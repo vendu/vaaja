@@ -1,0 +1,34 @@
+#ifndef __SYS_VCODE_VM_H__
+#define __SYS_VCODE_VM_H__
+
+#include <stdint.h>
+#include <mach/param.h>
+
+#define V_INTR_VECTOR_SIZE      V_PAGE_SIZE
+
+/* VMINE CONTROL BITS */
+#if (WORDSIZE == 4)
+#define V_FLG_MAX_SHIFT         31
+#elif (WORDSIZE == 8)
+#define V_FLG_MAX_SHIFT         63
+#endif
+#define V_INTR_BIT              (1 << V_FLG_MAX_SHIFT)
+#define V_ZERO_BIT              (1 << (V_FLG_MAX_SHIFT - 1)
+#define V_UNDERFLOW_BIT         (1 << (V_FLG_MAX_SHIFT - 2)
+#define V_OVERFLOW_BIT          (1 << (V_FLG_MAX_SHIFT - 3)
+#define V_CARRY_BIT             (1 << (V_FLG_MAX_SHIFT - 4)
+#define V_BORROW_BIT            (1 << (V_FLG_MAX_SHIFT - 5)
+#define V_PARITY_BIT            (1 << (V_FLG_MAX_SHIFT - 6)
+#define V_ALIGN_BIT             (1 << (V_FLG_MAX_SHIFT - 7)
+#define V_ERROR_FLAG            0xfe
+#define V_FAIL_MASK             0xff
+
+struct vcodevm {
+    struct vcodeinst   *pc;
+    void               *proc();
+    void               *asm();
+    intmax_t            flg;
+};
+
+#endif /* __SYS_VCODE_VM_H__ */
+

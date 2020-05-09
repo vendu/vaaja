@@ -1,0 +1,11 @@
+libzen notes
+------------
+
+bitop		- bitwise operations
+fastudiv16	- replace 16-bit division with 32-bit words by faster operations
+hash		- hash() and unhash() routines
+kern		- kernel tools
+mem		- memory management
+prof		- profiling routines
+tabhash		- cache-friendly hash table implementation
+

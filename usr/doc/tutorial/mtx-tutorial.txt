@@ -1,0 +1,250 @@
+Implementation of Atomic Mutexes for Thread Synchronization
+-----------------------------------------------------------
+
+Copyright (C) 2018 Tuomo Venäläinen
+
+All right reserved
+
+Preface
+-------
+
+In this document, I will demonstrate our mutex implementation by several steps
+of improvements on more-obvious approaches. I will discuss each optimisation
+technique briefly. Note that I'll represent "silly" intermediate versions of
+the routines to illustrate what and how we have optimised in the final lock-
+routines.
+
+Mutex Implementation Techniques
+-------------------------------
+
+We utilise Zero libmach's atomic primitives for declaring the lock-routines.
+
+I shall start from naive/simplistic implementation of the routines, and then
+gradually improve them for faster runtime execution.
+
+I will first represent a hypothetical data structure to denote the importance
+of our single-lock-per-cacheline rule of thumb.
+
+Code
+----
+
+#include <stdint.h>
+#include <mach/param.h> /* for CLSIZE etc. */
+#include <mach/atomic.h> /* atomic/synchronous operations */
+#include <mach/asm.h>   /* for atomic machine operations */
+
+/* special volatile (non-register) type */
+typedef volatile m_atomic_t zerofmtx;
+
+/* special values to indicate locked and unlocked state */
+#define M_FMTXINITVAL ((m_atomic_t)0)
+#define M_FMTXLKVAL   (~(m_atomic_t)0)
+
+/* thread-safe/lockable data structure with a single uinptr_t data item */
+struct mtxdata {
+    volatile m_atomic_t lk;  /* actual lock variable */
+    uintptr_t           data; /* data; pointer/address value + flags or word */
+    uint8_t             _pad[CLSIZE - sizeof(m_atomic_t
+};
+
+-----
+- line 6 declares lock-variable; declared volatile to prevent careless
+  compiler optimisations
+- line 7 stores our data; e.g. a pointer with a few low flag-bits
+- line 8 pads/aligns us nicely to cacheline boundary to avoid cache trashing
+  resulting from several locks on the same cacheline
+
+Next up, the initial versions of our try-lock and lock-routines.
+
+Code
+----
+
+1  /* simple/naive version; returns 1 if lock succeeds, 0 if already locked
+2  m_atomic_t
+3  m_trylkfmtx0(m_atomic_t *ptr)
+4  {
+6      m_atomic_t res;     /* CAS-operation return value */
+7
+8      res = m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL);
+9
+10     return res;
+11 }
+
+Notes
+-----
+
+- line 2 starts the declaration of m_trylkfmtx0, a routine to try to acquire an
+  immediate lock. the function takes 1 arguments:
+  - ptr is the address of the lock-variable
+  - note that the name "fmtx" is for "fast mutex" (non-recursive, single-word
+  in-memory presentation)
+- line 8 attempts to replace the value at ptr with M_MTXLKVAL; only if the
+  original value *ptr equals M_MTXINITVAL (unlocked) shall the operation succeed
+  and m_cmpswap() return non-zero; otherwise, the memory is left untouched and
+  m_cmpswap() returns zero.
+
+Code
+----
+
+1  /* simple/naive version */
+2  m_atomic_t
+3  m_lkfmtx0(m_atomic_t *ptr)
+4  {
+5      do {
+6          ; /* busy-spin */
+7      } while (!m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL);
+8
+9      return;
+10 }
+
+Notes
+-----
+
+- line 2 starts the declaration of m_lkfmtx0(), the first version of our routine
+  to acquire a mutual exclustion lock (mutex). m_lkfmtx0() takes as it's single
+  argument the address of the lock-variable in memory.
+- lines 5-7 busy-wait until the lock is acquired on line 7
+- line 9 returns with the lock being held
+
+Implementation Issues
+---------------------
+
+Let's discuss the shortcomings of these simple versions of our routines briefly.
+
+Both m_trylkfmtx0() and m_lkfmtx0() *always* perform an atomic operation in
+order to try and acquire the lock. As a simple optimisation of sorts, we may
+instead check if the *volatile* lock-value in memory is that of M_MTXINITVAL,
+and only perform the atomic m_cmpswap() (CAS) operation if the lock-value is
+observed to be zero. The following two sections show our slightly-edited
+routines in full. Note that there's going to be no further optimisations for
+m_trylkfmtx(); on the other hand, we shall keep improving m_lkmtx().
+
+Code
+----
+
+1  /* improved/final version; returns 1 if lock succeeds, 0 if already locked
+2  m_atomic_t
+3  m_trylkfmtx(m_atomic_t *ptr)
+4  {
+6      m_atomic_t res = 0; /* CAS-operation return value */
+7
+8      if (*ptr == M_MTXINITVAL) {
+9          res = m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL);
+13     }
+14
+15     return res;
+16 }
+
+Notes
+-----
+
+- line 8 checks the volatile value at the address ptr for our desired, unlocked
+  value
+
+Code
+----
+
+1  /* improved version #1 */
+2  m_atomic_t
+3  m_lkfmtx1(m_atomic_t *ptr)
+4  {
+5      if (*ptr == M_MTXINITVAL) {
+6          do {
+6              ; /* busy-spin */
+8          } while (!m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL));
+9      }
+11
+12     return;
+13 }
+
+Once we take a closer look at m_lkfmtx1(), the routine actually only checks the
+initial [call-time] value of *ptr. Let's improve it by making it do that check
+every time it's about to attempt the m_cmpswap().
+
+Code
+----
+
+1  /* improved version #2 */
+2  m_atomic_t
+3  m_lkfmtx2(m_atomic_t *ptr)
+4  {
+5      m_atomic_t res;
+6
+7      do {
+8          res = 0;
+8          if (*ptr == M_MTXINITVAL) {
+9              res = m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL);
+10         }
+11     } while (!res);
+12
+13     return;
+14 }
+
+Code
+----
+
+- line 8 checks for unlocked in-memory value; if found, only then shall line
+  9 perform the atomic operation
+- line 11 checks if the lock was locked at the time of the m_cmpswap() operation
+
+There's still something that bothers the trained eye about that code. But of
+course, it's the evil busy loop trying to bring your multitasking system down
+to its knees. Modern architectures have their ways to ease the pain by waiting
+for an interrupt or other such event to notify the threads should be waken up
+to continue their operation, i.e. trying to acquire the lock in our case.
+
+ARM architectures use a machine pair of WFE (wait for event) and SEV (signal
+event) instructions to deal with the wait, whereas X86 architectures use a
+single PAUSE-instruction to enter "sleep mode." For the diversity, libmach
+defines 2 [inline-assembly] macros: m_waitspin() to enter the wait-mode,
+m_endspin() to leave it (where feasible, no-operation on X86).
+
+Our final, fine-tuned version of m_lkfmtx() is shown next.
+
+Code
+----
+
+1  /* final version */
+2  m_atomic_t
+3  m_lkfmtx(m_atomic_t *ptr)
+4  {
+5      m_atomic_t res;
+6
+7      do {
+8          if (*ptr == M_MTXINITVAL) {
+9              res = m_cmpswap(ptr, M_MTXINITVAL, M_MTXLKVAL);
+10             if (res) {
+11                 /* CAS succeeded */
+12
+13                 return;
+14             }
+15         }
+16         m_waitspin(); /* "sleep" until an event occurs */
+17     } while (1);
+18
+19     return;
+20 }
+
+To be complete, our fast mutex can be unlocked with
+
+Code
+----
+
+1 static void
+2 m_lkftmx(m_atomic_t *lp)
+3 {
+4     m_membar(); /* full memory barrier */
+5     *lp = FMTXINITVAL; /* lazy-write */
+6     m_endspin(); /* signal wakeup-event */
+7
+8     return;
+9 }
+
+Notes
+-----
+
+- line 4 is a full memory barrier, i.e. we wait until all pending memory
+  operations are performed before releasing the lock.
+- line 5 rewrites the [volatile] in-memory value
+- line 6 signals a wakeup-event (where due)
+

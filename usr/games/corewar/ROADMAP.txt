@@ -1,0 +1,19 @@
+
+
+instruction set
+---------------
+
+mnemonic	arguments	brief			notes
+--------	---------	-----			-----
+DAT		N/A		data			kills the process
+MOV		src, dest	load-store		dest = src;
+ADD		src, dest	addition		dest += src;
+SUB		src, dest	subtraction		dest -= src;
+JMP		adr  		branch			unconditional branch
+JMZ		adr, val	branch if 0		if (!val) { goto adr; }
+JNZ		adr, val	branch if not 0		if (val) { goto adr; }
+CMP		val1, val2	skip if equal 		if (val1 == val2) { pc++; }
+SLT		val1, val2	skip if less than 	if (val1 == val2) { pc++; }
+DJN		src, dest	decrement + branch	--a; if (b) { goto a; }
+SPL		proc 		queue process
+

@@ -1,0 +1,22 @@
+This directory holds an early implementation of Core War as described in the included PDF.
+
+To build the programs, run
+
+	./build.sh
+
+NOTE: you will need an imlib2 package installed; some systems require
+you to install a dev version to get the header files installed.
+
+I have included a few .rc-suffix example warriors. To try vendetta against vendetta2, do
+	./cw vendetta.rc vendetta2.rc
+
+For the visualisation, do
+
+	./zeus vendetta.rc vendetta2.rc
+
+Enjoy! :)
+
+/* vendu */
+
+P.S. I know, it's still a bit rough around the edges... :)
+

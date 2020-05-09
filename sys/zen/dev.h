@@ -1,0 +1,43 @@
+#ifndef __ZEN_DEV_H__
+#define __ZEN_DEV_H__
+
+#define ZEN_DEV_BITS            16
+#define zenmkdev(maj, min)      ((maj) << ZEN_DEV_BITS | (min))
+#define ZEN_DEV_ZERO            zenmkdev(0, 0)
+#define ZEN_DEV_NULL            zenmkdev(0, 1)
+#define ZEN_DEV_HID             zenmkdev(1, 0)
+#define ZEN_DEV_KBD             zenmkdev(1, 1)
+#define ZEN_DEV_PNT             zenmkdev(1, 2)
+#define ZEN_DEV_AUD             zenmkdev(2, 0)
+#define ZEN_DEV_MIXER           zenmkdev(2, 1)
+#define ZEN_DEV_EQU             zenmkdev(2, 2)
+#define ZEN_DEV_DSP             zenmkdev(2, 3)
+#define ZEN_DEV_GFX             zenmkdev(3, 0)
+#define ZEN_DEV_FB              zenmkdev(3, 1)
+#define ZEN_DEV_VIDEO           zenmkdev(3, 2)
+#define ZEN_DEV_TIME            zenmkdev(4, 0)
+#define ZEN_INTR_TIMER          zenmkdev(4, 1)
+#define ZEN_HIRES_TIMER         zenmkdev(4, 2)
+#define ZEN_RTC_TIMER           zenmkdev(4, 3)
+#define ZEN_PROF_TIMER          zenmkdev(4, 4)
+#define ZEN_INPUT_DEV           zenmkdev(5, 0)
+#define ZEN_TTY_DEV             zenmkdev(5, 1)
+#define ZEN_OUTPUT_DEV          zenmkdev(6, 0)
+#define ZEN_LPR_DEV             zenmkdev(6, 1)
+#define ZEN_STOR_DEV            zenmkdev(7, 0)
+#define ZEN_MEM_KEY             zenmkdev(7, 1)
+#define ZEN_MEM_CARD            zenmkdev(7, 2)
+#define ZEN_DISK_DEV            zenmkdev(7, 3)
+#define ZEN_DISC_DEV            zenmkdev(7, 4)
+#define ZEN_TAPE_DEV            zenmkdev(7, 5)
+#define ZEN_NET_DEV             zenmkdev(8, 0)
+#define ZEN_NIC_DEV             zenmkdev(8, 1)
+#define ZEN_FIREWALL_DEV        zenmkdev(8, 2)
+#define ZEN_PKTFILTER_DEV       zenmkdev(8, 3)
+#define ZEN_GATEWAY_DEV         zenmkdev(8, 4)
+#define ZEN_WIFI_DEV            zenmkdev(8, 5)
+#define ZEN_DNS_DEV             zenmkdev(8, 6)
+#define ZEN_ARP_DEV             zenmkdev(8, 7)
+
+#endif /* __ZEN_DEV_H__ */
+

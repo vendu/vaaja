@@ -1,0 +1,391 @@
+V0 Programmer's Manual
+----------------------
+
+Preface
+-------
+
+V0 is a relatively RISC-like microprocessor albeit with some extras for the
+purposes of code optimization, memory management in multiuser scenarios, thread
+synchronization and other modern features.
+
+This should be a programming booklet, so end with the rant and let's start
+rolling our sleeves - time has come for some serious computer engineering
+sessions. :)
+
+Machine Architecture Overview
+-----------------------------
+
+User Registers
+--------------
+
+R0          always zero, returns 0 on read, writes are ignored
+R1          function return value (low word), function argument register #0
+R2-R5       function argument caller-save registers
+R6-R11      callee-save scratch registers
+R12/FP      currently effective stack-frame pointer (user- or system-mode)
+R13/SP      currently effective stack pointer (user- or system mode)
+R14/PC      program counter ('instruction pointer')
+R15/LR      link register; user-mode function return address
+
+System Registers
+----------------
+
+MSW         machine status word
+MCR         machine control register
+PID         process ID
+THR         thread ID or exit value
+TM0         timestamp low-word register
+TM1         timestamp high-word register
+TWC         wait-channel for current thread
+IMR         interrupt mask register
+
+System-Only Registers
+---------------------
+
+IVB         interrupt-vector base address
+TCB         thread control block/context address
+PDB         page-directory base address
+IOP         IO-port permission bitmap address
+SEG         segment-table address + # of segments
+TMP         function stack-argument count
+BLO         bound-check low limit
+BHI         bound-check high limit
+
+Static Registers
+----------------
+
+MFR         machine feature register
+            MT, PROT, CMOVE, FXP, FPU, DSP, GPU, SIMD
+
+Addressing Modes
+----------------
+
+    mov %r0, %r1            ;; zero R1
+
+    ldr $4(%sp), %r2        ;; move word from memory address SP + 4 to R2
+
+    ldr %r2(%r1), %r3       ;; move data from address R1 + R2 to R3
+
+    str %r1, $8(%r2:%r3)    ;; store R1 to address R2 + R3 + 8
+
+Example Function pagezero()
+---------------------------
+
+WORDSIZE = 4
+PAGESIZE = 1024
+LOOPBYTES = (4 * WORDSIZE)
+    stm %r6-%r15            ;; push caller-save registers
+    ldr $_page, %r1         ;;
+    mvx %tms, %r11          ;; read start time-stamp into R11
+    sbr pagezero            ;; call pagezero(adr)
+    mvx %tms, %r10          ;; read start time-stamp into R11
+    sub %r10, %r11          ;; compute cycles consumed
+    ret
+
+pagezero:                   ;; function pagezero starts
+    ldr %r0, %r2            ;; R2 = 0;
+    ldr $PAGESIZE, %r3      ;; R3 = PAGESIZE;
+_loop:
+    ;; unrolled 4-fold
+    str %r0, $0(%r1:%r2)    ;; R1[R2 + 0] = 0;
+    str %r0, $4(%r1:%r2)    ;; R1[R2 + 4] = 0;
+    str %r0, $8(%r1:%r2)    ;; R1[R2 + 8] = 0;
+    str %r0, $12(%r1:%r2)   ;; R1[R2 + 12] = 0;
+    add $LOOPBYTES, %r2     ;; R2 += LOOPBYTES;
+    cmp %r2, %r3            ;; is R2 == R3 i.e. PAGESIZE?
+    jeq _done               ;; yep
+    jmp _loop               ;; nope
+_done:
+
+_page:  .space  1024
+
+Instruction Set Architecture
+----------------------------
+
+Instruction Brief Fields
+------------------------
+
+Op			Instruction mnemonic
+Source      Source Operand
+Destination Destination Operand
+Extra       Possible 3rd Operand
+
+Instruction Operand Types
+-------------------------
+
+Letter      Description
+------      -----------
+
+r           register
+c           val6; up to 6 bits in the latter word of the args-field of opcode
+            (count for shift/rotate operations)
+v			15-bit [optionally signed] operand in the imm15-field
+            (denoted by having arg.imm high bit set to 1)
+i			32- or 64-bit immediate argument (following opcode)
+            (64-bit operands may need to be aligned by 32 bits by the assembler)
+a           memory address (see Addressing Modes)
+
+SYS-Instructions - System Management
+------------------------------------
+
+Op		Source	Destination	Extra	Pseudo-Code
+--		------	-----------	-----	-----------
+
+NOP		--		--			--		nop();
+FTR		r/i		r2			--		dest = MFR & src;
+HLT		r/i		--			--		hlt(intrmask);
+RST		r/i		--			--		rst(flg);
+DEV		r1		r2			r3		dev(id, cmd, buf);
+LST		r/v		r2			r3		dest = find(name); xtra = len(dest);
+LOD		r/v		r2			r3      res = load(node, buf);
+RUN     r/i     r2          r3      thr = run(adr), *adr = res(thr);
+TRM     r/i     r2          --      r2 = term(thr);
+
+CTL-Instructions - Control Operations
+-------------------------------------
+
+Op		Source	Destination	Pseudo-Code
+--		------	-----------	-----------
+
+CLI		r/i		--			intron(mask);
+STI		r/i		--			introff(mask);
+SIM		r/i		--			intrmask(rmask);
+INT		r/v		--			intr(num);
+
+MT-Extension
+------------
+WFE		--		--			waitev();
+SEV		--		--			sigev();
+
+ARITH-Instructions - Arithmetic Operations
+------------------------------------------
+
+Op		Source	Destination	Pseudo-Code
+--		------	-----------	-----------
+
+NEG     r/i		r			dest = ~src + 1 <=> dest = -src;
+NOT     r/i     r           dest = ~src <=> dest = src ^ 0xfffffffff;
+INC		r		--			src = src + 1;
+DEC		r		--			src = src - 1;
+ADD		r/i		r			dest = dest + src; // OF
+UADD	r/i		r			dest = dest + src; // ignore overflow
+SUB		r/i		r			dest = dest - src;
+ADC		r/i		r			dest = dest + src; // CF
+SBC		r/i		r			dest = dest - src; // CF
+CMP		r/i		r			src == dest, src < dest, src > dest, signed
+UCMP	r/i		r			src == dest, src < dest, src > dest, unsigned
+
+LOGIC-Instructions - Logical Operations
+---------------------------------------
+
+Op		Source	Destination	Pseudo-Code
+--		------	-----------	-----------
+
+OR		r/i     r           dest = src | dest;
+XOR		r/i     r           dest = src ^ dest;
+NOR		r/i     r           dest = src ~| dest;
+XNOR	r/i     r           dest = src ~^ dest;
+AND		r/i     r           dest = src & dest;
+NAND	r/i     r           dest = src ~& dest;
+
+SHIFT-Instructions - Shift and Rotate Operations
+------------------------------------------------
+
+Op      Count   Source	Destination	Pseudo-Code
+--		-----   ------  -----------	-----------
+
+SLL		r/c     r       r			dest = src << cnt;
+SLR		r/c     r       r			dest = src >> cnt;
+SAR		r/c     r       r			dest = src >>> cnt;
+ROL		r/c     r       r			dest = rol(cnt, src);
+ROR		r/c     r       r			dest = ror(cnt, src);
+RCL		r/c     r       r			dest = rcl(cnt, src);
+RCR		r/c     r       r			dest = rcr(cnt, src);
+
+MULDIV-Instructions - Multiplication and Division Operations
+------------------------------------------------------------
+
+Op		Source  Destination Pseudo-Code
+--
+
+MUL     r/i     r           dest = src * dest;
+UMUL    r/i     r           dest = src * dest, unsigned
+MHI     r/i     r           dest = (src * dest) >> 32;
+UMHI    r/i     r           dest = (src * dest) >> 32, unsigned
+IRP     r/i     r           dest = irp(src);
+UIRP    r/i     r           dest = uirp(src);
+REM     r/i     r           dest = dest % src;
+UREM    r/i     r           dest = dest % src, unsigned
+DIV     r/i     r           dest = dest * irp(src);
+UDIV    r/i     r           dest = dest * uirp(src);
+
+FLOW-Instructions - Control Flow
+--------------------------------
+
+Op		Destination Pseudo-Code
+--		----------- -----------
+
+JEQ		r/m         if (ZF) jmp(adr);
+JNE		r/m			if (!ZF) jmp(adr);
+JLT		r/m			if (LT) jmp(adr);
+JLE		r/m			if (LT || ZF) jmp(adr);
+JGT		r/m			if (!LT) jmp(adr);
+JGE		r/m			if (!LT || ZF) jmp(adr);
+JULT	r/m			if (LT && !SF) jmp(adr);
+JULE	r/m			if ((LT || ZF) && !SF) { jmp(adr); }
+JUGT	r/m			if (!LT && !SF) jmp(adr);
+JUGE	r/m			if ((!LT || ZF) && !SF) { jmp(adr); }
+JCF		r/m			if (CF) jmp(adr);
+JNC		r/m			if (!CF) jmp(adr);
+JOF		r/m			if (OF) jmp(adr);
+JNO		r/m			if (!OF) jmp(adr);
+JNR		r/m			if (!NR) jmp(adr);
+
+SUB-Instructions - Subroutines and Threads
+------------------------------------------
+
+Op		Source  Destination Pseudo-Code
+--		------  ----------- -----------
+
+JMP		r/m     --          jmp(adr);
+JPC		r/m		--          jmp(pc + adr);
+SBR     r/m		--          lr = pc; jmp(adr);
+RET     ri (0)  --			sp += tmp; jmp(lr);
+
+PROT-Extension
+--------------
+
+SME     r       r/i         save(uctx, map);
+                            lr = pc; fp = fp0; sp = sp0;
+                            sp += src;
+SMX     ri      --          r1 = src;
+                            fp0 = fp; sp0 = sp;
+                            pop(uctx);
+
+MT-Extension
+------------
+
+- ctx doesn't save R0-R1
+- ctx saves registers in map or R2-R5, R12-R15 (FP, SP, PC, LR) if map is 0,
+  RX0-RX14 (not MFR)
+
+Op      Source  Destination Extra   Pseudo-Code
+--      ------  ----------- -----   -----------
+
+THR     r       r           r/m     push(uctx); tcb = ctx; thr(dest, adr);
+THX		r/m     ri          --      trap(func, code); load(tcb);
+
+BIT-Instructions - Bit Operations
+---------------------------------
+
+Op      Source  Destination Pseudo-Code
+--      ------  ----------- -----------
+
+ZEX		r/i     r           dest = zeroext(src);
+SEX		r/i     r           dest = signext(src);
+CLZ		r/i     r           dest = clz(src);
+HAM		r/i     r           dest = bitpop(src);
+PAR     r/i     r           dest = parity(src);
+BSW     r/i     r           dest = bswap(src, dest, sz);
+HSH     r/i     r           dest = hash(src);
+HUN     r/i     r           dest = unhash(src);
+
+MEM-Instructions - Load and Store Operations
+--------------------------------------------
+
+Op		Source  Destination Pseudo-Code
+--		------  ----------- -----------
+
+MOV		r/i     r           reg2 = reg1;
+LDR		r/m     r           reg2 = *src;
+STR		r       r/m         *adr = src;
+PSH		r/i     --          push(src);
+POP		--      r           pop(dest);
+STM		r/i                 strmany(map);
+LDM		r/i                 ldrmany(map);
+MVX		r/i     x           dest = src;
+LDX		r/m     x           dest = *src;
+STX		x       r/m         *adr = x;
+SMX     r/i     --          strmanyx(map);
+LMX     r/i     --          ldrmanyx(map);
+LNT		r/m     r           reg = *adr, non-temporal (bypass cache)
+SNT		r       r/m         *adr = reg, non-temporal
+CSP		r/v		--			cacheset(pol);
+CPF		r/i		--			cachepref(adr);
+IPG		r/i		--			invtlb(page);
+
+SYN-Instructions - Synchronous (Atomic) Operations - MT-Extension
+-----------------------------------------------------------------
+
+Op		Source  Destination Extra   Pseudo-Code
+--		------  ----------- -----   -----------
+
+RBR		--      --          --      memrdbar();
+WBR		--      --          --      memwrbar();
+FBR		--      --          --      membar();
+LDL		r/m     r           --      r = ldrlnk(adr);
+STL		r       r/m         --      *adr = strcond(adr);
+RLOR	r/m     r           --      fetch-and-OR
+RXOR	r/m     r           --      fetch-and-XOR
+RAND	r/m     r           --      fetch-and-AND
+RINC    r/m     r           --      fetch-and-increment-by-one
+RDEC    r/m     r           --      fetch-and-decrement-by-one
+RADD    r/m     r           --      fetch-and-add
+CAS		r/m     r           r		compare-and-swap
+BTC		r/m     r           --      bit test-and-clear
+BTS		r/m     r           --      bit test-and-set
+BSF     rm      r           --      bit scan-and-set forward
+BSR     rm      r           --      bit scan-and-set reverse (backwards)
+
+CMOVE-Instructions - Conditional Load and Store Operations - CMOVE-Extension
+----------------------------------------------------------------------------
+
+Op		Source  Destination Pseudo-Code
+--		------  ----------- -----------
+
+MEQ		r       r           if (ZF) { dest = src; }
+LEQ		r/m     r           if (ZF) { dest = *adr; }
+SEQ     r       r/m         if (ZF) { *adr = src; }
+MNE     r       r           if (!ZF) { dest = src; }
+LNE     r/m     r           if (!ZF) { dest = *adr; }
+SNE     r       r/m         if (!ZF) { *adr = src; }
+MLT     r       r           if (LT) { dest = src; }
+LLT     r/m     r           if (LT) { dest = *adr; }
+SLT     r       r/m         if (LT) { *adr = src; }
+MLE     r       r           if (LT || ZF) { dest = src; }
+LLE     r/m     r           if (LT || ZF) { dest = *adr; }
+SLE     r       r/m         if (LT || ZF) { *adr = src; }
+MGT     r       r           if (!LT && !ZF) { dest = src; }
+LGT     r/m     r           if (!LT && !ZF) { dest = src; }
+SGT     r       r/m         if (!LT && !ZF) { dest = src; }
+MGE     r       r           if (!LT || ZF) { dest = src; }
+LGE     r/m     r           if (!LT || ZF) { dest = src; }
+SGE     r       r/m         if (!LT || ZF) { dest = src; }
+MULT    r       r           if (LT) { dest = src; }
+LULT    r/m     r           if (LT) { dest = *adr; }
+SULT    r       r/m         if (LT) { dest = src; }
+MULE	r       r           if (LT || ZF) { dest = src; }
+LULE	r/m     r           if (LT || ZF) { dest = *adr; }
+SULE	r       r/m         if (LT || ZF) { *adr = src; }
+MUGT    r       r           if (!LT && !ZF) { dest = src; }
+LUGT	r/m     r           if (!LT && !ZF) { dest = *adr; }
+SUGT	r       r/m         if (!LT && !ZF) { *adr = src; }
+MUGE    r       r           if (!LT || ZF) { dest = src; }
+LUGE    r/m     r           if (!LT || ZF) { dest = *adr; }
+SUGE    r       r/m         if (!LT || ZF) { *adr = src; }
+MCF     r       r           if (CF) { dest = src; }
+LCF     r/m     r           if (CF) { dest = *adr; }
+SCF     r       r/m         if (CF) { *adr = src; }
+MNC     r       r           if (!CF) { dest = src; }
+LNC     r/m     r           if (!CF) { dest = *adr; }
+SNC     r       r/m         if (!CF) { *adr = src; }
+MOF     r       r           if (OF) { dest = src; }
+LOF     r/m     r           if (OF) { dest = *adr; }
+SOF     r       r/m         if (OF) { *adr = src; }
+MNO     r       r           if (!OF) { dest = src; }
+LNO     r/m     r           if (!OF) { dest = *adr; }
+SNO     r       r/m         if (!OF) { *adr = src; }
+MNR     r       r           if (!RF) { dest = src; }
+LNR     r/m     r           if (!RF) { dest = *adr; }
+SNR     r       r/m         if (!RF) { *adr = src; }
+

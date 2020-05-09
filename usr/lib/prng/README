@@ -1,0 +1,11 @@
+libprng notes
+-------------
+
+qrand		PRNG routines from Quake 3
+randk		PRNG from Donald Knuth
+randklc		linear congruential PRNG from Donald Knuth
+randlfg		yet another PRNG
+randlfg2	one more PRNG
+randmt32	32-bit Mersenne Twister PRNG
+randmt64	64-bit Mersenne Twister PRNG
+

@@ -1,0 +1,154 @@
+Zen Operating System Design Notes
+---------------------------------
+
+Zen is, currently, a set of ideas for a new operating system kernel. Rather than
+reinvent and 'get married' with UNIX/POSIX, I'll draw inspiration from them and
+try to create something without legacy payload. The initial target architecture
+will most likely be quite-constrained, namely a custom microprocessor running
+on an FPGA-board.
+
+I will start the design around Von Neumann Machine abstraction, i.e. a
+processor with memory and input/output (I/O) subsystems.
+
+PROCESSOR MODULES
+-----------------
+
+Task Abstractions
+-----------------
+
+Timers
+------
+- tmr	- timer
+  - tmrnew(type, val
+  - tmrconf(id, cmd, *parm)
+    - id:	system timer ID
+      		INTR		0
+		HIRES		1
+		RTC		2
+Tao Scheduler
+-------------
+- sched	- [thread] scheduler driven by timer interrupts
+  - schedyield()	- release processor to other threads
+  - schedpick()		- pick next thread to schedule on processor
+  - schedwait(mask, wc)	- wait for events on wait-channel
+  - schedsleep(us)	- sleep for us microseconds or more
+  - schedconf(cmd, val, *arg)	- configure thread scheduling
+    - SCHED_SET_CLASS
+      - SCHED_CLASS_RT		- realtime class	- fast response
+      - SCHED_CLASS_FAST	- human-interfaces	- fastest devices (HIDs)
+      - SCHED_CLASS_SYS		- system class		- fast throughput
+      - SCHED_CLASS_USER	- user class		- high speed execution
+      - SCHED_CLASS_BATCH	- batch, i.e. lots of I/O and processing without
+      				  need for fast interactive response
+      - SCHED_CLASS_IDLE	- threads to be scheduled when processor is idle
+    - SCHED_SET_PRIO
+    - SCHED_SET_NICE
+    - SCHED_SET_MEM
+      - SCHED_MEM_LINEAR_BIT	- linear access pattern, unlikely reuse
+      - SCHED_MEM_SMALL_BIT	- smallish memory footprint
+      - SCHED_MEM_HUGE_BIT	- huge memory footprint, bigger buffers
+    - SCHED_SET_IO
+      - SCHED_IO_SYNC_BIT, SCHED_IO_POLL_BIT, SCHED_IO_BUF_BIT, SCHED_IO_RAW_BIT
+
+Processes and Threads
+---------------------
+- proc	- process, a set of threads
+  - procnew(flg)		- fork(), vfork(), PROC_COW_BIT/copy-on-write
+  - procconf(cmd, val, *arg)	- tmr, mem, io, tab, sched, sig
+  - procexit(val)
+- thr	- thread of execution
+  - thrself()	- get current thread's system ID, -1 on failure
+  - thrnew()	- launch new thread of execution
+  - thrconf()	- configure thread parameters
+  - thrjoin()	- wait for thread to terminate
+  - thrdrop()	- release waiting threads
+  - threxit()	- terminate thread
+  - thryield()	- release processor for other threads
+  - thrsave()	- save thread context
+  - thrjmp()	- switch to another thread
+
+Synchronization
+---------------
+
+Synchonization is done by using libmt.
+
+- mach		- assembly routines, i.e. machine-specific stuff
+- mtx		- mutual exclusion/binary semaphore
+- sem		- semaphore
+- bar		- thread barrier
+- tkt		- ticket-lock a'la locklessinc.com
+- lk		- bit-locks, ...
+
+Inter-Process Communication
+---------------------------
+NOTE: we support 32 normal + 32 real-time signals
+
+Signals
+-------
+- sigsend(sig, pid)
+  - send/raise signal
+    - sig:	signal number
+    - pid:	process ID specification
+    		-x	 - all processes in group x
+    		-1	 - CLD
+    		0	 - SELF
+		1	 - PARENT
+- sigmask(cmd, bits)
+  - manipulate signal mask
+    - cmd: SETMASK, BLK, UNBLK
+    - bits: signal bitmap/mask
+- sigset(sig, spec)
+  - set signal handler; SIG_IGN, SIG_DFL, action
+  - spec:	signal disposion specification
+    		- SIG_ERR	 ((void *)-1)
+  		- SIG_IGN	 ((void *)0)
+  		- SIG_DFL	 ((void *)1)
+		- funcptr	 void *func(int);
+- sigwait(mask, blk, save)
+  - wait for signal in mask; temporarily set mask to blk; return
+    - mask:	mask of signals waited for
+    - blk:	temporary signal mask if non-zero
+    - save:	address to store current mask to; restore when waken up
+
+Shared Memory
+-------------
+- fd shmget(key, size, flg)
+  - get shared memory handle
+- shmat(key, adr, flg)
+  - attach shared memory segment
+    - key:	shared memory handle as returned by shmget
+    - adr:	NULL -> map address, otherwise try to use adr
+    - flg:	FIXED, WIRED, DONTKEEP, ...
+
+Message Queues
+--------------
+- mqnew(flg)		- create/initialise message queue
+- mqconf(mq, cmd, *arg)	- configure message queue
+- mqsend(mq, flg, *arg)	- send/queue message
+- mqrecv(mq, flg, *arg)	- receive/pop message
+- mqdel(mq, id, *arg)	- remove message from queue
+- mqclose(mq)	  	- close message queue, release resources
+
+MEMORY MODULES
+--------------
+
+Memory Abstractions
+-------------------
+
+- buf	- block I/O buffer
+- slab	- a fixed-size region of memory split into smaller allocation blocks
+- mag	- magazine; stack of allocation blocks (split from slabs)
+- pool	- a queue of slab buffers of different sizes
+
+I/O Abstractions
+----------------
+
+- term	- terminal/console interface
+- ptr	- mouse/pointer interface
+- blk	- block device such as disk or tape
+- chr	- character device such as terminal or printer
+- sock	- socket used for network communication
+
+Kernel Subsystems
+-----------------
+
