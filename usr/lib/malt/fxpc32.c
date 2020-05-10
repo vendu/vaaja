@@ -91,7 +91,6 @@ double2fxpc32(double x)
     if (x > 0.0) {
         lim = (fxpc32_t)floor(x);
         fxp = lim << FXPC32_FRAC_BITS;
-        fprintf(stderr, "FLOOR: %x (%x)\n", fxp, lim);
     } else if (x < 0.0) {
         lim = (fxpc32_t)ceil(x);
         fxp = lim << FXPC32_FRAC_BITS;
@@ -104,7 +103,6 @@ double2fxpc32(double x)
     bit = UINT32_C(1) << (FXPC32_FRAC_BITS - 1);
     for (i = 0 ; i < FXPC32_FRAC_BITS ; i++) {
         if (x - d > 0) {
-            fprintf(stderr, "i == %d (%lx)\n", i, bit);
             x -= d;
             fxp |= bit;
         }
@@ -134,52 +132,38 @@ fxpc32init(struct g_fxpc32 *cp)
 fxpc32_t
 fxpc32mul(int64_t x, int64_t y)
 {
-    int64_t     delta = y >> FXPC32_FRAC_BITS;
     int64_t     res = 0;
-    ufxpc32_t   p2 = UINT32_C << (FXPC32_BITS - 2);
-    int         i;
-    
-    for (i = 0 ; i < FXPC32_BITS - 1 ; i++) {
-        if (x > 0) {
-            x -= p2;
-            res += y * p2;
-            p2 >>= 1;
-        } else {
-            x += p2;
-            res -= y * p2;
-            p2 >>= 1;
-        }
-    }
-    delta++;
+
+    res = x * y;
     res >>= FXPC32_FRAC_BITS;
-    if (x > 0) {
-        res += delta;
-    }
 
     return res;
 }
 
+#if 0
 fxpc32_t
 fxpc32div(fxpc32_t x, fxpc32_t y)
 {
     fxpc32_t    res = 0;
-    fxpc32_t    p2 = UINT32_C(1) << (FXPC32_BITS - 2);
+    ufxpc32_t   p2 = UINT32_C(1) << (FXPC32_BITS - 2);
+    int         cnt = 1;
     int         i;
     
-    for (i = 0; i <= FXPC32_BITS - 1 ; i++){
-        if (fx > 0) {
-            x -= y * p2;
+    for (i = 0 ; i < FXPC32_BITS - 1 ; i++) {
+        if (x > 0) {
+            x -= y >> cnt;
             res += p2;
-            p2 >>= 1;
         } else {
-            x += y * p2;
+            x += y >> cnt;
             res -= p2;
-            p2 >>= 1;
         }
+        cnt++;
+        p2 >>= 1;
     }
-        
+
     return res;
 }
+#endif
 
 #if 0
 fxpc32_t
@@ -282,19 +266,28 @@ int
 main(int argc, char *argv[])
 {
     fxpc32_t    fxp;
+    fxpc32_t    tmp;
     
     fxpc32init(NULL);
-    printf("ONE\t%lx\n", g_fxpc32.one);
-    printf("PI/2\t%lx\n", g_fxpc32.halfpi);
-    printf("ONE * PI/2\t%lx\n", fxpc32mul(g_fxpc32.one, g_fxpc32.halfpi));
-    printf("2 * PI/2\t%lx\n", fxpc32mul(2 << FXPC32_FRAC_BITS,
+    printf("ONE\t%x\n", g_fxpc32.one);
+    printf("PI/2\t%x\n", g_fxpc32.halfpi);
+    printf("ONE * PI/2\t%x\n", fxpc32mul(g_fxpc32.one, g_fxpc32.halfpi));
+    printf("2 * PI/2\t%x\n", fxpc32mul(2 << FXPC32_FRAC_BITS,
                                         g_fxpc32.halfpi));
     fxp = double2fxpc32(DBL_PI);
-    printf("PI\t%lx\n", fxp);
-    printf("2 * PI == %lx (%lx)\n", fxpc32mul(2 << FXPC32_FRAC_BITS, fxp),
+    printf("PI\t%x\n", fxp);
+    printf("2 * PI == %x (%x)\n", fxpc32mul(2 << FXPC32_FRAC_BITS, fxp),
            fxp << 1);
-    printf("PI / 2 == %lx (%lx)\n", fxpc32div(fpx, 2 << FXPC32_FRAC_BITS),
+    printf("PI / 2 == %x (%x)\n", fxpc32div(fxp, 2 << FXPC32_FRAC_BITS),
            fxp >> 1);
+    printf("PI / 3 == %x (%x)\n", fxpc32div(fxp, 3 << FXPC32_FRAC_BITS),
+           fxp / 3);
+    tmp = double2fxpc32(1.5);
+    printf("PI / 1.5 == %x (%x)\n", fxpc32div(fxp, tmp),
+           double2fxpc32(DBL_PI / 1.5));
+    tmp = double2fxpc32(1.75);
+    printf("PI / 1.75 == %x (%x)\n", fxpc32div(fxp, tmp),
+           double2fxpc32(DBL_PI / 1.75));
 
     exit(0);
 }
