@@ -136,7 +136,7 @@ fxpc32mul(int64_t x, int64_t y)
 {
     int64_t     delta = y >> FXPC32_FRAC_BITS;
     int64_t     res = 0;
-    ufxpc32_t   p2 = 0x00000001 << (FXPC32_BITS - 2);
+    ufxpc32_t   p2 = UINT32_C << (FXPC32_BITS - 2);
     int         i;
     
     for (i = 0 ; i < FXPC32_BITS - 1 ; i++) {
@@ -159,32 +159,29 @@ fxpc32mul(int64_t x, int64_t y)
     return res;
 }
 
-#if 0
 fxpc32_t
-fxpc32div(uint32_t x,uint32_t y){
-    fxpc32_t    fx = fxpc32normint(x);
-    fxpc32_t    fy = fxpc32normint(y);
-    fxpc32_t    p2 = INT32_C(1) << (FXPC32_FRAC_BITS - 1);
+fxpc32div(fxpc32_t x, fxpc32_t y)
+{
     fxpc32_t    res = 0;
+    fxpc32_t    p2 = UINT32_C(1) << (FXPC32_BITS - 2);
     int         i;
     
-    if (fx > 0)
-        for (i = 1; i <= FXPC32_FRAC_BITS ; i++){
-            fx -= fy * p2;
+    for (i = 0; i <= FXPC32_BITS - 1 ; i++){
+        if (fx > 0) {
+            x -= y * p2;
             res += p2;
             p2 >>= 1;
-        }
-    else {
-        for (i = 1; i <= FXPC32_FRAC_BITS; i++){
-            fx += fy * p2;
-            res-= p2;
+        } else {
+            x += y * p2;
+            res -= p2;
             p2 >>= 1;
         }
     }
-
+        
     return res;
 }
 
+#if 0
 fxpc32_t
 fxpc32div4q(uint32_t x, uint32_t y)
 {
@@ -295,7 +292,9 @@ main(int argc, char *argv[])
     fxp = double2fxpc32(DBL_PI);
     printf("PI\t%lx\n", fxp);
     printf("2 * PI == %lx (%lx)\n", fxpc32mul(2 << FXPC32_FRAC_BITS, fxp),
-           fxp * 2);
+           fxp << 1);
+    printf("PI / 2 == %lx (%lx)\n", fxpc32div(fpx, 2 << FXPC32_FRAC_BITS),
+           fxp >> 1);
 
     exit(0);
 }
