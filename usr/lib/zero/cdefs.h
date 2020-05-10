@@ -3,70 +3,70 @@
 
 #if defined(__STDC_VERSION__)
 #if (__STDC_VERSION__ >= 199901L)
-#   define VLA
-#   define RESTRICT     restrict
+#   define C_VLA
+#   define C_RESTRICT   restrict
 #else
-#   define VLA          0
+#   define C_VLA        0
 #endif
 #if (__STDC_VERSION__ >= 201112L)
 #include <stdalign.h>
 #if !defined(__STDC_NO_THREADS__)
 #include <threads.h>
-#define THREADLOCAL     _Thread_local
+#define C_THREADLOCAL   _Thread_local
 #endif /* !defined(__STDC_NO_THREADS__) */
 #endif /* __STDC_VERSION__ >= 201112L */
 #endif /* __STDC_VERSION__ */
 
 #if defined(_MSC_VER) || defined(__CC_ARM)
-#define INLINE          __forceinline
+#define C_INLINE        __forceinline
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
 #if (defined(__i386__) || defined(__i486__)                             \
      || defined(__i586__) || defined(__i686__))
-#define ASMLINK         regparm(0)
+#define C_ASMLINK       regparm(0)
 #else
-#define ASMLINK
+#define C_ASMLINK
 #endif
-#if !defined(ALIGNED)
-#define ALIGNED(a)      __attribute__ ((__aligned__(a)))
+#if !defined(C_ALIGNED)
+#define C_ALIGNED(a)    __attribute__ ((__aligned__(a)))
 #endif
 #define IMMEDIATE(x)    __builtin_constant_p(x)
-#define INLINE       	__inline__ __attribute__ ((__always_inline__))
-#define NOINLINE     	__attribute__ ((__noinline__))
-#define NORETURN     	__attribute__ ((__noreturn__))
-#define CONST        	__attribute__ ((__const__))
+#define C_INLINE       	__inline__ __attribute__ ((__always_inline__))
+#define C_NOINLINE     	__attribute__ ((__noinline__))
+#define C_NORETURN     	__attribute__ ((__noreturn__))
+#define C_CONST        	__attribute__ ((__const__))
 #if !defined(UNUSED)
-#define UNUSED          __attribute__ ((__unused__))
+#define C_UNUSED        __attribute__ ((__unused__))
 #endif
-#if !defined(RESTRICT)
-#define RESTRICT        __restrict
+#if !defined(C_RESTRICT)
+#define C_RESTRICT      __restrict
 #endif
-#define PURE            __attribute__ ((__pure__))
-#if !defined(THREADLOCAL)
-#define THREADLOCAL     __thread
+#define C_PURE          __attribute__ ((__pure__))
+#if !defined(C_THREADLOCAL)
+#define C_THREADLOCAL   __thread
 #endif
-#define LIKELY(x)       (__builtin_expect(!!(x), 1))
-#define UNLIKELY(x)     (__builtin_expect(!!(x), 0))
+#define C_LIKELY(x)     (__builtin_expect(!!(x), 1))
+#define C_UNLIKELY(x)   (__builtin_expect(!!(x), 0))
 #endif
 
-#if !defined(INLINE)
-#define INLINE
+#if !defined(C_INLINE)
+#define C_INLINE
 #endif
-#if !defined(NOINLINE)
-#define NOINLINE
+#if !defined(C_NOINLINE)
+#define C_NOINLINE
 #endif
-#if !defined(NORETURN)
-#define NORETURN
+#if !defined(C_NORETURN)
+#define C_NORETURN
 #endif
-#if !defined(CONST)
-#define CONST
+#if !defined(C_CONST)
+#define C_CONST
 #endif
-#if !defined(UNUSED)
-#define UNUSED
+#if !defined(C_UNUSED)
+#define C_UNUSED
 #endif
-#if !defined(PURE)
-#define PURE
+#if !defined(C_PURE)
+#define C_PURE
 #endif
 
 #define adralign(a, b2) ((uintptr_t)(a) & -(b2))

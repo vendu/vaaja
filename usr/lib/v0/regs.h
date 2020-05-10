@@ -28,8 +28,8 @@
 #define V0_TL_REGISTER          11      // thread-local segment base address
 #define V0_FP_REGISTER          12      // frame pointer
 #define V0_SP_REGISTER          13      // stack pointer
-#define V0_PC_REGISTER          14      // program counter (instruction pointer)
-#define V0_LR_REGISTER          15      // link register (return address)
+#define V0_LR_REGISTER          14      // link register (return address)
+#define V0_PC_REGISTER          15      // program counter (instruction pointer)
 #define V0_GENERAL_REGISTERS    16      // total # of general registers
 /* MSW-register flag-bits */
 #define V0_MSW_CF_BIT			(1 << 0)    // carry/borrow-bit
@@ -41,7 +41,7 @@
 #define V0_MSW_IF_BIT           (1 << 6)    // interrupt enable
 #define V0_MSW_FR_BIT           (1 << 7)    // round-up (fraction MSB set)
 
-/* [private] segment registers; page-address + flags */
+/* [private] segment registers; 64-bit, limit + page-address + flags */
 #define V0_CS_REGISTER          0x00    // code-segment
 #define V0_DS_REGISTER          0x01    // [initialized] data-segment
 #define V0_ES_REGISTER          0x02    // [initialized] read-only data-segment
@@ -77,6 +77,7 @@
 #define V0_TEX_REGISTER         14      // thread exit-status address
 #define V0_SEG_REGISTER         15      // segment-table address + # of segments
 #define V0_SYSTEM_REGISTERS     16      // maximum/total # of system registers
+
 #define V0_FIXED_REGISTERS      16      // total # of fixed-point registers
 #define V0_FLOAT_REGISTERS      16      // total # of floating-point registers
 

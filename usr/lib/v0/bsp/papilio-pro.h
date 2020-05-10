@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #define PAPILIO_PRO_PIX_MASK_BIT        (1 << 0)
-#define PAPILIO_PRO_PIX_BUF_BIT  	(1 << 1)
+#define PAPILIO_PRO_PIX_BUF_BIT  	    (1 << 1)
 #define PAPILIO_PRO_PIX_SHIFT           4
 #define PAPILIO_PRO_PIX_MASK            0x0f
 
@@ -18,11 +18,11 @@
 typedef int16_t                         v0pix12;
 typedef v0pix12                         v0pixel;
 
-#define v0getblue(ptr)                                                  \
+#define v0getpixblue(ptr)                                               \
     ((uint8_t *)(ptr)[0] & PAPILIO_PRO_PIX_MASK)
-#define v0getgreen(ptr)                                                 \
+#define v0getpixgreen(ptr)                                              \
     (((uint8_t *)(ptr)[0] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)
-#define v0getred(ptr)                                                   \
+#define v0getpixred(ptr)                                                \
     ((uint8_t *)(ptr)[1] & PAPILIO_PRO_PIX_MASK)
 #define v0getpixflg(ptr)                                                \
     (((uint8_t *)(ptr)[1] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)

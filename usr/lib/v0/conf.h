@@ -14,7 +14,7 @@
 /* FIXME */
 #define V0_RAM_SIZE             PAPILIO_PRO_RAM_SIZE
 #else
-#errof machine-type not specified in <v0/conf.h>
+#error machine-type not specified in <v0/conf.h>
 #endif
 
 #define V0_CACHE_LINE_SIZE      32              // cacheline size

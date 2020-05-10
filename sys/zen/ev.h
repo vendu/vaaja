@@ -6,8 +6,8 @@
 #include <limits.h>
 #include <gfx/rgb.h>
 
-#define ZEN_EV_OBJ_BITS  64
-#define ZEN_EV_TIME_BITS 64
+#define ZEN_EV_OBJ_BITS  32
+#define ZEN_EV_TIME_BITS 32
 #define ZEN_EV_WORD_BITS 32
 
 #if (ZEN_EV_TIME_BITS == 64)
@@ -18,14 +18,14 @@ typedef uint32_t zenevtime_t;
 
 #define ZEN_EV_KEYCODE_BITS     32 // number of bits for keys in event keycodes
 #define ZEN_EV_KEY_UP_BIT       (1L << 31)
-#define ZEN_EV_KEY_BITS         22 // space for up to 0x1fffff + EVKBDSTATEBIT
+#define ZEN_EV_KEY_BITS         21 // space for up to 0x1fffff
 #define ZEN_EV_KEY_NONE         0 // no key value provided
 #define ZEN_EV_KEY_INVAL        (~0L) // invalid key/error return
 typedef int32_t                 zenkeycode_t; // transport keycode of 32 bits
 typedef int32_t                 zenkeystate_t; // modifier + button state
 
 /* library/user-level keycode type */
-#if (ZEN_EV_KEY_BITS <= 16)
+#if (ZEN_EV_KEYCODE_BITS <= 16)
 typedef int16_t  zenevkey_t;
 #else
 typedef int32_t  zenevkey_t;
@@ -240,7 +240,7 @@ void    zensyncev(struct deck *deck, long flg);
 /* keyboard event macros */
 #define ZEN_KEY_MASK            0x01ffffffL              // Unicode 1..0x10fffff
 #define zenkeysym(key)          ((key) & ZEN_KEY_MASK)
-#define zenhasstate(key)        ((key) & ZEN_KBD_STATE_BIT)  // have state
+#define zenkeyhasstate(key)     ((key) & ZEN_KBD_STATE_BIT)  // have state
 #define zenbuttondown(id, b)    ((id) & ZEN_EV_BUTTON(b)) // button pressed
 #define zengetkeybuttons(ev, mask) ((ev)->state & (mask))    // buttons pressed
 #define zengetkeymod(ev, mod)   ((ev)->state & ZEN_EV_MOD(mod)) // modifiers?
@@ -248,15 +248,13 @@ void    zensyncev(struct deck *deck, long flg);
 
 /* pointer such as mouse device events */
 
-#define pnthasbutton(ev, b) ((ev)->state & (1 << (b)))
+#define zenpnthasbutton(ev, b) ((ev)->state & (1 << (b)))
 /* pointer device, e.g. mouse event */
 struct zencoord {
     zenevword_t         x;      // screen X coordinate
     zenevword_t         y;      // screen Y coordinate
     zenevword_t         z;      // screen Z coordinate
 };
-
-#define EVNOTEMSGBIT    (1L << 31)
 
 /* cmd-field for SYS */
 /* EVSHUTDOWN is delivered no matter what events have been selected */
@@ -269,7 +267,7 @@ struct zencoord {
 #define ZEN_SYS_DEEP_SIX        6 // forceful shutdown
 #define ZEN_SYS_EVENT_TYPES     7
 
-/* cmd-field for SYSHWNOTIFY
+/* cmd-field for SYSHWNOTIFY */
 /* hardware/driver events */
 #define ZEN_HW_NO_OP            0
 #define ZEN_HW_LOAD             1 // kernel module loaded
