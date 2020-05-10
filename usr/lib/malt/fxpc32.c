@@ -134,7 +134,7 @@ fxpc32init(struct g_fxpc32 *cp)
 fxpc32_t
 fxpc32mul(int64_t x, int64_t y)
 {
-    ufxpc32_t   delta = x >> FXPC32_FRAC_BITS;
+    int64_t     delta = y >> FXPC32_FRAC_BITS;
     int64_t     res = 0;
     ufxpc32_t   p2 = 0x00000001 << (FXPC32_BITS - 2);
     int         i;
