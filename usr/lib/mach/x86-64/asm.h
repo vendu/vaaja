@@ -27,7 +27,7 @@
 
 #define __RIPFRAMEOFS                8
 
-static INLINE void *
+static C_INLINE void *
 m_getretadr(void)
 {
     void *ptr;
@@ -38,7 +38,7 @@ m_getretadr(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getfrmadr(void)
 {
     void *ptr;
@@ -48,7 +48,7 @@ m_getfrmadr(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getfrmadr1(void *fp)
 {
     void *ptr;
@@ -62,7 +62,7 @@ m_getfrmadr1(void *fp)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getretfrmadr(void)
 {
     void *ptr;
@@ -72,7 +72,7 @@ m_getretfrmadr(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_loadretadr(void *frm)
 {
     void *ptr;
@@ -274,7 +274,7 @@ m_cmpxchg128(volatile m_atomic_t *p64,
 #endif
 
 /* atomic set bit operation */
-static INLINE void
+static C_INLINE void
 m_setbit64(volatile m_atomic_t *p, long ndx)
 {
     int64_t mask = ~(INT64_C(1) << ndx);
@@ -289,7 +289,7 @@ m_setbit64(volatile m_atomic_t *p, long ndx)
 }
 
 /* atomic reset/clear bit operation */
-static INLINE void
+static C_INLINE void
 m_clrbit64(volatile m_atomic_t *p, long ndx)
 {
     int64_t bit = INT64_C(1) << ndx;
@@ -303,7 +303,7 @@ m_clrbit64(volatile m_atomic_t *p, long ndx)
 }
 
 /* atomic flip/toggle bit operation */
-static INLINE void
+static C_INLINE void
 m_flipbit64(volatile m_atomic_t *p, long ndx)
 {
     m_membar();

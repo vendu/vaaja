@@ -11,7 +11,7 @@
  */
 
 /* atomic types */
-#if (WORDSIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 typedef int32_t         m_atomic_t;
 #else
 typedef int64_t         m_atomic_t;

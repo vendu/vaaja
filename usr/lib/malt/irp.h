@@ -5,6 +5,13 @@
 
 #include <stdint.h>
 #include <zero/cdefs.h>
+#include <malt/fxpc32.h>
+#if defined(TEST_IRP)
+#include <stdio.h>
+#endif
+
+#define IRP_GUESS_CONST     (48.0 / 17.0)
+#define IRP_GUESS_FACTOR    (32 / 17.0)
 
 int32_t irpdiv(int32_t num, int32_t den);
 
@@ -14,13 +21,25 @@ static C_INLINE double
 nrpiter(double x, double d)
 {
     double      xd = x * d;
-    double      one = 1.0;
     double      val = 1.0;
 
-    val -= xd;                  // 1.0 - x * x
-    val *= x;                   // x * (1.0 - x * x)
-    x += val;                   // x + x * (1.0 - x * x)
+    val -= xd;                  // 1.0 - x * d
+    val *= x;                   // x * (1.0 - x * d)
+    x += val;                   // x + x * (1.0 - x * d)
+#if defined(TEST_IRP)
     printf("IRP: %A\n", x);
+#endif
+
+    return x;
+}
+
+static C_INLINE double
+nrpiter2(double x, double d)
+{
+    double  e = 1 - d * x;
+    double  y = x * e;
+
+    x += y + y * e;
 
     return x;
 }

@@ -60,40 +60,40 @@
 #define max2(a, b) ((a) ^ (((a) ^ (b)) & -((a) < (b))))
 
 /* compute minimum and maximum of a and b without branching */
-#define min3(a, b)                                                      \
+#define min3(a, b)                              \
     ((b) + (((a) - (b)) & -((a) < (b))))
-#define max3(a, b)                                                      \
+#define max3(a, b)                              \
     ((a) - (((a) - (b)) & -((a) < (b))))
 
-#define sign(x, nb)                                                     \
-    ((x) = (x) & ((1U < (nb)) - 1),                                     \
+#define sign(x, nb)                                     \
+    ((x) = (x) & ((1U < (nb)) - 1),                     \
      ((x) ^ (1U << ((nb) - 1))) - (1U << ((nb) - 1)))
 
 /* compare with power-of-two p2 */
-#define gtpow2(u, p2)  /* true if u > p2 */                             \
+#define gtpow2(u, p2)  /* true if u > p2 */     \
     ((u) & ~(p2))
-#define gtepow2(u, p2) /* true if u >= p2 */                            \
+#define gtepow2(u, p2) /* true if u >= p2 */    \
     ((u) & -(p2))
 /* swap a and b without a temporary variable */
 #define swapi(a, b)     ((a) ^= (b), (b) ^= (a), (a) ^= (b))
-#define swap32(a, b)                                                    \
-    do {                                                                \
-        uint32_t _tmp = a;                                              \
-                                                                        \
-        a = b;                                                          \
-        b = _tmp;                                                       \
+#define swap32(a, b)                            \
+    do {                                        \
+        uint32_t _tmp = a;                      \
+                                                \
+        a = b;                                  \
+        b = _tmp;                               \
     } while (0)
-#define ptrswap(a, b)                                                   \
-    do {                                                                \
-        void *_tmp = a;                                                 \
-                                                                        \
-        a = b;                                                          \
-        b = _tmp;                                                       \
+#define ptrswap(a, b)                           \
+    do {                                        \
+        void *_tmp = a;                         \
+                                                \
+        a = b;                                  \
+        b = _tmp;                               \
     } while (0)
 /* compute absolute value of integer without branching; PATENTED in USA :( */
 #if (ZEROABS)
-#define zeroabs(a)                                                      \
-    (((a) ^ (((a) >> (CHAR_BIT * sizeof(a) - 1))))                      \
+#define zeroabs(a)                                  \
+    (((a) ^ (((a) >> (CHAR_BIT * sizeof(a) - 1))))  \
      - ((a) >> (CHAR_BIT * sizeof(a) - 1)))
 static __inline__ int
 abs32(int a)
@@ -133,12 +133,12 @@ long long llabs(long long x);
 #define rounddown2(a, b2) ((a) & ~((b2) - 0x01))
 
 #if defined(__GNUC__)
-#define _roundup2(a, b)                                                 \
-    ((__builtin_constant_p(b))                                          \
-     ? rounduppow2(a, b)                                                \
+#define _roundup2(a, b)                         \
+    ((__builtin_constant_p(b))                  \
+     ? rounduppow2(a, b)                        \
      : ((((a) + ((b) - 1)) / (b)) * b))
 #elif 0
-#define roundup2b(a, b)                                                 \
+#define roundup2b(a, b)                         \
     ((((a) + ((b) - 1)) / (b)) * (b))
 #endif /* !defined(__GNUC__) */
 
@@ -151,314 +151,313 @@ long long llabs(long long x);
 #define haszero32(a)    (((a) - 0x01010101) & ~(a) & 0x80808080)
 
 /* count population of 1 bits in u32; store into r */
-#define onebits_32a(u32, r)
-#define onebits_32a(u32, r)                                             \
-    ((r) = (u32),                                                       \
-     (r) -= ((r) >> 1) & 0x55555555,                                    \
-     (r) = (((r) >> 2) & 0x33333333) + ((r) & 0x33333333),              \
-     (r) = ((((r) >> 4) + (r)) & 0x0f0f0f0f),                           \
-     (r) += ((r) >> 8),                                                 \
-     (r) += ((r) >> 16),                                                \
+#define onebits_32a(u32, r)                                 \
+    ((r) = (u32),                                           \
+     (r) -= ((r) >> 1) & 0x55555555,                        \
+     (r) = (((r) >> 2) & 0x33333333) + ((r) & 0x33333333),  \
+     (r) = ((((r) >> 4) + (r)) & 0x0f0f0f0f),               \
+     (r) += ((r) >> 8),                                     \
+     (r) += ((r) >> 16),                                    \
      (r) &= 0x3f)
-#define onebits_32b(u32, r)                                             \
-    ((r) = (u32),                                                       \
-     (r) -= ((r) >> 1) & 0x55555555,                                    \
-     (r) = (((r) >> 2) & 0x33333333) + ((r) & 0x33333333),              \
+#define onebits_32b(u32, r)                                         \
+    ((r) = (u32),                                                   \
+     (r) -= ((r) >> 1) & 0x55555555,                                \
+     (r) = (((r) >> 2) & 0x33333333) + ((r) & 0x33333333),          \
      (r) = (((((r) >> 4) + (r)) & 0x0f0f0f0f) * 0x01010101) >> 24)
 
 /* store parity of byte b into r */
-#define bytepar(b, r)                                                   \
-    do {                                                                \
-        unsigned long __tmp1;                                           \
-                                                                        \
-        __tmp1 = (b);                                                   \
-        __tmp1 ^= (b) >> 4;                                             \
-        (r) = (0x6996 >> (__tmp1 & 0x0f)) & 0x01;                       \
+#define bytepar(b, r)                               \
+    do {                                            \
+        unsigned long __tmp1;                       \
+                                                    \
+        __tmp1 = (b);                               \
+        __tmp1 ^= (b) >> 4;                         \
+        (r) = (0x6996 >> (__tmp1 & 0x0f)) & 0x01;   \
     } while (0)
-#define bytepar2(b, r)                                                  \
-    do {                                                                \
-        unsigned long __tmp1;                                           \
-        unsigned long __tmp2;                                           \
-                                                                        \
-        __tmp1 = (b);                                                   \
-        __tmp2 = (b);                                                   \
-        __tmp2 >>= 4;                                                   \
-        __tmp1 ^= __tmp2;                                               \
-        (r) = (0x6996 >> (__tmp1 & 0x0f)) & 0x01;                       \
+#define bytepar2(b, r)                              \
+    do {                                            \
+        unsigned long __tmp1;                       \
+        unsigned long __tmp2;                       \
+                                                    \
+        __tmp1 = (b);                               \
+        __tmp2 = (b);                               \
+        __tmp2 >>= 4;                               \
+        __tmp1 ^= __tmp2;                           \
+        (r) = (0x6996 >> (__tmp1 & 0x0f)) & 0x01;   \
     } while (0)
 #define bytepar3(b) ((0x6996 >> (((b) ^ ((b) >> 4)) & 0x0f)) & 0x01)
 
 #if !defined(__GNUC__) || defined(ZERO_TRIX_TEST)
 
 /* count number of trailing zero-bits in u32 */
-#define tzero32b(u32, r)                                                \
-    do {                                                                \
-        uint32_t __tmp;                                                 \
-        uint32_t __mask;                                                \
-                                                                        \
-        if (u32 == 0) {                                                 \
-            (r) = 32;                                                   \
-        } else {                                                        \
-            (r) = 0;                                                    \
-            __tmp = (u32);                                              \
-            __mask = 0x01;                                              \
-            if (!(__tmp & __mask)) {                                    \
-                __mask = 0xffff;                                        \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 16;                                       \
-                    (r) += 16;                                          \
-                }                                                       \
-                __mask >>= 8;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 8;                                        \
-                    (r) += 8;                                           \
-                }                                                       \
-                __mask >>= 4;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 4;                                        \
-                    (r) += 4;                                           \
-                }                                                       \
-                __mask >>= 2;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 2;                                        \
-                    (r) += 2;                                           \
-                }                                                       \
-                __mask >>= 1;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    (r) += 1;                                           \
-                }                                                       \
-            }                                                           \
-        }                                                               \
+#define tzero32b(u32, r)                        \
+    do {                                        \
+        uint32_t __tmp;                         \
+        uint32_t __mask;                        \
+                                                \
+        if (u32 == 0) {                         \
+            (r) = 32;                           \
+        } else {                                \
+            (r) = 0;                            \
+            __tmp = (u32);                      \
+            __mask = 0x01;                      \
+            if (!(__tmp & __mask)) {            \
+                __mask = 0xffff;                \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 16;               \
+                    (r) += 16;                  \
+                }                               \
+                __mask >>= 8;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 8;                \
+                    (r) += 8;                   \
+                }                               \
+                __mask >>= 4;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 4;                \
+                    (r) += 4;                   \
+                }                               \
+                __mask >>= 2;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 2;                \
+                    (r) += 2;                   \
+                }                               \
+                __mask >>= 1;                   \
+                if (!(__tmp & __mask)) {        \
+                    (r) += 1;                   \
+                }                               \
+            }                                   \
+        }                                       \
     } while (0)
 
 /*
  * Here's one that minimizes the use of constants.
  */
-#define tzero32c(u32, r) \
-do { \
-    uint32_t __tmp; \
-    uint32_t __mask; \
-    uint32_t __width; \
-    uint32_t __one; \
-\
-    (r) = 0; \
-    __tmp = (u32); \
-    __one = 0x01; \
-    __mask = 0xffff; \
-    __width = 16; \
-    if (!(__tmp & __one)) { \
-        if (!(__tmp & __mask)) { \
-            __tmp >>= __width; \
-            (r) += __width; \
-        } \
-        __width >>= __one; \
-        __mask >>= __width; \
-        if (!(__tmp & __mask)) { \
-            __tmp >>= __width; \
-            (r) += __width; \
-        } \
-        __width >>= __one; \
-        __mask >>= __width; \
-        if (!(__tmp & __mask)) { \
-            __tmp >>= __width; \
-            (r) += __width; \
-        } \
-        __width >>= __one; \
-        __mask >>= __width; \
-        if (!(__tmp & __mask)) { \
-            __tmp >>= __width; \
-            (r) += __width; \
-            __tmp >>= __width; \
-        } \
-        __width >>= __one; \
-        __mask >>= __width; \
-        if (!(__tmp & __mask)) { \
-            __tmp >>= __width; \
-            (r) += __width; \
-        } \
-    } \
-} while (FALSE)
+#define tzero32c(u32, r)                        \
+    do {                                        \
+        uint32_t __tmp;                         \
+        uint32_t __mask;                        \
+        uint32_t __width;                       \
+        uint32_t __one;                         \
+                                                \
+        (r) = 0;                                \
+        __tmp = (u32);                          \
+        __one = 0x01;                           \
+        __mask = 0xffff;                        \
+        __width = 16;                           \
+        if (!(__tmp & __one)) {                 \
+            if (!(__tmp & __mask)) {            \
+                __tmp >>= __width;              \
+                (r) += __width;                 \
+            }                                   \
+            __width >>= __one;                  \
+            __mask >>= __width;                 \
+            if (!(__tmp & __mask)) {            \
+                __tmp >>= __width;              \
+                (r) += __width;                 \
+            }                                   \
+            __width >>= __one;                  \
+            __mask >>= __width;                 \
+            if (!(__tmp & __mask)) {            \
+                __tmp >>= __width;              \
+                (r) += __width;                 \
+            }                                   \
+            __width >>= __one;                  \
+            __mask >>= __width;                 \
+            if (!(__tmp & __mask)) {            \
+                __tmp >>= __width;              \
+                (r) += __width;                 \
+                __tmp >>= __width;              \
+            }                                   \
+            __width >>= __one;                  \
+            __mask >>= __width;                 \
+            if (!(__tmp & __mask)) {            \
+                __tmp >>= __width;              \
+                (r) += __width;                 \
+            }                                   \
+        }                                       \
+    } while (FALSE)
 
-#define lzero32b(u32, r)                                                \
-    do {                                                                \
-        uint32_t __res = 0;                                             \
-        uint32_t __tmp = (u32);                                         \
-        uint32_t __mask = 0xffff0000;                                   \
-                                                                        \
-        if (__tmp) {                                                    \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 16;                                            \
-                __tmp <<= 16;                                           \
-            }                                                           \
-            __mask <<= 8;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 8;                                             \
-                __tmp <<= 8;                                            \
-            }                                                           \
-            __mask <<= 4;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 4;                                             \
-                __tmp <<= 4;                                            \
-            }                                                           \
-            __mask <<= 2;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 2;                                             \
-                __tmp <<= 2;                                            \
-            }                                                           \
-            __mask <<= 1;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res++;                                                \
-            }                                                           \
-        } else {                                                        \
-            __res = 32;                                                 \
-        }                                                               \
-        (r) = __res;                                                    \
+#define lzero32b(u32, r)                        \
+    do {                                        \
+        uint32_t __res = 0;                     \
+        uint32_t __tmp = (u32);                 \
+        uint32_t __mask = 0xffff0000;           \
+                                                \
+        if (__tmp) {                            \
+            if (!(__tmp & __mask)) {            \
+                __res += 16;                    \
+                __tmp <<= 16;                   \
+            }                                   \
+            __mask <<= 8;                       \
+            if (!(__tmp & __mask)) {            \
+                __res += 8;                     \
+                __tmp <<= 8;                    \
+            }                                   \
+            __mask <<= 4;                       \
+            if (!(__tmp & __mask)) {            \
+                __res += 4;                     \
+                __tmp <<= 4;                    \
+            }                                   \
+            __mask <<= 2;                       \
+            if (!(__tmp & __mask)) {            \
+                __res += 2;                     \
+                __tmp <<= 2;                    \
+            }                                   \
+            __mask <<= 1;                       \
+            if (!(__tmp & __mask)) {            \
+                __res++;                        \
+            }                                   \
+        } else {                                \
+            __res = 32;                         \
+        }                                       \
+        (r) = __res;                            \
     } while (0)
 
 /* 64-bit versions */
 
-#define tzero64b(u64, r)                                                \
-    do {                                                                \
-        uint64_t __tmp;                                                 \
-        uint64_t __mask;                                                \
-                                                                        \
-        if (u64 == 0) {                                                 \
-            (r) = 64;                                                   \
-        } else {                                                        \
-            (r) = 0;                                                    \
-            __tmp = (u64);                                              \
-            __mask = 0x01;                                              \
-            if (!(__tmp & __mask)) {                                    \
-                __mask = 0xffffffff;                                    \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 32;                                       \
-                    (r) += 32;                                          \
-                }                                                       \
-                __mask >>= 16;                                          \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 16;                                       \
-                    (r) += 16;                                          \
-                }                                                       \
-                __mask >>= 8;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 8;                                        \
-                    (r) += 8;                                           \
-                }                                                       \
-                __mask >>= 4;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 4;                                        \
-                    (r) += 4;                                           \
-                }                                                       \
-                __mask >>= 2;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    __tmp >>= 2;                                        \
-                    (r) += 2;                                           \
-                }                                                       \
-                __mask >>= 1;                                           \
-                if (!(__tmp & __mask)) {                                \
-                    (r) += 1;                                           \
-                }                                                       \
-            }                                                           \
-        }                                                               \
+#define tzero64b(u64, r)                        \
+    do {                                        \
+        uint64_t __tmp;                         \
+        uint64_t __mask;                        \
+                                                \
+        if (u64 == 0) {                         \
+            (r) = 64;                           \
+        } else {                                \
+            (r) = 0;                            \
+            __tmp = (u64);                      \
+            __mask = 0x01;                      \
+            if (!(__tmp & __mask)) {            \
+                __mask = 0xffffffff;            \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 32;               \
+                    (r) += 32;                  \
+                }                               \
+                __mask >>= 16;                  \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 16;               \
+                    (r) += 16;                  \
+                }                               \
+                __mask >>= 8;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 8;                \
+                    (r) += 8;                   \
+                }                               \
+                __mask >>= 4;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 4;                \
+                    (r) += 4;                   \
+                }                               \
+                __mask >>= 2;                   \
+                if (!(__tmp & __mask)) {        \
+                    __tmp >>= 2;                \
+                    (r) += 2;                   \
+                }                               \
+                __mask >>= 1;                   \
+                if (!(__tmp & __mask)) {        \
+                    (r) += 1;                   \
+                }                               \
+            }                                   \
+        }                                       \
     } while (0)
 
-#define lzero64b(u32, r)                                                \
-    do {                                                                \
-        uint32_t __res = 0;                                             \
-        uint32_t __tmp = (u32);                                         \
-        uint32_t __mask = UINT64_C(0xffffffff00000000;                  \
-                                                                        \
-        if (__tmp) {                                                    \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 32;                                            \
-                __tmp <<= 32;                                           \
-            }                                                           \
-            __mask <<= 16;                                              \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 16;                                            \
-                __tmp <<= 16;                                           \
-            }                                                           \
-            __mask <<= 8;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 8;                                             \
-                __tmp <<= 8;                                            \
-            }                                                           \
-            __mask <<= 4;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 4;                                             \
-                __tmp <<= 4;                                            \
-            }                                                           \
-            __mask <<= 2;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res += 2;                                             \
-                __tmp <<= 2;                                            \
-            }                                                           \
-            __mask <<= 1;                                               \
-            if (!(__tmp & __mask)) {                                    \
-                __res++;                                                \
-            }                                                           \
-        } else {                                                        \
-            __res = 32;                                                 \
-        }                                                               \
-        (r) = __res;                                                    \
-    } while (0)
+#define lzero64b(u32, r)                                    \
+    do {                                                    \
+    uint32_t __res = 0;                                     \
+    uint32_t __tmp = (u32);                                 \
+    uint32_t __mask = UINT64_C(0xffffffff00000000;          \
+                                                            \
+                               if (__tmp) {                 \
+                                   if (!(__tmp & __mask)) { \
+                                       __res += 32;         \
+                                       __tmp <<= 32;        \
+                                   }                        \
+                                   __mask <<= 16;           \
+                                   if (!(__tmp & __mask)) { \
+                                       __res += 16;         \
+                                       __tmp <<= 16;        \
+                                   }                        \
+                                   __mask <<= 8;            \
+                                   if (!(__tmp & __mask)) { \
+                                       __res += 8;          \
+                                       __tmp <<= 8;         \
+                                   }                        \
+                                   __mask <<= 4;            \
+                                   if (!(__tmp & __mask)) { \
+                                       __res += 4;          \
+                                       __tmp <<= 4;         \
+                                   }                        \
+                                   __mask <<= 2;            \
+                                   if (!(__tmp & __mask)) { \
+                                       __res += 2;          \
+                                       __tmp <<= 2;         \
+                                   }                        \
+                                   __mask <<= 1;            \
+                                   if (!(__tmp & __mask)) { \
+                                       __res++;             \
+                                   }                        \
+                               } else {                     \
+                                   __res = 32;              \
+                               }                            \
+                               (r) = __res;                 \
+                               } while (0)
 
 #endif /* !defined(__GNUC__) */
 
 /* count number of trailing (low) zero-bits in long-word */
 #if defined(__GNUC__)
 //#define tzero32(u) (__builtin_ctz(u))
-#define tzerol(u)     (!(u)                                             \
-                       ? (LONGSIZE * CHAR_BIT)                          \
+#define tzerol(u)     (!(u)                             \
+                       ? (MACH_LONG_SIZE * CHAR_BIT)    \
                        : (__builtin_ctzl(u)))
-#define tzeroll(u)    (!(u)                                             \
-                       ? (LONGLONGSIZE * CHAR_BIT)                      \
+#define tzeroll(u)    (!(u)                                 \
+                       ? (MACH_LONG_LONG_SIZE * CHAR_BIT)   \
                        : (__builtin_ctzll(u)))
-#define tzero32(u, r) (!(u)                                             \
-                       ? ((r) = 32)                                     \
+#define tzero32(u, r) (!(u)                             \
+                       ? ((r) = 32)                     \
                        : ((r) = (__builtin_ctz(u))))
-#if (LONGSIZE == 4)
-#define tzero64(u, r) (!(u)                                             \
-                       ? ((r) = 64)                                     \
+#if (MACH_LONG_SIZE == 4)
+#define tzero64(u, r) (!(u)                             \
+                       ? ((r) = 64)                     \
                        : ((r) = (__builtin_ctzll(u))))
-#elif (LONGSIZE == 8)
-#define tzero64(u, r) (!(u)                                             \
-                       ? ((r) = 64)                                     \
+#elif (MACH_LONG_SIZE == 8)
+#define tzero64(u, r) (!(u)                             \
+                       ? ((r) = 64)                     \
                        : ((r) = (__builtin_ctzl(u))))
 #endif
 #elif defined(__i386__) || defined(__x86_64__) || defined(__amd64__)
-#define tzerol(u)  (!(u)                                                \
-                    ? (LONGSIZE * CHAR_BIT)                             \
+#define tzerol(u)  (!(u)                            \
+                    ? (MACH_LONG_SIZE * CHAR_BIT)   \
                     : m_scanlo1bit(u))
 #endif
 
 /* count number of leading (high) zero-bits in long-word */
 #if defined(__GNUC__)
-#define lzerol(u)     (!(u)                                             \
-                       ? (LONGSIZE * CHAR_BIT)                          \
+#define lzerol(u)     (!(u)                             \
+                       ? (MACH_LONG_SIZE * CHAR_BIT)    \
                        : (__builtin_clzl(u)))
-#define lzeroll(u)    (!(u)                                             \
-                       ? (LONGLONGSIZE * CHAR_BIT)                      \
+#define lzeroll(u)    (!(u)                                 \
+                       ? (MACH_LONG_LONG_SIZE * CHAR_BIT)   \
                        : (__builtin_clzll(u)))
-#define lzero32(u, r) (!(u)                                             \
-                       ? ((r) = 32)                                     \
+#define lzero32(u, r) (!(u)                             \
+                       ? ((r) = 32)                     \
                        : ((r) = (__builtin_clz(u))))
 #if ((defined(__i386__) || defined(__x86_64__) || defined(__amd64__))   \
-     || LONGSIZE == 4)
-#define lzero64(u, r) (!(u)                                             \
-                       ? ((r) = 64)                                     \
+     || MACH_LONG_SIZE == 4)
+#define lzero64(u, r) (!(u)                             \
+                       ? ((r) = 64)                     \
                        : ((r) = (__builtin_clzll(u))))
 #endif
-#elif (LONGSIZE == 8)
-#define lzero64(u, r) (!(u)                                             \
-                       ? ((r) = 64)                                     \
+#elif (MACH_LONG_SIZE == 8)
+#define lzero64(u, r) (!(u)                             \
+                       ? ((r) = 64)                     \
                        : ((r) = (__builtin_clzl(u))))
 #elif defined(__i386__) || defined(__x86_64__) || defined(__amd64__)
-#define lzerol(u) (!(u)                                                 \
-                   ? (LONGSIZE * CHAR_BIT)                              \
-                   : (LONGSIZE * CHAR_BIT - m_scanhi1bit(u)))
-#define lzero64(u, r) (!(u)                                             \
-                       ? ((r) = 64)                                     \
+#define lzerol(u) (!(u)                                             \
+                   ? (MACH_LONG_SIZE * CHAR_BIT)                    \
+                   : (MACH_LONG_SIZE * CHAR_BIT - m_scanhi1bit(u)))
+#define lzero64(u, r) (!(u)                             \
+                       ? ((r) = 64)                     \
                        : ((r) = (__builtin_clzll(u))))
 #endif
 
@@ -481,34 +480,34 @@ ceilpow2l(unsigned long u)
     return ret;
 }
 
-#define ceilpow2_32(u, r)                                               \
-    do {                                                                \
-        (r) = (u);                                                      \
-                                                                        \
-        if (!powerof2(r)) {                                             \
-            (r)--;                                                      \
-            (r) |= (r) >> 1;                                            \
-            (r) |= (r) >> 2;                                            \
-            (r) |= (r) >> 4;                                            \
-            (r) |= (r) >> 8;                                            \
-            (r) |= (r) >> 16;                                           \
-            (r)++;                                                      \
-        }                                                               \
+#define ceilpow2_32(u, r)                       \
+    do {                                        \
+        (r) = (u);                              \
+                                                \
+        if (!powerof2(r)) {                     \
+            (r)--;                              \
+            (r) |= (r) >> 1;                    \
+            (r) |= (r) >> 2;                    \
+            (r) |= (r) >> 4;                    \
+            (r) |= (r) >> 8;                    \
+            (r) |= (r) >> 16;                   \
+            (r)++;                              \
+        }                                       \
     } while (0)
-#define ceilpow2_64(u, r)                                               \
-    do {                                                                \
-        (r) = (u);                                                      \
-                                                                        \
-        if (!powerof2(r)) {                                             \
-            (r)--;                                                      \
-            (r) |= (r) >> 1;                                            \
-            (r) |= (r) >> 2;                                            \
-            (r) |= (r) >> 4;                                            \
-            (r) |= (r) >> 8;                                            \
-            (r) |= (r) >> 16;                                           \
-            (r) |= (r) >> 32;                                           \
-            (r)++;                                                      \
-        }                                                               \
+#define ceilpow2_64(u, r)                       \
+    do {                                        \
+        (r) = (u);                              \
+                                                \
+        if (!powerof2(r)) {                     \
+            (r)--;                              \
+            (r) |= (r) >> 1;                    \
+            (r) |= (r) >> 2;                    \
+            (r) |= (r) >> 4;                    \
+            (r) |= (r) >> 8;                    \
+            (r) |= (r) >> 16;                   \
+            (r) |= (r) >> 32;                   \
+            (r)++;                              \
+        }                                       \
     } while (0)
 
 /*
@@ -524,13 +523,13 @@ union __ieee754f { uint32_t u32; float f; };
 #define fgetsign(f)       (((union __ieee754f *)&(f))->u32 & 0x80000000)
 #define fsetmant(f, mant) (((union __ieee754f *)&(f))->u32 |= (mant) & 0x7fffff)
 #define fsetexp(f, exp)   (((union __ieee754f *)&(f))->u32 |= (exp) << 23)
-#define fsetsign(f, sign)                                               \
-    ((sign)                                                             \
-     ? (((union __ieee754f *)&(f))->u32 |= 0x80000000)                  \
+#define fsetsign(f, sign)                               \
+    ((sign)                                             \
+     ? (((union __ieee754f *)&(f))->u32 |= 0x80000000)  \
      : (((union __ieee754f *)&(f))->u32 &= 0x7fffffff))
-#define fsetnan(f)                                                      \
+#define fsetnan(f)                              \
     (*(uint32_t *)&(f) = 0x7fffffffU)
-#define fsetsnan(f)                                                     \
+#define fsetsnan(f)                             \
     (*(uint32_t *)&(f) = 0xffffffffU)
 
 /*
@@ -550,9 +549,9 @@ union __ieee754d { uint64_t u64; double d; };
     ((sign)                                                             \
      ? (((union __ieee754d *)(&(d)))->u64 |= UINT64_C(0x8000000000000000)) \
      : (((union __ieee754d *)(&(d)))->u64 &= UINT64_C(0x7fffffffffffffff)))
-#define dsetnan(d)                                                      \
+#define dsetnan(d)                                          \
     (*(uint64_t *)(&(d)) = UINT64_C(0x7fffffffffffffff))
-#define dsetsnan(d)                                                     \
+#define dsetsnan(d)                                         \
     (*(uint64_t *)(&(d)) = UINT64_C(0xffffffffffffffff))
 
 /*
@@ -566,43 +565,43 @@ union __ieee754d { uint64_t u64; double d; };
 #define ldgetsign(ld)       (*((uint32_t *)&(ld) + 3) & 0x8000)
 #define ldsetmant(ld, mant) (*((uint64_t *)&(ld)) = (mant))
 #define ldsetexp(ld, exp)   (*((uint32_t *)&(ld) + 2) |= (exp) & 0x7fff)
-#define ldsetsign(ld, sign)                                             \
-    ((sign)                                                             \
-     ? (*((uint32_t *)&ld + 3) |= 0x8000)                               \
+#define ldsetsign(ld, sign)                     \
+    ((sign)                                     \
+     ? (*((uint32_t *)&ld + 3) |= 0x8000)       \
      : (*((uint32_t *)&ld + 3) &= 0x7fff))
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define ldsetnan(ld)                                                    \
-    do {                                                                \
-        uint32_t *__u32p = (uint32_t *)&(ld);                           \
-                                                                        \
-        __u32p[0] = 0xffffffffU;                                        \
-        __u32p[1] = 0xffffffffU;                                        \
-        __u32p[2] = 0x7fffU;                                            \
+#define ldsetnan(ld)                            \
+    do {                                        \
+        uint32_t *__u32p = (uint32_t *)&(ld);   \
+                                                \
+        __u32p[0] = 0xffffffffU;                \
+        __u32p[1] = 0xffffffffU;                \
+        __u32p[2] = 0x7fffU;                    \
     } while (0)
-#define ldsetsnan(ld)                                                   \
-    do {                                                                \
-        uint32_t *__u32p = (uint32_t *)&(ld);                           \
-                                                                        \
-        __u32p[0] = 0xffffffffU;                                        \
-        __u32p[1] = 0xffffffffU;                                        \
-        __u32p[2] = 0xffffU;                                            \
+#define ldsetsnan(ld)                           \
+    do {                                        \
+        uint32_t *__u32p = (uint32_t *)&(ld);   \
+                                                \
+        __u32p[0] = 0xffffffffU;                \
+        __u32p[1] = 0xffffffffU;                \
+        __u32p[2] = 0xffffU;                    \
     } while (0)
 #elif (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define ldsetnan(ld)                                                    \
-    do {                                                                \
-        uint32_t *__u32p = (uint32_t *)&(ld);                           \
-                                                                        \
-        __u32p[0] = 0x7fffU;                                            \
-        __u32p[1] = 0xffffffffU;                                        \
-        __u32p[2] = 0xffffffffU;                                        \
+#define ldsetnan(ld)                            \
+    do {                                        \
+        uint32_t *__u32p = (uint32_t *)&(ld);   \
+                                                \
+        __u32p[0] = 0x7fffU;                    \
+        __u32p[1] = 0xffffffffU;                \
+        __u32p[2] = 0xffffffffU;                \
     } while (0)
-#define ldsetsnan(ld)                                                   \
-    do {                                                                \
-        uint32_t *__u32p = (uint32_t *)&(ld);                           \
-                                                                        \
-        __u32p[0] = 0xffffU;                                            \
-        __u32p[1] = 0xffffffffU;                                        \
-        __u32p[2] = 0xffffffffU;                                        \
+#define ldsetsnan(ld)                           \
+    do {                                        \
+        uint32_t *__u32p = (uint32_t *)&(ld);   \
+                                                \
+        __u32p[0] = 0xffffU;                    \
+        __u32p[1] = 0xffffffffU;                \
+        __u32p[2] = 0xffffffffU;                \
     } while (0)
 #endif
 
@@ -614,12 +613,12 @@ union __ieee754d { uint64_t u64; double d; };
 /* FIXME: little-endian. */
 #define _dtohi32(d)    (*(((uint32_t *)&(d)) + 1))
 /* sign bit 0x8000000000000000. */
-#define ifabs(d)                                                        \
+#define ifabs(d)                                \
     (_dtou64(d) & UINT64_C(0x7fffffffffffffff))
-#define fabs2(d, t64)                                                   \
+#define fabs2(d, t64)                           \
     (*((uint64_t *)&(t64)) = ifabs(d))
 /* sign bit 0x80000000. */
-#define ifabsf(f)                                                       \
+#define ifabsf(f)                               \
     (_ftou32(f) & 0x7fffffff)
 
 /*
@@ -637,33 +636,33 @@ union __ieee754d { uint64_t u64; double d; };
 /* c - conditional, f - flag, u - word */
 #define condflgset(c, f, u) ((u) ^ ((-(u) ^ (u)) & (f)))
 
-#define condsetbits(val, mask, cond)                                    \
+#define condsetbits(val, mask, cond)            \
     ((val) ^= (-(cond) ^ (val)) & (mask))
-#define condsetbits2(val, mask, cond)                                   \
+#define condsetbits2(val, mask, cond)                   \
     ((val) = ((val) & ~(mask)) | (-(cond) & (mask)))
 
-#define satu8(x)                                                        \
+#define satu8(x)                                \
     ((x) <= 0xff ? (x) : 0xff)
-#define satu16(x)                                                       \
+#define satu16(x)                               \
     ((x) <= 0xffff ? (x) : 0xffff)
-#define satu32(x)                                                       \
+#define satu32(x)                               \
     ((x) <= 0xffffffff ? (x) : 0xffffffff)
-#define satu8b(x16)                                                     \
+#define satu8b(x16)                             \
     ((x16) | (!((x16) >> 8) - 1))
-#define satu16b(x32)                                                    \
+#define satu16b(x32)                            \
     ((x32) | (!((x32) >> 16) - 1))
-#define satu32b(x64)                                                    \
+#define satu32b(x64)                            \
     ((x64) | (!((x64) >> 32) - 1))
-#define sat8b(x)                                                        \
+#define sat8b(x)                                \
     condltset(x, 0xff, x, 0xff)
 
 #define haszero(a) (~(a))
-#define haszero32b(a)                                                   \
+#define haszero32b(a)                                           \
     (~(((((a) & 0x7f7f7f7f) + 0x7f7f7f7f) | (a)) | 0x7f7f7f7f))
 
 /* calculate modulus u % 10 */
 #if 0
-#define modu10(u)                                                       \
+#define modu10(u)                               \
     ((u) - ((((u) * 6554U) >> 16) * 10))
 #endif
 
@@ -864,9 +863,9 @@ divs1000(long x) {
 #define modu100(u) ((u) - divu100(u) * 100)
 #define modu400(u) ((u) - (divu100(u) >> 2) * 400)
 
-#define leapyear(u)                                                     \
+#define leapyear(u)                                     \
     (!((u) & 0x03) && ((modu100(u)) || !modu400(u)))
-#define leapyear2(u)                                                    \
+#define leapyear2(u)                                    \
     (!((u) & 0x03) && ((((u) % 100)) || !((u) % 400)))
 
 #define SWAPTMP 1

@@ -253,7 +253,7 @@ m_cmpxchgu32(volatile m_atomicu32_t *lp,
 }
 
 /* atomic set bit operation */
-static INLINE void
+static C_INLINE void
 m_setbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
     m_membar();
@@ -266,7 +266,7 @@ m_setbit32(volatile m_atomic32_t *lp, int32_t ndx)
 }
 
 /* atomic reset/clear bit operation */
-static INLINE void
+static C_INLINE void
 m_clrbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
     int32_t mask = ~(INT32_C(1) << ndx);
@@ -280,7 +280,7 @@ m_clrbit32(volatile m_atomic32_t *lp, int32_t ndx)
 }
 
 /* atomic flip/toggle bit operation */
-static INLINE void
+static C_INLINE void
 m_flipbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
     int32_t bit = INT32_C(1) << ndx;

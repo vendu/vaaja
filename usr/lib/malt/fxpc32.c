@@ -140,7 +140,6 @@ fxpc32mul(int64_t x, int64_t y)
     return res;
 }
 
-#if 0
 fxpc32_t
 fxpc32div(fxpc32_t x, fxpc32_t y)
 {
@@ -163,7 +162,6 @@ fxpc32div(fxpc32_t x, fxpc32_t y)
 
     return res;
 }
-#endif
 
 #if 0
 fxpc32_t

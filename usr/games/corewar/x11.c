@@ -89,7 +89,7 @@ zeusaddsel(struct zeusx11 *x11, XEvent *event)
 }
 
 void
-zeusrun(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
+zeusrun(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     long pid = g_cwmars.curpid;
 
@@ -112,7 +112,7 @@ zeusrun(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
 }
 
 void
-zeusstop(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
+zeusstop(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     g_cwmars.running = 0;
 
@@ -120,7 +120,7 @@ zeusstop(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
 }
 
 void
-zeusstep(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
+zeusstep(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     long pid = g_cwmars.curpid;
 
@@ -147,7 +147,7 @@ zeusfence(struct zeusx11 *x11, XEvent *event)
 #endif
 
 void
-zeusclear(struct zeusx11 *x11, UNUSED XEvent *event)
+zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     if (g_zeussel.bmap) {
         memset(g_zeussel.bmap, 0, CWCORESIZE >> 3);
@@ -156,14 +156,14 @@ zeusclear(struct zeusx11 *x11, UNUSED XEvent *event)
     zeusdrawsim(x11);
 }
 
-NORETURN
+C_NORETURN
 void
-zeusexit(UNUSED struct zeusx11 *x11, UNUSED XEvent *event)
+zeusexit(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     exit(0);
 }
 
-PURE
+C_PURE
 int
 zeusfindbutton(Window win)
 {
@@ -687,7 +687,7 @@ zeusinitimlib2(struct zeusx11 *x11)
 }
 
 void
-zeusloadx11buttonimgs(UNUSED struct zeusx11 *x11)
+zeusloadx11buttonimgs(C_UNUSED struct zeusx11 *x11)
 {
     Imlib_Image *img;
 

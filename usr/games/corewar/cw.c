@@ -22,8 +22,8 @@
 
 extern long     g_rcnargtab[CWNOP];
 
-struct cwmars   g_cwmars ALIGNED(PAGESIZE);     // virtual machine structure
-const char     *g_cwopnametab[CWNOP]            // instruction name table
+struct cwmars   g_cwmars C_ALIGNED(MACH_PAGE_SIZE); // virtual machine structure
+const char     *g_cwopnametab[CWNOP]                // instruction name table
 = {
     "DAT",
     "MOV",
@@ -166,7 +166,7 @@ cwdatop(long pid, long pc)
 
 /* instruction handler for MOV */
 static long
-cwmovop(UNUSED long pid, long pc)
+cwmovop(C_UNUSED long pid, long pc)
 {
     struct cwinstr *op = &g_cwmars.optab[pc];
     long            arg1;
@@ -190,7 +190,7 @@ cwmovop(UNUSED long pid, long pc)
 
 /* instruction handler for ADD */
 static long
-cwaddop(UNUSED long pid, long pc)
+cwaddop(C_UNUSED long pid, long pc)
 {
     struct cwinstr *op = &g_cwmars.optab[pc];
     long            arg1;
@@ -239,7 +239,7 @@ cwaddop(UNUSED long pid, long pc)
 
 /* instruction handler for SUB */
 static long
-cwsubop(UNUSED long pid, long pc)
+cwsubop(C_UNUSED long pid, long pc)
 {
     struct cwinstr *op = &g_cwmars.optab[pc];
     long            arg1;
@@ -345,7 +345,7 @@ cwjmnop(long pid, long pc)
 
 /* instruction handler for CMP */
 static long
-cwcmpop(UNUSED long pid, long pc)
+cwcmpop(C_UNUSED long pid, long pc)
 {
     struct cwinstr *op = &g_cwmars.optab[pc];
     long            arg1;
@@ -374,7 +374,7 @@ cwcmpop(UNUSED long pid, long pc)
 
 /* instruction handler for SLT */
 static long
-cwsltop(UNUSED long pid, long pc)
+cwsltop(C_UNUSED long pid, long pc)
 {
     struct cwinstr *op = &g_cwmars.optab[pc];
     long            arg1;
@@ -572,7 +572,7 @@ cwexec(long pid)
 }
 
 /* virtual machine main loop */
-NORETURN
+C_NORETURN
 void
 cwloop(void)
 {

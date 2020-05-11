@@ -4,7 +4,7 @@
 /* # of I/O ports */
 #define MACH_IO_PORTS           65536
 
-#define MACH_WORD_SIZE         
+#define MACH_WORD_SIZE          8
 #define MACH_CHAR_SIZE          1
 #define MACH_SHORT_SIZE         2
 #define MACH_INT_SIZE           4

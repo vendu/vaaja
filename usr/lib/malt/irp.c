@@ -6,10 +6,14 @@
  */
 
 #include <stdint.h>
-#include <stdio.h>
-#include <malt/util.h>
+//#include <malt/util.h>
 #include <malt/float.h>
-#include <malt/nrp.h>
+#include <malt/irp.h>
+#if defined(TEST_IRP)
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
 
 #if 0
 float
@@ -48,6 +52,7 @@ irpguess(double den)
     return dbl;
 }
 
+/* this division routine should work fine :) */
 int32_t
 irpdiv(int32_t num, int32_t den)
 {
@@ -60,9 +65,21 @@ irpdiv(int32_t num, int32_t den)
     drp = nrpiter(drp, dval);
     drp = nrpiter(drp, dval);
     drp = nrpiter(drp, dval);
+    drp = nrpiter(drp, dval);
     dnum *= drp;
     res = (int32_t)dnum;
 
     return res;
 }
+
+#if defined(TEST_IRP)
+int
+main(int argc, char *argv[])
+{
+    fprintf(stderr, "%e steps\n", log2(33.0 / log2(17)));
+    fprintf(stderr, "%d\n", irpdiv(55, 55));
+
+    exit(0);
+}
+#endif
 

@@ -7,7 +7,7 @@
  */
 
 #define FXPC32_BITS         32
-#define FXPC32_SIGN_BIT     (UINT64_C(1) << 31)
+#define FXPC32_SIGN_BIT     (INT32_C(1) << 31)
 #define FXPC32_INT_BITS     (FXPC32_BITS - 1 - FXPC32_FRAC_BITS)
 #define FXPC32_FRAC_BITS    29
 
