@@ -62,10 +62,10 @@ irpdiv(int32_t num, int32_t den)
     int32_t res;
 
     drp = irpguess(dval);
-    drp = nrpiter(drp, dval);
-    drp = nrpiter(drp, dval);
-    drp = nrpiter(drp, dval);
-    drp = nrpiter(drp, dval);
+    drp = nrpiter2(drp, dval);
+    drp = nrpiter2(drp, dval);
+    drp = nrpiter2(drp, dval);
+    drp = nrpiter2(drp, dval);
     dnum *= drp;
     res = (int32_t)dnum;
 
