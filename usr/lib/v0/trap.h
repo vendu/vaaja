@@ -31,11 +31,11 @@
 #define V0_IRQ_TRAP_BIT     0x20
 #define V0_IRQ_TRAP(i)      (V0_IRQ_TRAP_BIT | (i))
 #define V0_IRQ_0x00_TRAP    V0_IRQ_TRAP(0x00)   // interrupt 0  - TMR
-#define V0_IRQ_0x01_TRAP    V0_IRQ_TRAP(0x01)   // interrupt 1  - AUD
-#define V0_IRQ_0x02_TRAP    V0_IRQ_TRAP(0x02)   // interrupt 2	- VID
-#define V0_IRQ_0x03_TRAP    V0_IRQ_TRAP(0x03)   // interrupt 3	- KBD
-#define V0_IRQ_0x04_TRAP    V0_IRQ_TRAP(0x04)   // interrupt 4	- PTR
-#define V0_IRQ_0x05_TRAP    V0_IRQ_TRAP(0x05)   // interrupt 5	- HID
+#define V0_IRQ_0x01_TRAP    V0_IRQ_TRAP(0x01)   // interrupt 1  - HID
+#define V0_IRQ_0x02_TRAP    V0_IRQ_TRAP(0x02)   // interrupt 2	- AUD
+#define V0_IRQ_0x03_TRAP    V0_IRQ_TRAP(0x03)   // interrupt 3	- VID
+#define V0_IRQ_0x04_TRAP    V0_IRQ_TRAP(0x04)   // interrupt 4	- KBD
+#define V0_IRQ_0x05_TRAP    V0_IRQ_TRAP(0x05)   // interrupt 5	- PTR
 #define V0_IRQ_0x06_TRAP    V0_IRQ_TRAP(0x06)   // interrupt 6	- NET
 #define V0_IRQ_0x07_TRAP    V0_IRQ_TRAP(0x07)   // interrupt 7	- DSK
 #define V0_IRQ_0x08_TRAP    V0_IRQ_TRAP(0x08)   // interrupt 8  - OPT
@@ -50,11 +50,11 @@
 
 /* predefined traps */
 #define V0_TMR_TRAP         V0_IRQ_0x00_TRAP    // timer interrupt
-#define V0_AUD_TRAP         V0_IRQ_0x01_TRAP    // audio interrupt
-#define V0_VID_TRAP         V0_IRQ_0x02_TRAP    // video interrupt
-#define V0_KBD_TRAP         V0_IRQ_0x03_TRAP    // keyboard interrupt
-#define V0_PTR_TRAP         V0_IRQ_0x04_TRAP    // pointer such as mouse
-#define V0_HID_TRAP         V0_IRQ_0x05_TRAP    // human interface device
+#define V0_HID_TRAP         V0_IRQ_0x01_TRAP    // human interface device
+#define V0_AUD_TRAP         V0_IRQ_0x02_TRAP    // audio interrupt
+#define V0_VID_TRAP         V0_IRQ_0x03_TRAP    // video interrupt
+#define V0_KBD_TRAP         V0_IRQ_0x04_TRAP    // keyboard interrupt
+#define V0_PTR_TRAP         V0_IRQ_0x05_TRAP    // pointer such as mouse
 #define V0_NET_TRAP         V0_IRQ_0x06_TRAP    // network interrupt
 #define V0_DSK_TRAP         V0_IRQ_0x07_TRAP    // disk interrupt
 #define V0_OPT_TRAP         V0_IRQ_0x08_TRAP    // optical/disc interrupt
@@ -66,20 +66,20 @@
 /* v0trapfunc */
 #define V0_SYS_TRAP_BIT     (1 << 0)            // system-mode trap execution
 #define V0_STK_TRAP_BIT     (1 << 1)            // traps on separate stack
-#define V0_TRAP_ADR_MASK    0xfffffffc     	// trap-handler function pointer
+#define V0_TRAP_ADR_MASK    0xfffffffc     	    // trap-handler function pointer
 
 /* PF (page-fault) trap error code bits */
-#define V0_PF_EXEC          (1 << 0)       	// page-fault during execution
-#define V0_PF_WRITE         (1 << 1)       	// page-fault during write
-#define V0_PF_READ          (1 << 2)       	// page-fault during read
-#define V0_PF_RING0         (1 << 3)       	// page-fault with system page
-#define V0_PF_STACK         (1 << 4)       	// stack-fault
+#define V0_PF_EXEC          (1 << 0)       	    // page-fault during execution
+#define V0_PF_WRITE         (1 << 1)       	    // page-fault during write
+#define V0_PF_READ          (1 << 2)       	    // page-fault during read
+#define V0_PF_RING0         (1 << 3)       	    // page-fault with system page
+#define V0_PF_STACK         (1 << 4)       	    // stack-fault
 /* IO (input/output) trap error code bits */
-#define V0_IO_EXEC          (1 << 0)       	// execute error
-#define V0_IO_WRITE         (1 << 1)       	// write error
+#define V0_IO_EXEC          (1 << 0)       	    // execute error
+#define V0_IO_WRITE         (1 << 1)       	    // write error
 #define V0_IO_READ          (1 << 2)            // read error
-#define V0_IO_PERM          (1 << 3)       	// no I/O permission
-#define V0_IO_SEEK          (1 << 4)       	// invalid seek position
+#define V0_IO_PERM          (1 << 3)       	    // no I/O permission
+#define V0_IO_SEEK          (1 << 4)       	    // invalid seek position
 #define V0_IO_DEV_ERROR     (1 << 5)            // I/O error
 #define V0_IO_CHK           (1 << 6)            // check if I/O allowed
 
