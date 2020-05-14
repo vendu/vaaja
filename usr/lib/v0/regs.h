@@ -28,7 +28,7 @@
 #define V0_TL_REGISTER          11      // thread-local segment base address
 #define V0_FP_REGISTER          12      // frame pointer
 #define V0_SP_REGISTER          13      // stack pointer
-#define V0_LR_REGISTER          14      // link register (return address)
+#define V0_LR_REGISTER          14      // link register (caller return address)
 #define V0_PC_REGISTER          15      // program counter (instruction pointer)
 #define V0_GENERAL_REGISTERS    16      // total # of general registers
 /* MSW-register flag-bits */
@@ -40,21 +40,6 @@
 #define V0_MSW_TF_BIT           (1 << 5)    // trap-flag/single-step
 #define V0_MSW_IF_BIT           (1 << 6)    // interrupt enable
 #define V0_MSW_FR_BIT           (1 << 7)    // round-up (fraction MSB set)
-
-/* [private] segment registers; 64-bit, limit + page-address + flags */
-#define V0_CS_REGISTER          0x00    // code-segment
-#define V0_DS_REGISTER          0x01    // [initialized] data-segment
-#define V0_ES_REGISTER          0x02    // [initialized] read-only data-segment
-#define V0_SS_REGISTER          0x03    // stack-segment
-#define V0_TS_REGISTER          0x03    // thread-local data-segment
-
-#define V0_SEG_EXEC_BIT         (1 << 0)    // executable [code] segment
-#define V0_SEG_WRITE_BIT        (1 << 1)    // writable [data] segment
-#define V0_SEG_READ_BIT         (1 << 2)    // readable segment
-#define V0_SEG_USER_BIT         (1 << 3)    // software use (not hardware)
-#define V0_SEG_DEF_BIT          (1 << 4)    // segment descriptor defined
-#define V0_SEG_SYS_BIT          (1 << 5)    // ring #0 access only
-#define V0_SEG_DIR_BIT          (1 << 6)    // expansion-direction (stack)
 
 /* SYSTEM-registers */
 /* read-only registers in user-mode; 32-bit wide */
@@ -80,6 +65,25 @@
 
 #define V0_FIXED_REGISTERS      16      // total # of fixed-point registers
 #define V0_FLOAT_REGISTERS      16      // total # of floating-point registers
+
+/* [private] segment registers; 64-bit, limit + page-address + flags */
+#define V0_CS_REGISTER          0x00    // code-segment
+#define V0_DS_REGISTER          0x01    // [initialized] data-segment
+#define V0_ES_REGISTER          0x02    // [initialized] read-only data-segment
+#define V0_SS_REGISTER          0x03    // stack-segment
+#define V0_TS_REGISTER          0x04    // thread-local data-segment
+#define V0_XS0_REGISTER         0x05
+#define V0_XS1_REGISTER         0x06
+#define V0_XS2_REGISTER         0x07
+#define V0_SEGMENT_REGISTERS    8
+
+#define V0_SEG_EXEC_BIT         (1 << 0)    // executable [code] segment
+#define V0_SEG_WRITE_BIT        (1 << 1)    // writable [data] segment
+#define V0_SEG_READ_BIT         (1 << 2)    // readable segment
+#define V0_SEG_USER_BIT         (1 << 3)    // software use (not hardware)
+#define V0_SEG_DEF_BIT          (1 << 4)    // segment descriptor defined
+#define V0_SEG_SYS_BIT          (1 << 5)    // ring #0 access only
+#define V0_SEG_DIR_BIT          (1 << 6)    // expansion-direction (stack)
 
 #endif /*  __V0_VM_REGS_H__ */
 

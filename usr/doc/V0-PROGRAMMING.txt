@@ -24,8 +24,8 @@ R2-R5       function argument caller-save registers
 R6-R11      callee-save scratch registers
 R12/FP      currently effective stack-frame pointer (user- or system-mode)
 R13/SP      currently effective stack pointer (user- or system mode)
-R14/PC      program counter ('instruction pointer')
-R15/LR      link register; user-mode function return address
+R14/LR      link register; user-mode function return address
+R15/PC      program counter ('instruction pointer')
 
 System Registers
 ----------------
@@ -66,7 +66,7 @@ Addressing Modes
 
     ldr %r2(%r1), %r3       ;; move data from address R1 + R2 to R3
 
-    str %r1, $8(%r2:%r3)    ;; store R1 to address R2 + R3 + 8
+    str %r1, $8(%r2)    ;; store R1 to address R2 + R3 + 8
 
 Example Function pagezero()
 ---------------------------
@@ -105,10 +105,10 @@ Instruction Set Architecture
 Instruction Brief Fields
 ------------------------
 
-Op			Instruction mnemonic
-Source      Source Operand
-Destination Destination Operand
-Extra       Possible 3rd Operand
+Op		Instruction mnemonic
+Source		Source Operand
+Destination	Destination Operand
+Extra		Possible 3rd Operand
 
 Instruction Operand Types
 -------------------------
@@ -203,19 +203,19 @@ RCR	r/v     r       r		dest = rcr(cnt, src);
 MULDIV-Instructions - Multiplication and Division Operations
 ------------------------------------------------------------
 
-Op		Source  Destination Pseudo-Code
---		
+Op	Source  Destination 	Pseudo-Code
+--	------	-----------	-----------
 
-MUL     r/i     r           dest = src * dest;
-UMUL    r/i     r           dest = src * dest, unsigned
-MHI     r/i     r           dest = (src * dest) >> 32;
-UMHI    r/i     r           dest = (src * dest) >> 32, unsigned
-IRP     r/i     r           dest = irp(src);
-UIRP    r/i     r           dest = uirp(src);
-REM     r/i     r           dest = dest % src;
-UREM    r/i     r           dest = dest % src, unsigned
-DIV     r/i     r           dest = dest * irp(src);
-UDIV    r/i     r           dest = dest * uirp(src);
+MUL     r/i     r           	dest = src * dest;
+UMUL    r/i     r           	dest = src * dest, unsigned
+MHI     r/i     r           	dest = (src * dest) >> 32;
+UMHI    r/i     r           	dest = (src * dest) >> 32, unsigned
+IRP     r/i     r           	dest = irp(src);
+UIRP    r/i     r           	dest = uirp(src);
+REM     r/i     r           	dest = dest % src;
+UREM    r/i     r           	dest = dest % src, unsigned
+DIV     r/i     r           	dest = dest * irp(src);
+UDIV    r/i     r           	dest = dest * uirp(src);
 
 FLOW-Instructions - Control Flow
 --------------------------------
