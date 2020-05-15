@@ -1,0 +1,63 @@
+# - corridor
+------------
+- may be hidden
+- may be a hidden door
+
++ - door
+--------
+- may be hidden
+
+. - floor
+---------
+- may have hidden traps
+
+^ - trap
+--------
+- usually hidden unless you have used search or identify
+- dart, dagger, drop level down, teleport
+
+X - altar
+---------
+- sacrifices on altars may yield special items
+
+! - potion
+----------
+- booze, herb, etc.
+
+? - scroll
+----------
+- spells and magic
+  - animate the undead, freeze the undead, see gold, see monsters, see map,
+    identify
+
+" - punchcard
+-------------
+- hints for the game
+- maps
+- level control programs; turn lights on or off, show gold, show monsters, show
+  map, etc.
+
+- - horizontal wall
+-------------------
+
+| - vertical wall
+-----------------
+
+/ - whip
+--------
+
+T - teleport
+------------
+- teleports player to another location
+
+[ - mirror
+----------
+- vampires don't show in mirrors
+- some mirrors may be used to enter hidden parts of the dungeon
+
+c - crystal ball
+----------------
+- crystal ball may reveal parts of the plot by showing what's happening
+  elsewhere
+  - sometimes crystal balls may show future incidents
+

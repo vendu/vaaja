@@ -1,13 +1,35 @@
 #include <v0/types.h>
+#include <v0/trap.h>
 #include <zen/signal.h>
 
 typedef                 void (*v0trapfunc)(struct v0trapframe *);
 
-static v0trapfunc       _trapvec[V0_MAX_TRAPS];
-static v0sigmap         _sigmap[V0_MAX_TRAPS];
+static v0trapdesc       _trapvec[V0_MAX_TRAPS];
+static int8_t           _sigmap[V0_MAX_TRAPS];
 
 static void
 v0tmrirq(struct v0trapframe *frame)
+{
+
+    return;
+}
+
+static void
+v0kbdirq(struct v0trapframe *frame)
+{
+
+    return;
+}
+
+static void
+v0ptrirq(struct v0trapframe *frame)
+{
+
+    return;
+}
+
+static void
+v0hidirq(struct v0trapframe *frame)
 {
 
     return;
@@ -22,27 +44,6 @@ v0audirq(struct v0trapframe *frame)
 
 static void
 v0vidirq(struct v0trapframe *frame)
-{
-
-    return;
-}
-
-static void
-v0kbdirq(struct v0trapframe *frame)
-{
-
-    return;
-}
-
-static void
-v0pntirq(struct v0trapframe *frame)
-{
-
-    return;
-}
-
-static void
-v0hidirq(struct v0trapframe *frame)
 {
 
     return;
@@ -118,6 +119,7 @@ v0irq0x0f(struct v0trapframe *frame)
     return;
 }
 
+#if 0
 static void
 v0initsigmap(void)
 {
@@ -162,12 +164,15 @@ v0inittrapvec(void)
 
     return;
 }
+#endif /* 0 */
 
 static void
 v0inittraps(void)
 {
+#if 0
     v0initsigmap();
     v0inittrapvec();
+#endif
 
     return;
 }

@@ -1,0 +1,46 @@
+Mjolnir Gameplay
+----------------
+
+WARNING: this document contains spoilers. Don't read it if you want the most fun
+out of the game. :)
+
+Notes
+-----
+- if you kill a bee queen, all bees will attack you; you get honey afterwards
+  - otherwise, bees won't attack unless you hit first
+- aliens carry laser guns
+- Holy Cross kills minor demons, e.g. all vampires but Dracula
+- your pet dog hears and smells much better than you
+- your pet dog shows its pride by bringing you objects it finds
+- sacrificing dead monsters on altars may yield special gifts from your deity
+
+Potions
+-------
+- potion of booze
+- potion of poison
+- potion of sleep
+- potion of levitation
+- potion of blindess
+
+Scrolls
+-------
+- scroll of summon deity
+- scroll of summon monster
+- scroll of bless item
+- scroll of identify
+- scroll of see monsters
+- scroll of teleportation
+- scroll of healing
+
+Wands
+-----
+- wand of fire bolt
+- wand of ice bolt
+- wand of silver bolt (use on demons)
+
+Punchcards
+----------
+- punchcard of execute hack
+- punchcard of hint
+- punchcard of draw map
+

@@ -10,8 +10,8 @@
 #include <stdio.h>
 #endif
 
-#define IRP_GUESS_CONST     (48.0 / 17.0)
-#define IRP_GUESS_FACTOR    (32 / 17.0)
+#define MALT_IRP_GUESS_CONST    (48.0 / 17.0)
+#define MALT_IRP_GUESS_FACTOR   (32 / 17.0)
 
 int32_t irpdiv(int32_t num, int32_t den);
 

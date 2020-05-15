@@ -3,6 +3,7 @@
 
 /*
  * machine-specific param.h headers should declare the following:
+ * MACH_WORD_SIZE       - sizeof machine word/register in bytes
  * MACH_CHAR_SIZE       - sizeof(char) in bytes
  * MACH_SHORT_SIZE      - sizeof(short) in bytes
  * MACH_INT_SIZE        - sizeof(int) in bytes

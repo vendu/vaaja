@@ -1,7 +1,7 @@
 #ifndef __V0_TRAP_H__
 #define __V0_TRAP_H__
 
-#include <v0/v0.h>
+#include <v0/types.h>
 
 #define v0trapirq(t)            ((t) & V0_IRQ_TRAP_BIT)
 #define v0trapirqid(t)          ((t) & ~V0_IRQ_TRAP_BIT)
@@ -29,15 +29,19 @@
 #define V0_NMI_TRAP         0x12 // non-maskable interrupt
 #define V0_LAST_SYS_TRAP    0x1f
 #define V0_IRQ_TRAP_BIT     0x20
+/*
+ * peripheral devices
+ * - human interface devices are _very_ high priority
+ */
 #define V0_IRQ_TRAP(i)      (V0_IRQ_TRAP_BIT | (i))
 #define V0_IRQ_0x00_TRAP    V0_IRQ_TRAP(0x00)   // interrupt 0  - TMR
-#define V0_IRQ_0x01_TRAP    V0_IRQ_TRAP(0x01)   // interrupt 1  - HID
-#define V0_IRQ_0x02_TRAP    V0_IRQ_TRAP(0x02)   // interrupt 2	- AUD
-#define V0_IRQ_0x03_TRAP    V0_IRQ_TRAP(0x03)   // interrupt 3	- VID
-#define V0_IRQ_0x04_TRAP    V0_IRQ_TRAP(0x04)   // interrupt 4	- KBD
-#define V0_IRQ_0x05_TRAP    V0_IRQ_TRAP(0x05)   // interrupt 5	- PTR
-#define V0_IRQ_0x06_TRAP    V0_IRQ_TRAP(0x06)   // interrupt 6	- NET
-#define V0_IRQ_0x07_TRAP    V0_IRQ_TRAP(0x07)   // interrupt 7	- DSK
+#define V0_IRQ_0x04_TRAP    V0_IRQ_TRAP(0x01)   // interrupt 1  - KBD
+#define V0_IRQ_0x05_TRAP    V0_IRQ_TRAP(0x02)   // interrupt 2  - PTR
+#define V0_IRQ_0x01_TRAP    V0_IRQ_TRAP(0x03)   // interrupt 3  - HID
+#define V0_IRQ_0x02_TRAP    V0_IRQ_TRAP(0x04)   // interrupt 4  - AUD
+#define V0_IRQ_0x03_TRAP    V0_IRQ_TRAP(0x05)   // interrupt 5  - VID
+#define V0_IRQ_0x06_TRAP    V0_IRQ_TRAP(0x06)   // interrupt 6  - NET
+#define V0_IRQ_0x07_TRAP    V0_IRQ_TRAP(0x07)   // interrupt 7  - DSK
 #define V0_IRQ_0x08_TRAP    V0_IRQ_TRAP(0x08)   // interrupt 8  - OPT
 #define V0_IRQ_0x09_TRAP    V0_IRQ_TRAP(0x09)   // interrupt 9  - USB
 #define V0_IRQ_0x0a_TRAP    V0_IRQ_TRAP(0x0a)   // interrupt 10 - DEV
@@ -46,15 +50,15 @@
 #define V0_IRQ_0x0d_TRAP    V0_IRQ_TRAP(0x0d)   // interrupt 13
 #define V0_IRQ_0x0e_TRAP    V0_IRQ_TRAP(0x0e)   // interrupt 14
 #define V0_IRQ_0x0f_TRAP    V0_IRQ_TRAP(0x0f)   // interrupt 15
-#define V0_MAX_TRAP         32                  // max # of traps for system
+#define V0_MAX_TRAPS        32                  // max # of traps for system
 
 /* predefined traps */
 #define V0_TMR_TRAP         V0_IRQ_0x00_TRAP    // timer interrupt
-#define V0_HID_TRAP         V0_IRQ_0x01_TRAP    // human interface device
-#define V0_AUD_TRAP         V0_IRQ_0x02_TRAP    // audio interrupt
-#define V0_VID_TRAP         V0_IRQ_0x03_TRAP    // video interrupt
-#define V0_KBD_TRAP         V0_IRQ_0x04_TRAP    // keyboard interrupt
-#define V0_PTR_TRAP         V0_IRQ_0x05_TRAP    // pointer such as mouse
+#define V0_KBD_TRAP         V0_IRQ_0x01_TRAP    // keyboard interrupt
+#define V0_PTR_TRAP         V0_IRQ_0x02_TRAP    // pointer such as mouse
+#define V0_HID_TRAP         V0_IRQ_0x03_TRAP    // human interface device
+#define V0_AUD_TRAP         V0_IRQ_0x04_TRAP    // audio interrupt
+#define V0_VID_TRAP         V0_IRQ_0x05_TRAP    // video interrupt
 #define V0_NET_TRAP         V0_IRQ_0x06_TRAP    // network interrupt
 #define V0_DSK_TRAP         V0_IRQ_0x07_TRAP    // disk interrupt
 #define V0_OPT_TRAP         V0_IRQ_0x08_TRAP    // optical/disc interrupt
@@ -94,11 +98,11 @@
  * - code
  */
 struct v0trapframe {
-    struct v0arg code;                          // error code
-    v0uword      msw;                   	// machine status-word
-    v0uword      usp;                   	// user-mode stack-pointer
-    v0uword      ufp;                   	// user-mode frame-pointer
-    v0uword      retp;                          // return address
+    m_uword_t   code;                           // error code or 0 if none
+    m_uword_t   msw;                            // machine status-word
+    m_uword_t   usp;                   	        // user-mode stack-pointer
+    m_uword_t   ufp;                   	        // user-mode frame-pointer
+    m_uword_t   retp;                           // return address
 };
 
 #endif /* __V0_TRAP_H__ */

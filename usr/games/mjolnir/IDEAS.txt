@@ -1,0 +1,245 @@
+Mjolnir
+-------
+
+This document contains ideas for a Rogue-like adventure game.
+
+ams
+---
+- dragons
+- leprechauns
+- trolls
+- wizards
+<ams> Classic cyberpunk characters were marginalized, alienated loners who lived
+on the edge of society in generally dystopic futures where daily life was
+impacted by rapid technological change, an ubiquitous datasphere of computerized
+information, and invasive modification of the human body. -- lawrence person
+
+Introduction
+------------
+
+Legend has it that many moons ago, Fenris, the eldest child of Loki and
+Angrboda, broke free from his chain, Pleignir, and stole Mjolnir from Thor.
+Fenris is believed to have hidden Mjolnir, Thor's hammer, into a dungeon.
+
+It is said that Thor shall ascend the one to return Mjolnir to a deity for
+saving the world from the forces of evil creating chaos with lightnings and
+thunder. Clairvoyants say evil forces are already on the hunt for Mjolnir.
+
+Armed with nothing more than a few food rations, your pet dog, a +1 blessed
+armor, a +3 neutral sword, and a piece of Pleignir, you enter the Dungeon.
+
+Good luck, adventurer, and beware of Fenris!
+
+Characters
+----------
+
+To make the most fun off the game and keep it playable on old terminals too,
+the standard "graphics" are drawn as characters.
+
+Non-Character Objects
+---------------------
+
+Object		| Display	| Description
+---------------------------------------------
+floor		| .		| floor/ground
+corridor	| #		| corridor
+wall		| -		| horizontal wall
+wall		| |		| vertical wall
+door		| +		| door
+ration		| %		| food ration
+water		| ~		| water
+fountain	| {		| fountain
+gold		| $		| use to get merchandise
+silver bullet	| S		| use for demons
+potion		| !		| potion
+plant		| *		| plant
+punchcard	| "		| to be used on in-dungeon mainframes :)
+tape		| 8		| for in-dungeon mainframes
+stairway down	| >		| go down one level
+stairway up	| <		| go up one level
+statue	 	| &		| e.g. Buddha
+trap		| ^		| trap
+wand		| \		| magic wand
+scroll		| ?		| spell or other scroll
+ring		| =		| ring
+whip		| /		| whip
+armor		| ]		| suit or armor
+mirror		| [		| mirror on a wall
+chain		| c		| chain
+chest		| C		| chest; may find treasury in them
+sub-machine gun | g		| close-range combat
+honey		| h		| from beehives after killing the queen
+knife		| k		| knife, dagger, gurkha, ...
+kaleidoscope	| K		| kaleidoscope
+lockpick	| l		| thieves are naturally best at using these
+laser		| L		| laser gun
+mace		| m		| may be Mjolnir
+mainframe	| M		| computer systems for running punchcards
+pipe		| p		| pipe
+pistol		| P		| pistol
+sword		| s		| sword
+terminal	| t		| terminal connected to mainframe
+well		| w		| well (water, may be cursed/poisonous)
+cross		| x		| cross; may be Holy Cross
+altar		| X		| altar; sacrifice dead creatures on it
+
+Characters
+----------
+
+Character	| Display	| Description
+---------------------------------------------
+player		| @		| you
+ant		| a		| ant, soldier ant
+alien		| A		| extraterrestrial creature
+bee		| b		| regular bee, only stings once
+bee queen	| B		| bee queen
+dog		| d		| pet dog
+deity		| D		| deity
+ghoul		| G		| corpse eater
+human		| H		| human being
+Iku-Turso	| I		| Finnish sea monster :)
+oracle		| O		| oracles know about things
+unicorn		| u		| unicorn
+vampire		| v		| regular vampire
+Dracula		| V		| Dracula; attack will get all vampires to hit
+wolf		| w		| may be Fenris
+Fenris		| W		| the guardian wolf of gods; kills demons
+Thor		| T		| god of thunder
+zombie		| Z		| zombies; living dead; always evil, attack all
+
+Special Items
+-------------
+Crystal ball    | o		| may show things happening elsewhere
+Demon Whip	| /		| weapon against different forms of undead
+Jatimatic	| J		| sub-machine gun for close range combat
+Mjolnir		| M		| the hammer of Thor
+Pleignir	| R		| ribbon that can hold Fenris
+Stormbringer	| s		| Stormbringer special sword
+Excalibur	| s		| Excalibur special sword
+Holy Cross	| x		| holy cross with the names of 4 archangels
+     		  		| - Michael, Raphael, Gabriel, Uriel
+Commands
+--------
+
+Notes
+-----
+- modeled after Rogue
+- movement can also be done using a PC-style numpad
+
+Rogue Commands
+--------------
+
+ESC		| boss key
+m		| open command menu
+/		| identify object
+h		| left
+j		| down
+k		| up
+l		| right
+y		| up & left
+u		| up & right
+b		| down & left
+n		| down & right
+<SHIFT><dir>	| run
+<CTRL><dir>	| run till adjacent
+f<dir>		| fight till death or near death
+t<dir>		| throw
+m<dir>		| move on top but don't pick up
+z<dir>		| zap a wand
+^<dir>		| identify trap type
+s		| search for trap/secret door
+>		| go down
+<		| go up
+.		| rest for a turn
+,		| pick up
+i		| inventory
+I		| inventory single item
+q		| quaff potion
+r		| read scroll
+e		| eat food
+w		| wield a weapon
+W		| wear armor
+T		| take armor off
+P		| put on ring
+R		| remove ring
+d		| drop object
+c		| call object
+a		| repeat last command
+)		| print current weapon
+]		| print current armor
+=		| print current rings
+@		| print current stats
+D		| recall what's been discovered
+o		| examine/set options
+^R		| redraw screen
+^P		| repeat last message
+^[		| cancel command
+S		| save game
+Q		| quit
+
+Mjolnir Extensions
+------------------
+
+u		| use an object with another one
+0		| turn off
+1		| turn on
+
+Gameplay
+--------
+
+- console commands (invoke console with M-x)
+  - use
+  - bite
+  - buy
+  - eat
+  - drink
+  - walk
+  - talk
+  - look
+  - open
+  - close
+  - unlock (use key)
+  - lock   (void)
+- scrolls
+  - teleport, leviation, identify, ice bolt, lightning
+- weapons
+  - longbow
+  - submachine gun (special item Jatimatic)
+  - swords (special items Excalibur and Stormbringer)
+- potions
+  - green dragon, sweet leaf
+- plant
+  - special item Herb of Love
+    - healing power
+    - gives better focus and concentration
+    - boosts combat and other physical skills
+- quests
+  - core war
+    - debug and develop warriors with graphical tools
+    - simulate battles
+      - simulator console mode for keyboard commands
+      	- peek	- inspect memory contents
+	- poke	- change memory contents
+	- brk	- set execution or memory breakpoint
+	- step	- execute a single instruction
+	- stepi - execute n instructions
+
+TILES
+-----
+
+- tiles should have 3 different versions for modes
+  - active
+  - hilited
+  - clicked
+
+- navigation (compass background)
+  - buttons; highlight the currently movable directions
+    - north
+    - east
+    - south
+    - west
+    - northeast
+    - southeast
+    - southwest
+    - northwest
+

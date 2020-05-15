@@ -6,189 +6,25 @@
 #include <stdlib.h>
 #endif
 
-static uint8_t  v0bitclztab[256];
-static uint8_t  v0bitctztab[256];
-static uint8_t  v0bitpartab[256];
+/* count bits, check parity, etc. one byte at a time from LUTs */
+#define V0_VM_BIT_TAB_ITEMS 256
+
+static uint8_t  v0bitclztab[V0_VM_BIT_TAB_ITEMS];
+static uint8_t  v0bitctztab[V0_VM_BIT_TAB_ITEMS];
+static uint8_t  v0bitpartab[V0_VM_BIT_TAB_ITEMS];
 
 static void
 v0initops(void)
 {
     int i;
 
-    for (i = 0 ; i < 256 ; i++) {
+    for (i = 0 ; i < V0_VM_BIT_TAB_ITEMS ; i++) {
         v0bitclztab[i] = __builtin_clz(i) - 24;
         v0bitctztab[i] = __builtin_ctz(i);
         v0bitpartab[i] = __builtin_parity(i);
     }
-}
 
-/*
- * not(r_src, r_dest);
- * neg(r_src, r_dest);
- * and(r_src, r_dest);
- * or(r_src, r_dest);
- * xor(r_src, r_dest);
- * nor(r_src, r_dest);
- * xnor(r_src, r_dest);
- * nand(r_src, r_dest);
- * inc(r_arg);
- * dec(r_arg);
- * sll(rv_cnt, r_arg);
- * srl(rv_cnt, r_arg);
- * sar(rv_cnt, r_arg);
- * cmp(ri_arg);
- * ucmp(ri_arg);
- */
-static C_INLINE void
-m_not(void *src, void *dest)
-{
-    int32_t res = ~((int32_t *)src);
-    
-    *(int32_ t *)dest = res;
-}
-
-static C_INLINE void
-m_neg(void *src, void *dest)
-{
-    int32_t res = -((int32_t *)arg);
-
-    *(int32_t *)dest = res;
-}
-
-static C_INLINE void
-m_and(void *src, void *dest)
-{
-    int32_t res = *(int32_t *)dest;
-
-    res &= *(int32_t *src);
-    *(int32_t *)dest = res;
-}
-
-static C_INLINE void
-m_or(void *src, void *dest)
-{
-    int32_t res = *(int32_t *)dest;
-
-    res |= *(int32_t *src);
-    *(int32_t *)dest = res;
-}
-
-static C_INLINE void
-m_xor(void *src, void *dest)
-{
-    int32_t res = *(int32_t *)dest;
-
-    res ^= *(int32_t *src);
-    *(int32_t *)dest = res;
-}
-
-static C_INLINE void
-m_nor(void *src, void *dest)
-{
-    int32_t res = *(int32_t *)dest;
-
-    res |= !*(int32_t *)src;
-    *(int32_t *)dest = res;
-}
-
-static C_INLINE void
-m_xnor(void *src, void *dest)
-{
-    int32_t res = !*(int32_t *)dest;
-
-    res ^= !*(int32_t *)src;
-    *(int32_t *)dest = !res;
-}
-
-static C_INLINE void
-m_nand(void *src, void *dest)
-{
-    int32_t res = !*(int32_t *)dest;
-
-    res &= !*(int32_t *src);
-    *(int32_t *)dest = res;
-}
-
- * inc(r_arg);
- * dec(r_arg);
- * sll(rv_cnt, r_arg);
- * srl(rv_cnt, r_arg);
- * sar(rv_cnt, r_arg);
- * cmp(ri_arg);
- * ucmp(ri_arg);
-
-static C_INLINE void
-m_inc(void *src, void *dest)
-{
-    int32_t val = *(int32_t *)src;
-
-    val++;
-    *(int32_t *)dest = val;
-}
-
-static C_INLINE void
-m_dec(void *src, void *dest)
-{
-    int32_t val = *(int32_t *)src;
-
-    val--;
-    *(int32_t *)dest = val;
-}
-
-static C_INLINE void
-m_sll(void *src, void *dest)
-{
-    int32_t  cnt = *(int32_t *)src;
-    uint32_t uval = *(uint32_t *)dest;
-    
-    uval <<= cnt;
-    
-    *(uint32_t *)res = uval;
-}
-
-static C_INLINE void
-m_srl(void *src, void *dest)
-{
-    int32_t  cnt = *(int32_t *)src;
-    uint32_t uval = *(uint32_t *)dest;
-
-    uval >>= cnt;
-
-    *(uint32_t *)res = uval;
-}
-
-/* NOTE: we assume C's right-shift to be arithmetic for signed types */
-static C_INLINE void
-m_sar(void *src, void *dest)
-{
-    int32_t cnt = *(int32_t *)src;
-    int32_t sval = *(int32_t *)dest;
-
-    sval >>= cnt;
-
-    *(int32_t *)res = (int32_t)ret;
-}
-
-static C_INLINE void
-m_cmp(void *src, void *dest)
-{
-    int32_t arg1 = *(int32_t *)src;
-    int32_t arg2 = *(int32_t *)dest;
-
-#define condltset(a, b, v1, v2)                                         \
-    (((((a) - (b)) >> (CHAR_BIT * sizeof(a) - 1)) & ((v1) ^ (v2))) ^ (v2))
-    vm_clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
-    /* (arg1 < arg2) ? !LT : LT; */
-    condltset(arg1, arg2, vm_clrmsw(V0_MSW_LT_BIT), vm_setmsw(V0_MSW_LT_BIT));
-    if (arg1 == arg2) {
-        vm_setmsw(V0_MSW_ZF_BIT);
-    }
-}
-
-static C_INLINE void
-m_ucmp(void *src, void *dest)
-{
-int32_t arg1 = 
+    return;
 }
 
 static C_INLINE int8_t

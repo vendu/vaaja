@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
-#include <v0/v0.h>
+//#include <v0/v0.h>
 
+#if 0
 struct v0sys *
 v0confsys(struct v0sys *sys, struct v0sysconf *conf)
 {
@@ -37,4 +38,5 @@ v0confsys(struct v0sys *sys, struct v0sysconf *conf)
 
     return sys;
 }
+#endif
 

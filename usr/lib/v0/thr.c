@@ -1,13 +1,16 @@
-#include <v0/v0.h>
+//#include <v0/v0.h>
 #include <zero/cdefs.h>
 #if defined(V0_PTHREAD)
 #include <pthread.h>
 #endif
 
+#if 0
+
 THREADLOCAL struct v0thr          t_ctx;
 #if defined(V0_PTHREAD)
 THREADLOCAL pthread_t             t_thrid;
 THREADLOCAL pthread_mutex_t       t_waitmtx;
+#endif
 THREADLOCAL void                * t_exitval;
 
 static __inline__ void
@@ -18,4 +21,6 @@ v0initthr(struct v0thr *thr)
 
     return;
 }
+
+#endif
 
