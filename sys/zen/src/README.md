@@ -3,7 +3,7 @@
 
 ## Source Code Modules and Layout
 
-### asm - assembly code
+- asm - assembly code
 ### bsp - board support package
 ### bvt - borrowed virtual time task/thread scheduler
 ### conf - system compile-time configuration
