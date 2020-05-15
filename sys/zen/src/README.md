@@ -1,5 +1,7 @@
-Zen System README
------------------
+# Zen System README
+----
+
+## Source Code Modules and Layout
 
 asm		- assembly code
 bsp		- board support package
