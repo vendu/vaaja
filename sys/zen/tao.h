@@ -5,13 +5,11 @@
 #include <zen/sys/v0.h>
 #endif
 
-m_thr_t                 g_taothrtab[MACH_MAX_THREADS]
-
 #if defined(TAO_ULE_TASK_SCHED)
-#include <zen/ule.h>
+#include <zen/tao/ule.h>
 #endif
 #if defined(TAO_BVT_TASK_SCHED)
-#include <zen/bvt.h>
+#include <zen/tao/bvt.h>
 #endf
 
 union taoschedparm {
