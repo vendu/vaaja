@@ -1,5 +1,7 @@
 #include <limits.h>
 #include <mach/param.h>
+#include <mach/atomic.h>
+#include <v0/regs.h>
 #include <v0/types.h>
 
 #define v0_setmsw(bits)     (g_vm.sysregs[V0_MSW_REGISTER] |= (bits))

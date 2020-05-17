@@ -10,9 +10,9 @@
 #include <mt/mtx.h>
 #include <mt/cond.h>
 
-#if (LONGSIZE == 8)
+#if (MACH_WORD_SIZE == 8)
 #define BARFLAGBIT   (UINT64_C(1) << 63)
-#elif (LONGSIZE == 4)
+#elif (MACH_WORD_SIZE == 4)
 #define BARFLAGBIT   (UINT32_C(1) << 31)
 #endif
 #define BARSERIALTHR (-1L)

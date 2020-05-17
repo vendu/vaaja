@@ -37,7 +37,7 @@ typedef volatile m_atomic_t mtfmtx;
 #define MTFMTXINITVAL   0
 #define MTFMTXLKVAL     1
 
-static INLINE void
+static C_INLINE void
 mtinitfmtx(volatile m_atomic_t *lp)
 {
     m_membar();         // full memory barrier
@@ -50,7 +50,7 @@ mtinitfmtx(volatile m_atomic_t *lp)
  * try to acquire fast mutex lock
  * - return non-zero on success, zero if already locked
  */
-static INLINE long
+static C_INLINE long
 mttryfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
@@ -66,7 +66,7 @@ mttryfmtx(volatile m_atomic_t *lp)
  * - acquire fast mutex lock
  * - spin on volatile lock to avoid excess lock-operations
  */
-static INLINE void
+static C_INLINE void
 mtlkfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
@@ -85,7 +85,7 @@ mtlkfmtx(volatile m_atomic_t *lp)
  * unlock fast mutex
  * - must use full memory barrier to guarantee proper write-ordering
  */
-static INLINE void
+static C_INLINE void
 mtunlkfmtx(volatile m_atomic_t *lp)
 {
     m_membar();         // full memory barrier
@@ -99,7 +99,7 @@ mtunlkfmtx(volatile m_atomic_t *lp)
  * try to acquire fast mutex lock
  * - return non-zero on success, zero if already locked
  */
-static INLINE long
+static C_INLINE long
 mttryrecfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
@@ -119,7 +119,7 @@ mttryrecfmtx(volatile m_atomic_t *lp)
  * - acquire fast mutex lock
  * - spin on volatile lock to avoid excess lock-operations
  */
-static INLINE void
+static C_INLINE void
 mtlkrecfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
@@ -142,7 +142,7 @@ mtlkrecfmtx(volatile m_atomic_t *lp)
  * unlock fast mutex
  * - must use full memory barrier to guarantee proper write-ordering
  */
-static INLINE void
+static C_INLINE void
 mtunlkrecfmtx(volatile m_atomic_t *lp)
 {
     m_membar();         // full memory barrier

@@ -35,7 +35,7 @@ typedef v0pix12                         v0pixel;
     (long)(PAPILIO_PRO_TIMER_HZ / PAPILIO_PRO_HZ)       // timer Hz factor
 #define PAPILIO_PRO_MIN_TICKS           1               // BVT-scheduler
 #define PAPILIO_PRO_FLASH_SIZE          (8U * 1024 * 1024)      // size of SPI
-#define PAPILIO_PRO_RAM_SIZE            (8U * 1024 * 1024)      // size of SDRAM
+#define PAPILIO_PRO_DRAM_SIZE           (8U * 1024 * 1024)     // size of SDRAM
 #define PAPILIO_PRO_VIDEO_WIDTH         640                     // screen width
 #define PAPILIO_PRO_VIDEO_HEIGHT        480                     // screen height
 #define PAPILIO_PRO_VIDEO_BUFSZ  (PAPILIO_PRO_VIDEO_WIDTH * PAPILIO_PRO_VIDEO_HEIGHT * sizeof(v0pixel))

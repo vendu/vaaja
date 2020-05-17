@@ -1,4 +1,4 @@
 #! /bin/sh
 
-gcc -g -O -Wall -I.. -I../../../sys -o vm *.c
+gcc -DV0_PAPILIO_PRO -DTEST_VM -g -O -Wall -I.. -I../../../sys -o vm *.c ../mt/mtx.c
 

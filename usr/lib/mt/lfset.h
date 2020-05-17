@@ -7,14 +7,14 @@
 #include <stdint.h>
 #include <mach/param.h>
 
-#if (WORDSIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 #define _mtlfsetfindbkt         tzero32
 #define _MTLFSETEMPTYBKT        (~INT32_C(0))
 #else
 #define _mtlfsetfindbkt         tzero64
 #define _MTLFSETEMPTYBKT        (~INT64_C(0))
 #endif
-#define _MTLFSETWORDBITS        (CHAR_BIT * WORDSIZE)
+#define _MTLFSETWORDBITS        (CHAR_BIT * MACH_WORD_SIZE)
 #define _MTLFSETMAPWORDS        (MT_LFSET_SIZE / _MTFLQWORDBITS)
 #define _MTLFSETMAPS            _MTLFSETMAPWORDS
 
@@ -22,7 +22,7 @@
 struct mtlfsetmap {
     volatile m_atomic_t bits;
 #if defined(MT_LFSET_MAPS)
-    int8_t              pad[CLSIZE - WORDSIZE];
+    int8_t              pad[CLSIZE - MACH_WORD_SIZE];
 #endif
 };
 

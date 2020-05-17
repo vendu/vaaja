@@ -9,7 +9,7 @@
 #define MT_MEM_LK_BIT          ((uintptr_t)1 << MT_MEM_LK_BIT_OFS)
 #define MT_MEM_LK_BIT_OFS      1
 
-static INLINE long
+static C_INLINE long
 mttrylkbit(volatile m_atomic_t *lp, long pos)
 {
     m_atomic_t res = 0;
@@ -19,7 +19,7 @@ mttrylkbit(volatile m_atomic_t *lp, long pos)
     return res;
 }
 
-static INLINE long
+static C_INLINE long
 mtlkbit(volatile m_atomic_t *lp, long pos)
 {
     m_atomic_t  res = 0;
@@ -42,7 +42,7 @@ mtlkbit(volatile m_atomic_t *lp, long pos)
  * unlock fast mutex
  * - must use full memory barrier to guarantee proper write-ordering
  */
-static INLINE void
+static C_INLINE void
 mtunlkbit(volatile m_atomic_t *lp, long pos)
 {
     m_membar();         // full memory barrier

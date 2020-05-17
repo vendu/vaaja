@@ -1,4 +1,5 @@
 #include <v0/types.h>
+#include <v0/mach32.h>
 #include <v0/trap.h>
 #include <zen/signal.h>
 

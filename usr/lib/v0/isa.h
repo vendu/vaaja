@@ -228,11 +228,11 @@ struct v0romparm {
 #define V0_POP_OP       0x03    // pop register
 #define V0_STM_OP       0x04    // store many (uses register bitmap)
 #define V0_LDM_OP       0x05    // load many (uses register bitmap)
-#define V0_MVX_OP       0x06    // user-to-system register copy
-#define V0_LDX_OP       0x07    // memory-to-system-register load
-#define V0_STX_OP       0x08    // system-register to memory store
-#define V0_SMX_OP       0x09    // store many system registers
-#define V0_LMX_OP       0x0a    // load many system registers
+#define V0_MVS_OP       0x06    // user-to-system register copy
+#define V0_LDS_OP       0x07    // memory-to-system-register load
+#define V0_STS_OP       0x08    // system-register to memory store
+#define V0_SMS_OP       0x09    // store many system registers
+#define V0_LMS_OP       0x0a    // load many system registers
 #define V0_LNT_OP       0x0b    // non-temporal load (bypass cache)
 #define V0_SNT_OP       0x0c    // non-temporal store
 /* opcodes 0x0d-0x0f are reserved for future use */
@@ -307,19 +307,19 @@ struct v0romparm {
 #define V0_PARM_MTOX_BIT        0x2000
 #define V0_PARM_MTOR_BIT        0x4000
 struct v0ins {
-    int8_t  op;                     // 3-bit unit and 5-bit operation ID
-    int8_t  regs;                   // source and destination register IDs
-    int16_t imm;                    // instruction-dependent operands/parameters
-    int32_t imm32[C_VARLENARRAY];   // possible 32-bit immediate operand
+    int8_t  op;             // 3-bit unit and 5-bit operation ID
+    int8_t  regs;           // source and destination register IDs
+    int16_t imm;            // instruction-dependent operands/parameters
+    int32_t imm32[C_VLA];   // possible 32-bit immediate operand
 };
 
 struct v0uctx {
-    m_reg   retadr;
-    m_reg   oldfp;
-    m_reg   nstkb;
-    m_reg   r1_5[5];
-    m_reg   rx0_rx14[15];
-    m_reg   r12_r15[4];             // FP, SP, PC, LR
+    m_reg_t oldfp;
+    m_reg_t retadr;
+    m_reg_t nstkb;
+    m_reg_t r1_5[5];
+    m_reg_t rx0_rx14[15];
+    m_reg_t r12_r15[4];     // FP, SP, PC, LR
     /* 416 bytes reserved for coprocessor use */
 };
 

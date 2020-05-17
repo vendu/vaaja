@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 /* assembler types */
+typedef int32_t                 m_reg_t;
+typedef uint32_t                m_ureg_t;
 typedef int32_t     			m_word_t;
 typedef uint32_t    			m_uword_t;
 typedef int16_t     			m_half_t;
