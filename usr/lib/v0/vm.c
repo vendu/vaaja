@@ -222,37 +222,21 @@ v0_sar(void *src, void *dest, C_UNUSED m_word_t parm)
 static C_INLINE void
 v0_rol(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int64_t d64 = *(int32_t *)dest;
-    int32_t d32 = *(int32_t *)dest;
-    int32_t cnt = *(int32_t *)src;
-
     ;
 }
 
 v0_ror(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int64_t d64 = *(int32_t *)dest;
-    int32_t d32 = *(int32_t *)dest;
-    int32_t cnt = *(int32_t *)src;
-
     ;
 }
 
 v0_rcl(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int64_t d64 = *(int32_t *)dest;
-    int32_t d32 = *(int32_t *)dest;
-    int32_t cnt = *(int32_t *)src;
-
     ;
 }
 
 v0_rcr(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int64_t d64 = *(int32_t *)dest;
-    int32_t d32 = *(int32_t *)dest;
-    int32_t cnt = *(int32_t *)src;
-
     ;
 }
 
@@ -306,8 +290,8 @@ v0_mul(void *src, void *dest, C_UNUSED m_word_t parm)
 
 v0_umul(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    uint32_t s32 = *(uint32_t *)src;
-    uint32_t d32 = *(uint32_t *)dest;
+    uint32_t    s32 = *(uint32_t *)src;
+    uint32_t    d32 = *(uint32_t *)dest;
 
     d32 *= s32;
     *(uint32_t *)dest = d32;
@@ -317,12 +301,28 @@ v0_umul(void *src, void *dest, C_UNUSED m_word_t parm)
 
 v0_mhi(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    ;
+    int64_t s64 = *(int32_t *)src;
+    int64_t d64 = *(int32_t *)dest;
+    int32_t d32;
+
+    d64 *= s64;
+    d32 = d64 >> 32;
+    *(int32_t *)dest = d32;
+
+    return;
 }
 
 v0_umhi(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    ;
+    uint64_t    s64 = *(uint32_t *)src;
+    uint64_t    d64 = *(uint32_t *)dest;
+    uint32_t    d32;
+
+    d64 *= s64;
+    d32 = d64 >> 32;
+    *(uint32_t *)dest = d32;
+
+    return;
 }
 
 static C_INLINE void
