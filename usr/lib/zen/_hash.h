@@ -5,7 +5,7 @@
 
 /* the following two snippets were posted on stackoverflow by Thomas Mueller */
 
-static INLINE uint32_t
+static C_INLINE uint32_t
 tmhash32(uint32_t u)
 {
     u = ((u >> 16) ^ u) * 0x45d9f3b;
@@ -15,7 +15,7 @@ tmhash32(uint32_t u)
     return u;
 }
 
-static INLINE uint32_t
+static C_INLINE uint32_t
 tmunhash32(uint32_t u)
 {
     u = ((u >> 16) ^ u) * 0x119de1f3;
@@ -25,7 +25,7 @@ tmunhash32(uint32_t u)
     return u;
 }
 
-static INLINE uint64_t
+static C_INLINE uint64_t
 tmhash64(uint64_t u)
 {
     u = (u ^ (u >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
@@ -35,7 +35,7 @@ tmhash64(uint64_t u)
     return u;
 }
 
-static INLINE uint32_t
+static C_INLINE uint32_t
 tmunhash64(uint32_t u)
 {
     u = ((u >> 30) ^ u) * UINT64_C(0xbf58476d1ce4e5b9);

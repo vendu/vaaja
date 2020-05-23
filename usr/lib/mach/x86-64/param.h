@@ -31,7 +31,7 @@
 #define MACH_PAGE_SIZE_LOG2     12 // 4-kilobyte pages
 
 #define MACH_CL_SIZE            64
-#define MACH_CL_SIZELOG2        6
+#define MACH_CL_SIZE_LOG2       6
 #define MACH_PAGE_SIZE          4096
 
 #define MACH_LONG_DOUBLE_SIZE   80

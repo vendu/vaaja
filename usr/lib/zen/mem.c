@@ -1,20 +1,22 @@
 #include <stdlib.h>
 #include <errno.h>
-#include <mt/mtx.h>
+#include <zero/cdefs.h>
 #include <zen/sys/unix.h>
 #include <zen/mem.h>
 #include <zen/bitop.h>
+#include <zen/tabhash.h>
+#include <mt/mtx.h>
 
 struct tabhashtab              *g_memhashtab[TABHASH_SLOTS];
-struct memglob                  g_mem ALIGNED(PAGESIZE);
-THREADLOCAL struct memtls      *t_memtls;
+struct memglob                  g_mem C_ALIGNED(MACH_PAGE_SIZE);
+C_THREADLOCAL struct memtls    *t_memtls;
 struct tabhashtab              *g_memhashbuf;
 
-#define memblkslabsize(qid)                                             \
-    (((qid) <= MEM_BLK_MID_QUEUE_MIN)                                   \
-     ? (MEM_BLK_MIN_SLAB >> 2)                                          \
-     : (((qid) <= MEM_BLK_BIG_QUEUE_MIN)                                \
-        ? (MEM_BLK_MID_SLAB >> 1)                                       \
+#define memblkslabsize(qid)                     \
+    (((qid) <= MEM_BLK_MID_QUEUE_MIN)           \
+     ? (MEM_BLK_MIN_SLAB >> 2)                  \
+     : (((qid) <= MEM_BLK_BIG_QUEUE_MIN)        \
+        ? (MEM_BLK_MID_SLAB >> 1)               \
         : MEM_BLK_BIG_SLAB))
 static void
 meminitblktabs(struct memglob *mem)
@@ -37,11 +39,11 @@ meminitblktabs(struct memglob *mem)
     return;
 }
 
-#define memrunslabsize(qid)                                             \
-    (((qid) < MEM_RUN_MID_QUEUE_MIN)                                    \
-     ? MEM_RUN_MIN_SLAB                                                 \
-     : (((qid) < MEM_RUN_BIG_QUEUE_MIN)                                 \
-        ? MEM_RUN_MID_SLAB                                              \
+#define memrunslabsize(qid)                     \
+    (((qid) < MEM_RUN_MID_QUEUE_MIN)            \
+     ? MEM_RUN_MIN_SLAB                         \
+     : (((qid) < MEM_RUN_BIG_QUEUE_MIN)         \
+        ? MEM_RUN_MID_SLAB                      \
         : MEM_RUN_BIG_SLAB))
 static void
 meminitruntabs(struct memglob *mem)
@@ -54,7 +56,7 @@ meminitruntabs(struct memglob *mem)
 
     for (qid = 0 ; qid < MEM_RUN_QUEUES ; qid++) {
         slabsz = (double)memrunslabsize(qid);
-        runsz = PAGESIZE * (double)(qid + 1);
+        runsz = MACH_PAGE_SIZE * (double)(qid + 1);
         nrun = slabsz / runsz;
         multi = 1.0 / runsz;
         mem->nruntab[qid] = (long)nrun;
@@ -87,15 +89,15 @@ memfindbuf(void *ptr, long which, uintptr_t mask)
 
     if (item.page) {
         switch (which) {
-            case MEM_FIND_PAGE:
-                ret = item.page;
+        case MEM_FIND_PAGE:
+            ret = item.page;
 
-                break;
-            case MEM_FIND_VAL:
-                ret = item.val;
-            default:
+            break;
+        case MEM_FIND_VAL:
+            ret = item.val;
+        default:
 
-                break;
+            break;
         }
     }
     ret &= mask;
@@ -338,26 +340,26 @@ memgetblk(unsigned long qid, size_t align, size_t *retsize)
                 }
                 n = min(8, nblk);
                 switch (nblk) {
-                    case 8:
-                        tab[7] = (uintptr_t)ptr + 7 * blksz;
-                    case 7:
-                        tab[6] = (uintptr_t)ptr + 6 * blksz;
-                    case 6:
-                        tab[5] = (uintptr_t)ptr + 5 * blksz;
-                    case 5:
-                        tab[4] = (uintptr_t)ptr + 4 * blksz;
-                    case 4:
-                        tab[3] = (uintptr_t)ptr + 3 * blksz;
-                    case 3:
-                        tab[2] = (uintptr_t)ptr + 2 * blksz;
-                    case 2:
-                        tab[1] = (uintptr_t)ptr + blksz;
-                    case 1:
-                        tab[0] = (uintptr_t)ptr;
-                    case 0:
-                    default:
+                case 8:
+                    tab[7] = (uintptr_t)ptr + 7 * blksz;
+                case 7:
+                    tab[6] = (uintptr_t)ptr + 6 * blksz;
+                case 6:
+                    tab[5] = (uintptr_t)ptr + 5 * blksz;
+                case 5:
+                    tab[4] = (uintptr_t)ptr + 4 * blksz;
+                case 4:
+                    tab[3] = (uintptr_t)ptr + 3 * blksz;
+                case 3:
+                    tab[2] = (uintptr_t)ptr + 2 * blksz;
+                case 2:
+                    tab[1] = (uintptr_t)ptr + blksz;
+                case 1:
+                    tab[0] = (uintptr_t)ptr;
+                case 0:
+                default:
 
-                        break;
+                    break;
                 }
                 ptr = (int8_t *)buf->tab[0];
                 buf->ofs = 1;
@@ -448,7 +450,7 @@ memgetrun(unsigned long qid, size_t align, size_t *retsize)
             bits = buf->bits;
             ofs = m_ctz(bits);
             mask = 1L << ofs;
-            ofs <<= PAGESIZELOG2;
+            ofs <<= MACH_PAGE_SIZE_LOG2;
             mask = ~mask;
             ofs *= qid;
             bits &= mask;
@@ -463,7 +465,7 @@ memgetrun(unsigned long qid, size_t align, size_t *retsize)
         bits = buf->bits;
         ofs = m_ctz(bits);
         mask = 1L << ofs;
-        ofs <<= PAGESIZELOG2;
+        ofs <<= MACH_PAGE_SIZE_LOG2;
         mask = ~mask;
         ofs *= qid;
         bits &= mask;
@@ -604,7 +606,7 @@ void *
 memgetbig(size_t size, size_t align, size_t *retsize)
 {
     struct membuf      *buf = memgetbuf(MEM_BIG);
-    size_t              mapsz = roundup2(size, PAGESIZE);
+    size_t              mapsz = roundup2(size, MACH_PAGE_SIZE);
     int8_t             *ptr;
     int8_t             *ret = NULL;
     size_t              aln;
@@ -662,24 +664,24 @@ memget(size_t size, size_t align, size_t *retsize)
         meminit(&g_mem);
     }
     switch (type) {
-        case MEM_BLK:
-            blksz = roundup2(alnsz, MEM_BLK_MIN);
-            qid = memblkqid(blksz);
-            ptr = memgetblk(qid, aln, &blksz);
+    case MEM_BLK:
+        blksz = roundup2(alnsz, MEM_BLK_MIN);
+        qid = memblkqid(blksz);
+        ptr = memgetblk(qid, aln, &blksz);
 
-            break;
-        case MEM_RUN:
-            blksz = roundup2(alnsz, PAGESIZE);
-            qid = memrunqid(blksz);
-            ptr = memgetrun(qid, aln, &blksz);
+        break;
+    case MEM_RUN:
+        blksz = roundup2(alnsz, MACH_PAGE_SIZE);
+        qid = memrunqid(blksz);
+        ptr = memgetrun(qid, aln, &blksz);
 
-            break;
-        case MEM_BIG:
-            blksz = roundup2(alnsz, PAGESIZE);
-            ptr = memgetbig(blksz, aln, &blksz);
-        default:
+        break;
+    case MEM_BIG:
+        blksz = roundup2(alnsz, MACH_PAGE_SIZE);
+        ptr = memgetbig(blksz, aln, &blksz);
+    default:
 
-            break;
+        break;
     }
     if ((ptr) && (retsize)) {
         *retsize = blksz;
@@ -731,7 +733,7 @@ memresize(void *ptr, size_t size, size_t align, long flg)
 
 /* release allocation */
 void
-memput(void *ptr)
+memfree(void *ptr)
 {
     uintptr_t           page = mempageadr(ptr);
     struct memhash      hash = tabhashop(g_memhashtab, page, TABHASH_REMOVE);
@@ -745,19 +747,19 @@ memput(void *ptr)
         size_t          size = memhashsize(&hash);
 
         switch (type) {
-            case MEM_BLK:
-                memputblk(buf, ptr);
+        case MEM_BLK:
+            memputblk(buf, ptr);
 
-                break;
-            case MEM_RUN:
-                memputrun(buf, ptr);
+            break;
+        case MEM_RUN:
+            memputrun(buf, ptr);
 
-                break;
-            case MEM_BIG:
-                memfreebig(buf->adr, size);
-            default:
+            break;
+        case MEM_BIG:
+            memfreebig(buf->adr, size);
+        default:
 
-                break;
+            break;
         }
     }
 

@@ -1,10 +1,10 @@
-#ifndef __VND_BITS_MEM_H__
-#define __VND_BITS_MEM_H__
+#ifndef __ZEN_BITS_MEM_H__
+#define __ZEN_BITS_MEM_H__
 
 #include <mach/param.h>
-#include <vnd/sys/unix.h>
-#include <vnd/hash.h>
-#include <vnd/tabhash.h>
+#include <zen/hash.h>
+#include <zen/tabhash.h>
+#include <zen/sys/unix.h>
 
 static __inline__ void *
 memgethashtab(void)
@@ -21,8 +21,8 @@ memgethashtab(void)
 
     ret = NULL;
     ptr = MAP_FAILED;
-    tabsz = sizeof(struct tabhashtab);
-    ntab = 2 * PAGESIZE / sizeof(struct tabhashtab);
+    tabsz = TABHASH_TAB_SIZE;
+    ntab = TABHASH_CACHE_TABS;
     tabq = &g_mem.hashtabq;
     do {
         mtlkbit((m_atomic_t *)tabq, MEM_LK_BIT_OFS);
@@ -65,5 +65,5 @@ memgethashtab(void)
     return ret;
 }
 
-#endif /* __VND_BITS_MEM_H__ */
+#endif /* __ZEN_BITS_MEM_H__ */
 

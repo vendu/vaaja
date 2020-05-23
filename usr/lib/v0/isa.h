@@ -17,6 +17,7 @@ struct v0romparm {
  */
 /*
  * ftr(ri_bit, r_dest);     	// check for presence of machine features
+ * - flag in ri_bit, return mask into r_dest
  * hlt();                   	// halt, wait for unmasked interrupts
  * rst(r_flg, a_state);     	// flg: HIBERNATE, REBOOT
  * sim(ri_op, r_intrmask);  	// op: INTCLR, INTSET, INTADD
@@ -55,9 +56,9 @@ struct v0romparm {
 #define V0_DEV_OP       0x07    // [bus and] device operations
 #define V0_CSP_OP       0x08    // set cache policy (NONE, WT, WB)
 #define V0_CPF_OP       0x09    // cacheline prefetch
-#define V0_BAR_OP       0x0a    // memory barrier; default to full
-#define V0_RBR_OP       0x0b    // read-barrier
-#define V0_WBR_OP       0x0c    // write-barrier
+#define V0_RBR_OP       0x0a    // read-barrier
+#define V0_WBR_OP       0x0b    // write-barrier
+#define V0_BAR_OP       0x0c    // memory barrier; default to full
 #define V0_WFE_OP       0x0d    // wait for [write] event
 #define V0_SEV_OP       0x0e    // signal [write] event
 #define V0_IPG_OP       0x1f    // invalidate page TLB-entry
@@ -133,12 +134,11 @@ struct v0romparm {
 #define V0_UMUL_OP      0x17    // unsigned multiplication
 #define V0_MHI_OP       0x18    // multiplication, high result word
 #define V0_UMHI_OP      0x19    // unsigned multiplication, high result word
-#define V0_IRP_OP       0x1a    // inverse reciprocal
-#define V0_UIRP_OP      0x1b    // unsigned inverse reciprocal
-#define V0_DIV_OP       0x1c    // division
-#define V0_UDIV_OP      0x1d    // unsigned division
-#define V0_REM_OP       0x1e    // remainder
-#define V0_UREM_OP      0x1f    // unsigned remainder
+#define V0_IDIV_OP      0x1a    // divide by multiplying with inverse reciprocal
+#define V0_DIV_OP       0x1b    // division
+#define V0_UDIV_OP      0x1c    // unsigned division
+#define V0_REM_OP       0x1d    // remainder
+#define V0_UREM_OP      0x1e    // unsigned remainder
 
 /* SUBRT-unit 0x02; branch instructions, function and system-calls, threads */
 /*
@@ -219,6 +219,8 @@ struct v0romparm {
 #define V0_PAR_OP       0x04    // compute bit-parity; 0 for even # of 1-bits
 #define V0_HSH_OP       0x04    // compute 32-bit hash-value from key
 #define V0_HUN_OP       0x05    // reverse 32-bit hash-value back to key
+#define V0_BEX_OP       0x06    // extract bits
+#define V0_BPK_OP       0x06    // pack bits
 
 /* LDSTR-unit 0x04 */
 #define V0_LDSTR_UNIT   0x04

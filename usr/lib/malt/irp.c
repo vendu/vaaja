@@ -54,7 +54,7 @@ irpguess(double den)
 
 /* this division routine should work fine :) */
 int32_t
-irpdiv(int32_t num, int32_t den)
+irpidiv(int32_t num, int32_t den)
 {
     double  dnum = num;
     double  dval = den;
@@ -77,7 +77,8 @@ int
 main(int argc, char *argv[])
 {
     fprintf(stderr, "%e steps\n", log2(33.0 / log2(17)));
-    fprintf(stderr, "%d\n", irpdiv(55, 55));
+    fprintf(stderr, "%d\n", irpidiv(55, 55));
+    fprintf(stderr, "%d\n", irpidiv(220, 55));
 
     exit(0);
 }

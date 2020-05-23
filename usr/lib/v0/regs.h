@@ -85,5 +85,11 @@
 #define V0_SEG_SYS_BIT          (1 << 5)    // ring #0 access only
 #define V0_SEG_DIR_BIT          (1 << 6)    // expansion-direction (stack)
 
+/* per-processor performance-counter registers; 64-bit */
+#define V0_TLB_MISS_REGISTER    0x00
+#define V0_L1_MISS_REGISTER     0x01
+#define V0_L2_MISS_REGISTER     0x02
+#define V0_INST_MISS_REGISTER   0x03
+
 #endif /*  __V0_VM_REGS_H__ */
 

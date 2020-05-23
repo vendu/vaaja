@@ -14,8 +14,8 @@
 #include <mach/param.h>
 #include <mt/lk.h>
 #include <zero/trix.h>
-#include <zen/sys/unix.h>
 #include <zen/hash.h>
+#include <zen/sys/unix.h>
 
 extern TABHASH_TAB_T   *TABHASH_BUF;
 
@@ -34,8 +34,9 @@ extern TABHASH_TAB_T   *TABHASH_BUF;
 #define TABHASH_CLEAR(ptr)      memset(ptr, 0, sizeof(TABHASH_ITEM_T))
 #endif
 
-#define TABHASH_TAB_SIZE        (roundup2(sizeof(struct tabhashtab), CLSIZE))
-#define TABHASH_BUF_SIZE        (2 * PAGESIZE)
+#define TABHASH_TAB_SIZE        (roundup2(sizeof(struct tabhashtab),    \
+                                          MACH_CL_SIZE))
+#define TABHASH_BUF_SIZE        (4 * MACH_PAGE_SIZE)
 #define TABHASH_CACHE_TABS      (TABHASH_BUF_SIZE / TABHASH_TAB_SIZE)
 struct tabhashtab {
     long                ncur;
@@ -49,9 +50,9 @@ static __inline__ void
 tabhashputtab(TABHASH_TAB_T *tab)
 {
     TABHASH_TAB_T      *head;
-    mtlkbit((m_atomic_t *)&TABHASH_BUF, MEM_LK_BIT_OFS);
+    mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
     head = TABHASH_BUF;
-    head = (void *)((uintptr_t)head & ~MEM_LK_BIT);
+    head = (void *)((uintptr_t)head & ~MT_MEM_LK_BIT);
     if (head) {
         head->prev = tab;
     }
@@ -70,9 +71,9 @@ tabhashgettab(void)
     long                ntab;
 
     /* lock buffer */
-    mtlkbit((m_atomic_t *)&TABHASH_BUF, MEM_LK_BIT_OFS);
+    mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
     tab = TABHASH_BUF;
-    tab = (void *)((uintptr_t)tab & ~MEM_LK_BIT);
+    tab = (void *)((uintptr_t)tab & ~MT_MEM_LK_BIT);
     if (!tab) {
         int8_t         *ptr = mapanon(-1, TABHASH_BUF_SIZE, 0);
         TABHASH_TAB_T  *cur;
@@ -81,7 +82,7 @@ tabhashgettab(void)
         /* allocate more subtables */
         if (ptr == MAP_FAILED) {
             tab = NULL;
-            mtunlkbit((m_atomic_t *)&TABHASH_BUF, MEM_LK_BIT_OFS);
+            mtunlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
         } else {
             tab = (TABHASH_TAB_T *)ptr;         // first table
             ntab = TABHASH_CACHE_TABS - 1;
@@ -124,12 +125,12 @@ tabhashadd(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
     long                ndx;
     long                lim;
     long                loop;
-    TABHASH_ITEM_T      item = { key, val };
+    TABHASH_ITEM_T      item = { key, (void *)val };
 
     ndx = TABHASH_HASH(key);
-    mtlkbit((m_atomic_t *)&hashtab[ndx], MEM_LK_BIT_OFS);
+    mtlkbit((m_atomic_t *)&hashtab[ndx], MT_MEM_LK_BIT_OFS);
     head = hashtab[ndx];
-    tab = (void *)((uintptr_t)head & ~MEM_LK_BIT);
+    tab = (void *)((uintptr_t)head & ~MT_MEM_LK_BIT);
     head = tab;
     do {
         if (!tab) {
@@ -184,9 +185,9 @@ tabhashop(TABHASH_TAB_T **hashtab, const uintptr_t val, long cmd)
 
     ndx = TABHASH_HASH(val);
     prev = NULL;
-    mtlkbit((m_atomic_t *)&hashtab[ndx], MEM_LK_BIT_OFS);
+    mtlkbit((m_atomic_t *)&hashtab[ndx], MT_MEM_LK_BIT_OFS);
     head = hashtab[ndx];
-    tab = (void *)((uintptr_t)head & ~MEM_LK_BIT);
+    tab = (void *)((uintptr_t)head & ~MT_MEM_LK_BIT);
     head = tab;
     while (tab) {
         lim = tab->nmax;

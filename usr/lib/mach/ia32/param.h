@@ -18,7 +18,7 @@
 #define MACH_CL_SIZE            32
 #define MACH_CL_SIZE_LOG2       5
 #define MACH_PAGE_SIZE          4096
-#define MACH_PAGE_SIZELOG2      12
+#define MACH_PAGE_SIZE_LOG2     12
 #define MACH_LONG_DOUBLE_SIZE   80
 
 #endif /* __MACH_IA32_PARAM_H__ */

@@ -1,8 +1,11 @@
 #include <limits.h>
+#include <stdint.h>
 #include <mach/param.h>
 #include <mach/atomic.h>
 #include <v0/regs.h>
 #include <v0/types.h>
+
+#define V0_SIGN_BIT         (INT32_C(1) << 31)
 
 #define v0_setmsw(bits)     (g_vm.sysregs[V0_MSW_REGISTER] |= (bits))
 #define v0_clrmsw(bits)     (g_vm.sysregs[V0_MSW_REGISTER] &= ~(bits))

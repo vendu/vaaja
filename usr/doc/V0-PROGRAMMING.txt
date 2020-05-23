@@ -12,6 +12,14 @@ This should be a programming booklet, so end with the rant and let's start
 rolling our sleeves - time has come for some serious computer engineering
 sessions. :)
 
+General Notes
+-------------
+
+The R0-register is always zero; that is, writes to it shall be ignored and reads
+shall return all zero-bits.
+
+Instructions do NOT affecs MSW-bits unless otherwise stated.
+
 Machine Architecture Overview
 -----------------------------
 
@@ -129,32 +137,31 @@ SYS-Instructions - System Management
 Op	Source	Destination	Extra	Pseudo-Code
 --	------	-----------	-----	-----------
 
-NOP	--	--		--	nop();
-FTR	r/i	r2		--	dest = MFR & src;
-HLT	r/i	--		--	hlt(intrmask);
-RST	r/i	--		--	rst(flg);
-DEV	r1	r2		r3	dev(id, cmd, buf);
-LST	r/v	r2		r3	dest = find(name); xtra = len(dest);
-LOD	r/v	r2		r3      res = load(node, buf);
-RUN     r/i     r2      	r3      thr = run(adr), *adr = res(thr);
-TRM     r/i     r2          	--      r2 = term(thr);
-
-CTL-Instructions - Control Operations
--------------------------------------
-
-Op	Source	Destination	Pseudo-Code
---	------	-----------	-----------
-
-CLI	r/i		--	intron(mask);
-STI	r/i		--	introff(mask);
+NOP	--	--	--	nop();
+FTR	r/i	r2	--	dest = MFR & src;
+HLT	r/i	--	--	hlt(intrmask);
+RST	r/i	--	--	rst(flg);
 SIM	r/i		--	intrmask(rmask);
-INT	r/v		--	intr(num);
+DEV	r1	r2	r3	dev(id, cmd, buf);
+CSP	r/v		--			cacheset(pol);
+CPF	r/i		--			cachepref(adr);
+RBR	--      --      --      memrdbar();
+WBR	--      --      --      memwrbar();
+BAR	--      --      --      membar();
 
 MT-Extension
 ------------
+
 WFE	--		--	waitev();
 SEV	--		--	sigev();
 
+IPG	r/i		--	invtlb(page);
+RAND	r/m     r       --      fetch-and-AND
+RINC    r/m     r       --      fetch-and-increment-by-one
+RDEC    r/m     r       --      fetch-and-decrement-by-one
+RADD    r/m     r       --      fetch-and-add
+CAS	r/m     r       r	compare-and-swap
+XCH	r	r/m	
 ARITH-Instructions - Arithmetic Operations
 ------------------------------------------
 
@@ -308,9 +315,6 @@ SMX     r/i     --          strmanyx(map);
 LMX     r/i     --          ldrmanyx(map);
 LNT	r/m     r           reg = *adr, non-temporal (bypass cache)
 SNT	r       r/m         *adr = reg, non-temporal
-CSP	r/v		--			cacheset(pol);
-CPF	r/i		--			cachepref(adr);
-IPG	r/i		--			invtlb(page);
 
 SYN-Instructions - Synchronous (Atomic) Operations - MT-Extension
 -----------------------------------------------------------------
@@ -318,18 +322,10 @@ SYN-Instructions - Synchronous (Atomic) Operations - MT-Extension
 Op	Source  Destination Extra   Pseudo-Code
 --	------  ----------- -----   -----------
 
-RBR	--      --          --      memrdbar();
-WBR	--      --          --      memwrbar();
-FBR	--      --          --      membar();
 LDL	r/m     r           --      r = ldrlnk(adr);
 STL	r       r/m         --      *adr = strcond(adr);
 RLOR	r/m     r           --      fetch-and-OR
 RXOR	r/m     r           --      fetch-and-XOR
-RAND	r/m     r           --      fetch-and-AND
-RINC    r/m     r           --      fetch-and-increment-by-one
-RDEC    r/m     r           --      fetch-and-decrement-by-one
-RADD    r/m     r           --      fetch-and-add
-CAS	r/m     r           r		compare-and-swap
 BTC	r/m     r           --      bit test-and-clear
 BTS	r/m     r           --      bit test-and-set
 BSF     rm      r           --      bit scan-and-set forward

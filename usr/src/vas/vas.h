@@ -19,17 +19,17 @@
 #define VASSYM          6
 #define VASCHAR         7
 #define VASIMMED        8
-#define VASADR    	9
+#define VASADR    	    9
 #define VASINDIR        10
-#define VASINDEX  	11
-#define VASDATA   	12
-#define VASGLOBL  	13
-#define VASSPACE  	14
-#define VASORG    	15
-#define VASALIGN  	16
-#define VASASCIZ  	17
-#define VASSTRING 	18
-#define VASPAREN  	19
+#define VASINDEX  		11
+#define VASDATA   		12
+#define VASGLOBL  		13
+#define VASSPACE  		14
+#define VASORG    		15
+#define VASALIGN  		16
+#define VASASCIZ  		17
+#define VASSTRING 		18
+#define VASPAREN  		19
 #define VASMACRO        20
 #define VASINST         21
 #define VASTOKENS       32
@@ -59,7 +59,7 @@ struct vastoken {
 #define VAS_EXTERN      (1 << 6)        // C storage class
 #define VAS_STATIC      (1 << 7)        // C storage class
 #define VAS_REGISTER    (1 << 8)        // C storage class
-#define VAS_GLOBL       (1 << 9)        // global storage
+#define VAS_GLOBAL      (1 << 9)        // global storage
 /* value size */
 #define VAS_INT8        1
 #define VAS_INT16       2
@@ -98,10 +98,10 @@ struct vasobj {
 };
 
 struct vasinst {
-    uint8_t     size;           // instruction size
-    uint8_t     narg;           // number of arguments for instruction
+    uint8_t     size;       // instruction size
+    uint8_t     narg;       // number of arguments for instruction
     void       *inst;    	// instruction in storage
-    void       *arg;            // immediate argument in storage
+    void       *arg;        // immediate argument in storage
 };
 
 #endif /* __VAS_VAS_H__ */

@@ -59,8 +59,10 @@ v0initvm(struct vm *vm, int flg, size_t dramsize)
     return vm;
 }
 
+/* ALU-unit */
+
 static C_INLINE void
-v0_not(void *src, void *dest)
+v0_not(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = ~(*(int32_t *)src);
     
@@ -70,7 +72,7 @@ v0_not(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_neg(void *src, void *dest)
+v0_neg(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = -(*(int32_t *)src);
 
@@ -80,7 +82,7 @@ v0_neg(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_and(void *src, void *dest)
+v0_and(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -91,7 +93,7 @@ v0_and(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_or(void *src, void *dest)
+v0_or(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -102,7 +104,7 @@ v0_or(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_xor(void *src, void *dest)
+v0_xor(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -113,7 +115,7 @@ v0_xor(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_nor(void *src, void *dest)
+v0_nor(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -124,7 +126,7 @@ v0_nor(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_xnor(void *src, void *dest)
+v0_xnor(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = !*(int32_t *)dest;
 
@@ -135,7 +137,7 @@ v0_xnor(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_nand(void *src, void *dest)
+v0_nand(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = ~*(int32_t *)dest;
 
@@ -147,7 +149,7 @@ v0_nand(void *src, void *dest)
 
 #if 0
 static C_INLINE void
-v0_nand(void *src, void *dest)
+v0_nand(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = !*(int32_t *)dest;
 
@@ -159,7 +161,7 @@ v0_nand(void *src, void *dest)
 #endif
 
 static C_INLINE void
-v0_inc(void *src, void *dest)
+v0_inc(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t val = *(int32_t *)src;
 
@@ -170,7 +172,7 @@ v0_inc(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_dec(void *src, void *dest)
+v0_dec(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t val = *(int32_t *)src;
 
@@ -181,7 +183,7 @@ v0_dec(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_sll(void *src, void *dest)
+v0_sll(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     uint32_t uval = *(uint32_t *)dest;
     int32_t  cnt = *(int32_t *)src;
@@ -193,7 +195,7 @@ v0_sll(void *src, void *dest)
 }
 
 static C_INLINE void
-v0_srl(void *src, void *dest)
+v0_srl(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     uint32_t uval = *(uint32_t *)dest;
     int32_t  cnt = *(int32_t *)src;
@@ -206,60 +208,237 @@ v0_srl(void *src, void *dest)
 
 /* NOTE: we assume C's right-shift to be arithmetic for signed types */
 static C_INLINE void
-v0_sar(void *src, void *dest)
+v0_sar(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int32_t sval = *(int32_t *)dest;
+    int32_t dval = *(int32_t *)dest;
     int32_t cnt = *(int32_t *)src;
 
-    sval >>= cnt;
-    *(int32_t *)dest = (int32_t)sval;
+    dval >>= cnt;
+    *(int32_t *)dest = (int32_t)dval;
 
     return;
 }
 
 static C_INLINE void
-v0_cmp(void *src, void *dest)
+v0_rol(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    int32_t arg2 = *(int32_t *)dest;
-    int32_t arg1 = *(int32_t *)src;
+    int64_t d64 = *(int32_t *)dest;
+    int32_t d32 = *(int32_t *)dest;
+    int32_t cnt = *(int32_t *)src;
 
-    v0_clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
-    if (arg1 < arg2) {
-        v0_setmsw(V0_MSW_LT_BIT);
-    } else {
-        v0_clrmsw(V0_MSW_LT_BIT);
-    }
-    if (arg1 == arg2) {
-        v0_setmsw(V0_MSW_ZF_BIT);
-    }
-
-    return;
+    ;
 }
 
-static C_INLINE void
-v0_ucmp(void *src, void *dest)
+v0_ror(void *src, void *dest, C_UNUSED m_word_t parm)
 {
-    uint32_t arg2 = *(uint32_t *)dest;
-    uint32_t arg1 = *(uint32_t *)src;
+    int64_t d64 = *(int32_t *)dest;
+    int32_t d32 = *(int32_t *)dest;
+    int32_t cnt = *(int32_t *)src;
 
-    v0_clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
-    if (arg1 < arg2) {
-        v0_setmsw(V0_MSW_LT_BIT);
-    } else {
-        v0_clrmsw(V0_MSW_LT_BIT);
+    ;
+}
+
+v0_rcl(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int64_t d64 = *(int32_t *)dest;
+    int32_t d32 = *(int32_t *)dest;
+    int32_t cnt = *(int32_t *)src;
+
+    ;
+}
+
+v0_rcr(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int64_t d64 = *(int32_t *)dest;
+    int32_t d32 = *(int32_t *)dest;
+    int32_t cnt = *(int32_t *)src;
+
+    ;
+}
+
+v0_add(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 += s32;
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+v0_addu(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    ;
+}
+
+v0_adc(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    ;
+}
+
+v0_sub(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 -= s32;
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+v0_sbc(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    ;
+}
+
+v0_mul(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 *= s32;
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+v0_umul(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    uint32_t s32 = *(uint32_t *)src;
+    uint32_t d32 = *(uint32_t *)dest;
+
+    d32 *= s32;
+    *(uint32_t *)dest = d32;
+
+    return;
+}
+
+v0_mhi(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    ;
+}
+
+v0_umhi(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    ;
+}
+
+static C_INLINE void
+v0_idiv(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 = irpdiv(d32, s32);
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+static C_INLINE void
+v0_div(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 /= s32;
+
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+static C_INLINE void
+v0_udiv(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    uint32_t    s32 = *(uint32_t *)src;
+    uint32_t    d32 = *(uint32_t *)dest;
+
+    d32 /= s32;
+
+    *(uint32_t *)dest = d32;
+
+    return;
+}
+
+static C_INLINE void
+v0_rem(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t s32 = *(int32_t *)src;
+    int32_t d32 = *(int32_t *)dest;
+
+    d32 %= s32;
+
+    *(int32_t *)dest = d32;
+
+    return;
+}
+
+static C_INLINE void
+v0_urem(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    uint32_t    s32 = *(uint32_t *)src;
+    uint32_t    d32 = *(uint32_t *)dest;
+
+    d32 %= s32;
+
+    *(uint32_t *)dest = d32;
+
+    return;
+}
+
+/* BIT-unit */
+
+static C_INLINE void
+m_zex(void *src, void *dest, m_word_t parm)
+{
+    int32_t val;
+
+    switch (parm) {
+        case 0:
+            val = *(int8_t *)src;
+
+            break;
+        case 1:
+            val = *(int16_t *)src;
+
+            break;
+        case 2:
+            val = *(int32_t *)src;
+
+            break;
+        case 3:
+            fprintf(stderr, "V0 does not support 32+-bit zero-extension...");
+
+            abort();
     }
-    if (arg1 == arg2) {
-        v0_setmsw(V0_MSW_ZF_BIT);
-    }
-    if (arg1 == arg2) {
-        v0_setmsw(V0_MSW_ZF_BIT);
+    *(int32_t *)dest = val;
+
+    return;
+}
+
+static C_INLINE void
+m_sex(void *src, void *dest, m_word_t parm)
+{
+    int32_t cnt = 8 << parm;
+    int32_t sign = *(int32_t *)src & V0_SIGN_BIT;
+
+    if (sign) {
+        int32_t mask = ~INT32_C(0);
+        int32_t tmp;
+            
+        mask <<= cnt;
+        tmp = cnt - 1;
+        *(int32_t *)dest = mask | tmp;
     }
 
     return;
 }
 
 static C_INLINE void
-m_clz32lut(void *src, void *dest)
+m_clz32lut(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     uint32_t    u32 = *(uint32_t *)src;
     uint32_t    ub1 = (u32 >> 24) & 0xff;
@@ -300,7 +479,7 @@ m_clz32lut(void *src, void *dest)
 }
 
 static C_INLINE void
-m_ctz32lut(void *src, void *dest)
+m_ctz32lut(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     uint32_t    u32 = *(uint32_t *)src;
     uint32_t    ub1 = (u32 >> 24) & 0xff;
@@ -341,7 +520,7 @@ m_ctz32lut(void *src, void *dest)
 }
 
 static C_INLINE void
-m_par32lut(void *src, void *dest)
+m_par32lut(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     uint32_t    u32 = *(uint32_t *)src;
     uint32_t    ub1 = (u32 >> 24) & 0xff;
@@ -356,6 +535,49 @@ m_par32lut(void *src, void *dest)
     res += v0bitpartab[ub4];
     res &= 0x01;
     *(int32_t *)dest = res;
+
+    return;
+}
+
+/* SUBRT-unit */
+
+static C_INLINE void
+v0_cmp(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    int32_t arg2 = *(int32_t *)dest;
+    int32_t arg1 = *(int32_t *)src;
+
+    v0_clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
+    if (arg1 < arg2) {
+        v0_setmsw(V0_MSW_LT_BIT);
+    } else {
+        v0_clrmsw(V0_MSW_LT_BIT);
+    }
+    if (arg1 == arg2) {
+        v0_setmsw(V0_MSW_ZF_BIT);
+    }
+
+    return;
+}
+
+static C_INLINE void
+v0_ucmp(void *src, void *dest, C_UNUSED m_word_t parm)
+{
+    uint32_t arg2 = *(uint32_t *)dest;
+    uint32_t arg1 = *(uint32_t *)src;
+
+    v0_clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
+    if (arg1 < arg2) {
+        v0_setmsw(V0_MSW_LT_BIT);
+    } else {
+        v0_clrmsw(V0_MSW_LT_BIT);
+    }
+    if (arg1 == arg2) {
+        v0_setmsw(V0_MSW_ZF_BIT);
+    }
+    if (arg1 == arg2) {
+        v0_setmsw(V0_MSW_ZF_BIT);
+    }
 
     return;
 }
