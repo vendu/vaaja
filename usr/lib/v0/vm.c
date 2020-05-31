@@ -66,7 +66,7 @@ v0_not(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = ~(*(int32_t *)src);
     
-    *(int32_t *)dest = res;
+    *(int32_t *)dest = ~res;
 
     return;
 }
@@ -76,7 +76,7 @@ v0_neg(void *src, void *dest, C_UNUSED m_word_t parm)
 {
     int32_t res = -(*(int32_t *)src);
 
-    *(int32_t *)dest = res;
+    *(int32_t *)dest = ~res + 1;
 
     return;
 }

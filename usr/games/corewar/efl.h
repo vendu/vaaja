@@ -1,8 +1,8 @@
 #ifndef __COREWAR_EFL_H__
 #define __COREWAR_EFL_H__
 
-#define ZEUSEFLWIDTH  800
-#define ZEUSEFLHEIGHT 600
+#define ZEUSEFLWIDTH  480
+#define ZEUSEFLHEIGHT 720
 
 struct zeusefl {
     Ecore_Evas *core;
