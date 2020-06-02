@@ -31,7 +31,8 @@ struct v0romparm {
  * wbr();               		// convenience for bar(WRBAR)
  * wfe();                       // wait for memory event
  * sev();                       // signal memory event
- * ipg(adr)                     // invalidate page TLB-entry
+ * ipg(adr);                    // invalidate page TLB-entry
+ * sbr(ri_low, r_hi);           // set bound-range for under/overrun checks
  * rand(ri_src, r_dest);        // ATOMIC *dest &= src;
  * rlor(ri_src, r_dest);        // ATOMIC *dest |= src;
  * rxor(ri_src, r_dest);        // ATOMIC *dest ^= src;
@@ -61,19 +62,20 @@ struct v0romparm {
 #define V0_BAR_OP       0x0c    // memory barrier; default to full
 #define V0_WFE_OP       0x0d    // wait for [write] event
 #define V0_SEV_OP       0x0e    // signal [write] event
-#define V0_IPG_OP       0x1f    // invalidate page TLB-entry
-#define V0_RAND_OP      0x10    // atomic fetch-and-AND
-#define V0_RLOR_OP      0x11    // atomic fetch-and-OR
-#define V0_RXOR_OP      0x12    // atomic fetch-and-XOR
-#define V0_RINC_OP      0x13    // atomic fetch-and-increment by one
-#define V0_RDEC_OP      0x14    // atomic fetch-and-decrement by one
-#define V0_RADD_OP      0x15    // atomic fetch-and-add
-#define V0_CAS_OP       0x16    // atomic compare-and-swap
-#define V0_XCH_OP       0x17    // atomic exchange
-#define V0_BTC_OP       0x18    // atomic bit test-and-clear
-#define V0_BTS_OP       0x19    // atomic bit test-and-set
-#define V0_BSF_OP       0x1a    // atomic bit scan-and-set forward (up)
-#define V0_BSR_OP       0x1b    // atomic bit scan-and-set reverse (down)
+#define V0_IPG_OP       0x0f    // invalidate page TLB-entry
+#define V0_SBR_OP       0x10    // set bound-range
+#define V0_RAND_OP      0x11    // atomic fetch-and-AND
+#define V0_RLOR_OP      0x12    // atomic fetch-and-OR
+#define V0_RXOR_OP      0x13    // atomic fetch-and-XOR
+#define V0_RINC_OP      0x14    // atomic fetch-and-increment by one
+#define V0_RDEC_OP      0x15    // atomic fetch-and-decrement by one
+#define V0_RADD_OP      0x16    // atomic fetch-and-add
+#define V0_CAS_OP       0x17    // atomic compare-and-swap
+#define V0_XCH_OP       0x18    // atomic exchange
+#define V0_BTC_OP       0x19    // atomic bit test-and-clear
+#define V0_BTS_OP       0x1a    // atomic bit test-and-set
+#define V0_BSF_OP       0x1b    // atomic bit scan-and-set forward (up)
+#define V0_BSR_OP       0x1c    // atomic bit scan-and-set reverse (down)
 
 /*
  * not(r_src, r_dest);
