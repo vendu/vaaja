@@ -156,10 +156,10 @@ main(int argc, char *argv[])
     u = fxp64nrpiter1(u, v);
     u = fxp64nrpiter2(u, v);
     u = fxp64nrpiter3(u, v);
+    u = fxp64nrpiter4(u, v);
     //    u = fxp64nrpiter(u, v);
     fxp *= u;
     //    fxp >>= FXP64_FRAC_BITS;
-    fprintf(stderr, "FXP == %llx (%llx)\n", (long long)fxp, (long long)u);
     fxp64print(fxp);
     fxp = INT64_C(65535) << FXP64_FRAC_BITS;
     fxp = fxp64lomul(fxp, fxd);

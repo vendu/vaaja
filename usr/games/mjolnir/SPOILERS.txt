@@ -13,14 +13,18 @@ Notes
 - your pet dog hears and smells much better than you
 - your pet dog shows its pride by bringing you objects it finds
 - sacrificing dead monsters on altars may yield special gifts from your deity
+- bombing a national bank vault should make a great camouflage operation
+- your core war warriors may yield you extras on victory
+- the bank data systems are rumoured to cipher with ROT13
 
 Potions
 -------
+- potion of holy water
 - potion of booze
 - potion of poison
 - potion of sleep
 - potion of levitation
-- potion of blindess
+- potion of blindness
 
 Scrolls
 -------
@@ -31,6 +35,8 @@ Scrolls
 - scroll of see monsters
 - scroll of teleportation
 - scroll of healing
+- scroll of activate cross (with the names Michael, Gabriel, Rafael, and Uriel)
+- scroll of stop time (Topar with the wang of Buddha stops time for 5 seconds)
 
 Wands
 -----
@@ -43,4 +49,15 @@ Punchcards
 - punchcard of execute hack
 - punchcard of hint
 - punchcard of draw map
+- punchcards of Core War warriors
+
+Software Tapes
+--------------
+- core war warriors + editor
+- mastermind + bots
+
+Miscellaneous
+-------------
+- wooden plug (for vampires)
+- golden sword
 

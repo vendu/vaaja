@@ -17,5 +17,26 @@ typedef uint64_t                m_uwide_t;
 typedef int32_t                 m_adr_t;
 typedef uint32_t                m_uadr_t;
 
+/* virtual machine types */
+
+struct v0romparm {
+    m_adr_t     buf;
+    m_uword_t   bufsize;
+};
+
+struct v0trapctx {
+    m_reg_t     sp;
+    m_reg_t     stksize;
+};
+
+struct v0uctx {
+    m_reg_t oldfp;
+    m_reg_t retadr;
+    m_reg_t r1_5[5];
+    m_reg_t rx0_rx15[16];
+    m_reg_t r12_r15[4];     // FP, SP, PC, LR
+    /* 416 bytes reserved for coprocessor use */
+};
+
 #endif /* __V0_TYPES_H__ */
 

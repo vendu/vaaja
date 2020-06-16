@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <signal.h>
 
 #define FXP64_BITS              64
 #define FXP64_SIGN_BIT          (INT64_C(1) << (FXP64_BITS - 1))
@@ -40,7 +41,6 @@ fxp64mul(fxp64_t x, fxp64_t y)
 {
     fxp64_t res = 0;
     fxp64_t fyi = y >> FXP64_FRAC_BITS;
-    fxp64_t fxf = x & FXP64_FRAC_MASK;
     fxp64_t fyf = x & FXP64_FRAC_MASK;
 
     res = (x * fyi);
@@ -65,32 +65,40 @@ fxp64idiv(int64_t x, int64_t y)
     return ux;
 }
 
+#if 0
 static C_INLINE fxp64_t
 fxp64div(fxp64_t x, fxp64_t y)
 {
-    fxp64_t res = 0;
-    fxp64_t p2 = INT64_C(1) << (FXP64_BITS - 2);
-    fxp64_t bit;
-    int     cnt;
+    ufxp64_t    res = 0;
+    fxp64_t     p2 = FXP64_SIGN_BIT >> 1;
+    fxp64_t     bit;
+    int         xlz = __builtin_clzll(x);
+    int         ylz = __builtin_clzll(x);
+    int         n = xlz + ylz - 2;
+    int         cnt;
 
-    fprintf(stderr, "X / Y => %llx / %llx\n", (long long)x, (long long)y);
-    for (cnt = 1 ; cnt < FXP64_BITS - 1 ; cnt++) {
-        bit = (y & p2) >> cnt;
-        if (x > 0 && (bit)) {
+    fprintf(stderr, "N == %d\n", n);
+    //    fprintf(stderr, "X / Y => %llx / %llx\n", (long long)x, (long long)y);
+    for (cnt = 0 ; cnt < FXP64_BITS - 2 ; cnt++) {
+        bit = y & p2;
+        if (x > bit) {
+            x |= p2;
+            res += p2;
+        } else {
             x ^= p2;
-            res |= p2;
-        } else if (bit) {
-            x ^= p2;
-            res |= p2;
+            res -= p2;
         }
+#if 0
         fprintf(stderr, "%d: bit == %llx, p2 == %llx, x == %llx, res == %llx\n",
                 cnt, (long long)bit, (long long)p2,
                 (long long)x, (long long)res);
+#endif
         p2 >>= 1;
     }
 
     return res;
 }
+#endif
 
 #if 0
 static C_INLINE fxp64_t
@@ -98,17 +106,21 @@ fxp64div(int64_t x, int64_t y)
 {
     int64_t     sign = FXP64_SIGN_BIT;
     int64_t     quot = 0;
+    int64_t     bit = 1;
     int64_t     rem = x & ~sign;
     int64_t     den = y & ~sign;
     int64_t     tmp;
     int         i;
 
+    if (y == 0) {
+        raise(SIGFPE);
+    }
     i = 0;
     for (i = 0 ; i < FXP64_BITS - 1 ; i++) {
-        fprintf(stderr, "R = %llx, D = %llx, Q == %llx\n", rem, den, quot);
         tmp = rem - den;
+        fprintf(stderr, "REM == %ld, DEN == %ld, tmp == %ld\n", rem, den, tmp);
         quot <<= 1;
-        if (tmp > 0) {
+        if (tmp > bit) {
             rem = tmp;
             quot |= 1;
         }

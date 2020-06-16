@@ -15,7 +15,7 @@ void
 fp_dprint(double d)
 {
     fprintf(stderr, "%e\n", d);
-    fprintf(stderr, "\texp: %d\tmant: %lld\n", fp_dgetexp(d),
+    fprintf(stderr, "\texp: %lld\tmant: %lld\n", (long long)fp_dgetexp(d),
             (long long)fp_dgetmant(d));
 
     return;

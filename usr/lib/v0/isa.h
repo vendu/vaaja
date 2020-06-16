@@ -4,12 +4,7 @@
 #include <stdint.h>
 #include <v0/types.h>
 
-#define v0isnop(ins) (*(int32_t *)ins == INT32_C(0)) // all 0-bits
-
-struct v0romparm {
-    m_adr_t     buf;
-    m_uword_t   bufsize;
-};
+#define v0isnop(ins)    (*(int32_t *)ins == INT32_C(0)) // all 0-bits
 
 /*
  * SYS-unit 0x00; initialization, interrupts/signals, shutdown, atomic ops...
@@ -26,13 +21,13 @@ struct v0romparm {
  * dev(ri_id, r_cmd, a_parm);
  * rom(ri_id, r_cmd, a_parm);
  * csp(ri_pol);         		// cache policy; NONE, WRTHRU, or WRBACK
- * bar(r_flg);          		// r_flg: RDBAR, WRBAR, default to both
- * rbr();               		// convenience for bar(RDBAR)
- * wbr();               		// convenience for bar(WRBAR)
+ * bar();          		        // full [memory] barrier
+ * rbr();               		// read-barrier
+ * wbr();               		// write-barrier
  * wfe();                       // wait for memory event
  * sev();                       // signal memory event
  * ipg(adr);                    // invalidate page TLB-entry
- * sbr(ri_low, r_hi);           // set bound-range for under/overrun checks
+ * sbr(r_low, adr_hi);          // set bound-range for under/overrun checks
  * rand(ri_src, r_dest);        // ATOMIC *dest &= src;
  * rlor(ri_src, r_dest);        // ATOMIC *dest |= src;
  * rxor(ri_src, r_dest);        // ATOMIC *dest ^= src;
@@ -133,12 +128,12 @@ struct v0romparm {
 #define V0_SUB_OP       0x14    // subtraction
 #define V0_SBC_OP       0x15    // subtraction with carry/borrow
 #define V0_MUL_OP       0x16    // multiplication
-#define V0_UMUL_OP      0x17    // unsigned multiplication
+//#define V0_UMUL_OP      0x17    // unsigned multiplication
 #define V0_MHI_OP       0x18    // multiplication, high result word
-#define V0_UMHI_OP      0x19    // unsigned multiplication, high result word
-#define V0_IDIV_OP      0x1a    // divide by multiplying with inverse reciprocal
+//#define V0_UMHI_OP      0x19    // unsigned multiplication, high result word
 #define V0_DIV_OP       0x1b    // division
-#define V0_UDIV_OP      0x1c    // unsigned division
+//#define V0_UDIV_OP      0x1c    // unsigned division
+#define V0_IDIV_OP      0x1a    // divide by multiplying with inverse reciprocal
 #define V0_REM_OP       0x1d    // remainder
 #define V0_UREM_OP      0x1e    // unsigned remainder
 
@@ -214,32 +209,35 @@ struct v0romparm {
  * hun(val);
  */
 #define V0_BIT_UNIT     0x03
-#define V0_ZEX_OP       0x00    // zero-extend from given width to 32-bit
-#define V0_SEX_OP       0x01    // sign-extend from given width to 32-bit
-#define V0_CLZ_OP       0x02    // count leading zero-bits
-#define V0_HAM_OP       0x03    // bit population/Hamming weight/count of 1-bits
-#define V0_PAR_OP       0x04    // compute bit-parity; 0 for even # of 1-bits
-#define V0_HSH_OP       0x04    // compute 32-bit hash-value from key
-#define V0_HUN_OP       0x05    // reverse 32-bit hash-value back to key
-#define V0_BEX_OP       0x06    // extract bits
-#define V0_BPK_OP       0x06    // pack bits
+#define V0_TST_OP       0x00    // AND without setting result (test bits)
+#define V0_ZEX_OP       0x01    // zero-extend from given width to 32-bit
+#define V0_SEX_OP       0x02    // sign-extend from given width to 32-bit
+#define V0_CLZ_OP       0x03    // count leading zero-bits
+#define V0_CTZ_OP       0x04    // count trailing zero-bits
+#define V0_HAM_OP       0x05    // bit population/Hamming weight/count of 1-bits
+#define V0_PAR_OP       0x06    // compute bit-parity; 0 for even # of 1-bits
+#define V0_HSH_OP       0x07    // compute 32-bit hash-value from key
+#define V0_HUN_OP       0x08    // reverse 32-bit hash-value back to key
+#define V0_BEX_OP       0x09    // extract bits
+#define V0_BPK_OP       0x0a    // pack bits
 
 /* LDSTR-unit 0x04 */
 #define V0_LDSTR_UNIT   0x04
-#define V0_LDR_OP       0x00    // memory-to-register load
-#define V0_STR_OP       0x01    // register-to-memory store
-#define V0_PSH_OP       0x02    // push register
-#define V0_POP_OP       0x03    // pop register
-#define V0_STM_OP       0x04    // store many (uses register bitmap)
-#define V0_LDM_OP       0x05    // load many (uses register bitmap)
-#define V0_MVS_OP       0x06    // user-to-system register copy
-#define V0_LDS_OP       0x07    // memory-to-system-register load
-#define V0_STS_OP       0x08    // system-register to memory store
-#define V0_SMS_OP       0x09    // store many system registers
-#define V0_LMS_OP       0x0a    // load many system registers
-#define V0_LNT_OP       0x0b    // non-temporal load (bypass cache)
-#define V0_SNT_OP       0x0c    // non-temporal store
-/* opcodes 0x0d-0x0f are reserved for future use */
+#define V0_LEA_OP       0x00    // load effective address
+#define V0_LDR_OP       0x01    // memory-to-register load
+#define V0_STR_OP       0x02    // register-to-memory store
+#define V0_PSH_OP       0x03    // push register
+#define V0_POP_OP       0x04    // pop register
+#define V0_STM_OP       0x05    // store many (uses register bitmap)
+#define V0_LDM_OP       0x06    // load many (uses register bitmap)
+#define V0_MVS_OP       0x07    // user-to-system register copy
+#define V0_LDS_OP       0x08    // memory-to-system-register load
+#define V0_STS_OP       0x09    // system-register to memory store
+#define V0_SMS_OP       0x0a    // store many system registers
+#define V0_LMS_OP       0x0b    // load many system registers
+#define V0_LNT_OP       0x0c    // non-temporal load (bypass cache)
+#define V0_SNT_OP       0x0d    // non-temporal store
+/* opcodes 0x0e, 0x0f are reserved for future use */
 /* CMOVE-extension; transfer type determined by parm & V0_XFER_DIR_MASK */
 #define V0_MEQ_OP       0x10    // if (ZF) { dest = src; }
 #define V0_LEQ_OP       0x10    // if (ZF) { dest = *adr; }
@@ -315,16 +313,6 @@ struct v0ins {
     int8_t  regs;           // source and destination register IDs
     int16_t imm;            // instruction-dependent operands/parameters
     int32_t imm32[C_VLA];   // possible 32-bit immediate operand
-};
-
-struct v0uctx {
-    m_reg_t oldfp;
-    m_reg_t retadr;
-    m_reg_t nstkb;
-    m_reg_t r1_5[5];
-    m_reg_t rx0_rx14[15];
-    m_reg_t r12_r15[4];     // FP, SP, PC, LR
-    /* 416 bytes reserved for coprocessor use */
 };
 
 #endif /* __V0_ISA_H__ */

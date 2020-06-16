@@ -38,7 +38,7 @@ union _dbl64 {
 };
 
 double
-irpguess(double den)
+irpguess0(double den)
 {
     union _dbl64        u;
     uint64_t            m = UINT64_C(0xbfcdd6a18f6a6f52);
@@ -52,7 +52,51 @@ irpguess(double den)
     return dbl;
 }
 
-/* this division routine should work fine :) */
+double
+irpguess(double den)
+{
+    double  d1 = 140.0 / 33.0;
+    double  d2 = -64.0 / 11.0;
+    double  d3 = 256.0 / 99.0;
+    double  res = den;
+
+    res *= d3;          // den * 256/99
+    res += d2;          // den += -64/11
+    res *= den;         // den * (-64/11 + d * 256/99)
+    res += d1;
+
+    return res;
+}
+
+double
+gsdiv(int32_t num, int32_t den)
+{
+    int     sft = DOUBLE_MANTISSA_BITS - __builtin_clz(den);
+    double  n;
+    double  d = den << sft;
+    double  f;
+
+    if (den == 0) {
+        abort();
+    } else if (den > num) {
+
+        return 0;
+    } else if (den == num) {
+
+        return 1;
+    }
+    fp_dsetexp(n, sft);
+    fp_dsetexp(d, -sft);
+    f = 2.0 - d;
+    d = 2.0 - f;
+    f = 2.0 - d;
+    d = 2.0 - f;
+    f = 2.0 - d;
+    num *= d;
+    
+    return num;
+}
+
 int32_t
 irpidiv(int32_t num, int32_t den)
 {
@@ -61,12 +105,22 @@ irpidiv(int32_t num, int32_t den)
     double  drp;
     int32_t res;
 
-    drp = irpguess(dval);
-    drp = nrpiter2(drp, dval);
-    drp = nrpiter2(drp, dval);
-    drp = nrpiter2(drp, dval);
-    drp = nrpiter2(drp, dval);
-    dnum *= drp;
+    if (den == 0) {
+        abort();
+    } else if (den > num) {
+
+        return 0;
+    } else if (den == num) {
+
+        return 1;
+    } else if (den != 1) {
+        drp = irpguess2(dval);
+        drp = nrpiter2(drp, dval);
+        drp = nrpiter2(drp, dval);
+        drp = nrpiter2(drp, dval);
+        drp = nrpiter2(drp, dval);
+        dnum *= drp;
+    }
     res = (int32_t)dnum;
 
     return res;
@@ -76,10 +130,25 @@ irpidiv(int32_t num, int32_t den)
 int
 main(int argc, char *argv[])
 {
+    int32_t res;
+    int     i;
+    int     j;
+    
     fprintf(stderr, "%e steps\n", log2(33.0 / log2(17)));
     fprintf(stderr, "%d\n", irpidiv(55, 55));
     fprintf(stderr, "%d\n", irpidiv(220, 55));
-
+    fprintf(stderr, "%d\n", irpidiv(5, 5));
+    for (i = 0 ; i <= 0xffff ; i++) {
+        fprintf(stderr, "I: %x\n", i);
+        for (j = 1 ; j <= 0xffff ; j++) {
+            res = irpidiv(i, j);
+            if (res != i / j) {
+                fprintf(stderr, "%d/%d != %d", i, j, res);
+                abort();
+            }
+        }
+    }
+    
     exit(0);
 }
 #endif

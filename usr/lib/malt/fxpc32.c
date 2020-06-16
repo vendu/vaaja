@@ -140,15 +140,16 @@ fxpc32mul(int64_t x, int64_t y)
     return res;
 }
 
+#if 0
 fxpc32_t
 fxpc32div(fxpc32_t x, fxpc32_t y)
 {
     fxpc32_t    res = 0;
-    ufxpc32_t   p2 = UINT32_C(1) << (FXPC32_BITS - 2);
-    int         cnt = 1;
+    ufxpc32_t   p2 = 1U << (FXPC32_BITS - 2);
+    int         cnt = 0;
     int         i;
     
-    for (i = 0 ; i < FXPC32_BITS - 1 ; i++) {
+    for (i = 0 ; i < FXPC32_BITS - 2 ; i++) {
         if (x > 0) {
             x -= y >> cnt;
             res += p2;
@@ -162,6 +163,7 @@ fxpc32div(fxpc32_t x, fxpc32_t y)
 
     return res;
 }
+#endif
 
 #if 0
 fxpc32_t

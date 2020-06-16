@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <zero/cdefs.h>
 
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0
@@ -47,8 +48,8 @@ struct zenvfsnode {
 
 /* FIXME */
 struct iovec;
-typedef uint32_t DIR;
-typedef uint32_t FILE;
+typedef uint32_t _DIR;
+typedef uint32_t _FILE;
 typedef size_t socklen_t;
 struct sockaddr;
 struct msghdr;
@@ -86,21 +87,21 @@ struct zenvfsdevfuncs {
 };
 
 struct zenvfsdirfuncs {
-    DIR               (*opendir)(const char *path);
-    int               (*closedir)(DIR *dir);
+    _DIR              (*opendir)(const char *path);
+    int               (*closedir)(_DIR *dir);
     int               (*mkdir)(const char *path,  mode_t mode);
     int               (*rmdir)(const char *path);
-    struct dirent     (*readdir)(DIR *dir);
-    void              (*seekdir)(DIR *dir, long loc);
-    void              (*rewinddir)(DIR *dir);
-    long              (*telldir)(DIR *dir);
+    struct dirent     (*readdir)(_DIR *dir);
+    void              (*seekdir)(_DIR *dir, long loc);
+    void              (*rewinddir)(_DIR *dir);
+    long              (*telldir)(_DIR *dir);
 };
 
 struct zenvfsfifofuncs {
-    FILE     (**popen)(const char *cmd, const char *type);
-    int       (*pclose)(FILE *fp);
-    ssize_t   (*pread)(int fd, void *buf, size_t len, off_t ofs);
-    ssize_t   (*pwrite)(int fd, void *buf, size_t len, off_t ofs);
+    _FILE            (**popen)(const char *cmd, const char *type);
+    int               (*pclose)(_FILE *fp);
+    ssize_t           (*pread)(int fd, void *buf, size_t len, off_t ofs);
+    ssize_t           (*pwrite)(int fd, void *buf, size_t len, off_t ofs);
 };
 
 struct zenvfssockfuncs {
@@ -108,20 +109,22 @@ struct zenvfssockfuncs {
     int       (*bind)(int sockfd, const struct sockaddr *adr,
                       socklen_t adrlen);
     int       (*listen)(int sockfd, int backlog);
-    int       (*accept)(int sockfd, struct sockaddr *RESTRICT adr,
-                        socklen_t *RESTRICT adrlen);
+    int       (*accept)(int sockfd, struct sockaddr *C_RESTRICT adr,
+                        socklen_t *C_RESTRICT adrlen);
     int       (*connect)(int sockfd, const struct sockaddr *adr,
                          socklen_t adrlen);
-    int       (*getsockname)(int sockfd, struct sockaddr *RESTRICT adr,
-                             socklen_t *RESTRICT adrlen);
+    int       (*getsockname)(int sockfd, struct sockaddr *C_RESTRICT adr,
+                             socklen_t *C_RESTRICT adrlen);
     int       (*getsockopt)(int sockfd, int level, int optname,
-                            void *RESTRICT optval, socklen_t *RESTRICT optlen);
-    int       (*getpeername)(int sockfd, struct sockaddr *RESTRICT adr,
-                             socklen_t *RESTRICT adrlen);
+                            void *C_RESTRICT optval,
+                            socklen_t *C_RESTRICT optlen);
+    int       (*getpeername)(int sockfd, struct sockaddr *C_RESTRICT adr,
+                             socklen_t *C_RESTRICT adrlen);
     ssize_t   (*recv)(int sockfd, void *buf, size_t len, int flags);
-    ssize_t   (*recvfrom)(int sockfd, void *RESTRICT buf, size_t len, int flags,
-                          struct sockaddr *RESTRICT adr,
-                          socklen_t *RESTRICT adrlen);
+    ssize_t   (*recvfrom)(int sockfd, void *C_RESTRICT buf, size_t len,
+                          int flags,
+                          struct sockaddr *C_RESTRICT adr,
+                          socklen_t *C_RESTRICT adrlen);
     ssize_t   (*recvmsg)(int sockfd, struct msghdr *msg, int flags);
     ssize_t   (*send)(int sockfd, const void *buf, size_t len, int flags);
     int       (*shutdown)(int sockfd, int how);

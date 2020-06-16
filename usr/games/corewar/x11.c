@@ -853,12 +853,14 @@ zeusinitx11(struct zeusx11 *info)
     XMapRaised(disp, info->simwin);
     XMapRaised(disp, info->db1win);
     XMapRaised(disp, info->db2win);
-    zeusaddx11button(info, 0, "RUN", zeusrun);
-    zeusaddx11button(info, 1, "STOP", zeusstop);
-    zeusaddx11button(info, 2, "STEP", zeusstep);
-    zeusaddx11button(info, 3, "LOAD", zeusstep);
-    zeusaddx11button(info, 4, "EDIT", zeusstep);
-    zeusaddx11button(info, 5, "SAVE", zeusstep);
+    zeusaddx11button(info, ZEUSRUNBUTTON, "run", zeusrun);
+    zeusaddx11button(info, ZEUSBRKBUTTON, "brk", zeusrun);
+    zeusaddx11button(info, ZEUSSTOPBUTTON, "stop", zeusstop);
+    zeusaddx11button(info, ZEUSSTEPBUTTON, "step", zeusstep);
+    zeusaddx11button(info, ZEUSSTEPIBUTTON, "stepi", zeusstep);
+    zeusaddx11button(info, ZEUSLOADBUTTON, "load", zeusstep);
+    zeusaddx11button(info, ZEUSEDITBUTTON, "edit", zeusstep);
+    zeusaddx11button(info, ZEUSSAVEBUTTON, "save", zeusstep);
     g_zeussel.last = -1;
 #endif
 

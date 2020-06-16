@@ -19,13 +19,13 @@ typedef int16_t                         v0pix12;
 typedef v0pix12                         v0pixel;
 
 #define v0getpixblue(ptr)                                               \
-    ((uint8_t *)(ptr)[0] & PAPILIO_PRO_PIX_MASK)
+    ((int8_t *)(ptr)[0] & PAPILIO_PRO_PIX_MASK)
 #define v0getpixgreen(ptr)                                              \
-    (((uint8_t *)(ptr)[0] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)
+    (((int8_t *)(ptr)[0] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)
 #define v0getpixred(ptr)                                                \
-    ((uint8_t *)(ptr)[1] & PAPILIO_PRO_PIX_MASK)
+    ((int8_t *)(ptr)[1] & PAPILIO_PRO_PIX_MASK)
 #define v0getpixflg(ptr)                                                \
-    (((uint8_t *)(ptr)[1] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)
+    (((int8_t *)(ptr)[1] >> PAPILIO_PRO_PIX_SHIFT) & PAPILIO_PRO_PIX_MASK)
 
 #define PAPILIO_PRO_TIMER_PREC          32000000        // 32 MHz oscillator
 #define PAPILIO_PRO_TIMER_MUL           2               // 64 MHz system bus
@@ -39,13 +39,12 @@ typedef v0pix12                         v0pixel;
 #define PAPILIO_PRO_VIDEO_WIDTH         640                     // screen width
 #define PAPILIO_PRO_VIDEO_HEIGHT        480                     // screen height
 #define PAPILIO_PRO_VIDEO_BUFSZ  (PAPILIO_PRO_VIDEO_WIDTH * PAPILIO_PRO_VIDEO_HEIGHT * sizeof(v0pixel))
-#define PAPILIO_PRO_VGA_DEPTH           4096
+#define PAPILIO_PRO_VGA_COLORS          4096
 #define PAPILIO_PRO_VGA_BITS            12
-#define PAPILIO_PRO_BRAM_FB             PAPILIO_PRO_RAM_SIZE    // above SDRAM
-#define PAPILIO_PRO_FB_SIZE             460800                  // fb size
+#define PAPILIO_PRO_FB                  PAPILIO_PRO_RAM_SIZE    // above SDRAM
+#define PAPILIO_PRO_FB_SIZE             PAPILIO_PRO_VIDEO_BUFSZ // fb size
 #define PAPILIO_PRO_CONF_SIZE           65536                   // BRAM-config
-#define PAPILIO_PRO_CONF_BRAM                                           \
-    (PAPILIO_PRO_BRAM_SIZE - PAPILIO_PRO_CONF_SIZE - PAPILIO_PRO_FB_SIZE)
+#define PAPILIO_PRO_CONF_BRAM           PAPILIO_PRO_BRAM_UNIT
 #define PAPILIO_PRO_BRAM_UNIT           18000
 #define PAPILIO_PRO_BRAM_UNITS          32
 #define PAPILIO_PRO_BRAM_SIZE                                           \

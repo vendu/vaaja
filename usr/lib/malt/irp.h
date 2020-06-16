@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 #include <zero/cdefs.h>
+#if defined(TEST_DIV)
+#include <stdio.h>
+#endif
 
 #define MALT_IRP_GUESS_CONST    (48.0 / 17.0)
 #define MALT_IRP_GUESS_FACTOR   (32 / 17.0)
@@ -27,15 +30,24 @@ nrpiter(double x, double d)
 }
 
 /* Another Newton-Raphson iterator variant */
+/*
+ * e = 1 - dx;
+ * y = x * e;
+ * x = x + y + y * e;
+ */
 static C_INLINE double
 nrpiter2(double x, double d)
 {
-    double  e = 1 - d * x;
+    double  e = 1.0 - d * x;
     double  y = x * e;
 
     x += y + y * e;
+#if (TEST_DIV)
+    fprintf(stderr, "X == %e\n", x);
+#endif
 
     return x;
 }
 
 #endif /* __MATH_IRP_H__ */
+

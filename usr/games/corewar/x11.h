@@ -9,7 +9,15 @@
 #include <Imlib2.h>
 #endif
 
-#define ZEUSNBUTTON 6
+#define ZEUSRUNBUTTON   0
+#define ZEUSBRKBUTTON   1
+#define ZEUSSTOPBUTTON  2
+#define ZEUSSTEPBUTTON  3
+#define ZEUSSTEPIUTTON  4
+#define ZEUSLOADBUTTON  5
+#define ZEUSEDITBUTTON  6
+#define ZEUSSAVEBUTTON  7
+#define ZEUSNBUTTON     8
 
 struct zeusx11win {
     Display *disp;

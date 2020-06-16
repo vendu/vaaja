@@ -79,7 +79,7 @@ struct zenfs0dirent {
     zenfs0half_t        namelen;        // 16-bit length of name
     zenfs0byte_t        type;           // ZEN_FS0_*_NODE
     zenfs0byte_t        ver;            // filesystem version
-    zenfs0byte_t        name[VLA];      // padded to 64-bit boundary
+    zenfs0byte_t        name[C_VLA];    // padded to 64-bit boundary
 };
 
 #endif /* __ZEN_FS0_H__ */
