@@ -133,7 +133,7 @@ main(int argc, char *argv[])
     int32_t res;
     int     i;
     int     j;
-    
+
     fprintf(stderr, "%e steps\n", log2(33.0 / log2(17)));
     fprintf(stderr, "%d\n", irpidiv(55, 55));
     fprintf(stderr, "%d\n", irpidiv(220, 55));
@@ -148,7 +148,7 @@ main(int argc, char *argv[])
             }
         }
     }
-    
+
     exit(0);
 }
 #endif

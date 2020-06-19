@@ -6,12 +6,12 @@
 
 #if 0
 
-THREADLOCAL struct v0thr          t_ctx;
+THREADLOCAL struct v0thr        t_ctx;
 #if defined(V0_PTHREAD)
-THREADLOCAL pthread_t             t_thrid;
-THREADLOCAL pthread_mutex_t       t_waitmtx;
+THREADLOCAL pthread_t           t_thrid;
+THREADLOCAL pthread_mutex_t     t_waitmtx;
 #endif
-THREADLOCAL void                * t_exitval;
+THREADLOCAL void               *t_exitval;
 
 static __inline__ void
 v0initthr(struct v0thr *thr)

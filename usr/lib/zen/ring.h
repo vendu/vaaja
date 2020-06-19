@@ -1,64 +1,64 @@
-#ifndef __ZERO_RING_H__
-#define __ZERO_RING_H__
+#ifndef __RING_H__
+#define __RING_H__
 
 /* FIXME: do this! :) */
-#define RINGATOMIC 0
+#define ZEN_RINGATOMIC 0
 
-/* RING_MALLOC  - function used to allocate data buffer */
-/* RING_FREE    - function used to free buffers */
-/* RING_MEMCPY  - function used to copy data */
-/* RING_ITEM    - type of items in ring buffer */
-/* RING_INVAL   - invalid/non-present item value */
+/* ZEN_RING_MALLOC  - function used to allocate data buffer */
+/* ZEN_RING_FREE    - function used to free buffers */
+/* ZEN_RING_MEMCPY  - function used to copy data */
+/* ZEN_RING_ITEM    - type of items in ring buffer */
+/* ZEN_RING_INVAL   - invalid/non-present item value */
 
-#if !defined(RINGSHAREBUF)
-#define RINGSHAREBUF 0
+#if !defined(ZEN_RINGSHAREBUF)
+#define ZEN_RINGSHAREBUF 0
 #endif
 
 #include <features.h>
 #include <stdint.h>
 #include <limits.h>
-#if defined(_ZERO_SOURCE) && (RINGSHAREBUF)
+#if defined(_ZERO_SOURCE) && (ZEN_RINGSHAREBUF)
 #include <sys/syscall.h>
 #include <sys/zero/syscall.h>
 #include <kern/mem/obj.h>
 #endif
 #include <zero/cdefs.h>
 #include <mach/param.h>
-#if (!RINGATOMIC)
+#if (!ZEN_RINGATOMIC)
 #include <mt/mtx.h>
 #endif
 #include <zero/trix.h>
-#if !defined(RING_MALLOC) || !defined(RING_FREE)
-#undef RING_MALLOC
-#undef RING_FREE
+#if !defined(ZEN_RING_MALLOC) || !defined(ZEN_RING_FREE)
+#undef ZEN_RING_MALLOC
+#undef ZEN_RING_FREE
 #if defined(__KERNEL__)
 #include <kern/malloc.h>
-#define RING_MALLOC(sz)            kmalloc(sz)
-#define RING_FREE(ptr)             kfree(ptr)
+#define ZEN_RING_MALLOC(sz)            kmalloc(sz)
+#define ZEN_RING_FREE(ptr)             kfree(ptr)
 #else
 #include <stdlib.h>
-#define RING_MALLOC(sz)            malloc(sz)
-#define RING_FREE(ptr)             free(ptr)
+#define ZEN_RING_MALLOC(sz)            malloc(sz)
+#define ZEN_RING_FREE(ptr)             free(ptr)
 #endif
 #endif
-#if !defined(RING_MEMCPY)
+#if !defined(ZEN_RING_MEMCPY)
 #include <string.h>
-#define RING_MEMCPY(dest, src, nb) memcpy(dest, src, nb)
+#define ZEN_RING_MEMCPY(dest, src, nb) memcpy(dest, src, nb)
 #endif
 
-#if (RINGSHAREBUF) && !defined(__KERNEL__)
+#if (ZEN_RINGSHAREBUF) && !defined(__KERNEL__)
 #if defined(_ISOC11_SOURCE) && (_ISOC11_SOURCE)
-#defined RING_VALLOC(n)           aligned_alloc(PAGESIZE, n)
+#defined ZEN_RING_VALLOC(n)           aligned_alloc(PAGESIZE, n)
 #elif (((defined(_BSD_SOURCE) && (_BSD_SOURCE))                         \
         || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE >= 500             \
                                        || ((defined(_XOPEN_SOURCE_EXTENDED) \
                                             && (_XOPEN_SOURCE_EXTENDED)))))) \
        && !((USEPOSIX200112)                                            \
             || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE >= 600))))     \
-#define RING_VALLOC(n)            valloc(n)
+#define ZEN_RING_VALLOC(n)            valloc(n)
 #elif (USEPOSIX200112 || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE >= 600)))
 static __inline__ void *
-RING_VALLOC(size_t n)
+ZEN_RING_VALLOC(size_t n)
 {
     void *ptr;
 
@@ -70,28 +70,28 @@ RING_VALLOC(size_t n)
     return ptr;
 }
 #else
-#define RING_VALLOC(n) memalign(PAGESIZE, n)
+#define ZEN_RING_VALLOC(n) memalign(PAGESIZE, n)
 #endif
-#endif /* RINGSHAREBUF && !__KERNEL__ */
+#endif /* ZEN_RINGSHAREBUF && !__KERNEL__ */
 
 /* flg-member bits */
-#define RINGBUF_INIT (1 << 0)
+#define ZEN_RINGBUF_INIT (1 << 0)
 struct ringbuf {
-    zerofmtx   lk;
-    long       flg;
-    long       nitem;
-    RING_ITEM *base;
-    RING_ITEM *lim;
-    RING_ITEM *inptr;
-    RING_ITEM *outptr;
-    long       pad;
+    mtfmtx          lk;
+    long            flg;
+    long            nitem;
+    ZEN_RING_ITEM  *base;
+    ZEN_RING_ITEM  *lim;
+    ZEN_RING_ITEM  *inptr;
+    ZEN_RING_ITEM  *outptr;
+    long            pad;
     /* data buffer */
-#if (RINGSHAREBUF)
+#if (ZEN_RINGSHAREBUF)
     uint8_t   *data;
 #else
-    uint8_t    data[VLA];
+    uint8_t    data[C_VLA];
 #endif
-} ALIGNED(PAGESIZE);
+} C_ALIGNED(MACH_PAGE_SIZE);
 
 /*
  * initialise ring buffer
@@ -103,17 +103,17 @@ ringinit(void *ptr, void *base, long nitem)
     struct ringbuf *buf = ptr;
     long            retval = 0;
 
-    fmtxlk(&buf->lk);
-    if (buf->flg & RINGBUF_INIT) {
-        fmtxunlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
+    if (buf->flg & ZEN_RINGBUF_INIT) {
+        mtunlkfmtx(&buf->lk);
 
         return 1;
     }
     if (!base) {
-#if (RINGSHAREBUF)
-        base = RING_VALLOC(nitem * sizeof(RING_ITEM));
-#elif defined(RING_MALLOC)
-        base = RING_MALLOC(nitem * sizeof(RING_ITEM));
+#if (ZEN_RINGSHAREBUF)
+        base = ZEN_RING_VALLOC(nitem * sizeof(ZEN_RING_ITEM));
+#elif defined(ZEN_RING_MALLOC)
+        base = ZEN_RING_MALLOC(nitem * sizeof(ZEN_RING_ITEM));
 #else
         base = &buf->data;
 #endif
@@ -124,19 +124,19 @@ ringinit(void *ptr, void *base, long nitem)
         retval++;
     }
     if (base) {
-        buf->flg |= RINGBUF_INIT;
+        buf->flg |= ZEN_RINGBUF_INIT;
         buf->nitem = nitem;
         buf->base = base;
-        buf->lim = (RING_ITEM *)((uint8_t *)base + nitem * sizeof(RING_ITEM));
+        buf->lim = (ZEN_RING_ITEM *)((uint8_t *)base + nitem * sizeof(ZEN_RING_ITEM));
         buf->inptr = base;
         buf->outptr = base;
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return retval;
 }
 
-#if defined(_ZERO_SOURCE) && (RINGSHAREBUF)
+#if defined(_ZERO_SOURCE) && (ZEN_RINGSHAREBUF)
 
 static __inline__ long
 ringmapbuf(struct ringbuf *buf, long flg, struct perm *perm)
@@ -147,61 +147,61 @@ ringmapbuf(struct ringbuf *buf, long flg, struct perm *perm)
     mem.flg = MEM_UMAP | flg;
     mem.adr = buf->base;
     mem.ofs = 0;
-    mem.len = buf->nitem * sizeof(RING_ITEM);
+    mem.len = buf->nitem * sizeof(ZEN_RING_ITEM);
 //    syscall(SYS_MCTL, MEM_SHMAP, MEM_DUALMAP, &mem);
 }
 
-#endif /* defined(_ZERO_SOURCE) && (RINGSHAREBUF) */
+#endif /* defined(_ZERO_SOURCE) && (ZEN_RINGSHAREBUF) */
 
 /* fetch next item from ring buffer */
-static __inline__ RING_ITEM
+static __inline__ ZEN_RING_ITEM
 ringget(struct ringbuf *buf)
 {
-    RING_ITEM item = RING_INVAL;
+    ZEN_RING_ITEM item = ZEN_RING_INVAL;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     if (buf->outptr == buf->lim) {
         buf->outptr = buf->base;
     }
     if (buf->outptr != buf->inptr) {
         item = *buf->outptr++;
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return item;
 }
 
 /* queue item into ring buffer */
-static __inline__ RING_ITEM
-ringput(struct ringbuf *buf, RING_ITEM val)
+static __inline__ ZEN_RING_ITEM
+ringput(struct ringbuf *buf, ZEN_RING_ITEM val)
 {
-    RING_ITEM item = RING_INVAL;
+    ZEN_RING_ITEM item = ZEN_RING_INVAL;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     if (buf->inptr == buf->lim) {
         buf->inptr = buf->base;
     }
     if (buf->inptr != buf->outptr) {
         *buf->inptr++ = val;
         item = val;
-    } else if (!(buf->flg & RINGBUF_INIT)) {
+    } else if (!(buf->flg & ZEN_RINGBUF_INIT)) {
         *buf->inptr++ = val;
         item = val;
-        buf->flg |= RINGBUF_INIT;
+        buf->flg |= ZEN_RINGBUF_INIT;
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return item;
 }
 
 /* fetch next items from ring buffer */
 static __inline__ long
-ringgetmany(struct ringbuf *buf, RING_ITEM *dest, long len)
+ringgetmany(struct ringbuf *buf, ZEN_RING_ITEM *dest, long len)
 {
     long nitem;
     long ret;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     if (buf->outptr > buf->inptr) {
         nitem = buf->lim - buf->outptr;
     } else {
@@ -224,19 +224,19 @@ ringgetmany(struct ringbuf *buf, RING_ITEM *dest, long len)
             *dest++ = *buf->outptr++;
         }
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return ret;
 }
 
 /* queue items into ring buffer */
 static __inline__ long
-ringputmany(struct ringbuf *buf, RING_ITEM *src, long len)
+ringputmany(struct ringbuf *buf, ZEN_RING_ITEM *src, long len)
 {
     long nitem;
     long ret;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     if (buf->inptr < buf->outptr) {
         nitem = buf->outptr - buf->inptr;
     } else {
@@ -259,7 +259,7 @@ ringputmany(struct ringbuf *buf, RING_ITEM *src, long len)
             *buf->inptr++ = *src++;
         }
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return ret;
 }
@@ -274,12 +274,12 @@ ringgetmany32(struct ringbuf *buf, int32_t *dest, long len)
     long     ret;
     long     ofs;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     i8ptr = (int8_t *)buf->outptr;
     ofs = sizeof(int32_t) - ((uintptr_t)i8ptr & (sizeof(int32_t) - 1));
     i8ptr += ofs;
     ptr = (int32_t *)i8ptr;
-    if ((RING_ITEM *)ptr < buf->inptr) {
+    if ((ZEN_RING_ITEM *)ptr < buf->inptr) {
         nitem = (int8_t *)buf->inptr - (int8_t *)ptr;
     } else {
         nitem = (int8_t *)buf->lim - (int8_t *)ptr;
@@ -290,10 +290,10 @@ ringgetmany32(struct ringbuf *buf, int32_t *dest, long len)
     while (nitem--) {
         *dest++ = *ptr++;
     }
-    if ((RING_ITEM *)ptr == buf->lim) {
+    if ((ZEN_RING_ITEM *)ptr == buf->lim) {
         ptr = (int32_t *)buf->base;
     }
-    if ((RING_ITEM *)ptr != buf->inptr) {
+    if ((ZEN_RING_ITEM *)ptr != buf->inptr) {
         nitem = (int8_t *)buf->inptr - (int8_t *)ptr;
         nitem = min(len, nitem >> 2);
         ret += nitem;
@@ -301,8 +301,8 @@ ringgetmany32(struct ringbuf *buf, int32_t *dest, long len)
             *dest++ = *ptr++;
         }
     }
-    buf->outptr = (RING_ITEM *)ptr;
-    fmtxunlk(&buf->lk);
+    buf->outptr = (ZEN_RING_ITEM *)ptr;
+    mtunlkfmtx(&buf->lk);
 
     return ret;
 }
@@ -317,16 +317,16 @@ ringputmany32(struct ringbuf *buf, int32_t *src, long len)
     long     ret;
     long     ofs;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     i8ptr = (int8_t *)buf->inptr;
     ofs = sizeof(int32_t) - ((uintptr_t)i8ptr & (sizeof(int32_t) - 1));
     ptr = (int32_t *)(i8ptr + ofs);
-#if defined(RING_PAD_BYTE)
+#if defined(ZEN_RING_PAD_BYTE)
     while (ofs--) {
-        *i8ptr++ = RING_PAD_BYTE;
+        *i8ptr++ = ZEN_RING_PAD_BYTE;
     }
 #endif
-    if ((RING_ITEM *)ptr < buf->outptr) {
+    if ((ZEN_RING_ITEM *)ptr < buf->outptr) {
         nitem = (int8_t *)buf->outptr - (int8_t *)ptr;
     } else {
         nitem = (int8_t *)buf->lim - (int8_t *)ptr;
@@ -337,10 +337,10 @@ ringputmany32(struct ringbuf *buf, int32_t *src, long len)
     while (nitem--) {
         *ptr++ = *src++;
     }
-    if ((RING_ITEM *)ptr == buf->lim) {
+    if ((ZEN_RING_ITEM *)ptr == buf->lim) {
         ptr = (int32_t *)buf->base;
     }
-    if ((RING_ITEM *)ptr != buf->outptr) {
+    if ((ZEN_RING_ITEM *)ptr != buf->outptr) {
         nitem = (int8_t *)buf->outptr - (int8_t *)ptr;
         nitem = min(len, nitem >> 2);
         ret += nitem;
@@ -348,50 +348,50 @@ ringputmany32(struct ringbuf *buf, int32_t *src, long len)
             *ptr++ = *src++;
         }
     }
-    buf->inptr = (RING_ITEM *)ptr;
-    fmtxunlk(&buf->lk);
+    buf->inptr = (ZEN_RING_ITEM *)ptr;
+    mtunlkfmtx(&buf->lk);
 
     return ret;
 }
 
-#if defined(RING_MALLOC)
+#if defined(ZEN_RING_MALLOC)
 
 /* resize data buffer */
 static __inline__ void *
 ringresize(struct ringbuf *buf, long nitem)
 {
-    RING_ITEM *ptr = NULL;
-    RING_ITEM *src;
+    ZEN_RING_ITEM *ptr = NULL;
+    ZEN_RING_ITEM *src;
     long       nin;
     long       nout;
 
-    fmtxlk(&buf->lk);
+    mtlkfmtx(&buf->lk);
     if (nitem > buf->nitem) {
         nin = (int8_t *)buf->inptr - (int8_t *)buf->base;
         nout = (int8_t *)buf->outptr - (int8_t *)buf->base;
         src = buf->base;
-        ptr = RING_MALLOC(nitem * sizeof(RING_ITEM));
+        ptr = ZEN_RING_MALLOC(nitem * sizeof(ZEN_RING_ITEM));
         if (ptr) {
-            if (src && (buf->flg & RINGBUF_INIT)) {
-                RING_MEMCPY(ptr, src, buf->nitem);
+            if (src && (buf->flg & ZEN_RINGBUF_INIT)) {
+                ZEN_RING_MEMCPY(ptr, src, buf->nitem);
             }
-            RING_FREE(src);
+            ZEN_RING_FREE(src);
             buf->nitem = nitem;
             buf->base = ptr;
-            buf->lim = (RING_ITEM *)((int8_t *)ptr
-                                     + nitem * sizeof(RING_ITEM));
-            buf->inptr = (RING_ITEM *)((int8_t *)ptr + nin);
-            buf->outptr = (RING_ITEM *)((int8_t *)ptr + nout);
+            buf->lim = (ZEN_RING_ITEM *)((int8_t *)ptr
+                                     + nitem * sizeof(ZEN_RING_ITEM));
+            buf->inptr = (ZEN_RING_ITEM *)((int8_t *)ptr + nin);
+            buf->outptr = (ZEN_RING_ITEM *)((int8_t *)ptr + nout);
         }
     } else {
         ptr = buf->base;
     }
-    fmtxunlk(&buf->lk);
+    mtunlkfmtx(&buf->lk);
 
     return ptr;
 }
 
-#endif /* RING_MALLOC */
+#endif /* ZEN_RING_MALLOC */
 
-#endif /* __ZERO_RING_H__ */
+#endif /* __ZEN_RING_H__ */
 

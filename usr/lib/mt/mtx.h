@@ -3,6 +3,8 @@
 
 /* velho mutex locks */
 
+#include <mach/atomic.h>
+
 #define MTPTHREAD       1
 
 #define MTMTX           1
