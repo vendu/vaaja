@@ -59,7 +59,7 @@ v0initvm(struct vm *vm, int flg, size_t dramsize)
     return vm;
 }
 
-/* ALU-unit */
+/* ALU-unit 0x01 */
 
 static void
 v0_not(void *src, void *dest, C_UNUSED m_word_t parm)
@@ -645,6 +645,25 @@ v0_ucmp(void *src, void *dest, C_UNUSED m_word_t parm)
     }
 
     return;
+}
+
+static int
+v0fetchinst(struct v0vm *vm)
+{
+    m_word_t    pc;
+    m_word_t    newpc;
+    m_word_t    ins;
+    m_word_t    imm;
+    
+    v0lkbit32(&vm->genregs[V0_PC_REGISTER], V0_PC_LK_BIT_OFS);
+    pc = vm->genregs[V0_PC_REGISTER];
+    newpc = pc + sizeof(m_word_t) - 1;
+    pc &= ~V0_PC_LK_BIT;
+    ins = vm->mem[pc];
+    if (ins & V0_INS_IMM32_BIT) {
+        imm = vm->mem[newpc];
+        newpc += sizeof(m_word_t);
+    }
 }
 
 int

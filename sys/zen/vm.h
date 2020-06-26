@@ -3,23 +3,27 @@
 
 /* zen kernel virtual memory interface */
 #if defined(__v0__)
-#include <zen/sys/v0.h>
+//#include <zen/bsp/v0.h>
 #endif
+#include <zen/types.h>
 #include <zero/trix.h>
+#include <mach/param.h>
+#include <mt/tktlk.h>
 
-#if (ZEN_WORD_SIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 #define zenvmcalcqid    lzero32
 #define ZEN_VM_QUEUES   32
-#elif (ZEN_WORD_SIZE == 8)
+#elif (MACH_WORD_SIZE == 8)
 #define zenvmcalcqid    lzero64
 #define ZEN_VM_QUEUES   64
 #endif
 
-#define v0calcvmqueue(page)                                             \
+#define _zencalcvmqueue(page)   ceilpow2l(page->qcnt)
 #define _zenvmlkqueue(queue)    mtlktkt(&queue->lk)
 #define _zenvmunlkqueue(queue)  mtunlktkt(&queue->lk)
 struct zenvmqueue {
     mttktlk             lk;
+    m_atomic_t          n;
     struct zenvmpage   *head;
     struct zenvmpage   *tail;
 };

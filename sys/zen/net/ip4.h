@@ -1,6 +1,9 @@
 #ifndef __ZEN_NET_IP4_H__
 #define __ZEN_NET_IP4_H__
 
+#include <stdint.h>
+#include <zero/cdefs.h>
+
 struct zennetudp4dgram {
     unsigned            version : 4;
     unsigned            hdrlen  : 4;
@@ -15,7 +18,7 @@ struct zennetudp4dgram {
     uint16_t            hdrcrc;
     uint32_t            srcadr;
     uint32_t            destadr;
-    uint8_t             data[VLA];
+    uint8_t             data[C_VLA];
 };
 
 struct zennettcp4pkt {
@@ -29,7 +32,7 @@ struct zennettcp4pkt {
     uint16_t            winsize;
     uint16_t            crc;
     uint16_t            urgptr;
-    uint8_t             data[VLA];
+    uint8_t             data[C_VLA];
 };
 
 #endif /* __ZEN_NET_IP4_H__ */

@@ -1,3 +1,6 @@
+#include <zen/types.h>
+#include <zen/perm.h>
+
 /* NOTE: flg MUST be one of ZEN_EXEC_PERM, ZEN_WRITE_PERM, ZEN_READ_PERM */
 
 /* I/O permissions */
@@ -9,26 +12,23 @@
  * - check for group permission
  * - check for world permission
  */
-#define _zenchkperm(perm, uid, grp, flg)                                \
-    (!(uid)                                                             \
+#define _zenchkperm(perm, u, g, f)                                      \
+    (!(u)                                                               \
      ? 1                                                                \
-     : (((uid) == ((perm)->uid) && (((perm)->flags) & ((flg) << 6)))    \
+     : (((u) == ((perm)->uid) && (((perm)->flags) & ((f) << 6)))        \
         ? 1                                                             \
-        : (((gid) == ((perm)->gid) && (((perm)->flags) & ((flg) << 3))) \
+        : (((g) == ((perm)->gid) && (((perm)->flags) & ((f) << 3)))     \
            ? 1                                                          \
-           : (((perm)->flags) && ((flags) & flg)))))
+           : (((perm)->flags) && ((f) & flg)))))
 
 int
 zenchkperm(struct zenperm *perm, struct zencred *cred, int flg)
 {
     zenuid_t    usr = cred->uid;
     zenuid_t    grp = cred->gid;
-    zenuid_t    uid = perm->owner->uid;
-    zenuid_t    gid = perm->owner->gid;
-    zenperm_t   flags = perm->flags;
     int         ret;
 
-    ret = _zenchkperm(uid, grp, flg, flg);
+    ret = _zenchkperm(perm, usr, grp, flg);
 
     return ret;
 }

@@ -127,6 +127,8 @@ tmunhash32(uint32_t u)
     u = ((u >> 16) ^ u) * 0x119de1f3;
     u = ((u >> 16) ^ u) * 0x119de1f3;
     u = (u >> 16) ^ u;
+
+    return u;
 }
 
 CONST uint64_t

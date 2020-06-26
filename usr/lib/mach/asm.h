@@ -3,7 +3,9 @@
 
 #include <mach/atomic.h>
 #include <mach/mem.h>
-#if defined(_WIN64)
+#if defined(__v0__)
+#include <mach/v0/asm.h>
+#elif defined(_WIN64)
 #include <zero/msc/win64.h>
 #elif defined(_WIN32)
 #include <zero/msc/win32.h>

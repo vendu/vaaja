@@ -1,74 +1,74 @@
 #include <stddef.h>
+#include <zen/mem.h>
+#include <zen/vm.h>
+#include <mt/lk.h>
 
-static struct mtlfq     g_vmpagequeue[ZEN_VM_QUEUES];
+static struct zenvmqueue    g_vmpagequeue[ZEN_VM_QUEUES];
 
 void
 zenvmqueuepage(struct zenproc *proc, struct zenvmpage *page)
 {
-    struct zenvmpage    *next;
-    uintptr_t            hptr;
-
-    _zenproclkpageq(proc);
-    next = page->next;
-    hptr = (uintptr_t)proc->pageq;
-    if (next) {
-        next->prev = page;
-    }
-    page->next = (struct zenvmpage *)(hptr & ~MT_MEM_LK_BIT);
-    m_cmpswapptr((m_atomicptr_t *)&proc->pageq,
-                 (m_atomicptr_t)hptr,
-                 (m_atomicptr_t)page);
-    zenvmaddpage(page);
-
-    return;
+    ;
 }
 
 void
 zenvmdeqpage(struct zenproc *proc)
 {
-    struct zenvmpage *head;
-    struct zenvmpage *next;
-    uintptr_t         hptr;
-
-    _zenproclkpageq(proc);
-    hptr = (uintptr_t)proc->pageq;
-    head = (struct zenvmpage *)(hptr & ~MT_MEM_LK_BIT);
-    if (head) {
-        next = head->next;
-        m_atomwrite(&proc->pageq, next);
-        zenvmdelpage(head);
-    } else {
-        m_atomwrite(&proc->pageq, NULL);
-    }
-
-    return;
+    ;
 }
 
 void
 zenvmaddpage(struct zenvmpage *page)
 {
-    zenlong             qcnt;
-    zenlong             qofs;
     struct zenvmqueue  *queue;
-    struct zenvmpage   *head;
     struct zenvmpage   *tail;
+    zenlong             qcnt;
+    zenlong             qid;
 
-    qcnt = m_fetchadd(&page->qcnt, 1);
-    zenvmcalcqid(qcnt, qid);
+    page->qcnt++;
+    qid = _zencalcvmqueue(page);
     queue = &g_vmpagequeue[qid];
-    qofs = mtlfqadd(queue, page);
-    page->qofs = ofs;
+    mtlktkt(&queue->lk);
+    tail = queue->tail;
+    if (tail) {
+        tail->next = page;
+    } else {
+        queue->head = page;
+    }
+    page->prev = tail;
+    page->next = NULL;
+    queue->tail = page;
+    mtunlktkt(&queue->lk);
+
+    return;
 }
 
 void
 zenvmdelpage(struct zenvmpage *page)
 {
-    struct zenvmqueue *queue;
-    long               ofs;
+    struct zenvmqueue  *queue;
+    struct zenvmpage   *item;
+    zenlong             qcnt;
+    zenlong             qid;
 
     queue = page->queue;
-    ofs = page->qofs;
-    mtlfqdel(queue, ofs, page);
+    item = page->prev;
+    qcnt = page->qcnt;
+    qid = _zencalcvmqueue(page);
+    queue = &g_vmpagequeue[qid];
+    mtlktkt(&queue->lk);
+    if (item) {
+        item->next = page->next;
+    } else {
+        queue->head = page->next;
+    }
+    item = page->next;
+    if (item) {
+        item->prev = page->prev;
+    } else {
+        queue->tail = page->prev;
+    }
+    mtunlktkt(&queue->lk);
 
     return;
 }

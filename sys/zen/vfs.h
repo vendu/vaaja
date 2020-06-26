@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <zero/cdefs.h>
+#include <zen/types.h>
 
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0
@@ -31,6 +32,7 @@ typedef uintptr_t       vfssize_t;
 typedef intptr_t        vfsoff_t;
 typedef intptr_t        vfsdev_t;
 typedef uintptr_t       vfsino_t;
+typedef uintptr_t       vfspid_t;
 typedef uintptr_t       vfsuid_t;
 typedef uintptr_t       vfsgid_t;
 
@@ -57,29 +59,29 @@ struct msghdr;
 struct zenvfsfuncs {
     int       (*open)(const char *path, int flg, ...);
     int       (*close)(int fd);
-    ssize_t   (*read)(int fd, void *buf, size_t len);
-    ssize_t   (*write)(int fd, void *buf, size_t len);
-    off_t     (*seek)(int fd, off_t ofs, int whence);
-    int       (*lock)(int fd, int cmd, off_t len);
+    m_ssize_t (*read)(int fd, void *buf, size_t len);
+    m_ssize_t (*write)(int fd, void *buf, size_t len);
+    vfsoff_t  (*seek)(int fd, vfsoff_t ofs, int whence);
+    int       (*lock)(int fd, int cmd, vfsoff_t len);
     void      (*map)(void *adr, size_t len, int prot, int flags,
-                     int fd, off_t ofs);
+                     int fd, vfsoff_t ofs);
     void      (*unmap)(void *adr, size_t len);
-    int       (*chmod)(const char *path, mode_t mode);
-    int       (*chown)(const char *path, uid_t owner, gid_t grp);
+    int       (*chmod)(const char *path, m_mode_t mode);
+    int       (*chown)(const char *path, vfsuid_t owner, vfsgid_t grp);
     int       (*link)(const char *src, const char *dest);
     int       (*symlink)(const char *src, const char *dest);
     int       (*unlink)(const char *path);
     int       (*dup2)(int srcfd, int destfd);
-    ssize_t   (*readv)(int fd, const struct iovec *iov, int niov);
-    ssize_t   (*writev)(int fd, const struct iovec *iov, int niov);
-    ssize_t   (*fsync)(int fd);
-    int       (*falloc)(int fd, int mode, off_t ofs, off_t len);
-    int       (*ftrunc)(int fd, off_t len);
-    int       (*fadvise)(int fd, off_t ofs, off_t len, int advice);
+    m_ssize_t (*readv)(int fd, const struct iovec *iov, int niov);
+    m_ssize_t (*writev)(int fd, const struct iovec *iov, int niov);
+    m_ssize_t (*fsync)(int fd);
+    int       (*falloc)(int fd, int mode, vfsoff_t ofs, vfsoff_t len);
+    int       (*ftrunc)(int fd, vfsoff_t len);
+    int       (*fadvise)(int fd, vfsoff_t ofs, vfsoff_t len, int advice);
 };
 
 struct zenvfsdevfuncs {
-    int       (*mkdev)(const char *path, mode_t mode, dev_t dev);
+    int       (*mkdev)(const char *path, m_mode_t mode, vfsdev_t dev);
     int       (*mount)(const char *devpath, const char *destpath,
                        const char *fstype, unsigned long flags,
                        const void *data);
@@ -87,21 +89,21 @@ struct zenvfsdevfuncs {
 };
 
 struct zenvfsdirfuncs {
-    _DIR              (*opendir)(const char *path);
-    int               (*closedir)(_DIR *dir);
-    int               (*mkdir)(const char *path,  mode_t mode);
-    int               (*rmdir)(const char *path);
-    struct dirent     (*readdir)(_DIR *dir);
-    void              (*seekdir)(_DIR *dir, long loc);
-    void              (*rewinddir)(_DIR *dir);
-    long              (*telldir)(_DIR *dir);
+    _DIR          (*opendir)(const char *path);
+    int           (*closedir)(_DIR *dir);
+    int           (*mkdir)(const char *path,  m_mode_t mode);
+    int           (*rmdir)(const char *path);
+    struct dirent (*readdir)(_DIR *dir);
+    void          (*seekdir)(_DIR *dir, long loc);
+    void          (*rewinddir)(_DIR *dir);
+    long          (*telldir)(_DIR *dir);
 };
 
 struct zenvfsfifofuncs {
-    _FILE            (**popen)(const char *cmd, const char *type);
-    int               (*pclose)(_FILE *fp);
-    ssize_t           (*pread)(int fd, void *buf, size_t len, off_t ofs);
-    ssize_t           (*pwrite)(int fd, void *buf, size_t len, off_t ofs);
+    _FILE     (**popen)(const char *cmd, const char *type);
+    int       (*pclose)(_FILE *fp);
+    m_ssize_t (*pread)(int fd, void *buf, size_t len, vfsoff_t ofs);
+    m_ssize_t (*pwrite)(int fd, void *buf, size_t len, vfsoff_t ofs);
 };
 
 struct zenvfssockfuncs {
@@ -120,18 +122,18 @@ struct zenvfssockfuncs {
                             socklen_t *C_RESTRICT optlen);
     int       (*getpeername)(int sockfd, struct sockaddr *C_RESTRICT adr,
                              socklen_t *C_RESTRICT adrlen);
-    ssize_t   (*recv)(int sockfd, void *buf, size_t len, int flags);
-    ssize_t   (*recvfrom)(int sockfd, void *C_RESTRICT buf, size_t len,
+    m_ssize_t (*recv)(int sockfd, void *buf, size_t len, int flags);
+    m_ssize_t (*recvfrom)(int sockfd, void *C_RESTRICT buf, size_t len,
                           int flags,
                           struct sockaddr *C_RESTRICT adr,
                           socklen_t *C_RESTRICT adrlen);
-    ssize_t   (*recvmsg)(int sockfd, struct msghdr *msg, int flags);
-    ssize_t   (*send)(int sockfd, const void *buf, size_t len, int flags);
+    m_ssize_t (*recvmsg)(int sockfd, struct msghdr *msg, int flags);
+    m_ssize_t (*send)(int sockfd, const void *buf, size_t len, int flags);
     int       (*shutdown)(int sockfd, int how);
 };
 
 struct zenvfsshmfuncs {
-    int       (*shmopen)(const char *path, int oflag, mode_t mode);
+    int       (*shmopen)(const char *path, int oflag, m_mode_t mode);
     int       (*shmunlink)(const char *path);
     void      (*shmat)(int shmfd, const void *shmadr, int flags);
 };

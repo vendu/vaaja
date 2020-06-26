@@ -1,11 +1,14 @@
-#Ifndef __ZEN_BVT_H__
-#define __ZEN_BVT_H__
+#ifndef __ZEN_SCHED_BVT_H__
+#define __ZEN_SCHED_BVT_H__
 
 #include <zen/conf.h>
 
 #if defined(ZEN_BVT_TASK_SCHED)
 
 #include <zen/task.h>
+#if defined(__v0__)
+#include <v0/types.h>
+#endif
 
 #define TAO_MIN_TIME            1
 #define TAO_WARP_LIM            8
@@ -38,5 +41,5 @@ struct taobvtparm {
 
 #endif /* defined(ZEN_BVT_TASK_SCHED) */
 
-#endif /* __ZEN_BVT_H__ */
+#endif /* __ZEN_SCHED_BVT_H__ */
 

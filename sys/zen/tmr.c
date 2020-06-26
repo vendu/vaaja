@@ -1,4 +1,6 @@
+#include <zen/test.h>
 #include <zen/tmr.h>
+#include <zen/errno.h>
 
 struct zentmr *
 tmrget(void)
@@ -12,30 +14,52 @@ tmrget(void)
     return tmr;
 }
 
-struct zentmr *tmr
-tmrprobe(m_word_t type)
+void
+tmrconf(struct zentmr *tmr, m_word_t type, m_word_t hz)
+{
+    tmr->type = type;
+    switch (type) {
+        case ZEN_RTC_TIMER:
+            tmr->freq = 60;
+            tmr->drift = 0;
+            tmr->hz = 60;
+
+            break;
+        case ZEN_HIRES_TIMER:
+            tmr->freq = ZEN_HIRES_TIMER_FREQ;
+            tmr->drift = ZEN_HIRES_TIMER_DRIFT;
+            tmr->hz = ZEN_HIRES_TIMER_MIN_HZ;
+
+            break;
+    }
+    tmr->val.ts.tv_sec = 0;
+    tmr->val.ts.tv_nsec = 0;
+
+    return;
+}
+
+struct zentmr *
+tmrprobe(m_word_t type, m_word_t hz)
 {
     struct zentmr       *tmr = tmrget();
 
     if (tmr) {
-        tmr->type = type;
-        tmrchkparm(tmr);
+        tmrconf(tmr, type, hz);
     }
+
+    return tmr;
 }
 
 /*
  * optionally allocate (tmr == NUL) a timer and initialize it
  */
-m_word_t
-tmrinit(struct zentmr *tmr, m_word_t type, m_word_t hz)
+struct zentmr *
+tmrinit(m_word_t type, m_word_t hz)
 {
-    tmr = tmrprobe(type);
-    if (tmr) {
-        tmrconf(tmr, hz);
+    struct zentmr  *tmr;
+    
+    tmr = tmrprobe(type, hz);
 
-        return ZEN_SUCCESS;
-    }
-
-    return ZEN_FAILURE;
+    return tmr;
 }
 

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include <zero/cdefs.h>
-#include <vnd/mem.h>
+#include "_malloc.h"
 
 void *
 malloc(size_t size)

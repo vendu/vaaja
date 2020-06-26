@@ -2,7 +2,10 @@
 #define __ZEN_BSP_V0_H__
 
 #include <stdint.h>
+#include <mach/param.h>
+#if defined(__v0__)
 #include <v0/trap.h>
+#endif
 
 /* memory parameters */
 #define ZEN_CL_SIZE             32              // memory cacheline size
@@ -33,12 +36,6 @@
 #define ZEN_USR_STACK           (ZEN_SYS_STACK - ZEN_SYS_STACK_SIZE)
 #define ZEN_SYS_STACK_LIM       (ZEN_SYS_STACK - ZEN_SYS_STACK_SIZE)
 #define ZEN_SYS_STACK           ZEN_RAM_SIZE
-
-union m_task {
-#if defined(__v0__)
-    struct v0tcb        v0;
-#endif
-};
 
 #endif /* __ZEN_BSP_ZEN_H__ */
 

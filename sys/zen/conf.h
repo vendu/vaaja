@@ -2,9 +2,10 @@
 #define __ZEN_CONF_H__
 
 #if defined(__v0__)
-#include <zen/sys/v0.h>
+#include <zen/bsp/v0.h>
 #endif
 
+#define ZEN_ULE_TASK_SCHED      1
 #define ZEN_DEF_TASK_SCHED      ZEN_ULE_TASK_SCHED
 #define ZEN_ULE_TASK_SCHED      1
 #define ZEN_BVT_TASK_SCHED      2

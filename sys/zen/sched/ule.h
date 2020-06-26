@@ -1,30 +1,32 @@
-#Ifndef __ZEN_ULE_H__
-#define __ZEN_ULE_H__
+#ifndef __ZEN_SCHED_ULE_H__
+#define __ZEN_SCHED_ULE_H__
 
 #include <zen/conf.h>
 
-#if defined(ZEN_ULE_THR_SCHED)
+#if defined(ZEN_ULE_TASK_SCHED)
+
+#include <zero/cdefs.h>
+#include <zen/task.h>
 
 #if defined(__KERNEL__)
 extern void uleinit(void);
 #endif
 extern void schedyield(void);
 
-#if defined(ZEROULE)
-
-extern void                   uleinitset(void);
-extern FASTCALL NORETURN void uleswitchtask(struct zentask *curtask);
-extern void                   ulesetready(struct zentask *task);
-extern void                   ulesetstopped(struct zentask *task);
-extern void                   ulesetzombie(struct zenproc *proc);
-extern void                   ulesetwait(struct zentask *task);
-extern void                   ulesetsleep(struct zentask *task);
+extern void uleinitset(void);
+extern void uleswitchtask(struct zentask *curtask);
+extern void ulesetready(struct zentask *task);
+extern void ulesetstopped(struct zentask *task);
+extern void ulesetzombie(struct zenproc *proc);
+extern void ulesetwait(struct zentask *task);
+extern void ulesetsleep(struct zentask *task);
 
 /*
  * in default configuration, we have
  *
  * ULE_CLASS_PRIOS    64
- * ULE_CLASS_QUEUES   ULE_CLASS_PRIOS / 4
+ * ULE_CLASS_QUEUES   ULE_CLASS_PRIOS / 4 => 16
+ */
 /* task scheduler classes */
 #define ULE_CLASS_PRIOS       64      // # of priorities per class
 #define ULE_CLASS_QUEUES      (ULE_CLASS_PRIO >> ULE_QUEUE_SHIFT)
@@ -62,7 +64,7 @@ extern void                   ulesetsleep(struct zentask *task);
 #define uleclassmaxprio(c)                                              \
     (uleclassminprio(c) + ULE_CLASS_PRIO - 1)
 /* priority organisation */
-#define ULE_IDLE               ULE_CLASS_QUEUE
+//#define ULE_IDLE               ULE_CLASS_QUEUE
 #define ULE_SYS_PRIO_MIN       uleclassminprio(ULE_SYSTEM)
 /* interrupt priority limits */
 #define ULE_TRAP_PRIO_MIN      uleclassminprio(ULE_TRAP)
@@ -90,13 +92,13 @@ extern void                   ulesetsleep(struct zentask *task);
 #define ULE_ICE_HALF           (ULE_ICE_RANGE >> 1)
 /* highest and lowest priorities are reserved for nice */
 /* we allow negative nice values to map to classes ULE_REALTIME..ULE_SYSTEM */
-#define ULE__PRIO_MIN          ULE_USER_PRIO_MIN
-#define ULE__PRIO_MAX          ULE_USER_PRIO_MAX
-#define ULE_PRIO_RANGE         (ULE__PRIO_MAX - ULE__PRIO_MIN)
+#define ULE_PRIO_MIN           ULE_USER_PRIO_MIN
+#define ULE_PRIO_MAX           ULE_USER_PRIO_MAX
+#define ULE_PRIO_RANGE         (ULE_PRIO_MAX - ULE_PRIO_MIN)
 /* interactive priority limits */
 #define ULE_INT_PRIO_MIN       ULE_USER_PRIO_MIN
 //#define ULE_INT_PRIO_MAX     (ULE_BATCH_PRIO_MIN + ULE_BATCH_PRIO_MAX - 1)
-#define ULE_INT_PRIO_MAX       ULE_USERPRIOMAX
+#define ULE_INT_PRIO_MAX       ULE_USER_PRIO_MAX
 #define ULE_INT_RANGE          (ULE_INT_PRIO_MAX - ULE_INT_PRIO_MIN + 1)
 
 /* interactivity scoring */
@@ -119,7 +121,31 @@ extern void                   ulesetsleep(struct zentask *task);
 #define ULE_REC_TIME_MAX        ((kgethz() << 2) << ULE_TICK_SHIFT)
 #define ULE_REC_TIME_FORK_MAX   ((kgethz() << 1) << ULE_TICK_SHIFT)
 
-#endif /* defined(ZEROULE_) */
+struct taouleparm {
+    m_word_t    unit;           // CPU-affinity
+    m_word_t    sched;          // thread scheduler class
+    m_word_t    intr;           // received interrupt
+    m_word_t    runprio;        // current priority
+    m_word_t    prio;           // base priority
+    m_word_t    sysprio;        // kernel-mode priority
+    m_word_t    nice;           // priority adjustment
+    m_word_t    state;          // thread state
+    m_word_t    score;          // interactivity score
+    m_word_t    slice;          // timeslice in ticks
+    m_word_t    runtime;        // # of ticks run
+    m_word_t    slptime;        // # of ticks slept voluntarily
+    m_word_t    slptick;        // ID of tick when sleeping started
+    m_word_t    ntick;          // # of scheduler ticks received
+    m_word_t    lastrun;        // last tick we ran on
+    m_word_t    firstrun;       // first tick we ran on
+    m_word_t    ntickleft;      // # of remaining ticks of slice
+    m_word_t    lasttick;       // real last tick for affinity
+    m_adr_t     waitchan;       // wait channel
+    time_t      timelim;        // wakeup time or deadline
+    
+};
 
-#endif /* __ZEN_ULE_H__ */
+#endif /* defined(ZEN_ULE_TASK_SCHED) */
+
+#endif /* __ZEN_SCHED_ULE_H__ */
 

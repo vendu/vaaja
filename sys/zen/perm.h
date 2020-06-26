@@ -25,7 +25,7 @@ struct zenperm {
 #define V0_IO_AW_PERM   (1L << 1)       // world write
 #define V0_IO_AX_PERM   (1L << 0)       // world execute
 
-extern zenchkperm(struct zenperm *perm, struct zencred *cred, int mask);
+extern int  zenchkperm(struct zenperm *perm, struct zencred *cred, int mask);
 
-#endif __ZEN_PERM_H__
+#endif /* __ZEN_PERM_H__ */
 

@@ -3,19 +3,25 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <zen/task.h>
 #if defined(__v0__)
-#include <zen/sys/v0.h>
+#include <v0/types.h>
 #endif
-#include <zen/types.h>
 
 typedef intmax_t        zenlong;        // system maximum
 typedef uintmax_t       zenulong;       // unsigned system maximum
 typedef int32_t         zenid_t;        // generic object ID
 typedef uint32_t        zendev_t;       // device type
 typedef int64_t         zenoff_t;       // file-system offset
+typedef int32_t         zenpid_t;       // process ID
 typedef int32_t         zenuid_t;       // user ID
 typedef int32_t         zengid_t;       // group ID
 typedef uint32_t        zenperm_t;      // I/O permission flags
+
+struct zencred {
+    zenuid_t            uid;
+    zengid_t            gid;
+};
 
 struct zendev {
     struct zenvfsfuncs *funcs;
@@ -75,14 +81,12 @@ struct zendesc {
     uint32_t   flg;
 };
 
-};
-
 struct zensys {
-    struct zentask     *systasktab[ZEN_SYS_TASKS];
-    struct zentask     *tasktab[ZEN_PROC_TASKS];
-    m_page_t           *pagedir[ZEN_PAGE_DIR_ITEMS];
+    struct zentask     *systasktab[ZEN_SYS_THREADS];
+    struct zentask     *tasktab[MACH_PROC_THREADS];
+    m_page_t            pagedir[MACH_PAGE_DIR_ITEMS];
     m_uword_t           ndesc;
-    m_desc_t           *desctab;
+    m_word_t           *desctab;
     m_uword_t           nnodehash;
     struct zenvfsnode  *nodehash;
     m_uword_t           nmembuf;

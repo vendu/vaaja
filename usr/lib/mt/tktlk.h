@@ -13,9 +13,9 @@
 #include <mt/thr.h>
 
 #define MTTKTLKSPINS 16384
-#define MTTKLKTSIZE  (2 * WORDSIZE)
+#define MTTKTLKSIZE  (2 * MACH_WORD_SIZE)
 
-#if (WORDSIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 
 union mttktlk {
     m_atomicu32_t uval;
@@ -32,7 +32,7 @@ union mttktlk {
 #endif
 };
 
-#elif (WORDSIZE == 8)
+#elif (MACH_WORD_SIZE == 8)
 
 union mttktlk {
     m_atomicu64_t uval;
@@ -51,16 +51,16 @@ union mttktlk {
 
 #endif /* MTTKTLKSIZE */
 
-#define MTTKTBKTITEMS (CLSIZE / MTTKTSIZE)
+#define MTTKTBKTITEMS (MACH_CL_SIZE / MTTKTLKSIZE)
 struct mttktbkt {
     union mttktlk tab[MTTKTBKTITEMS];
 };
 
 typedef volatile union mttktlk mttktlk;
 
-#if (WORDSIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 
-static INLINE void
+static C_INLINE void
 mtlktkt(mttktlk *tp)
 {
     uint16_t val = m_fetchaddu16(&tp->s.cnt, 1);
@@ -72,7 +72,7 @@ mtlktkt(mttktlk *tp)
     return;
 }
 
-static INLINE void
+static C_INLINE void
 mtunlktkt(mttktlk *tp)
 {
     m_membar();
@@ -83,7 +83,7 @@ mtunlktkt(mttktlk *tp)
 }
 
 /* return 1 if lock succeeds, 0 otherwise */
-static INLINE long
+static C_INLINE long
 mttrytktlk(union mttktlk *tp)
 {
     uint16_t val = tp->s.cnt;
@@ -99,9 +99,9 @@ mttrytktlk(union mttktlk *tp)
     return res;
 }
 
-#elif (WORDSIZE == 8)
+#elif (MACH_WORD_SIZE == 8)
 
-static INLINE void
+static C_INLINE void
 mtlktkt(union mttktlk *tp)
 {
     uint32_t val = m_fetchaddu32(&tp->s.cnt, 1);
@@ -113,7 +113,7 @@ mtlktkt(union mttktlk *tp)
     return;
 }
 
-static INLINE void
+static C_INLINE void
 mtunlktkt(union mttktlk *tp)
 {
     m_membar();
@@ -124,7 +124,7 @@ mtunlktkt(union mttktlk *tp)
 }
 
 /* return 1 if lock succeeds, 0 otherwise */
-static INLINE long
+static C_INLINE long
 mttrytktlk(union mttktlk *tp)
 {
     uint32_t val = tp->s.cnt;
@@ -140,10 +140,10 @@ mttrytktlk(union mttktlk *tp)
     return res;
 }
 
-#endif /* WORDSIZE */
+#endif /* MACH_WORD_SIZE */
 
 #if 0
-static INLINE long
+static C_INLINE long
 tktmaylk(union mttktlk *tp)
 {
     union mttktlk tu = *tp;

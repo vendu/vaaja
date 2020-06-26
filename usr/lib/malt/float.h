@@ -1,7 +1,7 @@
 #ifndef __MALT_FLOAT_H__
 #define __MALT_FLOAT_H__
 
-/* FIXME: hack this for non-little endian systems */
+/* FIXME: hack this file is for little-endian systems */
 
 #include <stdint.h>
 #include <endian.h>

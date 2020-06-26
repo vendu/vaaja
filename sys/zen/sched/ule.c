@@ -1,21 +1,20 @@
-#include <zen/ule.h>
+#include <zen/sched/ule.h>
+#include <zen/nice.h>
 
 extern struct proc     *k_proczombietab[TASKSMAX];
 
-#include <kern/nice.h>
-
 struct schednice       *k_schedniceptr = &k_schednicetab[SCHEDNICEHALF];
-static struct tasktab   k_scheddeadlinetab[SCHEDNLVL0DL];
-static struct task     *k_schedstoppedtab[TASKSMAX];
+struct tasktab          k_scheddeadlinetab[SCHEDNLVL0DL];
+struct task            *k_schedstoppedtab[TASKSMAX];
 struct task            *k_schedreadytab0[SCHEDNQUEUE];
 struct task            *k_schedreadytab1[SCHEDNQUEUE];
-static struct task     *k_schedidletab[SCHEDNIDLE];
-static long             k_schedreadymap0[SCHEDREADYMAPNWORD];
-static long             k_schedreadymap1[SCHEDREADYMAPNWORD];
-static long             k_schedidlemap[SCHEDIDLEMAPNWORD];
+struct task            *k_schedidletab[SCHEDNIDLE];
+long                    k_schedreadymap0[SCHEDREADYMAPNWORD];
+long                    k_schedreadymap1[SCHEDREADYMAPNWORD];
+long                    k_schedidlemap[SCHEDIDLEMAPNWORD];
 /* SCHEDIDLE queues are not included in SCHEDNQUEUE */
-static long             k_schedloadmap[SCHEDLOADMAPNWORD];
-static long             k_scheddeadlinemap[SCHEDDEADLINEMAPNWORD];
+long                    k_schedloadmap[SCHEDLOADMAPNWORD];
+long                    k_scheddeadlinemap[SCHEDDEADLINEMAPNWORD];
 long                    k_schedidlecoremap[SCHEDIDLECOREMAPNWORD];
 struct schedqueueset    k_schedreadyset;
 
@@ -44,6 +43,16 @@ schedinit(void)
 #elif (__LONGBITS == 64)
 #define __LONGBITSLOG2 6
 #endif
+
+struct schedqueueset {
+    long           *curmap;
+    long           *nextmap;
+    long           *idlemap;
+    long           *loadmap;
+    struct task    *cur;
+    struct task    *next;
+    struct task    *idle;
+};
 
 void
 schedinitset(void)

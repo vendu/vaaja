@@ -39,7 +39,7 @@ mtlkbit(volatile m_atomic_t *lp, long pos)
 }
 
 /*
- * unlock fast mutex
+ * unlock bit-lock
  * - must use full memory barrier to guarantee proper write-ordering
  */
 static C_INLINE void

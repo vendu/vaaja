@@ -105,12 +105,12 @@
  * urem(ri_src, r_dest);
  */
 #define V0_ALU_UNIT     0x01
-#define V0_NOT_OP       0x00    // logical NOT
+#define V0_NOT_OP       0x00    // bitwise NOT
 #define V0_NEG_OP       0x01    // arithmetic negation
 #define V0_AND_OP       0x02    // logical AND
 #define V0_OR_OP        0x03    // logical OR
 #define V0_XOR_OP       0x04    // logical XOR
-#define V0_NOR_OP       0x05
+#define V0_NOR_OP       0x05    // logical NOR
 #define V0_XNOR_OP      0x06    // logical XNOR
 #define V0_NAND_OP      0x07    // logical NAND
 #define V0_INC_OP       0x08    // increment by one
@@ -292,22 +292,14 @@
 /* 8-bit immediate value */
 #define V0_PARM_VAL8_MASK       0x00ff
 /* 4-bit extra register ID */
-#define V0_PARM_REG_MASK        0x000f
+#define V0_PARM_REG4_MASK       0x000f
 /* addressing-mode flags */
-#define V0_PARM_ADR_NDX_BIT     0x0010
-#define V0_PARM_ADR_OFS_BIT     0x0020
+#define V0_PARM_ADR_REG_BIT     0x1000
+#define V0_PARM_ADR_NDX_BIT     0x2000
+#define V0_PARM_ADR_OFS_BIT     0x4000
 /* operand-size flags */
-#define V0_PARM_OPSIZE_BIT_1    0x0040
-#define V0_PARM_OPSIZE_BIT_2    0x0080
-/* (extra) register/memory transfer directions */
-#define V0_XFER_DIR_MASK        0x7f00
-#define V0_PARM_RTOR_BIT        0x0100
-#define V0_PARM_RTOM_BIT        0x0200
-#define V0_PARM_RTOX_BIT        0x0400
-#define V0_PARM_XTOR_BIT        0x0800
-#define V0_PARM_XTOM_BIT        0x1000
-#define V0_PARM_MTOX_BIT        0x2000
-#define V0_PARM_MTOR_BIT        0x4000
+#define V0_PARM_OPSIZE_BIT_1    0x0800
+#define V0_PARM_OPSIZE_BIT_2    0x1000
 struct v0ins {
     int8_t  op;             // 3-bit unit and 5-bit operation ID
     int8_t  regs;           // source and destination register IDs

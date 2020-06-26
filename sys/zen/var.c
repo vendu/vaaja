@@ -1,7 +1,11 @@
-uint8_t         var[ZEN_PAGE_SIZE];             // kernel variable values
+#include <stdint.h>
+#include <zen/conf.h>
+
+uint8_t         var[MACH_PAGE_SIZE];             // kernel variable values
 
 void
-ksetvar(void *tab, long ndx, )
+ksetvar(void *tab, long ndx, long val)
 {
+    ;
 }
 
