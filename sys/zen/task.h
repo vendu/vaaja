@@ -2,10 +2,11 @@
 #define __ZEN_TASK_H__
 
 #include <zen/conf.h>
-#include <zen/types.h>
+//#include <zen/types.h>
 #include <zen/sched/tao.h>
 #include <mach/param.h>
-#include <zen/types.h>
+#include <mt/tktlk.h>
+//#include <zen/types.h>
 
 /*
  * NOTES
@@ -32,9 +33,10 @@
 #define ZEN_PROC_RUN            2
 #define ZEN_PROC_WAIT           3
 #define ZEN_PROC_SLEEP          4
-#define ZEN_PROC_ZOMBIE         5
-#define ZEN_PROC_EXIT           6
-#define ZEN_PROC_IDLE           7
+#define ZEN_PROC_STOPPED        5
+#define ZEN_PROC_ZOMBIE         6
+#define ZEN_PROC_EXIT           7
+#define ZEN_PROC_IDLE           8
 
 //#define _zenproclkpageq(proc)   mtlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)
 //#define _zenprocunlkpageq(proc) mtunlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)
@@ -42,11 +44,13 @@ struct zenproc {
     m_word_t            flags;
     union taoschedparm  sched;
     volatile void      *pageq;  // process page queue
-    struct m_tcb       *thrtab[MACH_PROC_THREADS];
+    struct m_thr       *thrtab[MACH_PROC_THREADS];
 };
 
 struct zentask {
-    struct m_tcb        tcb;    // task control block
+    mttktlk             tkt;
+    struct m_thr        m_tcb;  // task control block
+    struct zenproc      proc;
     m_word_t            pgrp;   // parent/group process ID
     m_word_t            state;  // task state
     m_word_t            flags;  // task flags

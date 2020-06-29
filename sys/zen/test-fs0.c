@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <zen/fs0.h>
 
+#if defined(TEST_FS0)
 int
 main(int argc, char *argv[])
 {
@@ -15,4 +16,5 @@ main(int argc, char *argv[])
 
     exit(0);
 }
+#endif
 

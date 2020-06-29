@@ -14,6 +14,7 @@
 #define MACH_SHORT_SIZE         2
 #define MACH_INT_SIZE           4
 #define MACH_LONG_SIZE          4
+#define MACH_LONG_SIZE_LOG2     2
 
 #if (V0_MACHINE_TYPE == V0_PAPILI0_PRO)
 #include <v0/bsp/papilio-pro.h>
@@ -66,6 +67,7 @@
 #define V0_STACK_SIZE           (3 * V0_PAGE_SIZE) // per-thread stack size
 #define V0_STACK_PROT_SIZE      V0_PAGE_SIZE       // protector maximum size
 #if defined(V0_THREADS)
+#define MACH_MAX_PROCS          MACH_MAX_THREADS
 #define MACH_PROC_THREADS       16                 // max # of process threads
 #define MACH_MAX_THREADS        256                // max # of system threads
 #define MACH_THR_ID_BITS        8                  // # of bits in thread-IDs

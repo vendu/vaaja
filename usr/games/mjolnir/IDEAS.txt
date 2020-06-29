@@ -42,19 +42,17 @@ Non-Character Objects
 Object		| Display	| Description
 ---------------------------------------------
 floor		| .		| floor/ground
-corridor	| #		| corridor
-wall		| -		| horizontal wall
-wall		| |		| vertical wall
+wall	        | #		| cave wall (may be hidden door)
 door		| +		| door
 ration		| f		| food ration
 water		| ~		| water
 fountain	| {		| fountain
 gold		| $		| use to get merchandise
-silver bullet	| =		| use for demons
+bullet	        | =		| bullet (silver ones work on daemons)
 potion		| !		| potion
 plant		| *		| plant
-punchcard	| 0		| to be used on in-dungeon mainframes :)
-tape		| 8		| for in-dungeon mainframes
+punchcard	| 0		| corewar warriors to be run from terminals :)
+tape		| 8		| software for in-dungeon terminals
 stairway down	| >		| go down one level
 stairway up	| <		| go up one level
 statue	 	| &		| e.g. Buddha
@@ -74,7 +72,7 @@ kaleidoscope	| K		| kaleidoscope
 lockpick	| l		| thieves are naturally best at using these
 laser		| L		| laser gun
 mace		| m		| may be Mjolnir
-mainframe	| M		| computer systems for running punchcards
+#mainframe	| M		| computer systems for running punchcards
 pipe		| 7		| pipe
 pistol		| p		| pistol
 sword		| s		| sword
@@ -89,8 +87,9 @@ Characters
 Character	| Display	| Description
 ---------------------------------------------
 player		| @		| you
-ant		| a		| ant, soldier ant
-alien		| A		| extraterrestrial creature
+ant		| a		| ant
+soldier ant     | A             | the strongest type of ants
+alien		| e		| extraterrestrial creature
 bee		| b		| regular bee, only stings once
 bee queen	| B		| bee queen
 dog		| d		| pet dog
@@ -111,7 +110,7 @@ zombie		| Z		| zombies; living dead; always evil, attack all
 Special Items
 -------------
 Crystal ball    | o		| may show things happening elsewhere
-Demon Whip	| /		| weapon against different forms of undead
+Demon Whip	| |		| weapon against different forms of undead
 Jatimatic	| J		| sub-machine gun for close range combat
 				  - may be loaded with 9-mm rounds, perhaps with
 				    silver bullets... ;)

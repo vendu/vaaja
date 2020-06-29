@@ -8,7 +8,9 @@
 #else
 #   define C_VLA        0
 #endif
-#if (__STDC_VERSION__ >= 201112L)
+#if defined(__GNUC__) || defined(__clang__)
+#define C_THREADLOCAL   __thread
+#elif (__STDC_VERSION__ >= 201112L)
 #include <stdalign.h>
 #if !defined(__STDC_NO_THREADS__)
 #include <threads.h>
@@ -24,8 +26,10 @@
 #if defined(__GNUC__) || defined(__clang__)
 #if (defined(__i386__) || defined(__i486__)                             \
      || defined(__i586__) || defined(__i686__))
+#define C_FASTCALL      regparm(3)
 #define C_ASMLINK       regparm(0)
 #else
+#define C_FASTCALL
 #define C_ASMLINK
 #endif
 #if !defined(C_ALIGNED)

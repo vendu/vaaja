@@ -39,10 +39,10 @@ struct divuf16 {
     uint_fast16_t info;
 };
 
-static struct divuf16 fastu16divuf16tab[65536] ALIGNED(PAGESIZE);
+static struct divuf16 fastu16divuf16tab[65536] C_ALIGNED(MACH_PAGE_SIZE);
 
 /* get the high 16 bits of val1 * val2 */
-static INLINE uint_fast16_t
+static C_INLINE uint_fast16_t
 _mulhiuf16(uint32_t val1, uint32_t val2)
 {
     uint32_t res = val1 * val2;

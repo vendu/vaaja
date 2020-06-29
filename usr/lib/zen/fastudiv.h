@@ -57,7 +57,7 @@ void fastu16divu16gentab(struct divu16 *duptr, uint32_t lim16);
 #if (FASTUF16DIVUF16)
 
 /* get the high 16 bits of val1 * val2 */
-static INLINE uint_fast16_t
+static C_INLINE uint_fast16_t
 _mulhiuf16(uint32_t val1, uint32_t val2)
 {
     uint32_t res = val1 * val2;
@@ -73,7 +73,7 @@ _mulhiuf16(uint32_t val1, uint32_t val2)
 #if (FASTUF16DIVUF32)
 
 /* get the high 16 bits of val1 * val2 */
-static INLINE uint_fast16_t
+static C_INLINE uint_fast16_t
 _mulhiuf32(uint_fast32_t val1, uint_fast32_t val2)
 {
     uint_fast32_t res = val1 * val2;
@@ -86,7 +86,7 @@ _mulhiuf32(uint_fast32_t val1, uint_fast32_t val2)
 #endif
 
 /* get the high 16 bits of val1 * val2 */
-static INLINE uint16_t
+static C_INLINE uint16_t
 _mulhiu16(uint32_t val1, uint32_t val2)
 {
     uint32_t res = val1 * val2;
@@ -99,7 +99,7 @@ _mulhiu16(uint32_t val1, uint32_t val2)
 #if (FASTUF16DIVUF16)
 
 /* compute num/divu16 with [possible] multiplication + shift operations */
-static INLINE uint_fast16_t
+static C_INLINE uint_fast16_t
 fastuf16divuf16(uint_fast16_t num, uint_fast16_t divuf16,
                 const struct divuf16 *tab)
 {
@@ -144,7 +144,7 @@ fastuf16divuf16(uint_fast16_t num, uint_fast16_t divuf16,
 #if (FASTUF16DIVUF32)
 
 /* compute num/divu16 with [possible] multiplication + shift operations */
-static INLINE uint_fast16_t
+static C_INLINE uint_fast16_t
 fastuf16divuf32(uint_fast16_t num, uint_fast16_t divuf16,
                 const struct divuf32 *tab)
 {
@@ -187,7 +187,7 @@ fastuf16divuf32(uint_fast16_t num, uint_fast16_t divuf16,
 #endif
 
 /* compute num/divu16 with [possible] multiplication + shift operations */
-static INLINE uint16_t
+static C_INLINE uint16_t
 fastu16divu16(uint16_t num, uint16_t divu16,
               const struct divu16 *tab)
 {

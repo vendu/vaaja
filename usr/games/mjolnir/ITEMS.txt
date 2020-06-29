@@ -5,7 +5,7 @@
 
 + - door
 --------
-- may be hidden
+- may be hidden (show as a corridor)
 
 . - floor
 ---------
@@ -30,12 +30,23 @@ X - altar
   - animate the undead, freeze the undead, see gold, see monsters, see map,
     identify
 
-" - punchcard
+0 - punchcard
 -------------
-- hints for the game
+- hints for the game; always in the initial inventory
 - maps
 - level control programs; turn lights on or off, show gold, show monsters, show
-  map, etc.
+  map, etc. (.com extension)
+- corewar warriors (.red extension)
+  - battle against masterhood of the machine, gain different inventory items
+    and masterhood on winning 4 games.
+
+8 - tape
+--------
+- programs which can be installed on mainframes from terminal
+  - rced        - redcode editor (corewar)
+  - mmind       - mastermind code-breaking game
+  - bship       - battleship
+  - ttt         - tic-tac-toe
 
 - - horizontal wall
 -------------------
@@ -52,7 +63,7 @@ T - teleport
 
 [ - mirror
 ----------
-- vampires don't show in mirrors
+- vampires don't show reflections from mirrors
 - some mirrors may be used to enter hidden parts of the dungeon
 
 c - crystal ball

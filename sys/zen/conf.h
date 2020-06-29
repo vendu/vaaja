@@ -5,6 +5,8 @@
 #include <zen/bsp/v0.h>
 #endif
 
+#define ZEN_MAX_CPUS            32
+#define ZEN_ULE_HZ              250
 #define ZEN_ULE_TASK_SCHED      1
 #define ZEN_DEF_TASK_SCHED      ZEN_ULE_TASK_SCHED
 #define ZEN_ULE_TASK_SCHED      1

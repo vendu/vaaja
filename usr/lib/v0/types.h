@@ -40,7 +40,7 @@ struct v0uframe {
     /* 416 bytes reserved for coprocessor use */
 };
 
-struct m_tcb {
+struct m_thr {
     volatile m_word_t   genregs[V0_GENERAL_REGISTERS];
     volatile m_word_t   sysregs[V0_GENERAL_REGISTERS];
     volatile m_word_t   segregs[V0_SEGMENT_REGISTERS];

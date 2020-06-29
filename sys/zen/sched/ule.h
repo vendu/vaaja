@@ -21,6 +21,12 @@ extern void ulesetzombie(struct zenproc *proc);
 extern void ulesetwait(struct zentask *task);
 extern void ulesetsleep(struct zentask *task);
 
+#if (MACH_WORD_SIZE == 8)
+#define ULE_CLASS_MAP_WORDS 1
+#elif (MACH_WORD_SIZE == 4)
+#define ULE_CLASS_MAP_WORDS 2
+#endif
+#define ULE_DIVU16TAB_SIZE  65536
 /*
  * in default configuration, we have
  *
@@ -28,43 +34,44 @@ extern void ulesetsleep(struct zentask *task);
  * ULE_CLASS_QUEUES   ULE_CLASS_PRIOS / 4 => 16
  */
 /* task scheduler classes */
-#define ULE_CLASS_PRIOS       64      // # of priorities per class
-#define ULE_CLASS_QUEUES      (ULE_CLASS_PRIO >> ULE_QUEUE_SHIFT)
-#define ULE_QUEUE_SHIFT       2
-#define ULE_QUEUE_PRIOS       (1 << ULE_QUEUE_SHIFT)
+#define ULE_CLASS_PRIOS     64      // # of priorities per class
+#define ULE_CLASS_QUEUES    (ULE_CLASS_PRIOS >> ULE_QUEUE_SHIFT)
+#define ULE_QUEUE_SHIFT     2
+//#define ULE_QUEUE_PRIOS       (1 << ULE_QUEUE_SHIFT)
 /* 'system' classes */
-#define ULE_DEADLINE          (-ULE_REALTIME - 1) // deadline tasks
-#define ULE_REALTIME_RR       (-ULE_REALTIME) //
-#define ULE_TRAP              0       // interrupt tasks
-#define ULE_REALTIME          1       // realtime threads
-#define ULE_SYSTEM            2
-#define ULE_SYS_CLASSES       3       // # of system scheduler classes
+#define ULE_DEADLINE        (-ULE_REALTIME - 1) // deadline tasks
+#define ULE_REALTIME_RR     (-ULE_REALTIME) //
+#define ULE_TRAP            0       // interrupt tasks
+#define ULE_REALTIME        1       // realtime threads
+#define ULE_SYSTEM          2
+#define ULE_SYS_CLASSES     3       // # of system scheduler classes
 /* timeshare classes */
-#define ULE_RESPONSIVE        3       // 'quick' timeshare tasks
-#define ULE_NORMAL            4       // 'normal' timeshare tasks
-#define ULE_BATCH             5       // batch tasks
-#define ULE_USER_CLASSES      3       // number of user ('timeshare') classes
-#define ULE_CLASSES           6       // # of user scheduler classes
-#define ULE_IDLE              ULE_CLASSES // idle tasks
-#define ULE_QUEUES            (ULE_CLASSES * ULE_CLASS_QUEUES)
-#define ULE_TABLE_QUEUE       512
-#define ULE_NOO_CLASS         (-0x7f)
+#define ULE_RESPONSIVE      3       // 'quick' timeshare tasks
+#define ULE_NORMAL          4       // 'normal' timeshare tasks
+#define ULE_BATCH           5       // batch tasks
+#define ULE_USER_CLASSES    3       // number of user ('timeshare') classes
+#define ULE_CLASSES         6       // # of user scheduler classes
+#define ULE_IDLE            ULE_CLASSES // idle tasks
+#define ULE_QUEUES          (ULE_CLASSES * ULE_CLASS_QUEUES)
+#define ULE_IDLE_QUEUES     ULE_CLASS_QUEUES
+#define ULE_TAB_QUEUES      512
+#define ULE_NO_CLASS        (-0x7f)
 
 #if 0 /* FIXME: these will be handled in ULE_TRAP */
 /* fixed priorities */
-#define ULE_HID               0           // human interface devices (kbd, mouse)
-#define ULE_AUDIO             1           // audio synchronisation
-#define ULE_VIDEO             2           // video synchronisation
-#define ULE_INIT              3           // init; creation of new processes
-#define ULE_FIXED_PRIO_MIN    0
+#define ULE_HID             0           // human interface devices (kbd, mouse)
+#define ULE_AUDIO           1           // audio synchronisation
+#define ULE_VIDEO           2           // video synchronisation
+#define ULE_INIT            3           // init; creation of new processes
+#define ULE_FIXED_PRIO_MIN  0
 #endif
 
 #define uleclassminprio(c)                                              \
     ((c) * ULE_CLASS_PRIOS)
 #define uleclassmaxprio(c)                                              \
-    (uleclassminprio(c) + ULE_CLASS_PRIO - 1)
+    (uleclassminprio(c) + ULE_CLASS_PRIOS - 1)
 /* priority organisation */
-//#define ULE_IDLE               ULE_CLASS_QUEUE
+//#define ULE_IDLE               ULE_CLASS_QUEUES
 #define ULE_SYS_PRIO_MIN       uleclassminprio(ULE_SYSTEM)
 /* interrupt priority limits */
 #define ULE_TRAP_PRIO_MIN      uleclassminprio(ULE_TRAP)
@@ -75,21 +82,21 @@ extern void ulesetsleep(struct zentask *task);
 /* timeshare priority limits */
 #define ULE_USER_PRIO_MIN      uleclassminprio(ULE_RESPONSIVE)
 /* positive nice values will not be mapped to ULE_IDLE */
-#define ULE_USER_PRIO_MAX      (uleclassmaxprio(ULE_BATCH) - ULE_ICEHALF)
+#define ULE_USER_PRIO_MAX      (uleclassmaxprio(ULE_BATCH) - ULE_NICE_HALF)
 #define ULE_USER_RANGE         (ULE_USER_PRIO_MAX - ULE_USER_PRIO_MIN + 1)
 /* batch priority limits */
 #define ULE_BATCH_PRIO_MIN     uleclassminprio(ULE_BATCH)
 #define ULE_BATCH_PRIO_MAX     uleclassmaxprio(ULE_BATCH)
 #define ULE_BATCH_RANGE        (ULE_BATCH_PRIO_MAX - ULE_BATCH_PRIO_MIN + 1)
 /* idle priority limits */
-#define ULE_IDLE_PRIO_MIN      (ULE_IDLE * ULE_CLASS_PRIO)
-#define ULE_IDLE_PRIO_MAX      (ULE_IDLE_PRIO_MIN + ULE_CLASS_QUEUE - 1)
+#define ULE_IDLE_PRIO_MIN      (ULE_IDLE * ULE_CLASS_PRIOS)
+#define ULE_IDLE_PRIO_MAX      (ULE_IDLE_PRIO_MIN + ULE_CLASS_QUEUES - 1)
 #define ULE_IDLE_RANGE         (ULE_IDLE_PRIO_MAX - ULE_IDLE_PRIO_MIN + 1)
 /* nice limits */
-#define ULE_ICE_MIN            (-(ULE_CLASS_QUEUEs << 1))
-#define ULE_ICE_MAX            ((ULE_CLASS_QUEUES << 1) - 1)
-#define ULE_ICE_RANGE          (ULE_ICE_MAX - ULE_ICE_MIN + 1)
-#define ULE_ICE_HALF           (ULE_ICE_RANGE >> 1)
+#define ULE_NICE_MIN           (-(ULE_CLASS_QUEUES << 1))
+#define ULE_NICE_MAX           ((ULE_CLASS_QUEUES << 1) - 1)
+#define ULE_NICE_RANGE         (ULE_NICE_MAX - ULE_NICE_MIN + 1)
+#define ULE_NICE_HALF          (ULE_NICE_RANGE >> 1)
 /* highest and lowest priorities are reserved for nice */
 /* we allow negative nice values to map to classes ULE_REALTIME..ULE_SYSTEM */
 #define ULE_PRIO_MIN           ULE_USER_PRIO_MIN
@@ -143,6 +150,17 @@ struct taouleparm {
     m_adr_t     waitchan;       // wait channel
     time_t      timelim;        // wakeup time or deadline
     
+};
+
+struct schedqueueset {
+    mttktlk         lk;
+    long           *curmap;
+    long           *nextmap;
+    long           *idlemap;
+    long           *loadmap;
+    struct task    *cur;
+    struct task    *next;
+    struct task    *idle;
 };
 
 #endif /* defined(ZEN_ULE_TASK_SCHED) */
