@@ -114,7 +114,7 @@ Demon Whip	| |		| weapon against different forms of undead
 Jatimatic	| J		| sub-machine gun for close range combat
 				  - may be loaded with 9-mm rounds, perhaps with
 				    silver bullets... ;)
-Golden Sword	| K		| princess Kara's golden sword
+Golden Sword	| -		| princess Kara's golden sword
 Mjolnir		| M		| the hammer of Thor
 Pleignir	| P		| ribbon that can hold Fenris
 Stormbringer	| S		| Stormbringer special sword
