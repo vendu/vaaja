@@ -3,9 +3,9 @@
 ## Basic Plot
 
 The wolf of gods, Fenris, has turned evil and stolen his hammer Mjolnir from
-Thor. Your duty is to bring Mjolnir back from the depths of the dungeon of
-Tuoni. Along your adventure, you will be faced with puzzles, battles with other
-game characters, and a bit of magic.
+Thor. Your duty is to bring Mjolnir back from the depths of the dungeons of
+Valhalla. Along your adventure, you will be faced with puzzles, battles with
+other game characters, a bit of magic and some cyberpunk.
 
 ## Implementation
 
