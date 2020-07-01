@@ -5,34 +5,46 @@
 #include <mjolnir/obj.h>
 
 /* characters */
-#define MJOLNIR_CHAR_PLAYER          '@'
-#define MJOLNIR_CHAR_ANT             'a'
-#define MJOLNIR_CHAR_ALIEN           'A'
-#define MJOLNIR_CHAR_BEE             'b'
-#define MJOLNIR_CHAR_BEE_QUEEN       'B'
-#define MJOLNIR_CHAR_DOG             'd'
-#define MJOLNIR_CHAR_DEITY           'D'
-#define MJOLNIR_CHAR_GHOUL           'G'
-#define MJOLNIR_CHAR_HUMAN           'H'
-#define MJOLNIR_CHAR_ORACLE          'O'
-#define MJOLNIR_CHAR_REMNANTS        'R'
-#define MJOLNIR_CHAR_UNICORN         'u'
-#define MJOLNIR_CHAR_THOR            'T'
-#define MJOLNIR_CHAR_VAMPIRE         'v'
-#define MJOLNIR_CHAR_DRACULA         'V'
-#define MJOLNIR_CHAR_WOLF            'w'
-#define MJOLNIR_CHAR_ZOMBIE          'Z'
+#define MJOLNIR_CHAR_PLAYER         '@'
+#define MJOLNIR_CHAR_ANT            'a'
+#define MJOLNIR_CHAR_SOLDIER_ANT    'A'
+#define MJOLNIR_CHAR_BEE            'b'
+#define MJOLNIR_CHAR_BEE_QUEEN      'B'
+#define MJOLNIR_CHAR_DOG            'd'
+#define MJOLNIR_CHAR_DEITY          'D'
+#define MJOLNIR_CHAR_ALIEN          'e'
+#define MJOLNIR_CHAR_GHOUL          'g'
+#define MJOLNIR_CHAR_HUMAN          'H'
+#define MJOLNIR_CHAR_ORACLE         'O'
+#define MJOLNIR_CHAR_REMNANTS       'R'
+#define MJOLNIR_CHAR_UNICORN        'u'
+#define MJOLNIR_CHAR_VAMPIRE        'v'
+#define MJOLNIR_CHAR_WOLF           'w'
+
+#define MJOLNIR_CHAR_IKU_TURSO      'I'
+#define MJOLNIR_CHAR_FENRIS         'F'
+#define MJOLNIR_CHAR_KARA           'K'
+#define MJOLNIR_CHAR_THOR           'T'
+#define MJOLNIR_CHAR_DRACULA        'V'
+#define MJOLNIR_CHAR_ZOMBIE         'Z'
 
 /* character flags */
-#define MJOLNIR_CHAR_NO_PICK   0x00000001U // don't pick object up automatically
-#define MJOLNIR_CHAR_BLIND     0x00000020U // character is blind
-#define MJOLNIR_CHAR_LEVITATES 0x00000040U // character is levitating
-/* speed values */
+#define MJOLNIR_CHAR_NO_AUTOPICK    0x00000001U // don't pick object up automatically
+#define MJOLNIR_CHAR_BLIND          0x00000002U // character is blind
+#define MJOLNIR_CHAR_LEVITATES      0x00000004U // character is levitating
 
+/* speed values */
 #define MJOLNIR_CHAR_FAST      2           // character is moving faster
 #define MJOLNIR_CHAR_NORMAL    1           // normal speed
 #define MJOLNIR_CHAR_FROZEN    0           // character can't move
 #define MJOLNIR_CHAR_SLOW      (-1)        // slow speed
+
+/*
+ * - returns hit-point delta (negative)
+ * - the argument is one of 8 directions
+ */
+typedef int   (*mjolmovefunc(int));
+
 struct mjolchr {
     struct dngobj      data;            // common character data
     struct mjolobjfunc func;

@@ -6,6 +6,7 @@
 + - door
 --------
 - may be hidden (show as a corridor)
+- may have traps
 
 . - floor
 ---------
@@ -15,10 +16,6 @@
 --------
 - usually hidden unless you have used search or identify
 - dart, dagger, drop level down, teleport
-
-X - altar
----------
-- sacrifices on altars may yield special items
 
 ! - potion
 ----------
@@ -43,19 +40,20 @@ X - altar
 8 - tape
 --------
 - programs which can be installed on mainframes from terminal
-  - rced        - redcode editor (corewar)
-  - mmind       - mastermind code-breaking game
-  - bship       - battleship
-  - ttt         - tic-tac-toe
-
-- - horizontal wall
--------------------
-
-| - vertical wall
------------------
+  - map*.txt    - dungeon level maps
+  - rced.com    - redcode editor (corewar)
+  - rcdb.com    - redcode debugger
+  - mmind.com   - mastermind code-breaking game
+  - bship.com   - battleship
+  - ttt.com     - tic-tac-toe
+  - *.rc        - redcode source for a corewar warrior
+                - imp
 
 / - whip
 --------
+
+| - demon whip
+--------------
 
 T - teleport
 ------------
@@ -71,4 +69,8 @@ c - crystal ball
 - crystal ball may reveal parts of the plot by showing what's happening
   elsewhere
   - sometimes crystal balls may show future incidents
+
+X - altar
+---------
+- sacrifices on altars may yield special items
 

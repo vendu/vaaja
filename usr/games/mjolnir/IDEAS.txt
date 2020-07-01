@@ -18,7 +18,7 @@ Introduction
 ------------
 
 Legend has it that many moons ago, Fenris, the eldest child of Loki and
-Angrboda, broke free from his chain, Pleignir, and stole Mjolnir from Thor.
+Angrboda, broke free from his chain, Gleipnir, and stole Mjolnir from Thor.
 Fenris is believed to have hidden Mjolnir, Thor's hammer, into a dungeon.
 
 It is said that Thor shall ascend the one to return Mjolnir to a deity for
@@ -38,6 +38,12 @@ the standard "graphics" are drawn as characters.
 
 Non-Character Objects
 ---------------------
+
+NOTES
+-----
+- neutral and unknown objects are shown in white
+- known-to-be-blessed objects are shown in green
+- known-to-be-cursed objects are shown in red
 
 Object		| Display	| Description
 ---------------------------------------------
@@ -89,23 +95,28 @@ Character	| Display	| Description
 player		| @		| you
 ant		| a		| ant
 soldier ant     | A             | the strongest type of ants
-alien		| e		| extraterrestrial creature
 bee		| b		| regular bee, only stings once
 bee queen	| B		| bee queen
 dog		| d		| pet dog
 deity		| D		| deity
-Kara		| K		| Kara, the princess of Atlatnis
-Fenris		| F		| the guardian wolf of gods; kills demons
-ghoul		| G		| corpse eater
+alien		| e		| extraterrestrial creature
+ghoul		| g		| corpse eater
 human		| H		| human being
-Iku-Turso	| I		| Finnish sea monster :)
 oracle		| O		| oracles know about things
+rat             | r             | regular rat
+R               | remnants      | body and/or possession of dead creatures
 unicorn		| u		| unicorn
 vampire		| v		| regular vampire
-Dracula		| V		| Dracula; attack will get all vampires to hit
 wolf		| w		| may be Fenris
-Thor		| T		| god of thunder
 zombie		| Z		| zombies; living dead; always evil, attack all
+
+Special Characters
+------------------
+Iku-Turso	| I		| Finnish sea monster :)
+Fenris		| F		| the guardian wolf of gods; kills demons
+Kara		| K		| Kara, the princess of Atlantis
+Thor		| T		| god of thunder
+Dracula		| V		| Dracula; attack will get all vampires to hit
 
 Special Items
 -------------
@@ -116,7 +127,7 @@ Jatimatic	| J		| sub-machine gun for close range combat
 				    silver bullets... ;)
 Golden Sword	| -		| princess Kara's golden sword
 Mjolnir		| M		| the hammer of Thor
-Pleignir	| P		| ribbon that can hold Fenris
+Gleipnir	| G		| ribbon that can hold Fenris
 Stormbringer	| S		| Stormbringer special sword
 Excalibur	| E		| Excalibur special sword
 Holy Cross	| C		| holy cross with the names of 4 archangels
