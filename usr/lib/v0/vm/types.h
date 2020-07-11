@@ -2,7 +2,6 @@
 #define __V0_TYPES_H__
 
 #include <stdint.h>
-#include <v0/regs.h>
 
 /* assembler types */
 typedef int32_t                 m_reg_t;

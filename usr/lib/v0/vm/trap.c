@@ -1,7 +1,8 @@
-#include <v0/types.h>
-#include <v0/mach32.h>
-#include <v0/trap.h>
+#include <v0/vm/vm.h>
+
+#if defined(__zen__)
 #include <zen/signal.h>
+#endif
 
 typedef                 void (*v0trapfunc)(struct v0trapframe *);
 

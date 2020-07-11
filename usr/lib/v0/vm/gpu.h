@@ -2,7 +2,7 @@
 #define __V0_GPU_H__
 
 #include <stdint.h>
-#include <v0/v0.h>
+#include <v0/vm/vm.h>
 #include <gfx/rgb.h>
 
 typedef gfxpix444               v0pix;

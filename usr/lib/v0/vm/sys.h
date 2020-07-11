@@ -1,7 +1,7 @@
 #ifndef __V0_SYS_H__
 #define __V0_SYS_H__
 
-#include <v0/v0.h>
+#include <v0/vm/vm.h>
 
 /* prec-member */
 #define V0_TIME_NANO            1000000000L

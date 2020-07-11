@@ -299,7 +299,7 @@ m_cmpsetbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
     int32_t val = 0;
 
-    if (IMMEDIATE(ndx)) {
+    if (C_IMMEDIATE(ndx)) {
         __asm__ __volatile__ ("lock btsl %2, %0\n"
                               "jnc 1f\n"
                               "incl %1\n"
@@ -309,33 +309,6 @@ m_cmpsetbit32(volatile m_atomic32_t *lp, int32_t ndx)
                               : "cc", "memory");
     } else {
         __asm__ __volatile__ ("lock btsl %2, %0\n"
-                              "jnc 1f\n"
-                              "incl %1\n"
-                              "1:\n"
-                              : "+m" (*(lp)), "=r" (val)
-                              : "r" (ndx)
-                              : "cc", "memory");
-    }
-
-    return val;
-}
-
-/* atomic clear bit operation */
-static __inline__ int32_t
-m_cmpclrbit32(volatile m_atomic32_t *lp, int32_t ndx)
-{
-    int32_t val = 0;
-
-    if (IMMEDIATE(ndx)) {
-        __asm__ __volatile__ ("lock btrl %2, %0\n"
-                              "jnc 1f\n"
-                              "incl %1\n"
-                              "1:\n"
-                              : "+m" (*(lp)), "=r" (val)
-                              : "i" (ndx)
-                              : "cc", "memory");
-    } else {
-        __asm__ __volatile__ ("lock btrl %2, %0\n"
                               "jnc 1f\n"
                               "incl %1\n"
                               "1:\n"

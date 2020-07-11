@@ -2,8 +2,11 @@
 #include <stdint.h>
 #include <mach/param.h>
 #include <mach/atomic.h>
-#include <v0/regs.h>
-#include <v0/types.h>
+#include <v0/vm/VOIMA-isa.h>
+#include <v0/vm/regs.h>
+#include <v0/vm/types.h>
+#include <v0/vm/mach32.h>
+#include <v0/vm/trap.h>
 
 #define V0_SIGN_BIT         (INT32_C(1) << 31)
 
@@ -19,10 +22,12 @@
 struct v0vm {
     volatile m_atomic_t     mtx;
     long                    flg;
-    volatile m_adr_t       *mem;
+    volatile void          *bram;
+    size_t                  bramsize;
+    volatile void          *mem;
     size_t                  memsize;
     volatile m_word_t       genregs[V0_GENERAL_REGISTERS];
-    volatile m_word_t       sysregs[V0_GENERAL_REGISTERS];
+    volatile m_word_t       sysregs[V0_SYSTEM_REGISTERS];
     volatile m_word_t       segregs[V0_SEGMENT_REGISTERS];
 };
 

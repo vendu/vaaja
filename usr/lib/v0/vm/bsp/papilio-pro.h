@@ -1,10 +1,6 @@
 #ifndef __V0_BSP_PAPILIO_PRO_H__
 #define __V0_BSP_PAPILIO_PRO_H__
 
-#include <zen/conf.h>
-
-#if defined(V0_PAPILIO_PRO)
-
 #include <stdint.h>
 
 #define PAPILIO_PRO_PIX_MASK_BIT        (1 << 0)
@@ -142,8 +138,6 @@ typedef v0pix12                         v0pixel;
 #define PAPILIO_PRO_PS2_DATA2           88
 
 #define PAPILIO_PRO_RESET_PIN           85
-
-#endif /* V0_PAPILIO_PRO */
 
 #endif /* __V0_BSP_PAPILIO_PRO_H__ */
 

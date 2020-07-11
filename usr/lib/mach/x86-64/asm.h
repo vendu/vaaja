@@ -320,7 +320,7 @@ m_cmpsetbit64(volatile m_atomic_t *p, long ndx)
 {
     long val = 0;
 
-    if (IMMEDIATE(ndx)) {
+    if (C_IMMEDIATE(ndx)) {
         __asm__ __volatile__ ("lock btsq %2, %0\n"
                               "jnc 1f\n"
                               "incq %1\n"
@@ -347,7 +347,7 @@ m_cmpclrbit64(volatile m_atomic_t *p, long ndx)
 {
     long val = 0;
 
-    if (IMMEDIATE(ndx)) {
+    if (C_IMMEDIATE(ndx)) {
         __asm__ __volatile__ ("lock btrq %2, %0\n"
                               "jnc 1f\n"
                               "incq %1\n"

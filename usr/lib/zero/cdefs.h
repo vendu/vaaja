@@ -35,7 +35,7 @@
 #if !defined(C_ALIGNED)
 #define C_ALIGNED(a)    __attribute__ ((__aligned__(a)))
 #endif
-#define IMMEDIATE(x)    __builtin_constant_p(x)
+#define C_IMMEDIATE(x)  __builtin_constant_p(x)
 #define C_INLINE       	__inline__ __attribute__ ((__always_inline__))
 #define C_NOINLINE     	__attribute__ ((__noinline__))
 #define C_NORETURN     	__attribute__ ((__noreturn__))

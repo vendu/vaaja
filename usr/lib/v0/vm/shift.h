@@ -1,7 +1,7 @@
 #ifndef __SYS_V0_SHIFT_H__
 #define __SYS_V0_SHIFT_H__
 
-#include <v0/v0.h>
+#include <v0/vm/vm.h>
 
 static __inline__ long
 v0shl(long cnt, long word)

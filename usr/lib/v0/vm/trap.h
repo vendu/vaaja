@@ -1,8 +1,6 @@
 #ifndef __V0_TRAP_H__
 #define __V0_TRAP_H__
 
-#include <v0/types.h>
-
 #define v0trapirq(t)            ((t) & V0_IRQ_TRAP_BIT)
 #define v0trapirqid(t)          ((t) & ~V0_IRQ_TRAP_BIT)
 
