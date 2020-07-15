@@ -3,10 +3,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <zen/task.h>
-#if defined(__v0__)
-#include <v0/types.h>
-#endif
+#include <sys/zen/task.h>
+#include <mach/types.h>
 
 typedef intmax_t        zenlong;        // system maximum
 typedef uintmax_t       zenulong;       // unsigned system maximum

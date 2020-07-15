@@ -1,13 +1,13 @@
 #ifndef __ZEN_SCHED_TAO_H__
 #define __ZEN_SCHED_TAO_H__
 
-#include <zen/conf.h>
+#include <sys/zen/conf.h>
 
 #if defined(TAO_ULE_TASK_SCHED)
-#include <zen/sched/ule.h>
+#include <sys/zen/sched/ule.h>
 #endif
 #if defined(TAO_BVT_TASK_SCHED)
-#include <zen/ule/bvt.h>
+#include <sys/zen/ule/bvt.h>
 #endif
 
 union taoschedparm {

@@ -2,7 +2,7 @@
 #define __ZEN_CONF_H__
 
 #if defined(__v0__)
-#include <zen/bsp/v0.h>
+#include <sys/zen/bsp/v0.h>
 #endif
 
 #define ZEN_MAX_CPUS            32

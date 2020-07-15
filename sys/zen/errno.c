@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <pthread.h>
-#include <zen/errno.h>
+#include <sys/zen/errno.h>
 #include <zero/cdefs.h>
 
 #if (((!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)       \

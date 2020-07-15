@@ -6,12 +6,8 @@
 
 /* virtual machine types */
 
-typedef int32_t     v0word;         // signed register value
-typedef uint32_t    v0uword;        // unsigned register value
 typedef int64_t     v0wide;         // signed wide-register value
 typedef uint64_t    v0uwide;   	    // unsigned wide-register value
-typedef uint32_t    v0adr;
-typedef int32_t     v0ofs;
 
 /* machine types */
 
@@ -20,11 +16,6 @@ typedef uint32_t    v0trapdesc;     // trap function address + flags
 typedef uint32_t    v0pagedesc;     // page address + flags
 typedef uint32_t    v0ioperm;       // I/O-permission bits
 typedef uint32_t    v0iodesc;
-
-struct v0thr {
-    v0word      genregs[V0_GENERAL_REGISTERS];
-    v0word      sysregs[V0_SYSTEM_REGISTERS];
-};
 
 struct v0vmatr {
     size_t      nbbram;             // size of BRAM-memory in bytes

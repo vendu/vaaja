@@ -1,6 +1,3 @@
-#ifndef __ZEN_TABHASH_H__
-#define __ZEN_TABHASH_H__
-
 /*
  * cache-friendly hash table
  * -------------------------
@@ -11,45 +8,54 @@
  */
 
 #include <string.h>
-#include <mach/param.h>
-#include <mt/lk.h>
 #include <zero/trix.h>
+#include <zero/unix.h>
+#include <zen/types.h>
 #include <zen/hash.h>
-#include <zen/sys/unix.h>
+#include <mt/lk.h>
+#include <mach/param.h>
 
-extern TABHASH_TAB_T   *TABHASH_BUF;
+extern struct tabhashtab       *TABHASH_BUF;
 
 #define tabhashfind(hash, key)  tabhashop(hash, key, TABHASH_FIND)
 #define tabhashrm(hash, key)    tabhashop(hash, key, TABHASH_REMOVE)
 #define tabhashref(hash, key)   tabhashop(hash, key, TABHASH_ADD_REF)
+#if !defined(TABHASH_HASH)
+#if (MACH_WORD_SIZE == 4)
+#define TABHASH_HASH(u)         tmhash32(u)
+#elif (MACH_WORD_SIZE == 8)
+#define TABHASH_HASH(u)         tmhash64(u)
+#endif
+#endif
 #if defined(TABHASH_FREE)
 #define tabhashdel(hash, key)   TABHASH_FREE(tabhashrm(hash, key))
 #else
 #define tabhashdel(hash, key)   tabhashrm(hash, key)
 #endif
 #if !defined(TABHASH_COPY)
-#define TABHASH_COPY(src, dest) memcpy(dest, src, sizeof(TABHASH_ITEM_T))
+#define TABHASH_COPY(src, dest) memcpy((void *)dest,                    \
+                                       (void *)src,                     \
+                                       sizeof(TABHASH_ITEM_T))
+#endif
+#if !defined(TABHASH_BZERO)
+#define TABHASH_BZERO(p, sz)    memset((void *)p, 0, sz)
 #endif
 #if !defined(TABHASH_CLEAR)
-#define TABHASH_CLEAR(ptr)      memset(ptr, 0, sizeof(TABHASH_ITEM_T))
+#define TABHASH_CLEAR(ptr)      TABHASH_BZERO(ptr, sizeof(TABHASH_ITEM_T))
 #endif
+#define TABHASH_ADD_NREF(p, n)  m_fetchadd((volatile m_atomic_t *)p, n)
+#define TABHASH_READ_NREF(tab)  (tab->ncur)
 
 #define TABHASH_TAB_SIZE        (roundup2(sizeof(struct tabhashtab),    \
                                           MACH_CL_SIZE))
 #define TABHASH_BUF_SIZE        (4 * MACH_PAGE_SIZE)
 #define TABHASH_CACHE_TABS      (TABHASH_BUF_SIZE / TABHASH_TAB_SIZE)
-struct tabhashtab {
-    long                ncur;
-    long                nmax;
-    TABHASH_TAB_T      *prev;
-    TABHASH_TAB_T      *next;
-    TABHASH_ITEM_T      items[TABHASH_TAB_ITEMS];
-};
 
 static __inline__ void
-tabhashputtab(TABHASH_TAB_T *tab)
+tabhashputtab(volatile struct tabhashtab *tab)
 {
-    TABHASH_TAB_T      *head;
+    volatile struct tabhashtab *head;
+
     mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
     head = TABHASH_BUF;
     head = (void *)((uintptr_t)head & ~MT_MEM_LK_BIT);
@@ -63,36 +69,36 @@ tabhashputtab(TABHASH_TAB_T *tab)
 }
 
 /* get hash subtable */
-static __inline__ TABHASH_TAB_T *
+static __inline__ struct tabhashtab *
 tabhashgettab(void)
 {
-    TABHASH_TAB_T      *head = NULL;
-    TABHASH_TAB_T      *tab;
-    long                ntab;
+    volatile struct tabhashtab *head = NULL;
+    struct tabhashtab          *tab;
+    long                       ntab;
 
     /* lock buffer */
     mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
     tab = TABHASH_BUF;
     tab = (void *)((uintptr_t)tab & ~MT_MEM_LK_BIT);
     if (!tab) {
-        int8_t         *ptr = mapanon(-1, TABHASH_BUF_SIZE, 0);
-        TABHASH_TAB_T  *cur;
-        TABHASH_TAB_T  *prev;
+        int8_t                     *ptr = mapanon(-1, TABHASH_BUF_SIZE, 0);
+        volatile struct tabhashtab *cur;
+        volatile struct tabhashtab *prev;
 
         /* allocate more subtables */
         if (ptr == MAP_FAILED) {
             tab = NULL;
             mtunlkbit((m_atomic_t *)&TABHASH_BUF, MT_MEM_LK_BIT_OFS);
         } else {
-            tab = (TABHASH_TAB_T *)ptr;         // first table
+            tab = (struct tabhashtab *)ptr;         // first table
             ntab = TABHASH_CACHE_TABS - 1;
             ptr += TABHASH_TAB_SIZE;
-            head = (TABHASH_TAB_T *)ptr;       // second table
+            head = (struct tabhashtab *)ptr;       // second table
             prev = head;
             while (--ntab) {
                 /* chain newly-allocated table structures */
                 ptr += TABHASH_TAB_SIZE;
-                cur = (TABHASH_TAB_T *)ptr;
+                cur = (struct tabhashtab *)ptr;
                 prev->next = cur;
                 cur->prev = prev;
                 prev = cur;
@@ -111,21 +117,23 @@ tabhashgettab(void)
     }
     if (tab) {
         tab->nmax = TABHASH_TAB_ITEMS;
-        memset(&tab->items, 0, sizeof(tab->items));
+        TABHASH_BZERO(&tab->items, sizeof(tab->items));
     }
 
     return tab;
 }
 
 static __inline__ long
-tabhashadd(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
+tabhashadd(volatile struct tabhashtab **hashtab,
+           const uintptr_t key,
+           const uintptr_t val)
 {
-    TABHASH_TAB_T      *head;
-    TABHASH_TAB_T      *tab;
-    long                ndx;
-    long                lim;
-    long                loop;
-    TABHASH_ITEM_T      item = { key, (void *)val };
+    volatile struct tabhashtab *tab;
+    volatile struct tabhashtab *head;
+    long                        ndx;
+    long                        lim;
+    long                        loop;
+    TABHASH_ITEM_T              item = { key, (void *)val };
 
     ndx = TABHASH_HASH(key);
     mtlkbit((m_atomic_t *)&hashtab[ndx], MT_MEM_LK_BIT_OFS);
@@ -151,7 +159,7 @@ tabhashadd(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
         lim = tab->nmax;
         if (ndx < lim) {
             TABHASH_COPY(&item, &tab->items[ndx]);
-            TABHASH_PUT_NREF(&tab->items[ndx], 1);
+            TABHASH_ADD_NREF(tab, 1);
             ndx++;
             tab->ncur = ndx;
             loop = 0;
@@ -168,20 +176,20 @@ tabhashadd(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
 #define TABHASH_FIND            0
 #define TABHASH_ADD_REF         (1L)
 static __inline__ TABHASH_ITEM_T
-tabhashop(TABHASH_TAB_T **hashtab, const uintptr_t val, long cmd)
+tabhashop(volatile struct tabhashtab **hashtab, const uintptr_t val, long cmd)
 
 {
-    TABHASH_ITEM_T      ret = TABHASH_INVALID;
-    TABHASH_TAB_T      *tab;
-    TABHASH_TAB_T      *head;
-    TABHASH_TAB_T      *prev;
-    TABHASH_TAB_T      *next;
-    TABHASH_ITEM_T     *item;
-    long                ndx;
-    long                n;
-    long                nref;
-    long                lim;
-    long                cur;
+    TABHASH_ITEM_T              ret = TABHASH_INVALID;
+    volatile struct tabhashtab *tab;
+    volatile struct tabhashtab *head;
+    volatile struct tabhashtab *prev;
+    volatile struct tabhashtab *next;
+    volatile TABHASH_ITEM_T    *item;
+    long                        ndx;
+    long                        n;
+    long                        nref;
+    long                        lim;
+    long                        cur;
 
     ndx = TABHASH_HASH(val);
     prev = NULL;
@@ -193,9 +201,9 @@ tabhashop(TABHASH_TAB_T **hashtab, const uintptr_t val, long cmd)
         lim = tab->nmax;
         item = &tab->items[0];
         for (cur = 0 ; cur < lim ; cur++) {
-            if (!TABHASH_CMP(item, val)) {
+            if (TABHASH_CMP(item, val)) {
                 TABHASH_COPY(item, &ret);
-                nref = TABHASH_GET_NREF(item);
+                nref = TABHASH_READ_NREF(tab);
                 if (cmd == TABHASH_REMOVE && nref == 1) {
                     /* remove item from hash */
                     n = tab->ncur;
@@ -225,7 +233,7 @@ tabhashop(TABHASH_TAB_T **hashtab, const uintptr_t val, long cmd)
                     }
                 } else {
                     nref += cmd;
-                    TABHASH_PUT_NREF(item, nref);
+                    TABHASH_ADD_NREF(tab, nref);
                     if (prev) {
                         /* insert table into front of queue */
                         next = tab->next;
@@ -252,7 +260,9 @@ tabhashop(TABHASH_TAB_T **hashtab, const uintptr_t val, long cmd)
 }
 
 static __inline__ long
-tabhashaddref(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
+tabhashaddref(volatile struct tabhashtab **hashtab,
+              const uintptr_t key,
+              const uintptr_t val)
 {
     TABHASH_ITEM_T      item = tabhashop(hashtab, val, TABHASH_ADD_REF);
     long                retval = 0;
@@ -265,6 +275,4 @@ tabhashaddref(TABHASH_TAB_T **hashtab, const uintptr_t key, const uintptr_t val)
 
     return retval;
 }
-
-#endif /* __ZEN_TABHASH_H__ */
 

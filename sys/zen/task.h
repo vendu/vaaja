@@ -1,9 +1,9 @@
 #ifndef __ZEN_TASK_H__
 #define __ZEN_TASK_H__
 
-#include <zen/conf.h>
+#include <sys/zen/conf.h>
 //#include <zen/types.h>
-#include <zen/sched/tao.h>
+#include <sys/zen/sched/tao.h>
 #include <mach/param.h>
 #include <mt/tktlk.h>
 //#include <zen/types.h>

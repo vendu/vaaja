@@ -1,17 +1,17 @@
 #include <limits.h>
 #include <stdint.h>
 #include <mach/param.h>
+#include <mach/types.h>
 #include <mach/atomic.h>
-#include <v0/vm/VOIMA-isa.h>
-#include <v0/vm/regs.h>
-#include <v0/vm/types.h>
-#include <v0/vm/mach32.h>
-#include <v0/vm/trap.h>
+#include <v0/VOIMA-isa.h>
+#include <v0/regs.h>
+#include <v0/mach32.h>
+#include <v0/trap.h>
 
 #define V0_SIGN_BIT         (INT32_C(1) << 31)
 
-#define v0_setmsw(bits)     (g_vm.sysregs[V0_MSW_REGISTER] |= (bits))
-#define v0_clrmsw(bits)     (g_vm.sysregs[V0_MSW_REGISTER] &= ~(bits))
+#define v0setmsw(bits)      (g_vm.sysregs[V0_MSW_REGISTER] |= (bits))
+#define v0clrmsw(bits)      (g_vm.sysregs[V0_MSW_REGISTER] &= ~(bits))
 
 #define v0getfp(vm)         ((vm)->genregs[V0_FP_REGISTER])
 #define v0getsp(vm)         ((vm)->genregs[V0_SP_REGISTER])

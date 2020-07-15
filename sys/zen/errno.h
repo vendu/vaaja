@@ -2,7 +2,7 @@
 #define __ZEN_ERRNO_H__
 
 #include <zero/cdefs.h>
-#include <zen/bits/errno.h>
+#include <sys/zen/bits/errno.h>
 
 C_CONST int            *__errnoloc(void);
 

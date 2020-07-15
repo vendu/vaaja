@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <zero/cdefs.h>
-#include <zen/types.h>
+#include <sys/zen/types.h>
 
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0

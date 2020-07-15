@@ -5,11 +5,12 @@
 #include <zero/cdefs.h>
 #include <mach/param.h>
 
+#if 0
 /* machine types */
-typedef int8_t     		m_byte_t;
-typedef int16_t    		m_dualbyte_t;
-typedef uintptr_t  		m_adr_t;
-typedef void      	       *m_ptr_t;
+typedef int8_t     		        m_byte_t;
+typedef int16_t    		        m_dualbyte_t;
+//typedef uintptr_t               m_adr_t;
+typedef void *                  m_ptr_t;
 
 #if (LONGLONGSIZE > LONGSIZE)
 typedef long long               m_word_t;
@@ -18,8 +19,11 @@ typedef unsigned long long      m_uword_t;
 typedef long                    m_word_t;
 typedef unsigned long           m_uword_t;
 #endif
+#endif /* 0 */
 
-#if defined(_WIN64)
+#if defined(__v0__)
+#include <mach/v0/types.h>
+#elif defined(_WIN64)
 #include <zero/msc/win64.h>
 #elif defined(_WIN32)
 #include <zero/msc/win32.h>
