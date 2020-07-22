@@ -1,5 +1,5 @@
-#ifndef __ZEN_FS0_H__
-#define __ZEN_FS0_H__
+#ifndef __SYS_ZEN_FS0_H__
+#define __SYS_ZEN_FS0_H__
 
 /* zenfs0 aims to be a somewhat-modernised version of berkeley ffs */
 
@@ -82,5 +82,5 @@ struct zenfs0dirent {
     zenfs0byte_t        name[C_VLA];    // padded to 64-bit boundary
 };
 
-#endif /* __ZEN_FS0_H__ */
+#endif /* __SYS_ZEN_FS0_H__ */
 

@@ -1,9 +1,13 @@
+#ifndef __V0_VM_VM_H__
+#define __V0_VM_VM_H__
+
 #include <limits.h>
 #include <stdint.h>
 #include <mach/param.h>
 #include <mach/types.h>
 #include <mach/atomic.h>
 #include <v0/VOIMA-isa.h>
+#include <v0/cop.h>
 #include <v0/regs.h>
 #include <v0/mach32.h>
 #include <v0/trap.h>
@@ -29,5 +33,9 @@ struct v0vm {
     volatile m_word_t       genregs[V0_GENERAL_REGISTERS];
     volatile m_word_t       sysregs[V0_SYSTEM_REGISTERS];
     volatile m_word_t       segregs[V0_SEGMENT_REGISTERS];
+    volatile m_fxp_t        fxp64regs[V0_FXP_REGISTERS];
+    volatile m_fpu_t        fpu64regs[V0_FPU_REGISTERS];
+    volatile m_dsp_t        dsp32regs[V0_DSP_REGISTERS];
 };
 
+#endif /* __V0_VM_VM_H__ */

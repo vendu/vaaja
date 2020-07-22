@@ -3,7 +3,7 @@
 #ifndef __VAS_OPT_H__
 #define __VAS_OPT_H__
 
-#include <valhalla/cdefs.h>
+#include <zero/cdefs.h>
 
 extern void vasinitalign(void);
 

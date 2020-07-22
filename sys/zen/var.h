@@ -1,5 +1,5 @@
-#ifndef __ZEN_AUX_H__
-#define __ZEN_AUX_H__
+#ifndef __SYS_ZEN_AUX_H__
+#define __SYS_ZEN_AUX_H__
 
 #define ZEN_AUX_INTR_HZ         0
 #define ZEN_AUX_HIRES_TMR       (LONGSIZE)
@@ -11,5 +11,5 @@
 #define ZEN_AUX_SHM_MAX         28
 #define ZEN_AUX_DESC_MAX        32
 
-#endif /* __ZEN_AUX_H__ */
+#endif /* __SYS_ZEN_AUX_H__ */
 

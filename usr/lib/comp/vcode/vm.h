@@ -12,16 +12,14 @@
 #elif (WORDSIZE == 8)
 #define V_FLG_MAX_SHIFT         63
 #endif
-#define V_INTR_BIT              (1 << V_FLG_MAX_SHIFT)
-#define V_ZERO_BIT              (1 << (V_FLG_MAX_SHIFT - 1)
-#define V_UNDERFLOW_BIT         (1 << (V_FLG_MAX_SHIFT - 2)
-#define V_OVERFLOW_BIT          (1 << (V_FLG_MAX_SHIFT - 3)
-#define V_CARRY_BIT             (1 << (V_FLG_MAX_SHIFT - 4)
-#define V_BORROW_BIT            (1 << (V_FLG_MAX_SHIFT - 5)
-#define V_PARITY_BIT            (1 << (V_FLG_MAX_SHIFT - 6)
-#define V_ALIGN_BIT             (1 << (V_FLG_MAX_SHIFT - 7)
-#define V_ERROR_FLAG            0xfe
-#define V_FAIL_MASK             0xff
+#define V_INTR_BIT              (1 << 0)
+#define V_ZERO_BIT              (1 << 1)
+#define V_OVERFLOW_BIT          (1 << 2)
+#define V_CARRY_BIT             (1 << 3)
+#define V_PARITY_BIT            (1 << 4)
+#define V_ALIGN_BIT             (1 << 5)
+#define V_ERROR_FLAG            (1 << 31)
+#define V_ERROR_MASK            0xff
 
 struct vcodevm {
     struct vcodeinst   *pc;

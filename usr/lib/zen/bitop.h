@@ -174,7 +174,7 @@ ham64nomul(uint64_t a)
     return a;
 }
 
-#if (WORDSIZE == 8)
+#if (MACH_WORD_SIZE == 8)
 #define m_ham ham64nomul
 #else
 #define m_ham ham32nomul
@@ -182,7 +182,7 @@ ham64nomul(uint64_t a)
 
 #endif
 
-#if (WORDSIZE == 8)
+#if (MACH_WORD_SIZE == 8)
 #define m_clz clz64
 #define m_ctz ctz64
 #define m_ham ham64

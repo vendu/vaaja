@@ -1,10 +1,10 @@
-#ifndef __ZEN_VFS_H__
-#define __ZEN_VFS_H__
+#ifndef __SYS_ZEN_VFS_H__
+#define __SYS_ZEN_VFS_H__
 
 #include <stddef.h>
 #include <stdint.h>
 #include <zero/cdefs.h>
-#include <sys/zen/types.h>
+#include <mach/types.h>
 
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0
@@ -138,5 +138,5 @@ struct zenvfsshmfuncs {
     void      (*shmat)(int shmfd, const void *shmadr, int flags);
 };
 
-#endif /* __ZEN_VFS_H__ */
+#endif /* __SYS_ZEN_VFS_H__ */
 

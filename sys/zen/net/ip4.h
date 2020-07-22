@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <zero/cdefs.h>
 
+#define NET_IP4_PKT_MAX 65536
+
 struct zennetudp4dgram {
     unsigned            version : 4;
     unsigned            hdrlen  : 4;

@@ -1,5 +1,7 @@
-#ifndef __V0_VM_REGS_H
+#ifndef __V0_VM_REGS_H__
 #define __V0_VM_REGS_H__
+
+#include <mach/param.h>
 
 /* MACHINE PARAMETERS */
 

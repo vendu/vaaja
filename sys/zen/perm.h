@@ -1,5 +1,5 @@
-#ifndef __ZEN_PERM_H__
-#define __ZEN_PERM_H__
+#ifndef __SYS_ZEN_PERM_H__
+#define __SYS_ZEN_PERM_H__
 
 /* access permissions */
 #define ZEN_TOOR_UID    INT32_C(0)
@@ -27,5 +27,5 @@ struct zenperm {
 
 extern int  zenchkperm(struct zenperm *perm, struct zencred *cred, int mask);
 
-#endif /* __ZEN_PERM_H__ */
+#endif /* __SYS_ZEN_PERM_H__ */
 

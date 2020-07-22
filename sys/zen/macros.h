@@ -1,5 +1,5 @@
-#ifndef __ZEN_MACROS_H__
-#define __ZEN_MACROS_H__
+#ifndef __SYS_ZEN_MACROS_H__
+#define __SYS_ZEN_MACROS_H__
 
 #define ZEN_SUCCESS     0
 #define ZEN_FAILURE     (-1)
@@ -17,5 +17,5 @@
 #define negcond(f, a)           (((a) ^ - (f)) + (f))
 #define bitmerge(a, b, msk, f)  ((a) ^ (((a) ^ (b)) & (msk)))   // 0 in mask is a
 
-#endif /* __ZEN_MACROS_H__ */
+#endif /* __SYS_ZEN_MACROS_H__ */
 

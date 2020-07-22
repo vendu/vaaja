@@ -10,10 +10,10 @@
 #include <string.h>
 #include <zero/trix.h>
 #include <zero/unix.h>
-#include <zen/types.h>
 #include <zen/hash.h>
-#include <mt/lk.h>
+#include <mach/atomic.h>
 #include <mach/param.h>
+#include <mt/lk.h>
 
 extern struct tabhashtab       *TABHASH_BUF;
 
@@ -50,6 +50,14 @@ extern struct tabhashtab       *TABHASH_BUF;
                                           MACH_CL_SIZE))
 #define TABHASH_BUF_SIZE        (4 * MACH_PAGE_SIZE)
 #define TABHASH_CACHE_TABS      (TABHASH_BUF_SIZE / TABHASH_TAB_SIZE)
+
+struct tabhashtab {
+    volatile m_atomic_t         ncur;
+    long                        nmax;
+    volatile struct tabhashtab *prev;
+    volatile struct tabhashtab *next;
+    volatile TABHASH_ITEM_T     items[TABHASH_TAB_ITEMS];
+};
 
 static __inline__ void
 tabhashputtab(volatile struct tabhashtab *tab)

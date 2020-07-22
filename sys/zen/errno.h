@@ -1,5 +1,5 @@
-#ifndef __ZEN_ERRNO_H__
-#define __ZEN_ERRNO_H__
+#ifndef __SYS_ZEN_ERRNO_H__
+#define __SYS_ZEN_ERRNO_H__
 
 #include <zero/cdefs.h>
 #include <sys/zen/bits/errno.h>
@@ -12,5 +12,5 @@ extern int              __zenerrno;
 #define kseterrno(e)  (*__errnoloc() = (e))
 #define kclrerrno(e)  (*__errnoloc() = 0)
 
-#endif /* __ZEN_ERRNO_H__ */
+#endif /* __SYS_ZEN_ERRNO_H__ */
 

@@ -1,16 +1,15 @@
-#include <zen/net/ip4.h>
-#if !defined(NETIP4TEST)
-#define NETIP4TEST    0
-#else
-#define NETIP4NPKT    4096
-#endif
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
 //#include <zero/param.h>
 #include <zero/trix.h>
-#if (NETIP4TEST)
+#include <sys/zen/net/ip4.h>
+#if !defined(NET_IP4_TEST)
+#define NET_IP4_TEST    0
+#else
+#define NET_IP4_NPKT    4096
+#endif
+#if (NET_IP4_TEST)
 #include <stdio.h>
 #include <string.h>
 #include <zero/prof.h>
@@ -22,13 +21,13 @@
  * http://locklessinc.com/articles/tcp_checksum/
  */
 
-#if (LONGSIZE == 4)
+#if (MACH_WORD_SIZE == 4)
 #define ip4chksum(buf, sz) ip4chksum16(buf, sz)
-#elif (LONGSIZE == 8)
+#elif (MACH_WORD_SIZE == 8)
 #define ip4chksum(buf, sz) ip4chksum64(buf, sz)
 #endif
 
-#if (LONGSIZE == 4) || (NETIP4TEST)
+#if (MACH_WORD_SIZE == 4) || (NET_IP4_TEST)
 
 uint_fast16_t
 ip4chksum16(const uint8_t *buf, size_t size)
@@ -36,7 +35,7 @@ ip4chksum16(const uint8_t *buf, size_t size)
     uint32_t sum = 0;
     uint16_t ndx;
 
-    size = min(size, NETIP4PKTSIZE);
+    size = min(size, NET_IP4_PKT_MAX);
     /* Accumulate checksum */
     for (ndx = 0; ndx < size - 1; ndx += 2) {
         uint16_t word16 = *(uint16_t *)&buf[ndx];
@@ -58,9 +57,9 @@ ip4chksum16(const uint8_t *buf, size_t size)
     return ~sum;
 }
 
-#endif /* LONGSIZE == 4 || NETIP4TEST */
+#endif /* MACH_WORD_SIZE == 4 || NET_IP4_TEST */
 
-#if (LONGSIZE == 8) || (NETIP4TEST)
+#if (MACH_WORD_SIZE == 8) || (NET_IP4_TEST)
 
 uint_fast16_t
 ip4chksum64(const uint8_t *buf, size_t size)
@@ -195,17 +194,17 @@ ip4chksum64_2(const uint8_t *buf, size_t size)
     return ~tmp3;
 }
 
-#endif /* LONGSIZE == 8 || NETIP4TEST */
+#endif /* MACH_WORD_SIZE == 8 || NET_IP4_TEST */
 
-#if (NETIP4TEST)
+#if (NET_IP4_TEST)
 
 int
 main(int argc, char *argv[])
 {
-    uint64_t           *pkttab[NETIP4NPKT];
-    size_t              lentab[NETIP4NPKT];
-    uint16_t            chk1tab[NETIP4NPKT];
-    uint16_t            chk2tab[NETIP4NPKT];
+    uint64_t           *pkttab[NET_IP4_NPKT];
+    size_t              lentab[NET_IP4_NPKT];
+    uint16_t            chk1tab[NET_IP4_NPKT];
+    uint16_t            chk2tab[NET_IP4_NPKT];
     unsigned long long  nbyte = 0;
     uint8_t            *ptr;
     long                nus;
@@ -215,10 +214,10 @@ main(int argc, char *argv[])
     PROFDECLCLK(clk);
 
     srandmt32(666);
-    fprintf(stderr, "NETIP4test, %d packets\n", NETIP4NPKT);
-    for (l = 0 ; l < NETIP4NPKT ; l++) {
+    fprintf(stderr, "NET_IP4_test, %d packets\n", NET_IP4_NPKT);
+    for (l = 0 ; l < NET_IP4_NPKT ; l++) {
 b        //        fprintf(stderr, "%ld\n", l);
-        len = (randmt32() & (NETIP4PKTSIZE - 1)) + 1;
+        len = (randmt32() & (NET_IP4_PKT_MAX - 1)) + 1;
         lentab[l] = len;
         nbyte += len;
 //        pkttab[l] = calloc(rounduppow2(len, sizeof(uint64_t)) / sizeof(uint64_t), sizeof(uint64_t));
@@ -232,13 +231,13 @@ b        //        fprintf(stderr, "%ld\n", l);
     }
 #if 0
     nbyte = 0;
-    for (l = 0 ; l < NETIP4NPKT ; l++) {
+    for (l = 0 ; l < NET_IP4_NPKT ; l++) {
         nbyte += lentab[l];
     }
 #endif
     fprintf(stderr, "allocated %llu bytes\n", nbyte);
     profstartclk(clk);
-    for (l = 0 ; l < NETIP4NPKT ; l++) {
+    for (l = 0 ; l < NET_IP4_NPKT ; l++) {
         //        profstartclk(clk);
         chk1tab[l] = ip4chksum64((const uint8_t *)pkttab[l], lentab[l]);
         //        profstopclk(clk);
@@ -252,15 +251,15 @@ b        //        fprintf(stderr, "%ld\n", l);
     fprintf(stderr, "%ld microseconds\n", profclkdiff(clk));
     fprintf(stderr, "%f MBps\n", (1000000.0 * ((double)nbyte / (double)profclkdiff(clk))) / 1048576.0);
     profstartclk(clk);
-    for (l = 0 ; l < NETIP4NPKT ; l++) {
+    for (l = 0 ; l < NET_IP4_NPKT ; l++) {
         chk2tab[l] = ip4chksum64_2((const uint8_t *)pkttab[l], lentab[l]);
     }
     profstopclk(clk);
     fprintf(stderr, "%ld microseconds\n", profclkdiff(clk));
 #if 0
-    memcpy(chk2tab, chk1tab, sizeof(uint16_t) * NETIP4NPKT);
+    memcpy(chk2tab, chk1tab, sizeof(uint16_t) * NET_IP4_NPKT);
 #endif
-    for (l = 0 ; l < NETIP4NPKT ; l++) {
+    for (l = 0 ; l < NET_IP4_NPKT ; l++) {
         if (chk1tab[l] != chk2tab[l]) {
             fprintf(stderr, "%ld\n", l);
 

@@ -1,13 +1,12 @@
-#ifndef __ZEN_TYPES_H__
-#define __ZEN_TYPES_H__
+#ifndef __SYS_ZEN_TYPES_H__
+#define __SYS_ZEN_TYPES_H__
 
-#include <stddef.h>
+#include <sys/zen/conf.h>
+//#include <stddef.h>
 #include <stdint.h>
-#include <sys/zen/task.h>
+#include <mt/tktlk.h>
 #include <mach/types.h>
 
-typedef intmax_t        zenlong;        // system maximum
-typedef uintmax_t       zenulong;       // unsigned system maximum
 typedef int32_t         zenid_t;        // generic object ID
 typedef uint32_t        zendev_t;       // device type
 typedef int64_t         zenoff_t;       // file-system offset
@@ -26,6 +25,10 @@ struct zendev {
     uint32_t            dev;    // 16-bit major + 16-bit minor device IDs
     uint16_t            bus;
     uint16_t            flg;
+};
+
+struct zencpu {
+    m_time_t            ntick;
 };
 
 #define MEM_NULL_FLAGS          0
@@ -79,17 +82,15 @@ struct zendesc {
     uint32_t   flg;
 };
 
-struct zensys {
-    struct zentask     *systasktab[ZEN_SYS_THREADS];
-    struct zentask     *tasktab[MACH_PROC_THREADS];
-    m_page_t            pagedir[MACH_PAGE_DIR_ITEMS];
-    m_uword_t           ndesc;
-    m_word_t           *desctab;
-    m_uword_t           nnodehash;
-    struct zenvfsnode  *nodehash;
-    m_uword_t           nmembuf;
-    struct zenmembuf   *membuftab;
+struct zennice {
+    int_fast8_t         nice;
+    int_fast8_t         slice;
 };
 
-#endif /* __ZEN_TYPES_H__ */
+struct zentasktab {
+    struct zentask     *tab;
+    mttktlk             tkt;
+};
+
+#endif /* __SYS_ZEN_TYPES_H__ */
 

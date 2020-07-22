@@ -1,7 +1,19 @@
-#ifndef __KERN_UTIL_H__
-#define __KERN_UTIL_H__
+#ifndef __SYS_ZEN_UTIL_H__
+#define __SYS_ZEN_UTIL_H__
 
 #include <stdint.h>
+#include <mach/asm.h>
+
+#define _roundup16b(a, b)                                               \
+    ((fastu16divu16((a) + (b) - 1, (b), k_fastu16divu16tab)) * (b))
+
+#define kdebug(s, p)                                                    \
+    do {                                                                \
+        kprintf("%s: %p\n", s, p);                                      \
+        do {                                                            \
+            m_waitspin();                                               \
+        } while (1);                                                    \
+    } while (0);
 
 void kbzero(void *adr, unsigned long len);
 void kmemset(void *adr, int byte, unsigned long len);
@@ -12,5 +24,5 @@ long kstrncpy(char *dest, char *src, long len);
 void kprintf(char *fmt, ...);
 void kpanic(void);
 
-#endif /* __KERN_UTIL_H__ */
+#endif /* __SYS_ZEN_UTIL_H__ */
 

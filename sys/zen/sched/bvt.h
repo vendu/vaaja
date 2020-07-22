@@ -1,14 +1,12 @@
 #ifndef __ZEN_SCHED_BVT_H__
 #define __ZEN_SCHED_BVT_H__
 
-#include <zen/conf.h>
+#include <sys/zen/conf.h>
 
-#if defined(ZEN_BVT_TASK_SCHED)
+#if (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED)
 
-#include <zen/task.h>
-#if defined(__v0__)
-#include <v0/types.h>
-#endif
+#include <sys/zen/task.h>
+#include <mach/types.h>
 
 #define TAO_MIN_TIME            1
 #define TAO_WARP_LIM            8
@@ -24,7 +22,7 @@
         : 0))
 
 /* global scheduler attributes */
-struct taobvtsched {
+struct taosched {
     m_uword_t   vtime;
     m_uword_t   minvtime;
     m_word_t    warplim;
@@ -32,14 +30,14 @@ struct taobvtsched {
 };
 
 /* per-thread scheduler parameters */
-struct taobvtparm {
+struct taoparm {
     m_uword_t   runtime;
     m_uword_t   slptime;
     long        warpofs;
     long        lastwarp;
 };
 
-#endif /* defined(ZEN_BVT_TASK_SCHED) */
+#endif /* (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED) */
 
 #endif /* __ZEN_SCHED_BVT_H__ */
 

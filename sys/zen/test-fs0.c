@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <zen/fs0.h>
+#include <sys/zen/fs0.h>
 
 #if defined(TEST_FS0)
 int

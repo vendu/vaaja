@@ -1,5 +1,5 @@
-#ifndef __ZEN_EV_H__
-#define __ZEN_EV_H__
+#ifndef __SYS_ZEN_EV_H__
+#define __SYS_ZEN_EV_H__
 
 #include <stddef.h>
 #include <stdint.h>
@@ -155,7 +155,7 @@ void    zengetev(struct deck *deck, struct deckev *ev, long flg);
 long    zenputev(struct deck *deck, struct deckev *ev, long flg);
 void    zensyncev(struct deck *deck, long flg);
 
-#if defined(__KERNEL__)
+#if defined(__zen__)
 
 #if !defined(RING_ITEM)
 #define RING_ITEM  struct deckev
@@ -167,7 +167,7 @@ void    zensyncev(struct deck *deck, long flg);
 #define MALLOC(sz) kmalloc(sz)
 #endif
 
-#else /* !defined(__KERNEL__) */
+#else /* !defined(__zen__) */
 
 #define RING_ITEM  struct deckev
 #define RING_INVAL NULL
@@ -175,7 +175,7 @@ void    zensyncev(struct deck *deck, long flg);
 
 #include <zero/ring.h>
 
-#endif /* defined(__KERNEL__) */
+#endif /* defined(__zen__) */
 
 /* event interface */
 
@@ -348,5 +348,5 @@ struct zenev {
     } msg;
 };
 
-#endif /* __ZEN_EV_H__ */
+#endif /* __SYS_ZEN_EV_H__ */
 

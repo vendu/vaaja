@@ -3,8 +3,9 @@
 
 #include <limits.h>
 #include <zero/cdefs.h>
-#include <mach/atomic.h>
 #include <mach/param.h>
+#include <mach/types.h>
+#include <mach/atomic.h>
 
 #define ZEN_ADR_LK_BIT_POS  0
 
@@ -23,8 +24,8 @@ struct zenmemqueue {
     m_word_t                mark;
     m_word_t                type;
     m_word_t                slot;
-    m_word_t                nitem;
     volatile m_atomic_t     nref;
+    m_word_t                nitem;
     void                   *head;
     void                   *tail;
     void                  (*free)(void *);
@@ -44,6 +45,7 @@ struct zenmemslab {
     struct zenmemslab      *next;
     struct zenmemqueue     *queue;
     m_byte_t               *base;
+    m_size_t                size;
     m_word_t                type;
     volatile m_atomic_t     nref;
     m_byte_t                bmap[C_VLA] C_ALIGNED(MACH_CL_SIZE);

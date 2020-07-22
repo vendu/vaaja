@@ -1,5 +1,5 @@
-#ifndef __ZEN_SIGNAL_H__
-#define __ZEN_SIGNAL_H__
+#ifndef __SYS_ZEN_SIGNAL_H__
+#define __SYS_ZEN_SIGNAL_H__
 
 #define SIGHUP          1
 #define SIGINT          2
@@ -52,5 +52,5 @@
 #define SIGRTMAX        63
 #define RTSIGMAX        32
 
-#endif /* __ZEN_SIGNAL_H__ */
+#endif /* __SYS_ZEN_SIGNAL_H__ */
 

@@ -1,5 +1,5 @@
-#ifndef __ZEN_DRV_H__
-#define __ZEN_DRV_H__
+#ifndef __SYS_ZEN_DRV_H__
+#define __SYS_ZEN_DRV_H__
 
 struct zeniofuncs {
     int     *creat(const char *path, mode_t mode);
@@ -17,5 +17,5 @@ struct zeniofuncs {
 
 };
 
-#endif /* __ZEN_DRV_H__ */
+#endif /* __SYS_ZEN_DRV_H__ */
 

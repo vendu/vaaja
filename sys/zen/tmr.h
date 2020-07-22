@@ -1,11 +1,34 @@
-#ifndef __ZEN_TIMER_H__
-#define __ZEN_TIMER_H__
+#ifndef __SYS_ZEN_TMR_H__
+#define __SYS_ZEN_TMR_H__
 
 #include <time.h>
 #include <sys/time.h>
-#if defined(__v0__)
-#include <v0/types.h>
+#include <mach/types.h>
+
+#define TAO_SCHED_POLICY        TAO_LOW_LATENCY_SCHED
+#define TAO_DESKTOP_SCHED       0
+#define TAO_LOW_LATENCY_SCHED   1
+#define TAO_SERVER_SCHED        2
+
+#if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
+#if (TAO_SCHED_POLICY == TAO_LOW_LATENCY_SCHED)
+#define ZEN_TMR_HZ              125
+#define ZEN_TMR_SLICE_MS        16
+#elif (TAO_SCHED_POLICY == TAO_DESKTOP_SCHED)
+#define ZEN_TMR_HZ              (125 / 2)
+#define ZEN_TMR_SLICE_MS        32
+#elif (TAO_SCHED_POLICY == TAO_SERVER_SCHED)
+#define ZEN_TMR_HZ              (125 / 8)
+#define ZEN_TMR_SLICE           64
+#else
+#errof TAO_SCHED_POLICY not specified in <sys/zen/sched/tao.h>
 #endif
+#endif /* (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED) */
+
+#if defined(ZEN_TMR_HZ)
+#define ZEN_SCHED_HZ            ZEN_TMR_HZ
+#endif
+#define kgethz()                ZEN_TMR_HZ
 
 #define ZEN_INTR_TIMER          0
 #define ZEN_HIRES_TIMER         1
@@ -26,5 +49,5 @@ struct zentmr {
     } val;
 };
 
-#endif /* __ZEN_TIMER_H__ */
+#endif /* __SYS_ZEN_TMR_H__ */
 

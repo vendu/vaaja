@@ -28,7 +28,7 @@
 #define TABHASH_HASH(item)      vashashname(item->str)
 #define TABHASH_CMP(item, key)  (strcmp(item->str, key))
 #undef  TABHASH_FREE
-#include <velho/lib/vnd/tabhash.h>
+#include <zen/tabhash.h>
 
 struct vasname {
     uintptr_t   data;
@@ -56,15 +56,15 @@ vasinitnametab(void)
 }
 
 long
-vasaddname(struct vasname *name, long glob)
+vasaddobj(struct vasname *name, void *data, long glob)
 {
     long                ret = -1;
     struct vasnametab **hash;
 
     if (glob) {
-        ret = tabhashadd(g_nametab, name);
+        ret = tabhashadd(g_nametab, (const uintptr_t)name, (const uintptr_t)data);
     } else {
-        ret = tabhashadd(l_nametab, name);
+        ret = tabhashadd(l_nametab, (const uintptr_t)name, (const uintptr_t)data);
     }
 
     return ret;

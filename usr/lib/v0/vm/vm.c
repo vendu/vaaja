@@ -16,6 +16,8 @@
 #define V0_WRITE_BARRIER    2
 #define V0_FULL_BARRIER     (V_READ_BARRIER | V0_WRITE_BARRIER)
 
+typedef void (*v0opfunc)(void *, void *, m_word_t);
+v0opfunc                   *v0opfunctab[256];
 static const unsigned char  v0ham32tab[256]
 = {
     0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
@@ -60,11 +62,65 @@ struct v0vm                 g_vm C_ALIGNED(MACH_CL_SIZE);
         abort();                                                        \
     } while (0)
 
+#define setopfunc(unit, op, func) opfunctab[(unit << 5) | (op)] = (func)
+
+static void
+v0initopfunctab(void)
+{
+    /* ALU-unit instructions */
+    setopfunc(V0_ALU_UNIT, V0_NOT_OP, v0_not);
+    setopfunc(V0_ALU_UNIT, V0_NEG_OP, v0_neg);
+    setopfunc(V0_ALU_UNIT, V0_AND_OP, v0_and);
+    setopfunc(V0_ALU_UNIT, V0_OR_OP, v0_or);
+    setopfunc(V0_ALU_UNIT, V0_XOR_OP, v0_xor);
+    setopfunc(V0_ALU_UNIT, V0_NOR_OP, v0_nor);
+    setopfunc(V0_ALU_UNIT, V0_NOR_OP, v0_nor);
+    setopfunc(V0_ALU_UNIT, V0_XNOR_OP, v0_xnor);
+    setopfunc(V0_ALU_UNIT, V0_NAND_OP, v0_nand);
+    setopfunc(V0_ALU_UNIT, V0_INC_OP, v0_inc);
+    setopfunc(V0_ALU_UNIT, V0_DEC_OP, v0_dec);
+    setopfunc(V0_ALU_UNIT, V0_SLL_OP, v0_sll);
+    setopfunc(V0_ALU_UNIT, V0_SRL_OP, v0_srl);
+    setopfunc(V0_ALU_UNIT, V0_SAR_OP, v0_sar);
+    setopfunc(V0_ALU_UNIT, V0_ROL_OP, v0_rol);
+    setopfunc(V0_ALU_UNIT, V0_ROR_OP, v0_ror);
+    setopfunc(V0_ALU_UNIT, V0_RCL_OP, v0_rcl);
+    setopfunc(V0_ALU_UNIT, V0_RCR_OP, v0_rcr);
+    setopfunc(V0_ALU_UNIT, V0_ADD_OP, v0_add);
+    setopfunc(V0_ALU_UNIT, V0_ADDU_OP, v0_addu);
+    setopfunc(V0_ALU_UNIT, V0_ADC_OP, v0_adc);
+    setopfunc(V0_ALU_UNIT, V0_SUB_OP, v0_sub);
+    setopfunc(V0_ALU_UNIT, V0_SBC_OP, v0_sbc);
+    setopfunc(V0_ALU_UNIT, V0_MUL_OP, v0_mul);
+    setopfunc(V0_ALU_UNIT, V0_UMUL_OP, v0_umul);
+    setopfunc(V0_ALU_UNIT, V0_MHI_OP, v0_mhi);
+    setopfunc(V0_ALU_UNIT, V0_UMHI_OP, v0_umhi);
+    setopfunc(V0_ALU_UNIT, V0_DIV_OP, v0_div);
+    setopfunc(V0_ALU_UNIT, V0_UDIV_OP, v0_udiv);
+    setopfunc(V0_ALU_UNIT, V0_IDIV_OP, v0_idiv);
+    setopfunc(V0_ALU_UNIT, V0_REM_OP, v0_rem);
+
+    /* BIT-unit instructions */
+    setopfunc(V0_BIT_UNIT, V0_TST_OP, v0_tst);
+    setopfunc(V0_BIT_UNIT, V0_ZEX_OP, v0_zex);
+    setopfunc(V0_BIT_UNIT, V0_SEX_OP, v0_sex);
+    setopfunc(V0_BIT_UNIT, V0_CLZ_OP, v0_clz);
+    setopfunc(V0_BIT_UNIT, V0_CTZ_OP, v0_ctz);
+    setopfunc(V0_BIT_UNIT, V0_HAM_OP, v0_ham);
+    setopfunc(V0_BIT_UNIT, V0_PAR_OP, v0_par);
+    setopfunc(V0_BIT_UNIT, V0_HSH_OP, v0_hsh);
+    setopfunc(V0_BIT_UNIT, V0_HUN_OP, v0_hun);
+    /* TODO: V0_BEX_OP and V0_BPK_OP currently unimplemented? */
+
+    return;
+}
+
 struct v0vm *
 v0initvm(struct v0vm *vm, int flg, size_t bramsize, size_t dramsize)
 {
     void   *ptr;
 
+    v0initopfunctab();
     mtlkfmtx(&vm->mtx);
     if (flg & V0_VM_READY) {
         mtunlkfmtx(&vm->mtx);
@@ -95,7 +151,7 @@ v0initvm(struct v0vm *vm, int flg, size_t bramsize, size_t dramsize)
 /* ALU-unit 0x01 */
 
 static C_INLINE void
-v0_not(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_not(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = ~(*(int32_t *)src);
     
@@ -105,7 +161,7 @@ v0_not(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_neg(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_neg(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = -(*(int32_t *)src);
 
@@ -115,7 +171,7 @@ v0_neg(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_and(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_and(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -126,7 +182,7 @@ v0_and(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_or(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_or(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -137,7 +193,7 @@ v0_or(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_xor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_xor(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -148,7 +204,7 @@ v0_xor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_nor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_nor(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = *(int32_t *)dest;
 
@@ -159,7 +215,7 @@ v0_nor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_xnor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_xnor(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = !*(int32_t *)dest;
 
@@ -170,7 +226,7 @@ v0_xnor(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_nand(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_nand(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = ~*(int32_t *)dest;
 
@@ -182,7 +238,7 @@ v0_nand(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 
 #if 0
 static C_INLINE void
-v0_nand(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_nand(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t res = !*(int32_t *)dest;
 
@@ -194,7 +250,7 @@ v0_nand(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 #endif
 
 static C_INLINE void
-v0_inc(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_inc(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t val = *(int32_t *)src;
 
@@ -205,7 +261,7 @@ v0_inc(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_dec(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_dec(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t val = *(int32_t *)src;
 
@@ -216,7 +272,7 @@ v0_dec(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_sll(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_sll(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -228,7 +284,7 @@ v0_sll(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_srl(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_srl(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -241,7 +297,7 @@ v0_srl(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 
 /* NOTE: we assume C's right-shift to be arithmetic for signed types */
 static C_INLINE void
-v0_sar(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_sar(volatile void *src, volatile void *dest, m_word_t parm)
 {
     int32_t dval = *(int32_t *)dest;
     int32_t cnt = *(int32_t *)src;
@@ -253,7 +309,7 @@ v0_sar(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_rol(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_rol(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -268,7 +324,7 @@ v0_rol(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_ror(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_ror(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -282,7 +338,7 @@ v0_ror(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_rcl(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_rcl(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -301,7 +357,7 @@ v0_rcl(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_rcr(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_rcr(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    uval = *(uint32_t *)dest;
     int32_t     cnt = *(int32_t *)src;
@@ -320,169 +376,212 @@ v0_rcr(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_add(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_add(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t add = *(int32_t *)src;
+    int32_t sum = *(int32_t *)dest;
 
-    d32 += s32;
-    if (d32 < s32) {
+    sum += add;
+    if (sum < add) {
         g_vm.sysregs[V0_MSW_REGISTER] |= V0_MSW_OF_BIT;
     }
-    *(int32_t *)dest = d32;
+    *(int32_t *)dest = sum;
 
     return;
 }
 
 /* ignore overflow */
 static C_INLINE void
-v0_addu(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_addu(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t add = *(int32_t *)src;
+    int32_t sum = *(int32_t *)dest;
 
-    d32 += s32;
-    *(int32_t *)dest = d32;
+    sum += add;
+    *(int32_t *)dest = sum;
 
     return;
 }
 
 static C_INLINE void
-v0_adc(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_adc(volatile void *src, volatile void *dest, m_word_t parm)
 {
     v0_crash("ADC not implemented in VM\n");
 }
 
 static C_INLINE void
-v0_sub(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_sub(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t sub = *(int32_t *)src;
+    int32_t diff = *(int32_t *)dest;
 
-    d32 -= s32;
-    *(int32_t *)dest = d32;
+    diff -= sub;
+    *(int32_t *)dest = diff;
 
     return;
 }
 
 static C_INLINE void
-v0_sbc(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_sbc(volatile void *src, volatile void *dest, m_word_t parm)
 {
     v0_crash("SBC not implemented in VM\n");
 }
 
 static C_INLINE void
-v0_mul(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_mul(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t mul = *(int32_t *)src;
+    int32_t prod = *(int32_t *)dest;
 
-    d32 *= s32;
-    *(int32_t *)dest = d32;
+    prod *= mul;
+    *(int32_t *)dest = prod;
 
     return;
 }
 
 static C_INLINE void
-v0_umul(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_umul(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    uint32_t    s32 = *(uint32_t *)src;
-    uint32_t    d32 = *(uint32_t *)dest;
+    uint32_t    mul = *(uint32_t *)src;
+    uint32_t    prod = *(uint32_t *)dest;
 
-    d32 *= s32;
-    *(uint32_t *)dest = d32;
+    prod *= mul;
+    *(uint32_t *)dest = prod;
 
     return;
 }
 
 static C_INLINE void
-v0_mhi(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_mhi(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int64_t s64 = *(int32_t *)src;
-    int64_t d64 = *(int32_t *)dest;
-    int32_t d32;
+    int64_t wmul = *(int32_t *)src;
+    int64_t wprod = *(int32_t *)dest;
+    int32_t prod;
 
-    d64 *= s64;
-    d32 = d64 >> 32;
-    *(int32_t *)dest = d32;
+    wprod *= wmul;
+    prod = wprod >> 32;
+    *(int32_t *)dest = prod;
 
     return;
 }
 
 static C_INLINE void
-v0_umhi(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_umhi(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    uint64_t    s64 = *(uint32_t *)src;
-    uint64_t    d64 = *(uint32_t *)dest;
-    uint32_t    d32;
+    uint64_t    wmul = *(uint32_t *)src;
+    uint64_t    wprod = *(uint32_t *)dest;
+    uint32_t    prod;
 
-    d64 *= s64;
-    d32 = d64 >> 32;
-    *(uint32_t *)dest = d32;
+    wprod *= wmul;
+    prod = wprod >> 32;
+    *(uint32_t *)dest = prod;
 
     return;
 }
 
 static C_INLINE void
-v0_div(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_div(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t num = *(int32_t *)src;
+    int32_t den = *(int32_t *)dest;
 
-    d32 /= s32;
+    den /= num;
 
-    *(int32_t *)dest = d32;
+    *(int32_t *)dest = den;
 
     return;
 }
 
 static C_INLINE void
-v0_udiv(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_udiv(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    uint32_t    s32 = *(uint32_t *)src;
-    uint32_t    d32 = *(uint32_t *)dest;
+    uint32_t    num = *(uint32_t *)src;
+    uint32_t    den = *(uint32_t *)dest;
 
-    d32 /= s32;
+    den /= num;
 
-    *(uint32_t *)dest = d32;
+    *(uint32_t *)dest = den;
 
     return;
 }
 
 static C_INLINE void
-v0_idiv(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_idiv(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t num = *(int32_t *)src;
+    int32_t den = *(int32_t *)dest;
 
-    d32 = irpdiv(d32, s32);
-    *(int32_t *)dest = d32;
+    den = irpdiv(den, num);
+    *(int32_t *)dest = den;
 
     return;
 }
 
 static C_INLINE void
-v0_rem(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_rem(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t s32 = *(int32_t *)src;
-    int32_t d32 = *(int32_t *)dest;
+    int32_t num = *(int32_t *)src;
+    int32_t den = *(int32_t *)dest;
 
-    d32 %= s32;
+    den %= num;
 
-    *(int32_t *)dest = d32;
+    *(int32_t *)dest = den;
 
     return;
 }
 
 static C_INLINE void
-v0_urem(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_urem(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    uint32_t    s32 = *(uint32_t *)src;
-    uint32_t    d32 = *(uint32_t *)dest;
+    uint32_t    num = *(uint32_t *)src;
+    uint32_t    den = *(uint32_t *)dest;
 
-    d32 %= s32;
+    den %= num;
 
-    *(uint32_t *)dest = d32;
+    *(uint32_t *)dest = den;
+
+    return;
+}
+
+/* SUBRT-unit */
+
+static C_INLINE void
+v0_cmp(volatile void *src, volatile void *dest, m_word_t parm)
+{
+    int32_t arg2 = *(int32_t *)dest;
+    int32_t arg1 = *(int32_t *)src;
+
+    v0clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
+    if (arg1 < arg2) {
+        v0setmsw(V0_MSW_LT_BIT);
+    } else {
+        v0clrmsw(V0_MSW_LT_BIT);
+    }
+    if (arg1 == arg2) {
+        v0setmsw(V0_MSW_ZF_BIT);
+    }
+
+    return;
+}
+
+static C_INLINE void
+v0_ucmp(volatile void *src, volatile void *dest, m_word_t parm)
+{
+    uint32_t arg2 = *(uint32_t *)dest;
+    uint32_t arg1 = *(uint32_t *)src;
+
+    v0clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
+    if (arg1 < arg2) {
+        v0setmsw(V0_MSW_LT_BIT);
+    } else {
+        v0clrmsw(V0_MSW_LT_BIT);
+    }
+    if (arg1 == arg2) {
+        v0setmsw(V0_MSW_ZF_BIT);
+    }
+    if (arg1 == arg2) {
+        v0setmsw(V0_MSW_ZF_BIT);
+    }
 
     return;
 }
@@ -490,7 +589,7 @@ v0_urem(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 /* BIT-unit */
 
 static
-vo_tst(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+vo_tst(volatile void *src, volatile void *dest, m_word_t parm)
 {
     ;
 }
@@ -553,7 +652,7 @@ v0_sex(volatile void *src, volatile void *dest, m_word_t parm)
 
 #if 0
 static C_INLINE void
-v0_clz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_clz(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    arg1 = *(uint32_t *)src;
     uint32_t    uval;
@@ -576,7 +675,7 @@ v0_clz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 #endif
 
 static C_INLINE void
-v0_clz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_clz(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    arg1 = *(uint32_t *)src;
     uint32_t    uval = !arg1;
@@ -598,7 +697,7 @@ v0_clz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_ctz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_ctz(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    arg1 = *(uint32_t *)src;
     uint32_t    uval = !arg1;
@@ -615,7 +714,7 @@ v0_ctz(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 }
 
 static C_INLINE void
-v0_ham(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_ham(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    arg1 = *(uint32_t *)src;
     uint32_t    n = v0ham32tab[arg1 & 0xff];
@@ -631,62 +730,26 @@ v0_ham(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
     return;
 }
 
+/* hash-routine */
 static C_INLINE void
-v0_par(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_hsh(volatile void *src, volatile void *dest, m_word_t parm)
 {
     uint32_t    arg1 = *(uint32_t *)src;
-    uint32_t    n = v0ham32tab[arg1 & 0xff];
-    uint32_t    n1 = v0ham32tab[(arg1 >> 8) & 0xff];
-    uint32_t    n2 = v0ham32tab[(arg1 >> 16) & 0xff];
-    uint32_t    n3 = v0ham32tab[(arg1 >> 24) & 0xff];
+    uint32_t    hash = tmhash32(arg1);
 
-    n += n1;
-    n2 += n3;
-    n += n2;
-    *(uint32_t *)dest = n;
+    *(uint32_t *)dest = hash;
 
     return;
 }
 
-/* SUBRT-unit */
-
+/* reverse of the v0_hsh-routine */
 static C_INLINE void
-v0_cmp(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
+v0_hun(volatile void *src, volatile void *dest, m_word_t parm)
 {
-    int32_t arg2 = *(int32_t *)dest;
-    int32_t arg1 = *(int32_t *)src;
+    uint32_t    arg1 = *(uint32_t *)src;
+    uint32_t    hash = tmunhash32(arg1);
 
-    v0clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
-    if (arg1 < arg2) {
-        v0setmsw(V0_MSW_LT_BIT);
-    } else {
-        v0clrmsw(V0_MSW_LT_BIT);
-    }
-    if (arg1 == arg2) {
-        v0setmsw(V0_MSW_ZF_BIT);
-    }
-
-    return;
-}
-
-static C_INLINE void
-v0_ucmp(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
-{
-    uint32_t arg2 = *(uint32_t *)dest;
-    uint32_t arg1 = *(uint32_t *)src;
-
-    v0clrmsw(V0_MSW_ZF_BIT | V0_MSW_LT_BIT);
-    if (arg1 < arg2) {
-        v0setmsw(V0_MSW_LT_BIT);
-    } else {
-        v0clrmsw(V0_MSW_LT_BIT);
-    }
-    if (arg1 == arg2) {
-        v0setmsw(V0_MSW_ZF_BIT);
-    }
-    if (arg1 == arg2) {
-        v0setmsw(V0_MSW_ZF_BIT);
-    }
+    *(uint32_t *)dest = hash;
 
     return;
 }
@@ -694,16 +757,6 @@ v0_ucmp(volatile void *src, volatile void *dest, C_UNUSED m_word_t parm)
 static void
 v0fetchinst(struct v0vm *vm)
 {
-    volatile void  *src;
-    volatile void  *dest = NULL;
-    m_byte_t        op;
-    m_adr_t         adr = 0;
-    m_word_t        imm = 0;
-    m_word_t        immu = 0;
-    m_word_t        parm;
-    m_reg_t         reg1;
-    m_reg_t         reg2;
-    m_reg_t         reg3;
     m_word_t        pc;
     m_word_t        newpc;
     m_word_t        ins;
@@ -712,19 +765,23 @@ v0fetchinst(struct v0vm *vm)
     v0lkbit32(&vm->genregs[V0_PC_REGISTER], V0_PC_LK_BIT_OFS);
     /* adjust PC, fetch instruction */
     pc = vm->genregs[V0_PC_REGISTER];
-    ins = ((m_word_t *)vm->mem)[pc];
-    op = ins & V0_INS_OP_MASK;
-    /* read source, destination, and extra registers */
-    reg1 = (ins >> V0_INS_SRC_SHIFT) & 0x0f;
-    reg2 = (ins >> V0_INS_DEST_SHIFT) & 0x0f;
     pc &= ~V0_PC_LK_BIT;
-    reg3 = (ins >> V0_INS_REG3_SHIFT) & 0x0f;
-    parm = ins >> V0_INS_PARM_SHIFT;
-    newpc = pc + sizeof(m_word_t);
+    ins = ((m_word_t *)vm->mem)[pc];
+    pc += sizeof(m_word_t);
+    newpc = pc;
+    if (ins & V0_INS_IMM32_BIT) {
+        newpc += sizeof(m_word_t);
+    }
+    if (newpc > vm->memsize) {
+        fprintf(stderr, "code out of bounds, PC > memsize\n");
+        abort();
+    }
+    /* advance + unlock PC */
+    m_atomwrite(&vm->genregs[V0_PC_REGISTER], newpc);
     if (ins & V0_INS_ADR_OFS_BIT) {
         if (ins & V0_INS_IMM32_BIT) {
             /* read immediate 32-bit operand */
-            imm = ((m_word_t *)vm->mem)[newpc];
+            imm = ((m_word_t *)vm->mem)[pc];
             /* adjust PC to point past imm32 */
             newpc += sizeof(m_word_t);
         } else if (ins & V0_INS_VAL8_MASK) {
@@ -734,14 +791,18 @@ v0fetchinst(struct v0vm *vm)
     } else if (ins & V0_INS_IMM32_BIT) {
         /* read signed or unsigned immediate 32-bit operand */
         if (!(ins & V0_INS_IMM_UNS_BIT)) {
-            imm = ((m_word_t *)vm->mem)[newpc];
+            imm = ((m_word_t *)vm->mem)[pc];
         } else {
-            immu = ((m_uword_t *)vm->mem)[newpc];
+            immu = ((m_uword_t *)vm->mem)[pc];
         }
+        newpc += sizeof(m_word_t);
     } else if (ins & V0_INS_VAL8_MASK) {
         imm = (ins >> V0_INS_VAL8_SHIFT) & 0xff;
     }
     switch (ins & V0_INS_MEM_XFER_MASK) {
+        case 0:
+            src = &((m_word_t *)vm->mem)[reg1];
+            dest = &((m_word_t *)vm->mem)[reg2];
         case V0_INS_REG_TO_REG_BIT:
             /* imm -> *%reg2 */
             if (imm) {
@@ -750,7 +811,7 @@ v0fetchinst(struct v0vm *vm)
                 src = &((m_word_t *)vm->mem)[reg1];
             }
             dest = &((m_word_t *)vm->mem)[reg2];
-
+            
             break;
         case V0_INS_REG_TO_MEM_BIT:
             /*
@@ -794,10 +855,7 @@ v0fetchinst(struct v0vm *vm)
             
             break;
     }
-    m_atomwrite(&vm->genregs[V0_PC_REGISTER], newpc);
-    switch (op) {
-    }
-
+    
     return;
 }
 

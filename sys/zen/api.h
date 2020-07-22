@@ -1,5 +1,5 @@
-#ifndef __ZEN_API_H__
-#define __ZEN_API_H__
+#ifndef __SYS_ZEN_API_H__
+#define __SYS_ZEN_API_H__
 
 /* USER-MODE API */
 
@@ -61,5 +61,5 @@ int		mqrecv(int mqid, const void *msg, size_t size, int type,
 		       int flags);
 int		mqctl(int mqid, int cmd, struct mqatr *atr);
 
-#endif /* __ZEN_API_H__ */
+#endif /* __SYS_ZEN_API_H__ */
 

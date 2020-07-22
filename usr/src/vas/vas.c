@@ -16,12 +16,11 @@
 //#include <zero/cdefs.h>
 //#include <zero/param.h>
 //#include <zero/trix.h>
-#include <valhalla/param.h>
+#include <mach/param.h>
 #include <vas/vas.h>
 #include <vas/opt.h>
 #include <vas/io.h>
-#if (V0)
-#include <v0/vm/conf.h>
+#if defined(__v0__)
 #include <v0/vm/vm.h>
 //#include <v0/vm/types.h>
 #endif

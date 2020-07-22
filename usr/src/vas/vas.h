@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <vas/types.h>
+#include <mach/types.h>
 
 #define VASUNRESOLVED   (~0U)
 
@@ -67,6 +67,7 @@ struct vastoken {
 #define VAS_INT64       8
 
 struct vasvalue {
+    uint8_t             type;
     union {
         uintptr_t       uptr;   // unsigned pointer value
         intptr_t        iptr;   // signed pointer value, e.g. pointer difference
@@ -88,16 +89,19 @@ struct vasvalue {
 };
 
 struct vasdef {
-    char    *name;
-    sysword  word;
+    uint8_t     type;
+    char       *name;
+    m_word_t    word;
 };
 
 struct vasobj {
+    uint8_t     type;
     char       *name;
     void       *data;
 };
 
 struct vasinst {
+    uint8_t     type;
     uint8_t     size;       // instruction size
     uint8_t     narg;       // number of arguments for instruction
     void       *inst;    	// instruction in storage

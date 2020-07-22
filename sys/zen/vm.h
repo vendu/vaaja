@@ -1,14 +1,14 @@
-#ifndef __ZEN_VM_H__
-#define __ZEN_VM_H__
+#ifndef __SYS_ZEN_VM_H__
+#define __SYS_ZEN_VM_H__
 
 /* zen kernel virtual memory interface */
 #if defined(__v0__)
 //#include <zen/bsp/v0.h>
 #endif
-#include <zen/types.h>
 #include <zero/trix.h>
 #include <mach/param.h>
 #include <mt/tktlk.h>
+#include <sys/zen/types.h>
 
 #if (MACH_WORD_SIZE == 4)
 #define zenvmcalcqid    lzero32
@@ -33,17 +33,17 @@ struct zenvmpage {
     struct zenvmpage           *prev;
     struct zenvmpage           *next;
     int8_t                     *ptr;
-    zenlong                     flg;
+    m_word_t                    flg;
     volatile m_atomic_t         qcnt;
-    zenlong                     qofs;
+    m_word_t                    qofs;
 };
 
 struct zenvmseg {
     const char         *name;
     int8_t             *ptr;
     size_t              size;
-    zenlong             flag;
+    m_word_t            flag;
 };
 
-#endif /* __ZEN_VM_H__ */
+#endif /* __SYS_ZEN_VM_H__ */
 

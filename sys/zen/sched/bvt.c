@@ -1,9 +1,12 @@
-#if defined (__v0__)
-#include <zen/bsp/v0.h>
-#include <v0/types.h>
-#endif
-#include <zen/sched/bvt.h>
+#include <sys/zen/conf.h>
 
-struct m_thr            g_taothrtab[MACH_MAX_THREADS];
+#if (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED)
+
+#include <mach/types.h>
+#include <sys/zen/sched/tao.h>
+
+struct m_thr            g_taothrtab[ZEN_MAX_TASKS];
 static m_uword_t        g_taovtime;
+
+#endif /* (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED) */
 

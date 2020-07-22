@@ -1,5 +1,5 @@
-#ifndef __ZEN_DEV_H__
-#define __ZEN_DEV_H__
+#ifndef __SYS_ZEN_DEV_H__
+#define __SYS_ZEN_DEV_H__
 
 #define ZEN_DEV_BITS            16
 #define zenmkdev(maj, min)      ((maj) << ZEN_DEV_BITS | (min))
@@ -39,5 +39,5 @@
 #define ZEN_DNS_DEV             zenmkdev(8, 6)
 #define ZEN_ARP_DEV             zenmkdev(8, 7)
 
-#endif /* __ZEN_DEV_H__ */
+#endif /* __SYS_ZEN_DEV_H__ */
 

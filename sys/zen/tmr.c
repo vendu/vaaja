@@ -1,6 +1,6 @@
-#include <zen/test.h>
-#include <zen/tmr.h>
-#include <zen/errno.h>
+#include <sys/zen/test.h>
+#include <sys/zen/tmr.h>
+#include <sys/zen/errno.h>
 
 struct zentmr *
 tmrget(void)

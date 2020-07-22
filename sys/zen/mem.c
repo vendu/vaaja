@@ -1,14 +1,8 @@
 #include <stddef.h>
+#include <mach/asm.h>
 #include <mach/types.h>
 #include <sys/zen/util.h>
 #include <sys/zen/mem.h>
-
-#if !defined(MEMFAIL)
-#define MEMFAIL(s)                                                      \
-    do {                                                                \
-        kpanic(s);                                                      \
-    } while (0);
-#endif
 
 #define TABHASH_TAB_ITEMS   30
 #define TABHASH_ITEM_T      struct zenmemitem
@@ -20,6 +14,18 @@ struct zenmemitem {
     struct zenmemslab  *slab;
 };
 #include <zen/tabhash.h>
+
+static void
+zenfreememblk(void *ptr)
+{
+    return;
+}
+
+static void
+zenfreememrun(void *ptr)
+{
+    return;
+}
 
 static void
 zeninitmemqueue(struct zenmemqueue *queue, m_word_t type, m_word_t slot)
@@ -45,9 +51,10 @@ zenfreemem(void *adr)
 {
     struct zenmemslab  *slab = zenmemslab(adr);
     struct zenmemqueue *queue;
-    m_byte_t            base;
-    m_size_t            val;
-    long                id;
+    m_byte_t           *base;
+    m_word_t            val;
+    m_word_t            ndx;
+    m_word_t            id;
     long                n;
 
     if (slab) {
@@ -56,13 +63,13 @@ zenfreemem(void *adr)
     }
     if (!queue) {
         /* ZEN_MEM_BIG */
-        unmapanon(adr, size);
+        unmapanon(adr, slab->size);
     } else if (val == ZEN_MEM_BLK) {
         id = queue->slot;
         slab = zenmemslab(adr, val, id);
         val = 1 << id;
         base = slab->base;
-        id = (uintptr_t)((m_byte_t)adr - base) >> val;
+        id = (uintptr_t)((m_byte_t *)adr - base) >> val;
         ndx = val & ((1 << MACH_LONG_SIZE_LOG2) - 1);
         id = val >> MACH_LONG_SIZE_LOG2;
         if (m_cmpclrbit(&slab->bmap[ndx], id)) {
@@ -74,14 +81,13 @@ zenfreemem(void *adr)
                 if (!queue->nref) {
                     /* slab still free */
                     val = queue->slot;
-                    queue->free(slab, ZEN_MEM_BLK, val);
-                    n = 0;
+                    queue->free(adr);
                 } else {
                     mtunlkfmtx(&slab->mtx);
                 }
             }
         } else {
-            kpanic("PANIC: duplicate free %p\n");
+            kdebug("PANIC: duplicate free\n", adr);
         }
     } else {
         /* ZEN_MEM_RUN */

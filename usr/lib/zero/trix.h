@@ -683,6 +683,8 @@ divu3(unsigned long x)
 }
 #endif
 
+#if !defined(__v0__)
+
 static __inline__ unsigned long
 divu3(unsigned long uval)
 {
@@ -696,6 +698,8 @@ divu3(unsigned long uval)
 
     return uval;
 }
+
+#endif /* !defined(__v0__) */
 
 static __inline__ unsigned long
 divu7(unsigned long x)
@@ -796,6 +800,8 @@ divu1000(unsigned long x)
     return q + ((r + 24) >> 10);
 }
 
+#if !defined(__v0__)
+
 static __inline__ unsigned long
 divu1000000(unsigned long x)
 {
@@ -808,6 +814,8 @@ divu1000000(unsigned long x)
 
     return res;
 }
+
+#endif /* !defined(__v0__) */
 
 static __inline__ long
 divs10(long x)

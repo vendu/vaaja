@@ -1,23 +1,31 @@
-#ifndef __ZEN_SCHED_TAO_H__
-#define __ZEN_SCHED_TAO_H__
+#ifndef __SYS_ZEN_SCHED_TAO_H__
+#define __SYS_ZEN_SCHED_TAO_H__
 
 #include <sys/zen/conf.h>
+#include <mt/tktlk.h>
+#include <mach/types.h>
 
-#if defined(TAO_ULE_TASK_SCHED)
-#include <sys/zen/sched/ule.h>
+#if defined(__zen__)
+extern void schedinit(void);
 #endif
-#if defined(TAO_BVT_TASK_SCHED)
-#include <sys/zen/ule/bvt.h>
-#endif
+extern void schedyield(void);
 
-union taoschedparm {
-#if defined(TAO_ULE_TASK_SCHED)
-    struct taouleparm   ule;
-#endif
-#if defined(TAO_BVT_TASK_SCHED)
-    struct taobvtparm   bvt;
-#endif
+struct  zenschedset {
+    mttktlk                     lk;
+    long                       *curmap;
+    long                       *nextmap;
+    long                       *idlemap;
+    long                       *loadmap;
+    struct zentask            **cur;
+    struct zentask            **next;
+    struct zentask            **idle;
 };
 
-#endif /* __ZEN_SCHED_TAO_H__ */
+#if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
+#include <sys/zen/sched/ule.h>
+#elif (ZEN_TASK_SCHED == ZEN_ULE_BVT_SCHED_SCHED)
+#include <sys/zen/sched/bvt.h>
+#endif
+
+#endif /* __SYS_ZEN_SCHED_TAO_H__ */
 
