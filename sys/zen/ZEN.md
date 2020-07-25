@@ -16,7 +16,7 @@
 - parm
 
 ## tao; high-level scheduler
-[tao implementation](https://github.com/vendu/vaaja/blob/master/sys/zen/tao/)
+[tao implementation](https://github.com/vendu/vaaja/blob/master/sys/zen/sched/)
 
 ### ule         - adopted freebsd scheduler
 
