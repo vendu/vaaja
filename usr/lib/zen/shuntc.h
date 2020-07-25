@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <zero/cdefs.h>
 #include <mach/param.h>
-#include <zero/bits/shuntc.h>
+#include <zen/bits/shuntc.h>
 
 #define SHUNT_NOPER      SHUNTCNOPER
 #define SHUNT_INTSIZE    SHUNTCINTSIZE
@@ -33,9 +33,8 @@ struct shuntctoken {
     struct shuntctoken *prev;
     struct shuntctoken *next;
     /* pad data to cacheline-boundary */
-    uint8_t             _pad[2 * CLSIZE - 3 * sizeof(void *)
-                             - 6 * sizeof(long)];
     /* value union */
+    long                pad;
     union {
         int8_t          i8;
         uint8_t         ui8;

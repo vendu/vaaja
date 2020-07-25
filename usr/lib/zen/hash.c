@@ -41,8 +41,8 @@ tmhash64(uint64_t u)
     return u;
 }
 
-C_CONST uint32_t
-tmunhash64(uint32_t u)
+C_CONST uint64_t
+tmunhash64(uint64_t u)
 {
     u = ((u >> 30) ^ u) * UINT64_C(0xbf58476d1ce4e5b9);
     u = ((u >> 27) ^ u) * UINT64_C(0x94d049bb133111eb);

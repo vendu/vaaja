@@ -22,7 +22,7 @@
 struct mtlfsetmap {
     volatile m_atomic_t bits;
 #if defined(MT_LFSET_MAPS)
-    int8_t              pad[CLSIZE - MACH_WORD_SIZE];
+    int8_t              _pad[CLSIZE - MACH_WORD_SIZE];
 #endif
 };
 

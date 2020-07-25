@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mt/mtx.h>
-#if (SHUNTC)
-#include <zero/shuntc.h>
+#if defined(SHUNTC)
+#include <zen/shuntc.h>
 #endif
-#include <zero/shunt.h>
+#include <zen/shunt.h>
 
 /*
  * Dijkstra's shunting yard algorithm

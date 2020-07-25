@@ -1,8 +1,8 @@
 #ifndef __ZERO_SHUNT_H__
 #define __ZERO_SHUNT_H__
 
-#if (SHUNTC)
-#include <zero/shuntc.h>
+#if defined(SHUNTC)
+#include <zen/shuntc.h>
 #endif
 
 extern void shuntprintbin(SHUNT_UINT val, char *str, long len);

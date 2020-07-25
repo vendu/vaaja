@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <zero/cdefs.h>
-#include <zero/shuntc.h>
+#include <zen/shuntc.h>
 
 /* C character conversion tables */
 static long             shuntcdectab[256];
@@ -30,7 +30,7 @@ struct shuntcparser {
 /* currently displayed radix */
 long                    shuntcradix;
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcnot64(struct shuntctoken *arg1, struct shuntctoken *dummy)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -42,7 +42,7 @@ shuntcnot64(struct shuntctoken *arg1, struct shuntctoken *dummy)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcand64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -53,7 +53,7 @@ shuntcand64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcor64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -64,7 +64,7 @@ shuntcor64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcxor64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -75,7 +75,7 @@ shuntcxor64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcshl64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT cnt = arg1->data.i64;
@@ -86,7 +86,7 @@ shuntcshl64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcsar64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT cnt = arg1->data.i64;
@@ -100,7 +100,7 @@ shuntcsar64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcshr64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT cnt = arg1->data.i64;
@@ -113,7 +113,7 @@ shuntcshr64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcror64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT cnt = arg1->data.i64;
@@ -128,7 +128,7 @@ shuntcror64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcrol64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT cnt = arg1->data.i64;
@@ -143,7 +143,7 @@ shuntcrol64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcinc64(struct shuntctoken *arg1, struct shuntctoken *dummy)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -181,7 +181,7 @@ shuntcinc64(struct shuntctoken *arg1, struct shuntctoken *dummy)
     return src;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcdec64(struct shuntctoken *arg1, struct shuntctoken *dummy)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -206,7 +206,7 @@ shuntcdec64(struct shuntctoken *arg1, struct shuntctoken *dummy)
     return src;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcadd64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -217,7 +217,7 @@ shuntcadd64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcsub64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -228,7 +228,7 @@ shuntcsub64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcmul64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -239,7 +239,7 @@ shuntcmul64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcdiv64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;
@@ -250,7 +250,7 @@ shuntcdiv64(struct shuntctoken *arg1, struct shuntctoken *arg2)
     return res;
 }
 
-PURE SHUNT_INT
+C_PURE SHUNT_INT
 shuntcmod64(struct shuntctoken *arg1, struct shuntctoken *arg2)
 {
     SHUNT_INT src = arg1->data.i64;

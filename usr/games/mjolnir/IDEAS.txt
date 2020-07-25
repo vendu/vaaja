@@ -3,6 +3,16 @@ Mjolnir
 
 This document contains ideas for a Rogue-like adventure game.
 
+- quests
+  - digital bank robbery; iron bar or lock-pick, camo operation, c4, switch room,
+    black box, network sniffing, packet deciphering, packet forging to access the
+    account database
+- mainframes
+  - direct access to mainframe let's you clone and steal the tape of the core war
+    warriors that have ruled the machine
+- terminals
+  - equipped with punchcard readers to play core war on in-dungeon mainframes
+
 ams
 ---
 - dragons

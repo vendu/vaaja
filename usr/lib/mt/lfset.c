@@ -4,8 +4,8 @@
 #include <mach/asm.h>
 #include <mt/lfset.h>
 
-static INLINE zenlong
-_mtflqrandofs(zenlong lim)
+static INLINE uintptr_t
+_mtflqrandofs(uintptr_t lim)
 {
     uint32_t val = lim & 0xffffffff;
     uint32_t ofs;
@@ -16,7 +16,7 @@ _mtflqrandofs(zenlong lim)
     return ofs;
 }
 
-zenlong
+uintptr_t
 mtlfsetadd(struct mtlfset *set, void *item)
 {
     long        val;
@@ -61,48 +61,6 @@ mtlfsetadd(struct mtlfset *set, void *item)
 
     return ofs;
 }
-#if 0
-zenlong
-mtlfsetadd(struct mtlfset *set, void *item)
-{
-    long        val;
-    long        ndx;
-    long        bit;
-    long        ofs;
-
-    do {
-        ndx = 0;
-        while (ndx < _MTLFSETMAPWORDS) {
-#if defined(MT_LFSET_MAPS)
-            val = set->map[ndx].bit;
-#else
-            val = set->bitmap[ndx];
-#endif
-            if (val != _MTLFSETEMPTYBKT) {
-                _mtlfsetfindbkt(val, bit);
-#if defined(MT_LFSET_MAPS)
-                if (!m_cmpswapbit(&set->map[ndx].bits, bit)) {
-                    ofs = ndx;
-
-                    break;
-                }
-#else
-                if (!m_cmpswapbit(&set->bitmap[ndx], bit)) {
-                    ofs = ndx;
-
-                    break;
-                }
-#endif
-            }
-            ndx++;
-        }
-    } while (1);
-    ofs *= _MTLFSETMAPBITS;
-    ogs += bit;
-
-    return ofs;
-}
-#endif
 
 void
 mtlfsetdel(struct lfset *set, m_atomic_t ofs, void *item)

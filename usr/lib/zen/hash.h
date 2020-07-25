@@ -10,8 +10,8 @@
 
 C_CONST uint32_t  tmhash32(uint32_t u);
 C_CONST uint32_t  tmunhash32(uint32_t u);
-C_CONST uint64_t  tmhash64(uint32_t u);
-C_CONST uint64_t  tmunhash64(uint32_t u);
+C_CONST uint64_t  tmhash64(uint64_t u);
+C_CONST uint64_t  tmunhash64(uint64_t u);
 
 #else
 

@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <zero/rbt.h>
+#include <zen/rbt.h>
 
 extern struct rbtnode * rbtgetnode(void);
 extern void             rbtputnode(struct rbtnode *);
