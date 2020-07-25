@@ -9,10 +9,13 @@
 #include <zero/cdefs.h>
 #include <zero/trix.h>
 #include <mt/tktlk.h>
+#include <mach/types.h>
 #include <zen/fastudiv.h>
+#include <sys/zen/sys.h>
 #include <sys/zen/zen.h>
 #include <sys/zen/tmr.h>
 #include <sys/zen/types.h>
+#include <sys/zen/sched/tao.h>
 #include <sys/zen/sched/task.h>
 
 #if (MACH_WORD_SIZE == 8)
@@ -207,29 +210,6 @@ extern struct zenschedset   k_schedreadyset;
                                      + SCHED_ULE_CLASS_PRIOS            \
                                      - 1)
 
-struct zenschedparm {
-    m_word_t    unit;           // CPU-affinity
-    m_word_t    sched;          // thread scheduler class
-    m_word_t    intr;           // received interrupt
-    m_word_t    runprio;        // current priority
-    m_word_t    prio;           // base priority
-    m_word_t    sysprio;        // kernel-mode priority
-    m_word_t    nice;           // priority adjustment
-    m_word_t    state;          // thread state
-    m_word_t    score;          // interactivity score
-    m_word_t    slice;          // timeslice in ticks
-    m_word_t    runtime;        // # of ticks run
-    m_word_t    slptime;        // # of ticks slept voluntarily
-    m_word_t    slptick;        // ID of tick when sleeping started
-    m_word_t    ntick;          // # of scheduler ticks received
-    m_word_t    lastrun;        // last tick we ran on
-    m_word_t    firstrun;       // first tick we ran on
-    m_word_t    ntickleft;      // # of remaining ticks of slice
-    m_word_t    lasttick;       // real last tick for affinity
-    m_adr_t     waitchan;       // wait channel
-    m_time_t    timelim;        // wakeup time or deadline
-};
-
 /* based on sched_pctcpu_update from ULE */
 static C_INLINE void
 schedadjcpupct(struct zentask *task, long run)
@@ -310,12 +290,12 @@ schedsetnice(struct zentask *task, long val)
 {
     long            pid = task->id;
     struct zenproc *proc = k_zensys.proctab[pid];
-    long            nice;
+    long            niceval;
 
     val = max(-20, val);
     val = min(19, val);
-    nice = k_schedniceptr[val].nice;
-    proc->nice = nice;
+    niceval = k_schedniceptr[val].nice;
+    proc->nice = niceval;
     proc->niceval = val;
 
     return;
@@ -401,7 +381,7 @@ static C_INLINE void
 schedcalcprio(struct zentask *task)
 {
     long score = schedcalcscore(task);
-    long nice = schedcalcnice(task->proc->nice);
+    long nice = schedcalcnice(task->proc->niceval);
     long runprio = task->sched.runprio;
     long prio;
     long ntick;
@@ -520,7 +500,7 @@ schedcalcintparm(struct zentask *task, long *retscore)
 {
     long range = SCHED_ULE_INT_RANGE;
     long res = 0;
-    long nice = task->proc->nice;
+    long nice = task->proc->niceval;
     long score;
     long diff;
     long ntick;
@@ -604,7 +584,7 @@ taskwakeup(struct zentask *task)
 #endif
     task->state = ZEN_TASK_READY;
     task->sched.unit = unit;
-    k_jmptask(&task->m_tcb);
+    k_jmptask(task->m_tcb);
 #if 0
     schedsetcpu(&k_zensys.cputab[unit]);
     schedsetready(task, unit);

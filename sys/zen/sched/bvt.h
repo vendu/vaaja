@@ -1,5 +1,5 @@
-#ifndef __ZEN_SCHED_BVT_H__
-#define __ZEN_SCHED_BVT_H__
+#ifndef __SYS_ZEN_SCHED_BVT_H__
+#define __SYS_ZEN_SCHED_BVT_H__
 
 #include <sys/zen/conf.h>
 
@@ -22,22 +22,14 @@
         : 0))
 
 /* global scheduler attributes */
-struct taosched {
+struct taoschedparm {
     m_uword_t   vtime;
     m_uword_t   minvtime;
     m_word_t    warplim;
     m_word_t    tickhz;
 };
 
-/* per-thread scheduler parameters */
-struct taoparm {
-    m_uword_t   runtime;
-    m_uword_t   slptime;
-    long        warpofs;
-    long        lastwarp;
-};
-
 #endif /* (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED) */
 
-#endif /* __ZEN_SCHED_BVT_H__ */
+#endif /* __SYS_ZEN_SCHED_BVT_H__ */
 

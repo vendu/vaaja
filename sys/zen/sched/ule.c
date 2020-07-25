@@ -118,7 +118,7 @@ schedsetdeadline(struct zentask *task)
 {
     struct zentasktab **l0tab;
     struct zentask    **tab;
-    time_t              deadline = task->sched->timelim;
+    time_t              deadline = task->sched.timelim;
     unsigned long       key0 = scheddlkey0(deadline);
     unsigned long       key1 = scheddlkey1(deadline);
     unsigned long       key2 = scheddlkey2(deadline);
@@ -176,8 +176,8 @@ schedsetdeadline(struct zentask *task)
 static void
 schedsetready(struct zentask *task)
 {
-    long                    sched = task->sched->sched;
-    long                    prio = task->sched->prio;
+    long                    sched = task->sched.sched;
+    long                    prio = task->sched.prio;
     struct zenschedset     *set = &k_schedreadyset;
     struct zentask        **queue;
     long                   *map;
@@ -210,7 +210,7 @@ schedsetready(struct zentask *task)
             lim = schedclassmaxprio(SCHED_ULE_SYSTEM);
             if (prio < lim) {
                 prio++;
-                task->sched->prio = prio;
+                task->sched.prio = prio;
             }
             qid = schedcalcqueue(SCHED_ULE_SYSTEM, prio);
         }
@@ -237,8 +237,8 @@ schedsetready(struct zentask *task)
             /* SCHED_ULE_NORMAL or SCHED_ULE_BATCH; calculate timeshare priority */
             prio = schedcalcintparm(task, &score);
         }
-        task->sched->sched = type;
-        task->sched->prio = prio;
+        task->sched.sched = type;
+        task->sched.prio = prio;
         qid = schedcalcqueue(type, prio);
         if (schedisinteract(score)) {
             /* if interactive, insert onto current queue */
@@ -256,7 +256,7 @@ schedsetready(struct zentask *task)
         lim = SCHED_ULE_CLASSES * SCHED_ULE_CLASS_PRIOS + SCHED_ULE_IDLE_QUEUES - 1;
         if (prio < lim) {
             prio++;
-            task->sched->prio = prio;
+            task->sched.prio = prio;
         }
         qid = schedcalcqueue(SCHED_ULE_IDLE, prio);
         ndx = qid - schedclassminqueue(SCHED_ULE_IDLE);
@@ -337,7 +337,7 @@ schedswitchtask(struct zentask *curtask)
 
             break;
         case ZEN_TASK_ZOMBIE:
-            schedsetzombie(&curtask->proc);
+            schedsetzombie(curtask->proc);
 
             break;
         default:
@@ -368,14 +368,12 @@ schedswitchtask(struct zentask *curtask)
                         }
                         mtunlktkt(&set->lk);
 
-                        k_jmptask(&task->m_tcb);
+                        k_jmptask(task->m_tcb);
                     }
                 }
             }
-            if (loop) {
-                /* if no task found during the first iteration, switch queues */
-                schedswapqueues();
-            }
+            /* if no task found during the first iteration, switch queues */
+            schedswapqueues();
             mtunlktkt(&set->lk);
         } while (loop--);
         /* if both current and next queues are empty, look for an idle task */
@@ -398,7 +396,7 @@ schedswitchtask(struct zentask *curtask)
                     }
                     mtunlktkt(&set->lk);
 
-                    k_jmptask(&task->m_tcb);
+                    k_jmptask(task->m_tcb);
                 }
             }
         }
@@ -411,7 +409,7 @@ schedswitchtask(struct zentask *curtask)
         k_intron();
         m_waitint();
     } while (1);
-    k_jmptask(&task->m_tcb);
+    k_jmptask(task->m_tcb);
 }
 
 #if 0
@@ -433,7 +431,7 @@ schedyield(void)
     schedswitchtask(oldtask);
     //    task = schedswitchtask(oldtask);
     //    //    if (task != oldtask) {
-    //    k_jmptask(&task->m_tcb);
+    //    k_jmptask(task->m_tcb);
     //    }
 }
 

@@ -3,7 +3,7 @@
 
 #include <mach/types.h>
 #include <sys/zen/types.h>
-#include <sys/zen/sched/ule.h>
+#include <sys/zen/sched/tao.h>
 
 /*
  * NOTES
@@ -55,5 +55,5 @@ struct zentask {
     struct zenschedparm     sched;
 };
 
-#endif /* __SYS_ZEN_TASK_H__ */
+#endif /* __SYS_ZEN_SCHED_TASK_H__ */
 
