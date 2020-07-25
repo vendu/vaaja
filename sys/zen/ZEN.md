@@ -10,10 +10,10 @@
 - [zen on github](https://github.com/vendu/vaaja/blob/master/sys/zen)
 
 ## the zen kernel
-- zen
-- usr
-- sys
-- parm
+- zen           - main kernel file + global data
+- usr           - user-mode API
+- sys           - system API (syscalls etc.)
+- parm          - system configuration + information
 
 ## tao; high-level scheduler
 [tao implementation](https://github.com/vendu/vaaja/blob/master/sys/zen/sched/)
@@ -22,65 +22,65 @@
 
 ### bvt         - borrowed virtual time scheduler
 
-## vfs
-- node
-  - reg
-  - chr
-  - blk
-  - dir
-  - link
-  - sock
-  - mq
+## vfs          - virtual filesystem layer
+- node          - vfs node interface
+  - reg         - regular files
+  - chr         - character special (device) files
+  - blk         - block special files
+  - dir         - directories
+  - link        - symbolic links
+  - sock        - socket interface
+  - mq          - message/event queues
 
-## fs
+## fs           - filesystem
 
-### fs0
+### fs0         - 0-filesystem (based on Berkeley UFS/FFS)
 
-### fat32
+### fat32       - FAT32-filesystem support
 
-### iso9660
+### iso9660     - ISO9660 support
 
-## dev
+## dev          - hardware- and pseudo-device support
 
-### chr
-- null
-- zero
-- tty
-- kbd
-- ptr
-- cam
-- pkt
-- tap
+### chr         - character/raw (non-block) devices
+- null          - /dev/null
+- zero          - /dev/zero
+- tty           - /dev/tty - pseudo-teletype multiplexer
+- kbd           - keyboard
+- ptr           - pointer devices such as mouses and drawpads
+- cam           - camera devices
+- pkt           - packet [network] interface
+- tap           - packet-filtering (debugging, firewall, ...)
 
-### blk
-- tape
-- disk
-- opt
-- ssd
-- net
+### blk         - block-based devices
+- tape          - tape devices
+- disk          - disk devices
+- opt           - optical disc devices
+- ssd           - solid-state drives (no mechanical seek)
+- net           - network devices
 
-### ev
-- kbd
-- ptr
-- 
+### ev          - event interface
+- hid           - human interface devices (keyboard, pointer devices)
+- fs            - filesystem events
 
 ## hw - hardware interface
-- unit
-- trap
-- sig
-- tmr
-- page
-- bus
-- io
+- unit          - processor and coprocessor devices
+- trap          - interrupts, exceptions, aborts, faults, ...
+- sig           - signal
+- tmr           - timer devices
+- page          - page daemon
+- bus           - bus support
+- io            - i/o mechanisms
 
 ## mem
-- vm
-- shm
-- blk
-- run
-- slab
-- big
-- buf
-- map
-  - dev
-  - nod
+- vm            - virtual memory
+- shm           - shared memory (fast ipc)
+- blk           - small-size allocations
+- run           - multiple-of-page allocations
+- slab          - allocations for blk and run abstractions
+- big           - big allocations (mapped memory)
+- buf           - buffer cache for block-devices
+- map           - memory maps
+  - dev         - i/o-mapped devices
+  - node        - file- and other maps
+
