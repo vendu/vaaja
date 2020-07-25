@@ -269,6 +269,8 @@ tabhashop(volatile struct tabhashtab **hashtab, const intptr_t val, long cmd)
 
                 break;
             }
+            n -= lim;
+            tab = tab->next;
         } else {
             for (cur = 0 ; cur < lim ; cur++) {
                 if (TABHASH_CMP(item, val)) {
@@ -316,7 +318,7 @@ tabhashop(volatile struct tabhashtab **hashtab, const intptr_t val, long cmd)
                         head = tab;
                     }
                     m_atomwrite((m_atomic_t *)&hashtab[ndx], head);
-                    
+
                     return ret;
                 }
                 item++;

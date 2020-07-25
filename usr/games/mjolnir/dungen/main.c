@@ -1,16 +1,27 @@
 #include <stdlib.h>
 #include "map.h"
 
-int main(int argc, char *argv[])
+void
+dungen(int w, int h, int gridsize, int maxrooms)
 {
     //    const struct map map = mapgen(80, 128, 8, 64);
-    const struct map map = mapgen(80,
-                                  80,
-                                  12 + (rand() & 0x07),
-                                  32 + (rand() & 0x1f));
-
+    const struct map map = mapgen(w,
+                                  h,
+                                  gridsize,
+                                  maxrooms);
     mapprint(map);
     mapclose(map);
 
+    return;
+}
+
+#if defined(TEST_DUNGEN)
+int
+main(int argc, char *argv[])
+{
+    dungen(80, 64 + (rand() & 0x1f), 4 + (rand() & 0x07), 16 + (rand() & 0x1f));
+
     exit(0);
 }
+#endif
+

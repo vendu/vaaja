@@ -1,7 +1,30 @@
-Mjolnir
--------
+# mjolnir video-game
+
+Copyright (C) Tuomo Petteri Venäläinen 2020. All rights reserved.
 
 This document contains ideas for a Rogue-like adventure game.
+
+## background
+
+I grew up playing mostly point and click adventures from the likes of Sierra
+On-Line and Lucasarts. Games such as Gabriel Knight series by my favorite game
+creator Jane Jensen, another Sierra series of funny Space Quest games, most
+Leisure Suit Larry games, and so forth.
+
+I was thrilled when I first ran games such as Hack or Nethack. I realized games
+are not all about fancy graphics but that the atmosphere and plot need some
+depth to make games really appealing to me. As a great example, I want to
+mention Gabriel Knight - Sins of the Fathers from the late Sierra On-Line. I
+rank it as one of the very best computer games ever made.
+
+Many Rogue-like genre games are based on characters from Dungeons & Dragons
+games, which is one reason I decided to try something different so you're going
+to meet characters from different mythologies such as Norse ones
+
+## the plot
+
+Fenris the wolf has stolen Mjolnir from Thor. Your main mission is to return his
+hammer back to Thor and optionally bring Fenris back as well.
 
 - quests
   - digital bank robbery; iron bar or lock-pick, camo operation, c4, switch room,
@@ -12,6 +35,20 @@ This document contains ideas for a Rogue-like adventure game.
     warriors that have ruled the machine
 - terminals
   - equipped with punchcard readers to play core war on in-dungeon mainframes
+
+## game interface
+
+The first versions of Mjolnir shall be based on characters; e.g., the '@'-
+character represents your character, a 'b' would be a bee and so forth. The
+characters you know to be friendly are printed in green; yellow means neutral
+character, and finally red means characters known to be hostile. Objects such
+as stairs are rendered in light green, unrecognized items in gold, and known-to-
+be-hazardous objects such as traps are shown in magenta.
+
+The dungeons are generated procedurally utilising pseudo-random numbers. I found
+a suitable level generator at
+
+[Dungen cave generator](https://github.com/glouw/dungen
 
 ams
 ---
@@ -68,7 +105,7 @@ bullet	        | =		| bullet (silver ones work on daemons)
 potion		| !		| potion
 plant		| *		| plant
 punchcard	| 0		| corewar warriors to be run from terminals :)
-tape		| t		| software for in-dungeon terminals
+tape		| 8		| software for in-dungeon terminals
 stairway down	| >		| go down one level
 stairway up	| <		| go up one level
 statue	 	| &		| e.g. Buddha
@@ -88,11 +125,11 @@ kaleidoscope	| K		| kaleidoscope
 lockpick	| l		| thieves are naturally best at using these
 laser		| L		| laser gun
 mace		| m		| may be Mjolnir
-mainframe	| 8		| computer systems for running punchcards
+#mainframe	| M		| computer systems for running punchcards
 pipe		| 7		| pipe
 pistol		| p		| pistol
 sword		| s		| sword
-terminal	| T		| terminal connected to mainframe
+terminal	| t		| terminal connected to mainframe
 well		| w		| well (water, may be cursed/poisonous)
 cross		| x		| cross; may be Holy Cross
 altar		| X		| altar; sacrifice dead creatures on it
