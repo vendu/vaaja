@@ -35,13 +35,13 @@ extern struct tabhashtab       *TABHASH_BUF;
 #if !defined(TABHASH_COPY)
 #define TABHASH_COPY(src, dest) memcpy((void *)dest,                    \
                                        (void *)src,                     \
-                                       sizeof(TABHASH_ITEM_T))
+                                       sizeof(struct tabhashitem))
 #endif
 #if !defined(TABHASH_BZERO)
 #define TABHASH_BZERO(p, sz)    memset((void *)p, 0, sz)
 #endif
 #if !defined(TABHASH_CLEAR)
-#define TABHASH_CLEAR(ptr)      TABHASH_BZERO(ptr, sizeof(TABHASH_ITEM_T))
+#define TABHASH_CLEAR(ptr)      TABHASH_BZERO(ptr, sizeof(struct tabhashitem))
 #endif
 #define TABHASH_ADD_NREF(p, n)  m_fetchadd((volatile m_atomic_t *)p, n)
 #define TABHASH_READ_NREF(tab)  (tab->ncur)
@@ -51,12 +51,17 @@ extern struct tabhashtab       *TABHASH_BUF;
 #define TABHASH_BUF_SIZE        (4 * MACH_PAGE_SIZE)
 #define TABHASH_CACHE_TABS      (TABHASH_BUF_SIZE / TABHASH_TAB_SIZE)
 
+struct tabhashitem {
+    intptr_t    key;
+    intptr_t    val;
+};
+
 struct tabhashtab {
-    volatile m_atomic_t         ncur;
-    long                        nmax;
-    volatile struct tabhashtab *prev;
-    volatile struct tabhashtab *next;
-    volatile TABHASH_ITEM_T     items[TABHASH_TAB_ITEMS];
+    volatile m_atomic_t             ncur;
+    long                            nmax;
+    volatile struct tabhashtab     *prev;
+    volatile struct tabhashtab     *next;
+    volatile struct tabhashitem     items[TABHASH_TAB_ITEMS];
 };
 
 static __inline__ void
@@ -133,15 +138,15 @@ tabhashgettab(void)
 
 static __inline__ long
 tabhashadd(volatile struct tabhashtab **hashtab,
-           const uintptr_t key,
-           const uintptr_t val)
+           const intptr_t key,
+           const intptr_t val)
 {
     volatile struct tabhashtab *tab;
     volatile struct tabhashtab *head;
     long                        ndx;
     long                        lim;
     long                        loop;
-    TABHASH_ITEM_T              item = { key, (void *)val };
+    struct tabhashitem          item = { key, (void *)val };
 
     ndx = TABHASH_HASH(key);
     mtlkbit((m_atomic_t *)&hashtab[ndx], MT_MEM_LK_BIT_OFS);
@@ -183,21 +188,24 @@ tabhashadd(volatile struct tabhashtab **hashtab,
 #define TABHASH_REMOVE          (-1L)
 #define TABHASH_FIND            0
 #define TABHASH_ADD_REF         (1L)
-static __inline__ TABHASH_ITEM_T
-tabhashop(volatile struct tabhashtab **hashtab, const uintptr_t val, long cmd)
+static __inline__ struct tabhashitem
+tabhashop(volatile struct tabhashtab **hashtab, const intptr_t val, long cmd)
 
 {
-    TABHASH_ITEM_T              ret = TABHASH_INVALID;
-    volatile struct tabhashtab *tab;
-    volatile struct tabhashtab *head;
-    volatile struct tabhashtab *prev;
-    volatile struct tabhashtab *next;
-    volatile TABHASH_ITEM_T    *item;
-    long                        ndx;
-    long                        n;
-    long                        nref;
-    long                        lim;
-    long                        cur;
+    struct tabhashitem              ret = TABHASH_INVALID;
+    volatile struct tabhashtab     *tab;
+    volatile struct tabhashtab     *head;
+    volatile struct tabhashtab     *prev;
+    volatile struct tabhashtab     *next;
+    volatile struct tabhashitem    *item;
+    intptr_t                        key;
+    intptr_t                        val;
+    intptr_t                        mask;
+    long                            ndx;
+    long                            n;
+    long                            nref;
+    long                            lim;
+    long                            cur;
 
     ndx = TABHASH_HASH(val);
     prev = NULL;
@@ -208,56 +216,111 @@ tabhashop(volatile struct tabhashtab **hashtab, const uintptr_t val, long cmd)
     while (tab) {
         lim = tab->nmax;
         item = &tab->items[0];
-        for (cur = 0 ; cur < lim ; cur++) {
-            if (TABHASH_CMP(item, val)) {
-                TABHASH_COPY(item, &ret);
-                nref = TABHASH_READ_NREF(tab);
-                if (cmd == TABHASH_REMOVE && nref == 1) {
-                    /* remove item from hash */
-                    n = tab->ncur;
-                    n--;
-                    if (cur != n) {
-                        /* copy last item in table over removed one */
-                        TABHASH_COPY(&tab->items[n], &tab->items[cur]);
-                    }
-#if defined(TABHASH_FREE)
-                    TABHASH_FREE(tab->items[n]);
-#endif
-                    TABHASH_CLEAR(&tab->items[n]);
-                    tab->ncur = n;
-                    prev = tab->prev;
-                    next = tab->next;
-                    if (!n) {
-                        /* free empty table */
-                        if (prev) {
-                            prev->next = next;
-                        } else {
-                            head = next;
-                        }
-                        if (next) {
-                            next->prev = prev;
-                        }
-                        tabhashputtab(tab);
-                    }
-                } else {
-                    nref += cmd;
-                    TABHASH_ADD_NREF(tab, nref);
-                    if (prev) {
-                        /* insert table into front of queue */
-                        next = tab->next;
-                        prev->next = next;
-                        if (next) {
-                            next->prev = prev;
-                        }
-                        tab->next = hashtab[ndx];
-                    }
-                    head = tab;
-                }
-                m_atomwrite((m_atomic_t *)&hashtab[ndx], head);
+        if (cmd == TABHASH_REMOVE) {
+            n = tab->ncur;
+            lim = max(8, n);
+            switch (lim) {
+                case 8:
+                    item = &tab->items[7];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 7:
+                    item = &tab->items[6];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 6:
+                    item = &tab->items[5];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 5:
+                    item = &tab->items[4];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 4:
+                    item = &tab->items[3];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 3:
+                    item = &tab->items[2];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 2:
+                    item = &tab->items[1];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 1:
+                    item = &tab->items[0];
+                    mask = -(item->key == key);
+                    mask &= (intptr_t)item;
+                    val |= mask;
+                case 0:
 
-                return ret;
+                    break;
             }
-            item++;
+            if (val) {
+                ret = *(struct tabhashitem *)val;
+
+                break;
+            }
+        } else {
+            for (cur = 0 ; cur < lim ; cur++) {
+                if (TABHASH_CMP(item, val)) {
+                    TABHASH_COPY(item, &ret);
+                    nref = TABHASH_READ_NREF(tab);
+                    if (cmd == TABHASH_REMOVE && nref == 1) {
+                        /* remove item from hash */
+                        n = tab->ncur;
+                        n--;
+                        if (cur != n) {
+                            /* copy last item in table over removed one */
+                            TABHASH_COPY(&tab->items[n], &tab->items[cur]);
+                        }
+#if defined(TABHASH_FREE)
+                        TABHASH_FREE(tab->items[n]);
+#endif
+                        TABHASH_CLEAR(&tab->items[n]);
+                        tab->ncur = n;
+                        prev = tab->prev;
+                        next = tab->next;
+                        if (!n) {
+                            /* free empty table */
+                            if (prev) {
+                                prev->next = next;
+                            } else {
+                                head = next;
+                            }
+                            if (next) {
+                                next->prev = prev;
+                            }
+                            tabhashputtab(tab);
+                        }
+                    } else {
+                        nref += cmd;
+                        TABHASH_ADD_NREF(tab, nref);
+                        if (prev) {
+                            /* insert table into front of queue */
+                            next = tab->next;
+                            prev->next = next;
+                            if (next) {
+                                next->prev = prev;
+                            }
+                            tab->next = hashtab[ndx];
+                        }
+                        head = tab;
+                    }
+                    m_atomwrite((m_atomic_t *)&hashtab[ndx], head);
+                    
+                    return ret;
+                }
+                item++;
+            }
         }
         prev = tab;
         tab = tab->next;
@@ -269,10 +332,10 @@ tabhashop(volatile struct tabhashtab **hashtab, const uintptr_t val, long cmd)
 
 static __inline__ long
 tabhashaddref(volatile struct tabhashtab **hashtab,
-              const uintptr_t key,
-              const uintptr_t val)
+              const intptr_t key,
+              const intptr_t val)
 {
-    TABHASH_ITEM_T      item = tabhashop(hashtab, val, TABHASH_ADD_REF);
+    struct tabhashitem      item = tabhashop(hashtab, val, TABHASH_ADD_REF);
     long                retval = 0;
 
     if (!TABHASH_CHK(&item)) {
