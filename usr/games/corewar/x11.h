@@ -76,6 +76,7 @@ struct zeusx11 {
 };
 
 typedef void zeusx11buttonfunc(struct zeusx11 *, XEvent *);
+
 struct zeusx11buttonfuncs {
     zeusx11buttonfunc *enter;
     zeusx11buttonfunc *leave;
@@ -113,9 +114,6 @@ void   zeusleavex11button(struct zeusx11 *x11, XEvent *event);
 void   zeusclickx11button(struct zeusx11 *x11, XEvent *event);
 void   zeusreleasex11button(struct zeusx11 *x11, XEvent *event);
 void   zeusexposex11button(struct zeusx11 *x11, XEvent *event);
-
-void   zeusrun(struct zeusx11 *x11, XEvent *event);
-void   zeusstop(struct zeusx11 *x11, XEvent *event);
 
 #endif /* ZEUSWINX11 */
 

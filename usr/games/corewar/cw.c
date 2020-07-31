@@ -75,7 +75,7 @@ cwdisasm(struct cwinstr *op, FILE *fp)
         if (ch) {
             fprintf(fp, "\t%c", ch);
         } else {
-                fprintf(fp, "\t");
+            fprintf(fp, "\t");
         }
         if (op->bflg & CWSIGNBIT) {
             fprintf(fp, "%d\n", op->b - CWCORESIZE);
@@ -147,7 +147,7 @@ cwgetargs(struct cwinstr *op, long pc, long *argp1, long *argp2)
 static long
 cwdatop(long pid, long pc)
 {
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
     zeusdrawsim(&g_cwmars.zeusx11);
 #endif
     if (!pid) {
@@ -499,7 +499,7 @@ cwexec(long pid)
     static long     ref = 0;
 #endif
 
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
     while (XEventsQueued(g_cwmars.zeusx11.disp, QueuedAfterFlush)) {
         zeusprocev(&g_cwmars.zeusx11);
     }
@@ -512,7 +512,7 @@ cwexec(long pid)
     cwdisasm(op, stderr);
 #endif
     if (cwisdat(op)) {
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
         zeusdrawsim(&g_cwmars.zeusx11);
 #endif
         if (!pid) {
@@ -535,15 +535,15 @@ cwexec(long pid)
                 g_cwmars.runqtab[pid][l] = g_cwmars.runqtab[pid][l + 1];
             }
         } else {
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
             zeusdrawsim(&g_cwmars.zeusx11);
 #endif
-        if (!pid) {
-            fprintf(stderr, "program #2 (%s) won (%ld)\n", g_cwmars.prog2name, pc);
-        } else {
-            fprintf(stderr, "program #1 (%s) won (%ld)\n", g_cwmars.prog1name, pc);
-        }
-#if defined(ZEUS)
+            if (!pid) {
+                fprintf(stderr, "program #2 (%s) won (%ld)\n", g_cwmars.prog2name, pc);
+            } else {
+                fprintf(stderr, "program #1 (%s) won (%ld)\n", g_cwmars.prog1name, pc);
+            }
+#if defined(ZEUS) && defined(ZEUSWINX11)
             sleep(5);
 #endif
 
@@ -560,7 +560,7 @@ cwexec(long pid)
         cur = 0;
     }
     g_cwmars.curproc[pid] = cur;
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
     ref++;
     if (!g_cwmars.running || ref == 32) {
         zeusdrawsim(&g_cwmars.zeusx11);
@@ -585,7 +585,7 @@ cwloop(void)
         g_cwmars.curpid = pid;
     }
     fprintf(stderr, "TIE\n");
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
     sleep(5);
 #endif
 
@@ -593,7 +593,7 @@ cwloop(void)
 }
 
 /* initialise virtual machine */
-static void
+void
 cwinit(void)
 {
     time_t seed32 = (((time(NULL) & 0xff) << 24)
@@ -621,6 +621,7 @@ cwinit(void)
     return;
 }
 
+#if defined(ZEUSWINX11)
 int
 main(int argc, char *argv[])
 {
@@ -694,7 +695,7 @@ main(int argc, char *argv[])
 #endif
     g_cwmars.prog1name = argv[1];
     g_cwmars.prog2name = argv[2];
-#if defined(ZEUS)
+#if defined(ZEUS) && defined(ZEUSWINX11)
     zeusdrawsim(&g_cwmars.zeusx11);
     while (1) {
         zeusprocev(&g_cwmars.zeusx11);
@@ -706,4 +707,5 @@ main(int argc, char *argv[])
     /* NOTREACHED */
     exit(0);
 }
+#endif /* defined(ZEUSWINX11) */
 

@@ -36,7 +36,8 @@ saving the world from the forces of evil creating chaos with lightnings and
 thunder. Clairvoyants say evil forces are already on the hunt for Mjolnir.
 
 Armed with nothing more than a few food rations, your pet dog, a +1 blessed
-armor, a +3 neutral sword, and a piece of Pleignir, you enter the Dungeon.
+armor, a +3 neutral sword, and a piece of Gleipnir, you enter the Dungeon of
+Cyberia.
 
 Good luck, adventurer, and beware of Fenris!
 
@@ -51,13 +52,15 @@ Non-Character Objects
 
 NOTES
 -----
-- neutral and unknown objects are shown in white
+- neutral and non-living objects are shown in white
+- unknown objects are shown in yellow
 - known-to-be-blessed objects are shown in green
 - known-to-be-cursed objects are shown in red
 
 Object		| Display	| Description
 ---------------------------------------------
-floor		| .		| floor/ground
+floor		| 		| floor/ground
+sand            | .             | may be quick-sand
 wall	        | #		| cave wall (may be hidden door)
 door		| +		| door
 ration		| f		| food ration
@@ -67,6 +70,7 @@ gold		| $		| use to get merchandise
 bullet	        | =		| bullet (silver ones work on daemons)
 potion		| !		| potion
 plant		| *		| plant
+explosives      | %             | stuff such as c4
 punchcard	| 0		| corewar warriors to be run from terminals :)
 tape		| t		| software for in-dungeon terminals
 stairway down	| >		| go down one level
@@ -74,7 +78,7 @@ stairway up	| <		| go up one level
 statue	 	| &		| e.g. Buddha
 trap		| ^		| trap
 wand		| \		| magic wand
-scroll		| %		| spell or other scroll
+scroll		| 9		| spell or other scroll
 ring		| o		| ring
 whip		| /		| whip
 armor		| ]		| suit or armor
@@ -94,7 +98,7 @@ pistol		| p		| pistol
 sword		| s		| sword
 terminal	| T		| terminal connected to mainframe
 well		| w		| well (water, may be cursed/poisonous)
-cross		| x		| cross; may be Holy Cross
+cross		| x		| cross; may be Cross of Light
 altar		| X		| altar; sacrifice dead creatures on it
 
 Characters
@@ -135,12 +139,12 @@ Demon Whip	| |		| weapon against different forms of undead
 Jatimatic	| J		| sub-machine gun for close range combat
 				  - may be loaded with 9-mm rounds, perhaps with
 				    silver bullets... ;)
-Golden Sword	| -		| princess Kara's golden sword
+Golden Sword	| S		| princess Kara's golden sword
 Mjolnir		| M		| the hammer of Thor
 Gleipnir	| G		| ribbon that can hold Fenris
 Stormbringer	| S		| Stormbringer special sword
 Excalibur	| E		| Excalibur special sword
-Holy Cross	| C		| holy cross with the names of 4 archangels
+Cross of Light	| C		| magic cross with the names of 4 archangels
      		  		| - Michael, Raphael, Gabriel, Uriel
 Commands
 --------

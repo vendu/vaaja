@@ -4,8 +4,8 @@
 
 extern void mjolbeep(void);
 
-mjolcmdfunc     *mjolcmdfunctab[1024][1024] ALIGNED(CLSIZE);
-mjolcmdmovefunc *mjolcmdmovefunctab[1024] ALIGNED(PAGESIZE);
+mjolcmdfunc     *mjolcmdfunctab[256] C_ALIGNED(MACH_CL_SIZE);
+mjolcmdmovefunc *mjolcmdmovefunctab[256] C_ALIGNED(MACH_PAGE_SIZE);
 uint8_t          mjolcmdismovemap[256];
 uint8_t          mjolcmdhasdirmap[256];
 uint8_t          mjolcmdhasargmap[256];

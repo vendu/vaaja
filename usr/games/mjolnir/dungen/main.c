@@ -19,7 +19,10 @@ dungen(int w, int h, int gridsize, int maxrooms)
 int
 main(int argc, char *argv[])
 {
-    dungen(80, 64 + (rand() & 0x1f), 4 + (rand() & 0x07), 16 + (rand() & 0x1f));
+    dungen(80,
+           96 + (rand() & 0x1f),
+           10 + (rand() & 0x07),
+           64 + (rand() & 0x1f));
 
     exit(0);
 }

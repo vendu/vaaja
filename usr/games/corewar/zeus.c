@@ -5,9 +5,7 @@
 #include <corewar/cw.h>
 #include <corewar/rc.h>
 #include <corewar/zeus.h>
-#if defined(ZEUSWINEFL)
-
-#elif defined(ZEUSWINX11)
+#if defined(ZEUSWINX11)
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/keysymdef.h>
@@ -20,6 +18,21 @@ extern long             g_rcnargtab[CWNOP];
 struct zeussel          g_zeussel;
 
 #define ZEUSDEFLINE 256
+
+#if 0
+void
+zeusfence(void)
+{
+    ;
+}
+#endif
+
+C_NORETURN
+void
+zeusexit(void)
+{
+    exit(0);
+}
 
 char *
 zeusdisasm(long pc, int *lenret)

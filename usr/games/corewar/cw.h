@@ -6,7 +6,12 @@
 #include <mach/param.h>
 #if defined(ZEUS)
 #include <corewar/zeus.h>
+#if defined(ZEUSWINSDL)
+#include <corewar/sdl.h>
 #endif
+#endif
+
+void    cwinit(void);
 
 #define CWNTURN     (128 * 1024)
 #define CWNPROC     1024
@@ -69,6 +74,9 @@ struct cwmars {
     long             curpid;                    // current program ID
     char            *prog1name;                 // program one path
     char            *prog2name;                 // program two path
+#if defined(ZEUSWINSDL)
+    struct zeussdl   zeussdl;
+#endif
 #if defined(ZEUSWINX11)
     struct zeusx11   zeusx11;                   // X11 GUI structure
 #endif

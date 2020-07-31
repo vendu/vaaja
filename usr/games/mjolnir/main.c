@@ -1,5 +1,3 @@
-#if 0
-
 #if (TEST)
 #include <stdio.h>
 #endif
@@ -19,6 +17,7 @@ extern void             mjolinit(struct mjolgame *game,
 extern void             mjolinitobj(void);
 extern void             mjolgameloop(struct mjolgame *game);
 
+#if 0
 int
 main(int argc, char *argv[])
 {
@@ -34,6 +33,5 @@ main(int argc, char *argv[])
     /* NOTREACHED */
     exit(0);
 }
-
 #endif
 

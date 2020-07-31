@@ -10,8 +10,8 @@
 extern long mjolhit(struct mjolchr *src, struct mjolchr *dest);
 extern long mjoltrap(struct mjolobj *trap, struct mjolchr *dest);
 
-extern mjolcmdfunc     *mjolcmdfunctab[1024][1024];
-extern mjolcmdmovefunc *mjolcmdmovefunctab[1024];
+extern mjolcmdfunc     *mjolcmdfunctab[256];
+extern mjolcmdmovefunc *mjolcmdmovefunctab[256];
 
 struct mjolchr *mjolplayer;
 struct mjolchr *mjolchaseq;
@@ -118,6 +118,7 @@ mjoldoturn(struct mjolgame *game, struct mjolchr *chr)
         } while (cmd > 0xff);
 //            clrmsg();
         if (cmd == MJOLNIR_CMD_BOSS) {
+            mjolsavegame(game);
 
             exit(0);
         } else if (mjolismove(cmd)) {
@@ -204,28 +205,32 @@ mjoladditem(struct mjolchr *dest, struct mjolobj *item)
 void
 mjoldie(struct mjolchr *dest)
 {
-    ;
+    int (*printmsg)(const char *, ...) = game->scr->printmsg;
+
+    mjolrmchase(dest);
+    printmsg("%s has left the planet\n", dest->name);
+
+    return;
 }
 
-typedef long hitfunc(struct mjolchr *, struct mjolchr *);
 long
 mjolfindmove(struct mjolchr *src, struct mjolchr *dest,
              hitfunc *func, long mindist)
 {
-    long              retval = 0;
-    struct mjolchr ***chrtab = mjolgame->chrtab[mjolgame->lvl];
-    struct mjolobj ***objtab = mjolgame->objtab[mjolgame->lvl];
-    struct mjolchr  *chr;
-    struct mjolobj   *obj;
-    struct mjolobj   *item;
-    long              destx = dest->data.x;
-    long              desty = dest->data.y;
-    long              srcx = src->data.x;
-    long              srcy = src->data.y;
-    long              dx = destx - srcx;
-    long              dy = desty - srcy;
-    long              type;
-    long              val;
+    long                retval = 0;
+    struct mjolchr    **chrtab = mjolgame->chrtab[mjolgame->lvl];
+    struct mjolobj    **objtab = mjolgame->objtab[mjolgame->lvl];
+    struct mjolchr     *chr;
+    struct mjolobj     *obj;
+    struct mjolobj     *item;
+    long                destx = dest->data.x;
+    long                desty = dest->data.y;
+    long                srcx = src->data.x;
+    long                srcy = src->data.y;
+    long                dx = destx - srcx;
+    long                dy = desty - srcy;
+    long                type;
+    long                val;
 
     if (srcx == destx && srcy == desty) {
 
@@ -348,7 +353,7 @@ mjolfindmove(struct mjolchr *src, struct mjolchr *dest,
             }
         }
         if (!mindist && srcx == destx && srcy == desty
-            && !(src->data.flg & MJOLNIR_CHAR_NO_PICK)) {
+            && !(src->data.flg & MJOLNIR_CHAR_NO_AUTOPICK)) {
             item = objtab[destx][desty];
             while (item) {
                 type = item->data.type;
@@ -398,6 +403,64 @@ mjolfindmove(struct mjolchr *src, struct mjolchr *dest,
     }
 
     return retval;
+}
+
+void
+mjolpushchase(struct mjolchr *data)
+{
+    struct mjolchr *next;
+
+    data->data.prev = NULL;
+    next = mjolchaseq;
+    if (mjolchaseq) {
+        mjolchaseq->data.prev = data;
+    }
+    data->data.next = next;
+    mjolchaseq = data;
+
+    return;
+}
+
+struct mjolchr *
+mjolpopchase(void)
+{
+    struct mjolchr *next = mjolchaseq->data.next;
+    struct mjolchr *data = mjolchaseq;
+
+    if (data) {
+        if (next) {
+            next->data.prev = NULL;
+        }
+        mjolchaseq = next;
+    }
+
+    return data;
+}
+
+void
+mjolrmchase(struct mjolchr *data)
+{
+    struct mjolchr *prev = data->data.prev;
+    struct mjolchr *next = data->data.next;
+
+    if (!prev && !next && mjolchaseq != data) {
+
+        return;
+    }
+
+    if (next) {
+        next->data.prev = prev;
+    }
+    if (prev) {
+        prev->data.next = next;
+    } else {
+        if (next) {
+            next->data.prev = NULL;
+        }
+        mjolchaseq = next;
+    }
+
+    return;
 }
 
 long

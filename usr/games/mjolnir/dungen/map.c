@@ -102,11 +102,15 @@ mapnewblk(const int w, const int h, const int val)
 static struct map
 mapnew(const int w, const int h)
 {
-    struct map  map;
+    struct map      map;
+    unsigned int    seed = time(NULL);
 
+    map.bmap = calloc(roundup2(w * h, 8) / CHAR_BIT, sizeof(uint8_t));
     map.wall = mapnewblk(w, h, '#');
+    map.nempty = 0;
     map.w = w;
     map.h = h;
+    map.seed = seed;
     
     return map;
 }
@@ -306,6 +310,12 @@ maprandpnt(const int w, const int h, const int max, const int grid,
             (float) (rand() % (w - border) + border / 2),
             (float) (rand() % (h - border) + border / 2)
         };
+#if 0
+        const struct pnt pnt = {
+            (float) (rand() % (w - border) + border),
+            (float) (rand() % (h - border) + border)
+        };
+#endif
         const struct pnt snapped = mapsnappnt(pnt, grid);
 
         set = mapaddpnt(set, snapped);
@@ -439,16 +449,20 @@ mapmkroom(const struct map map, const struct pnt where,
 {
     const int   x = where.x;
     const int   y = where.y;
+    int         ndx;
     int         xx;
     int         yy;
     int         i;
     int         j;
 
+    i = 2 * w + 2 * h;
+    map.nempty += i;
     for (i = -w; i < w; i++) {
         for (j = -h; j < h; j++) {
             xx = x + i;
             yy = y + j;
-
+            ndx = yy * map.w + xx;
+            setbit(map.bmap, ndx);
             map.wall[yy][xx] = ' ';
         }
     }
@@ -470,14 +484,21 @@ mapmkcorr(const struct map map, const struct pnt a, const struct pnt b)
     const int           dy = delta.y;
     int                 x = a.x;
     int                 y = a.y;
+    int                 ndx;
     int                 i;
-    
+
+    i = sx + sy;
+    map.nempty += i;
     for (i = 0; i < sx; i++) {
         x += dx;
+        ndx = y * map.w + x;
+        setbit(map.bmap, ndx);
         map.wall[y][x] = ' ';
     }
     for (i = 0; i < sy; i++) {
         y += dy;
+        ndx = y * map.w + x;
+        setbit(map.bmap, ndx);
         map.wall[y][x] = ' ';
     }
 
@@ -513,7 +534,6 @@ mapcarve(const struct map map, const struct triset edges,
         
         if (!mapeqpnt(edg.p3, flags.one)) {
             // Min room size ensures room will not be smaller than min x min.
-            //            const int min = 2;
             const int   min = 2;
             const int   size = grid / 2 - min;
             const int   w = min + rand() % size;
@@ -532,14 +552,18 @@ mapgen(const int w, const int h, const int grid, const int max)
     const struct map    map = mapnew(w, h);
     const struct flags  flags = { { 0.0f, 0.0f }, { 1.0f, 1.0f } };
     const int           border = 2 * grid;
+    //    const int           border = grid;
     struct pntset       pset;
     struct triset       tset;
     struct triset       edges;
-    
-    srand(time(0));
+
     pset = maprandpnt(w, h, max, grid, border);
+#if 0
     tset = mapdlntri(pset, w, h, 9 * max, flags);
     edges = mapgetedges(mapnewtriset(27 * max), tset, flags);
+#endif
+    tset = mapdlntri(pset, w, h, 13 * max, flags);
+    edges = mapgetedges(mapnewtriset(39 * max), tset, flags);
     mapdelrev(edges, w, h, flags);
     mapchkdups(edges, flags);
     mapcarve(map, edges, flags, grid);
@@ -553,7 +577,8 @@ mapgen(const int w, const int h, const int grid, const int max)
 void mapclose(const struct map map)
 {
     int row;
-    
+
+    free(map.bmap);
     for (row = 0; row < map.h; row++) {
         free(map.wall[row]);
     }

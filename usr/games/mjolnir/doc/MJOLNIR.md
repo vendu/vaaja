@@ -19,7 +19,7 @@ rank it as one of the very best computer games ever made.
 
 Many Rogue-like genre games are based on characters from Dungeons & Dragons
 games, which is one reason I decided to try something different so you're going
-to meet characters from different mythologies such as Norse ones
+to meet characters from different mythologies such as Norse ones.
 
 ## the plot
 
@@ -30,11 +30,28 @@ hammer back to Thor and optionally bring Fenris back as well.
   - digital bank robbery; iron bar or lock-pick, camo operation, c4, switch room,
     black box, network sniffing, packet deciphering, packet forging to access the
     account database
+  - y2k38; 32-bit timestamp cannat encode times after 03<.14:07 UTC on Jan 19,
+    2038. a malicious hacker gets hired to fix bank data systems, but plants a
+    trojan to do a few huge transfars from big company accounts to anonymous
+    accounts in Europe, then shuts the system down (hopefully wiping the
+    transfer logs), then brings the system back up as if nothing happened
+    - bank tapes, bank database documentation
 - mainframes
-  - direct access to mainframe let's you clone and steal the tape of the core war
-    warriors that have ruled the machine
+  - direct access to mainframe let's you clone and steal the tape of the core
+    war warriors that have ruled the machine
+  - other software
+    - DBG       - warrior debugger
+    - RCED      - redcode editor
+    - TAP       - network sniffer
 - terminals
   - equipped with punchcard readers to play core war on in-dungeon mainframes
+
+## magic and spells
+
+Mjolnir spells are typically written on scrolls. These spells include
+- spell of see monsters; shows all monsters on the level
+- spell of see hidden objects; shows all hidden objects on the level
+- spell of see map; shows level map
 
 ## game interface
 
@@ -50,146 +67,38 @@ a suitable level generator at
 
 [Dungen cave generator](https://github.com/glouw/dungen
 
-ams
----
-- dragons
-- leprechauns
-- trolls
-- wizards
-<ams> Classic cyberpunk characters were marginalized, alienated loners who lived
-on the edge of society in generally dystopic futures where daily life was
-impacted by rapid technological change, an ubiquitous datasphere of computerized
-information, and invasive modification of the human body. -- lawrence person
-
-Introduction
-------------
+## game intro
 
 Legend has it that many moons ago, Fenris, the eldest child of Loki and
 Angrboda, broke free from his chain, Gleipnir, and stole Mjolnir from Thor.
-Fenris is believed to have hidden Mjolnir, Thor's hammer, into a dungeon.
+Fenris is believed to have hidden Mjolnir, Thor's hammer, in the Dungeon of
+Cyberia.
 
 It is said that Thor shall ascend the one to return Mjolnir to a deity for
 saving the world from the forces of evil creating chaos with lightnings and
 thunder. Clairvoyants say evil forces are already on the hunt for Mjolnir.
 
 Armed with nothing more than a few food rations, your pet dog, a +1 blessed
-armor, a +3 neutral sword, and a piece of Pleignir, you enter the Dungeon.
+armor, a +3 neutral sword, and a piece of Gleipnir, you enter the Underworld.
 
 Good luck, adventurer, and beware of Fenris!
 
-Characters
-----------
+## notes
+- unknown characters and objects are shown in white
+- neutral characters and objects are shown in yellow
+- safe/friendly objects and characters are shown in green
+- unsafe/hostile objects are shown in red
 
-To make the most fun off the game and keep it playable on old terminals too,
-the standard "graphics" are drawn as characters.
+## commands
 
-Non-Character Objects
----------------------
-
-NOTES
------
-- neutral and unknown objects are shown in white
-- known-to-be-blessed objects are shown in green
-- known-to-be-cursed objects are shown in red
-
-Object		| Display	| Description
----------------------------------------------
-floor		| .		| floor/ground
-wall	        | #		| cave wall (may be hidden door)
-door		| +		| door
-ration		| f		| food ration
-water		| ~		| water
-fountain	| {		| fountain
-gold		| $		| use to get merchandise
-bullet	        | =		| bullet (silver ones work on daemons)
-potion		| !		| potion
-plant		| *		| plant
-punchcard	| 0		| corewar warriors to be run from terminals :)
-tape		| 8		| software for in-dungeon terminals
-stairway down	| >		| go down one level
-stairway up	| <		| go up one level
-statue	 	| &		| e.g. Buddha
-trap		| ^		| trap
-wand		| \		| magic wand
-scroll		| %		| spell or other scroll
-ring		| o		| ring
-whip		| /		| whip
-armor		| ]		| suit or armor
-mirror		| [		| mirror on a wall
-chain		| c		| chain
-chest		| C		| chest; may find treasury in them
-sub-machine gun | g		| close-range combat
-honey		| h		| from beehives after killing the queen
-knife		| k		| knife, dagger, gurkha, ...
-kaleidoscope	| K		| kaleidoscope
-lockpick	| l		| thieves are naturally best at using these
-laser		| L		| laser gun
-mace		| m		| may be Mjolnir
-#mainframe	| M		| computer systems for running punchcards
-pipe		| 7		| pipe
-pistol		| p		| pistol
-sword		| s		| sword
-terminal	| t		| terminal connected to mainframe
-well		| w		| well (water, may be cursed/poisonous)
-cross		| x		| cross; may be Holy Cross
-altar		| X		| altar; sacrifice dead creatures on it
-
-Characters
-----------
-
-Character	| Display	| Description
----------------------------------------------
-player		| @		| you
-ant		| a		| ant
-soldier ant     | A             | the strongest type of ants
-bee		| b		| regular bee, only stings once
-bee queen	| B		| bee queen
-dog		| d		| pet dog
-deity		| D		| deity
-alien		| e		| extraterrestrial creature
-ghoul		| g		| corpse eater
-human		| H		| human being
-oracle		| O		| oracles know about things
-rat             | r             | regular rat
-R               | remnants      | body and/or possession of dead creatures
-unicorn		| u		| unicorn
-vampire		| v		| regular vampire
-wolf		| w		| may be Fenris
-zombie		| Z		| zombies; living dead; always evil, attack all
-
-Special Characters
-------------------
-Iku-Turso	| I		| Finnish sea monster :)
-Fenris		| F		| the guardian wolf of gods; kills demons
-Kara		| K		| Kara, the princess of Atlantis
-Thor		| T		| god of thunder
-Dracula		| V		| Dracula; attack will get all vampires to hit
-
-Special Items
--------------
-Crystal ball    | o		| may show things happening elsewhere
-Demon Whip	| |		| weapon against different forms of undead
-Jatimatic	| J		| sub-machine gun for close range combat
-				  - may be loaded with 9-mm rounds, perhaps with
-				    silver bullets... ;)
-Golden Sword	| -		| princess Kara's golden sword
-Mjolnir		| M		| the hammer of Thor
-Gleipnir	| G		| ribbon that can hold Fenris
-Stormbringer	| S		| Stormbringer special sword
-Excalibur	| E		| Excalibur special sword
-Holy Cross	| C		| holy cross with the names of 4 archangels
-     		  		| - Michael, Raphael, Gabriel, Uriel
-Commands
---------
-
-Notes
------
+### notes
 - modeled after Rogue
 - movement can also be done using a PC-style numpad
 
-Rogue Commands
---------------
+### rogue command
 
+keybard command | description
+----------------|------------
 ESC		| boss key
 m		| open command menu
 /		| identify object
@@ -238,16 +147,13 @@ o		| examine/set options
 S		| save game
 Q		| quit
 
-Mjolnir Extensions
-------------------
-
+mjolnir actions | description
+----------------|------------
 u		| use an object with another one
 0		| turn off
 1		| turn on
 
-Gameplay
---------
-
+## gameplay
 - console commands (invoke console with M-x)
   - use
   - bite
@@ -292,14 +198,12 @@ Gameplay
     - you need to forge a few bank transfers after deciphering their network
       traffic format :)
 
-TILES
+## tiles
 -----
-
 - tiles should have 3 different versions for modes
   - active
   - hilited
   - clicked
-
 - navigation (compass background)
   - buttons; highlight the currently movable directions
     - north
@@ -310,4 +214,16 @@ TILES
     - southeast
     - southwest
     - northwest
+
+## TODO
+
+### ams
+- dragons
+- leprechauns
+- trolls
+- wizards
+> <ams> Classic cyberpunk characters were marginalized, alienated loners who
+lived on the edge of society in generally dystopic futures where daily life was
+impacted by rapid technological change, an ubiquitous datasphere of computerized
+information, and invasive modification of the human body. -- lawrence person
 

@@ -2,9 +2,12 @@
 #define __DUNGEN_MAP_H__
 
 struct map {
-    char  **wall;
-    int     w;
-    int     h;
+    uint8_t        *bmap;
+    char          **wall;
+    int             nempty;
+    int             w;
+    int             h;
+    unsigned int    seed;
 };
 
 struct map  mapgen(const int w, const int h, const int grid, const int max);

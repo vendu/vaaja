@@ -37,7 +37,7 @@
 #define RANDMT64MASK3       UINT64_C(0xFFF7EEE000000000)
 
 /* state vector array */
-static uint64_t randmt64state[RANDMT64NSTATE] ALIGNED(PAGESIZE);
+static uint64_t randmt64state[RANDMT64NSTATE] C_ALIGNED(MACH_PAGE_SIZE);
 /*
  * randmt64curndx == RANDMT64NSTATE + 1 means that
  * randmt64state[RANDMT64NSTATE] is uninitialised

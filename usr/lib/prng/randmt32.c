@@ -64,7 +64,7 @@
 #define RANDMT32MASK1       0x9d2c5680UL
 #define RANDMT32MASK2       0xefc60000UL
 
-static unsigned long randmt32state[RANDMT32NSTATE] ALIGNED(PAGESIZE);
+static unsigned long randmt32state[RANDMT32NSTATE] C_ALIGNED(MACH_PAGE_SIZE);
 static unsigned long randmt32magic[2] = { 0UL, RANDMT32MATRIX };
 static unsigned long randmt32curndx = RANDMT32NSTATE + 1;
 #if (RANDMT32TEST)
