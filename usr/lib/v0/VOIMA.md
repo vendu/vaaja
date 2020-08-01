@@ -19,7 +19,7 @@ The NOP instruction is implemented as all 32 bits set to 1.
 
 ### Main Processor Units
 
-struct v0ins {
+`struct v0ins {
     int8_t      op1     : 4;
     int8_t      op2     : 4;
     int8_t      reg1    : 4;
@@ -27,11 +27,11 @@ struct v0ins {
     int8_t      reg3    : 4;
     int8_t      flg     : 4;
     int8_t      imm8;
-};
+};`
 
 ### Coprocessor Units
 
-struct v0copins {
+`struct v0copins {
     int8_t      unit    : 4;
     int8_t      op1     : 4;
     int8_t      op2     : 4;
@@ -39,7 +39,7 @@ struct v0copins {
     int8_t      reg2    : 4;
     int8_t      reg3    : 4;
     int8_t      flg;
-};
+};`
 
 ### Address Modes
 
