@@ -1,9 +1,12 @@
+#include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <zero/trix.h>
 #include "map.h"
 
 typedef int                 (*const dirfunc)(const void *, const void *);
@@ -444,7 +447,7 @@ mapchkdups(const struct triset edges, const struct flags flags)
 }
 
 static void
-mapmkroom(const struct map map, const struct pnt where,
+mapmkroom(struct map map, const struct pnt where,
           const int w, const int h)
 {
     const int   x = where.x;
@@ -471,7 +474,7 @@ mapmkroom(const struct map map, const struct pnt where,
 }
 
 static void
-mapmkcorr(const struct map map, const struct pnt a, const struct pnt b)
+mapmkcorr(struct map map, const struct pnt a, const struct pnt b)
 {
     const struct pnt    step = mapsubpnt(b, a);
     const struct pnt    delta = {
@@ -547,7 +550,7 @@ mapcarve(const struct map map, const struct triset edges,
 }
 
 struct map
-mapgen(const int w, const int h, const int grid, const int max)
+dungenmap(const int w, const int h, const int grid, const int max)
 {
     const struct map    map = mapnew(w, h);
     const struct flags  flags = { { 0.0f, 0.0f }, { 1.0f, 1.0f } };
@@ -574,7 +577,7 @@ mapgen(const int w, const int h, const int grid, const int max)
     return map;
 }
 
-void mapclose(const struct map map)
+void dungenclose(const struct map map)
 {
     int row;
 
@@ -587,7 +590,7 @@ void mapclose(const struct map map)
     return;
 }
 
-void mapprint(const struct map map)
+void dungenprint(const struct map map)
 {
     int row;
     int col;

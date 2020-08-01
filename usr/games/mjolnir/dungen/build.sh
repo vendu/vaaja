@@ -11,5 +11,5 @@ GNUWARNFLAGS="-Wtrampolines -Wstack-usage=16384 -Wunsafe-loop-optimizations -Wc9
 # compile the system
 #gcc $CFLAGS $CCOPTFLAGS $CCWARNFLAGS $GNUWARNFLAGS -I../.. -I../../usr/lib -o zen *.c sched/*.c net/*.c ../../usr/lib/zen/fastudiv16.c -pthread
 
-gcc $CFLAGS $CCOPTFLAGS $CCWARNFLAGS $GNUWARNFLAGS -O -o dungen *.c -lm
+gcc -I../.. -I../../../lib $CFLAGS $CCOPTFLAGS $CCWARNFLAGS $GNUWARNFLAGS -O -o dungen *.c -lm
 

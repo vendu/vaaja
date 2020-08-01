@@ -1,6 +1,8 @@
 #ifndef __DUNGEN_MAP_H__
 #define __DUNGEN_MAP_H__
 
+#include <stdint.h>
+
 struct map {
     uint8_t        *bmap;
     char          **wall;
@@ -10,9 +12,9 @@ struct map {
     unsigned int    seed;
 };
 
-struct map  mapgen(const int w, const int h, const int grid, const int max);
-void        mapclose(const struct map);
-void        mapprint(const struct map);
+struct map  dungenmap(const int w, const int h, const int grid, const int max);
+void        dungenclose(const struct map);
+void        dungenprint(const struct map);
 
 #endif /* __DUNGEN_MAP_H__ */
 

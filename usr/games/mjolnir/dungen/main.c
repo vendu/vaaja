@@ -1,16 +1,18 @@
+#include <mjolnir/conf.h>
 #include <stdlib.h>
+#include <time.h>
 #include "map.h"
 
 void
-dungen(int w, int h, int gridsize, int maxrooms)
+dungenlvl(int w, int h, int gridsize, int maxrooms)
 {
     //    const struct map map = mapgen(80, 128, 8, 64);
-    const struct map map = mapgen(w,
-                                  h,
-                                  gridsize,
-                                  maxrooms);
-    mapprint(map);
-    mapclose(map);
+    const struct map map = dungenmap(w,
+                                     h,
+                                     gridsize,
+                                     maxrooms);
+    dungenprint(map);
+    dungenclose(map);
 
     return;
 }
@@ -19,10 +21,12 @@ dungen(int w, int h, int gridsize, int maxrooms)
 int
 main(int argc, char *argv[])
 {
-    dungen(80,
-           96 + (rand() & 0x1f),
-           10 + (rand() & 0x07),
-           64 + (rand() & 0x1f));
+    mjolsrand(time(NULL));
+    dungenlvl(80,
+              48 + (mjolrand() & 0x1f),
+              6 + (mjolrand() & 0x07),
+              //              4 + (rand() & 0x07),
+              8 + (mjolrand() & 0x1f));
 
     exit(0);
 }
