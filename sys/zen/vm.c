@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <sys/zen/mem.h>
 #include <sys/zen/vm.h>
+#include <sys/zen/sched/types.h>
+#include <sys/zen/sched/task.h>
 #include <mt/lk.h>
 
 static struct zenvmqueue    g_vmpagequeue[ZEN_VM_QUEUES];
@@ -22,10 +24,8 @@ zenvmaddpage(struct zenvmpage *page)
 {
     struct zenvmqueue  *queue;
     struct zenvmpage   *tail;
-    m_word_t            qcnt;
     m_word_t            qid;
 
-    page->qcnt++;
     qid = _zencalcvmqueue(page);
     queue = &g_vmpagequeue[qid];
     mtlktkt(&queue->lk);
@@ -38,6 +38,7 @@ zenvmaddpage(struct zenvmpage *page)
     page->prev = tail;
     page->next = NULL;
     queue->tail = page;
+    queue->n++;
     mtunlktkt(&queue->lk);
 
     return;
@@ -48,12 +49,10 @@ zenvmdelpage(struct zenvmpage *page)
 {
     struct zenvmqueue  *queue;
     struct zenvmpage   *item;
-    m_word_t            qcnt;
     m_word_t            qid;
 
     queue = page->queue;
     item = page->prev;
-    qcnt = page->qcnt;
     qid = _zencalcvmqueue(page);
     queue = &g_vmpagequeue[qid];
     mtlktkt(&queue->lk);
@@ -68,6 +67,7 @@ zenvmdelpage(struct zenvmpage *page)
     } else {
         queue->tail = page->prev;
     }
+    queue->n--;
     mtunlktkt(&queue->lk);
 
     return;

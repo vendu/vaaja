@@ -13,7 +13,25 @@
 - zen           - main kernel file + global data
 - usr           - user-mode API
 - sys           - system API (syscalls etc.)
-- parm          - system configuration + information
+  int64_t syscall(m_word_t num, m_word_t arg1, m_word_t arg2, m_word_t arg3);
+- conf          - system configuration + information
+  m_word_t sysconf(m_word_t id);
+  POSIX
+  -----
+  SYS_ARG_MAX, SYS_TASK_MAX, SYS_HOST_NAME_MAX, SYS_LOGIN_NAME_MAX,
+  SYS_NGROUPS_MAX, SYS_OPEN_MAX, SYS_PAGE_SIZE, SYS_STREAM_MAX = FOPEN_MAX,
+  SYS_SYMLOOP_MAX, SYS_TTY_NAME_MAX, SYS_TZNAME_MAX
+  non-POSIX
+  ---------
+  SYS_CL_SIZE, SYS_L1_SIZE, SYS_L1_INST_SIZE, SYS_L1_DATA_SIZE, SYS_L2_SIZE,
+  SYS_L3_SIZE, SYS_TLB_ENTRIES, SYS_TRAP_MAX (system), SYS_INTERRUPT_MAX
+  (dev/usr), SYS_PKT_BUF_MIN, SYS_PKT_BUF_MAX, SYS_PROC_SHM_MAX,
+  SYS_PROC_MQ_MAX, SYS_PROC_EVQ_MAX, SYS_PHYS_PAGES, SYS_PROCESSORS_MAX,
+  SYS_PROCESSORS_ONLINE,
+- parm          - system parameters, 'sysctl'
+- task          - process and thread support
+  m_word_t proc(void);
+  m_word_t task(struct taskatr *atr, m_word_t flg);
 
 ## tao; high-level scheduler
 [tao implementation](https://github.com/vendu/vaaja/blob/master/sys/zen/sched/)
@@ -63,7 +81,7 @@
 - hid           - human interface devices (keyboard, pointer devices)
 - fs            - filesystem events
 
-## hw - hardware interface
+## hw - ('high level') hardware interface
 - unit          - processor and coprocessor devices
 - trap          - interrupts, exceptions, aborts, faults, ...
 - sig           - signal
@@ -84,3 +102,4 @@
   - dev         - i/o-mapped devices
   - node        - file- and other maps
 
+TODO: cache auto-color, choices of data structures for subsystems, ...

@@ -18,7 +18,7 @@
 #define ZEN_VM_QUEUES   64
 #endif
 
-#define _zencalcvmqueue(page)   ceilpow2l(page->qcnt)
+#define _zencalcvmqueue(page)   ceilpow2l(page->nflt)
 #define _zenvmlkqueue(queue)    mtlktkt(&queue->lk)
 #define _zenvmunlkqueue(queue)  mtunlktkt(&queue->lk)
 struct zenvmqueue {
@@ -29,19 +29,21 @@ struct zenvmqueue {
 };
 
 struct zenvmpage {
-    struct zenvmqueue          *queue;
-    struct zenvmpage           *prev;
-    struct zenvmpage           *next;
-    int8_t                     *ptr;
-    m_word_t                    flg;
-    volatile m_atomic_t         qcnt;
-    m_word_t                    qofs;
+    struct zenvmqueue  *queue;
+    struct zenvmpage   *prev;
+    struct zenvmpage   *next;
+    m_adr_t             ptr;
+    m_word_t            flg;
+    m_word_t            nflt;
+#if defined(__v0__)
+    m_word_t            pad;
+#endif
 };
 
 struct zenvmseg {
     const char         *name;
     int8_t             *ptr;
-    size_t              size;
+    m_size_t            size;
     m_word_t            flag;
 };
 

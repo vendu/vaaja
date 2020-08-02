@@ -11,12 +11,11 @@
 #include <mt/tktlk.h>
 #include <mach/types.h>
 #include <zen/fastudiv.h>
-#include <sys/zen/sys.h>
+//#include <sys/zen/sys.h>
 #include <sys/zen/zen.h>
 #include <sys/zen/tmr.h>
 #include <sys/zen/types.h>
-#include <sys/zen/sched/tao.h>
-#include <sys/zen/sched/task.h>
+#include <sys/zen/sched/types.h>
 
 #if (MACH_WORD_SIZE == 8)
 #define SCHED_ULE_CLASS_WORDS       1

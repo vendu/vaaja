@@ -21,10 +21,10 @@ struct zencred {
 };
 
 struct zendev {
-    struct zenvfsfuncs *funcs;
-    uint32_t            dev;    // 16-bit major + 16-bit minor device IDs
-    uint16_t            bus;
-    uint16_t            flg;
+    m_adr_t     vfsfuncs;
+    m_word_t    dev;    // 16-bit major + 16-bit minor device IDs
+    m_uhalf_t   bus;
+    m_uhalf_t   flg;
 };
 
 struct zencpu {
@@ -68,10 +68,13 @@ struct zenmap {
 struct zenpage {
     m_uword_t           blk;    // page-device block ID
     zendev_t            dev;    // page-device
-    void               *pte;    // pointer to page-table entry
+    m_adr_t            *pte;    // pointer to page-table entry
     m_uword_t           flags;  // page-flags
     m_uword_t           nflt;   // # of page-faults
     m_uword_t           qid;    // lruq, sizeof(m_word_t) * CHAR_BIT - clz(nflt)
+#if defined(__v0__)
+    m_word_t            pad;
+#endif
     struct zenpage     *prev;   // previous in queue
     struct zenpage     *next;   // next in queue
 };
@@ -90,6 +93,9 @@ struct zennice {
 struct zentasktab {
     struct zentask     *tab;
     mttktlk             tkt;
+#if defined(__v0__)
+    m_word_t            pad;
+#endif
 };
 
 #endif /* __SYS_ZEN_TYPES_H__ */

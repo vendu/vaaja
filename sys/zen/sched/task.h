@@ -3,6 +3,7 @@
 
 #include <mach/types.h>
 #include <sys/zen/types.h>
+#include <sys/zen/vm.h>
 #include <sys/zen/sched/tao.h>
 
 /*
@@ -29,31 +30,13 @@
 /* process flags */
 #define ZEN_TASK_HAS_INPUT      (1 << 0)
 
-//#define _zenproclkpageq(proc)   mtlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)
-//#define _zenprocunlkpageq(proc) mtunlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)
-struct zenproc {
-    struct m_thr            m_tcb;  // task control block
-    m_word_t                flg;
-    volatile void          *pageq;  // process page queue
-    zenpid_t                ppid;
-    zenpid_t                pid;
-    m_word_t                nice;
-    m_word_t                niceval;
-    struct zenschedparm     sched;
-    struct m_thr           *thrtab[ZEN_MAX_TASKS];
-};
-
-struct zentask {
-    struct m_thr           *m_tcb;
-    struct zenproc         *proc;
-    zenpid_t                id;
-    zenpid_t                pgrp;   // parent/group process ID
-    m_word_t                state;  // task state
-    m_word_t                flg;    // task flags
-    struct zentask         *prev;
-    struct zentask         *next;
-    struct zenschedparm     sched;
-};
+C_NORETURN C_INLINE void
+k_jmptask(struct m_thr *thr)
+{
+    while (1) {
+        ;
+    }
+}
 
 #endif /* __SYS_ZEN_SCHED_TASK_H__ */
 

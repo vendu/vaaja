@@ -21,14 +21,17 @@ struct zenmemconf {
 };
 
 struct zenmemqueue {
+    m_adr_t               (*free)(m_adr_t);
+    m_adr_t                 head;
+    m_adr_t                 tail;
     m_word_t                mark;
     m_word_t                type;
     m_word_t                slot;
-    volatile m_atomic_t     nref;
     m_word_t                nitem;
-    void                   *head;
-    void                   *tail;
-    void                  (*free)(void *);
+    volatile m_atomic_t     nref;
+#if defined(__v0__)
+    m_word_t                pad;
+#endif
 };
 
 /*
@@ -41,10 +44,10 @@ struct zenmemqueue {
 #define ZEN_MEM_SLAB_SIZE   (ZEN_MIM_MEM_BLK * ZEN_MAX_SLAB_BLKS)
 struct zenmemslab {
     volatile m_atomic_t     mtx;
-    struct zenmemslab      *prev;
-    struct zenmemslab      *next;
-    struct zenmemqueue     *queue;
-    m_byte_t               *base;
+    m_adr_t                 prev;
+    m_adr_t                 next;
+    m_adr_t                 queue; // struct zenmemqueue *
+    m_adr_t                 base;
     m_size_t                size;
     m_word_t                type;
     volatile m_atomic_t     nref;
@@ -53,7 +56,7 @@ struct zenmemslab {
 
 struct zenmembuf {
     volatile m_atomic_t  nref;
-    int8_t              *ptr;
+    m_adr_t              ptr;
     m_size_t             size;
     m_word_t             flg;
 };

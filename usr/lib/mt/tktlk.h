@@ -18,7 +18,7 @@
 #if (MACH_WORD_SIZE == 4)
 
 union mttktlk {
-    m_atomicu32_t uval;
+    m_atomic_t   uval;
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
     struct {
         uint16_t  val;
