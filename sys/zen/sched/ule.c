@@ -58,13 +58,13 @@ static struct zentask      *k_schedstoppedtab[ZEN_MAX_TASKS];
 static struct zentask      *k_schedreadytab0[SCHED_ULE_QUEUES];
 static struct zentask      *k_schedreadytab1[SCHED_ULE_QUEUES];
 static struct zentask      *k_schedidletab[SCHED_ULE_CLASS_QUEUES];
-static long                 k_schedreadymap0[SCHED_ULE_READY_WORDS];
-static long                 k_schedreadymap1[SCHED_ULE_READY_WORDS];
-static long                 k_schedidlemap[SCHED_ULE_IDLE_WORDS];
+static m_word_t             k_schedreadymap0[SCHED_ULE_READY_WORDS];
+static m_word_t             k_schedreadymap1[SCHED_ULE_READY_WORDS];
+static m_word_t             k_schedidlemap[SCHED_ULE_IDLE_WORDS];
 /* SCHED_ULE_IDLE queues are not included in SCHED_ULE_CLASS_QUEUES */
-static long                 k_schedloadmap[SCHED_ULE_LOAD_WORDS];
-static long                 k_scheddeadlinemap[SCHED_ULE_CLASS_WORDS];
-long                        k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
+static m_word_t             k_schedloadmap[SCHED_ULE_LOAD_WORDS];
+static m_word_t             k_scheddeadlinemap[SCHED_ULE_CLASS_WORDS];
+m_word_t                    k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
 static struct zentasktab    k_scheddeadlinetab[SCHED_ULE_CLASS_QUEUES];
 struct zennice             *k_schedniceptr = &k_schednicetab[SCHED_ULE_NICE_HALF];
 struct zenschedset          k_schedreadyset;
@@ -103,7 +103,7 @@ schedinit(void)
 #endif
 #endif
     kprintf("SCHED_ULE_HISTORY_SIZE == %d\n", SCHED_ULE_HISTORY_SIZE);
-    fastu16divu16init(k_fastu16divu16tab, SCHED_ULE_DIVU16TAB_SIZE);
+    fastu16divu16gentab(k_fastu16divu16tab, SCHED_ULE_DIVU16TAB_SIZE);
     schedinitset();
 
     return;
@@ -280,6 +280,12 @@ schedsetready(struct zentask *task)
 }
 
 static void
+schedsetsleep(struct zentask *task)
+{
+    ;
+}
+
+static void
 schedsetstopped(struct zentask *task)
 {
     long id = task->id;
@@ -301,7 +307,7 @@ schedsetzombie(struct zenproc *proc)
 
 /* switch tasks */
 //schedswitchtask(struct zentask *curtask)
-C_FASTCALL C_NORETURN void
+C_FASTCALL void
 schedswitchtask(struct zentask *curtask)
 {
     long                    unit = curtask->sched.unit;
@@ -317,99 +323,99 @@ schedswitchtask(struct zentask *curtask)
     long                    lim;
     long                    loop;
 
-    if (!curtask) {
-        /* kernel initialisations are still taking place */
-
-        return;
-    }
-    switch (state) {
-        case ZEN_TASK_NEW:
-        case ZEN_TASK_READY:
-            schedsetready(curtask);
-
-            break;
-        case ZEN_TASK_SLEEP:
-            schedsetsleep(curtask);
-
-            break;
-        case ZEN_TASK_STOPPED:
-            schedsetstopped(curtask);
-
-            break;
-        case ZEN_TASK_ZOMBIE:
-            schedsetzombie(curtask->proc);
-
-            break;
-        default:
-            kdebug("invalid task state", curtask); /* FIXME: error # */
-
-            break;
-    }
-    do {
-        loop = 1;
+    if (curtask) {
+        /* kernel initialisations done */
+        switch (state) {
+            case ZEN_TASK_NEW:
+            case ZEN_TASK_READY:
+                schedsetready(curtask);
+                
+                break;
+            case ZEN_TASK_SLEEP:
+                schedsetsleep(curtask);
+                
+                break;
+            case ZEN_TASK_STOPPED:
+                schedsetstopped(curtask);
+                
+                break;
+            case ZEN_TASK_ZOMBIE:
+                schedsetzombie(curtask->proc);
+                
+                break;
+            default:
+                kdebug("invalid task state", curtask); /* FIXME: error # */
+                
+                break;
+        }
         do {
-            /* loop over current and next priority-queues */
-            lim = SCHED_ULE_CLASS_QUEUES;
+            loop = 1;
+            do {
+                /* loop over current and next priority-queues */
+                lim = SCHED_ULE_CLASS_QUEUES;
+                lim >>= __LONGBITSLOG2;
+                mtlktkt(&set->lk);
+                map = set->curmap;
+                queue = &set->cur[SCHED_ULE_TRAP_PRIO_MIN];
+                for (ndx = 0 ; ndx < lim ; ndx++) {
+                    val = map[ndx];
+                    if (val) {
+                        ofs = ndx * CHAR_BIT * sizeof(long);
+                        ndx = tzerol(val);
+                        ofs += ndx;
+                        if (ofs < SCHED_ULE_CLASS_QUEUES) {
+                            queue += ofs;
+                            task = deqpop(queue);
+                            if (!queue) {
+                                m_clrbit((m_atomic_t *)map, ofs);
+                            }
+                            mtunlktkt(&set->lk);
+                            
+                            k_jmptask(task->m_tcb);
+                        }
+                    }
+                }
+                /* if no task found during the first iteration, switch queues */
+                schedswapqueues();
+                mtunlktkt(&set->lk);
+            } while (loop--);
+            /* if both current and next queues are empty, look for an idle task */
+            lim = SCHED_ULE_IDLE_QUEUES;
             lim >>= __LONGBITSLOG2;
             mtlktkt(&set->lk);
-            map = set->curmap;
-            queue = &set->cur[SCHED_ULE_TRAP_PRIO_MIN];
+            map = set->idlemap;
+            queue = k_schedidletab;
             for (ndx = 0 ; ndx < lim ; ndx++) {
                 val = map[ndx];
                 if (val) {
                     ofs = ndx * CHAR_BIT * sizeof(long);
                     ndx = tzerol(val);
                     ofs += ndx;
-                    if (ofs < SCHED_ULE_CLASS_QUEUES) {
+                    if (ofs < SCHED_ULE_IDLE_QUEUES) {
                         queue += ofs;
                         task = deqpop(queue);
                         if (!queue) {
                             m_clrbit((m_atomic_t *)map, ofs);
                         }
                         mtunlktkt(&set->lk);
-
+                        
                         k_jmptask(task->m_tcb);
                     }
                 }
             }
-            /* if no task found during the first iteration, switch queues */
-            schedswapqueues();
+            /* FIXME: try to pull threads from other cores here */
+            //        task = taskpull(unit);
+            /* mark the core as idle */
+            map = set->idlemap;
+            setbit(map, unit);
             mtunlktkt(&set->lk);
-        } while (loop--);
-        /* if both current and next queues are empty, look for an idle task */
-        lim = SCHED_ULE_IDLE_QUEUES;
-        lim >>= __LONGBITSLOG2;
-        mtlktkt(&set->lk);
-        map = set->idlemap;
-        queue = k_schedidletab;
-        for (ndx = 0 ; ndx < lim ; ndx++) {
-            val = map[ndx];
-            if (val) {
-                ofs = ndx * CHAR_BIT * sizeof(long);
-                ndx = tzerol(val);
-                ofs += ndx;
-                if (ofs < SCHED_ULE_IDLE_QUEUES) {
-                    queue += ofs;
-                    task = deqpop(queue);
-                    if (!queue) {
-                        m_clrbit((m_atomic_t *)map, ofs);
-                    }
-                    mtunlktkt(&set->lk);
+            k_intron();
+            m_waitint();
+        } while (1);
+        k_jmptask(task->m_tcb);
+    }
 
-                    k_jmptask(task->m_tcb);
-                }
-            }
-        }
-        /* FIXME: try to pull threads from other cores here */
-//        task = taskpull(unit);
-        /* mark the core as idle */
-        map = set->idlemap;
-        setbit(map, unit);
-        mtunlktkt(&set->lk);
-        k_intron();
-        m_waitint();
-    } while (1);
-    k_jmptask(task->m_tcb);
+    return;
 }
 
 #if 0
@@ -426,13 +432,10 @@ C_NORETURN void
 schedyield(void)
 {
     struct zentask *oldtask = k_getcurtask();
-    //    struct zentask *task = NULL;
+    struct zentask *task = NULL;
 
-    schedswitchtask(oldtask);
-    //    task = schedswitchtask(oldtask);
-    //    //    if (task != oldtask) {
-    //    k_jmptask(task->m_tcb);
-    //    }
+    task = schedswitchtask(oldtask);
+    k_jmptask(task->m_tcb);
 }
 
 #endif /* (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED) */

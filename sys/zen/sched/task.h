@@ -4,7 +4,6 @@
 #include <mach/types.h>
 #include <sys/zen/types.h>
 #include <sys/zen/vm.h>
-#include <sys/zen/sched/tao.h>
 
 /*
  * NOTES

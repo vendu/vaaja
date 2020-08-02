@@ -11,11 +11,13 @@
 #include <mt/tktlk.h>
 #include <mach/types.h>
 #include <zen/fastudiv.h>
-//#include <sys/zen/sys.h>
+#include <sys/zen/util.h>
+#include <sys/zen/sys.h>
 #include <sys/zen/zen.h>
 #include <sys/zen/tmr.h>
 #include <sys/zen/types.h>
 #include <sys/zen/sched/types.h>
+#include <sys/zen/sched/task.h>
 
 #if (MACH_WORD_SIZE == 8)
 #define SCHED_ULE_CLASS_WORDS       1
@@ -199,7 +201,7 @@
     max(ZEN_MAX_CPUS / (CHAR_BIT * sizeof(long)), MACH_CL_SIZE / sizeof(long))
 
 extern struct divu16        k_fastu16divu16tab[SCHED_ULE_DIVU16TAB_SIZE];
-extern long                 k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
+extern m_word_t             k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
 extern struct zennice       k_schednicetab[SCHED_ULE_NICE_RANGE];
 extern struct zennice      *k_schedniceptr;
 extern struct zenschedset   k_schedreadyset;

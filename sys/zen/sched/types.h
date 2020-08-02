@@ -5,6 +5,20 @@
 #include <mach/types.h>
 
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
+struct  zenschedset {
+    mttktlk           lk;
+#if defined(__v0__)
+    m_word_t          pad;
+#endif
+    m_word_t         *curmap;
+    m_word_t         *nextmap;
+    m_word_t         *idlemap;
+    m_word_t         *loadmap;
+    struct zentask  **cur;
+    struct zentask  **next;
+    struct zentask  **idle;
+};
+
 struct zenschedparm {
     m_word_t    unit;           // CPU-affinity
     m_word_t    sched;          // thread scheduler class

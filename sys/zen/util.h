@@ -21,7 +21,7 @@ void kbcopy(void *dest, void *src, unsigned long len);
 int  kmemcmp(const void *ptr1, const void *ptr2, unsigned long nb);
 int  kstrcmp(const char *str1, const char *str2);
 long kstrncpy(char *dest, char *src, long len);
-void kprintf(char *fmt, ...);
+void kprintf(const char *fmt, ...);
 void kpanic(void);
 
 #endif /* __SYS_ZEN_UTIL_H__ */
