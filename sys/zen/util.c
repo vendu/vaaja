@@ -4,6 +4,7 @@
 #include <zero/cdefs.h>
 #include <zero/trix.h>
 #include <mach/param.h>
+#include <kern/dev/chr/con.h>
 //#include <kern/io/drv/chr/con.h>
 //#include <kern/io/drv/pc/vga.h>
 
@@ -588,9 +589,15 @@ kbfindzerol(unsigned long *bmap, long ofs, long nbit)
 }
 #endif
 
-void
-kpanic(void)
+C_NORETURN void
+kpanic(const char *msg, int sig)
 {
-    ;
+    kprintf("PANIC - signal %d: %s\n", sig, msg);
+#if defined(ZEN_HANG_ON_PANIC)
+    do {
+        ;
+    } while (1);
+#else
+    kreboot(ZEN_PANIC_REBOOT);
 }
 

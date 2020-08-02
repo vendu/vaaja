@@ -10,6 +10,8 @@
 #define MACH_INT_SIZE           4
 #define MACH_LONG_SIZE          4
 #define MACH_LONG_SIZE_LOG2     2
+#define MACH_PTR_SIZE           4
+#define MACH_ADR_BITS           32
 
 #define MACH_CL_SIZE            32              // cacheline size
 #define MACH_CL_SHIFT           5               // log2(V0_CACHE_LINE_SIZE)

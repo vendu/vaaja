@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <mach/asm.h>
+#include <sys/zen/signal.h>
 
 #define _roundup16b(a, b)                                               \
     ((fastu16divu16((a) + (b) - 1, (b), k_fastu16divu16tab)) * (b))
@@ -22,7 +23,7 @@ int  kmemcmp(const void *ptr1, const void *ptr2, unsigned long nb);
 int  kstrcmp(const char *str1, const char *str2);
 long kstrncpy(char *dest, char *src, long len);
 void kprintf(const char *fmt, ...);
-void kpanic(void);
+void kpanic(const char *str, int sig);
 
 #endif /* __SYS_ZEN_UTIL_H__ */
 

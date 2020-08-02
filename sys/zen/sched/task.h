@@ -4,16 +4,18 @@
 #include <mach/types.h>
 #include <sys/zen/types.h>
 #include <sys/zen/vm.h>
+#include <sys/zen/util.h>
 
 /*
  * NOTES
  * -----
- * #define TASK_SELF    (-1)
  * pid_t                sys_proc(flg);
  * void                 taskdt(tid);
  * void                 taskat(tid);
  * pid_t                taskrm(tid);
  */
+
+#define TASK_SELF               (-1)
 
 /* process states */
 #define ZEN_TASK_NEW            0
@@ -32,9 +34,22 @@
 C_NORETURN C_INLINE void
 k_jmptask(struct m_thr *thr)
 {
-    while (1) {
+    kpanic("k_jmptask() not implemented yet", SIGSYS);
+    do {
+        ;
+    } while (1);
+}
+
+C_NORETURN C_INLINE void
+k_signal(zenpid_t pid, int sig)
+{
+    if (pid == TASK_SELF) {
         ;
     }
+    kpanic("k_signal() not implemented yet", SIGSYS);
+    do {
+        ;
+    } while (1);
 }
 
 #endif /* __SYS_ZEN_SCHED_TASK_H__ */

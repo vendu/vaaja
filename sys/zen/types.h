@@ -21,10 +21,10 @@ struct zencred {
 };
 
 struct zendev {
-    m_adr_t     vfsfuncs;
-    m_word_t    dev;    // 16-bit major + 16-bit minor device IDs
-    m_uhalf_t   bus;
-    m_uhalf_t   flg;
+    m_adr_t             vfsfuncs;
+    m_word_t            dev;        // 16-bit major + 16-bit minor device IDs
+    m_uhalf_t           bus;
+    m_uhalf_t           flg;
 };
 
 struct zencpu {
@@ -80,9 +80,9 @@ struct zenpage {
 };
 
 struct zendesc {
-    m_adr_t    buf;             // buffer [page] address
-    m_adr_t    ofs;             // buffer offset
-    uint32_t   flg;
+    m_adr_t             buf;    // buffer [page] address
+    m_word_t             ofs;    // buffer offset
+    uint32_t            flg;    // object/descriptor flags
 };
 
 struct zennice {

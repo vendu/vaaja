@@ -32,30 +32,30 @@
 #define SCHAR_MIN               (-0x7f - 1)
 #define UCHAR_MAX               0xffU
 #define SHRT_MIN                (-0x7fff - 1)
-#define SHRT_MAX      		0x7fff
-#define USHRT_MAX     		0xffffU
-#define INT_MAX       		0xffffffff
+#define SHRT_MAX      		    0x7fff
+#define USHRT_MAX     		    0xffffU
+#define INT_MAX       		    0xffffffff
 #define INT_MIN                 (-0x7fffffff - 1)
 #define UINT_MAX                (0xffffffffU)
 #if (LONGSIZE == 4)
-#define LONG_MAX   		0xffffffffL
+#define LONG_MAX   		        0xffffffffL
 #define LONG_MIN                (-0x7fffffff - 1L)
-#define ULONG_MAX  		0xffffffffUL
+#define ULONG_MAX  		        0xffffffffUL
 #elif (LONGSIZE == 8)
-#define LONG_MAX   		0x7fffffffffffffffL
+#define LONG_MAX   		        0x7fffffffffffffffL
 #define LONG_MIN                (-0x7fffffffffffffffL - 1L)
-#define ULONG_MAX  		0xffffffffffffffffUL
+#define ULONG_MAX  		        0xffffffffffffffffUL
 #endif
-#define LLONG_MAX     		0x7fffffffffffffffLL
+#define LLONG_MAX     	        0x7fffffffffffffffLL
 #define LLONG_MIN               (-0x7fffffffffffffffLL - 1LL)
-#define ULLONG_MAX    		0xffffffffffffffffULL
+#define ULLONG_MAX    		    0xffffffffffffffffULL
 #define MB_LEN_MAX              1
 
 /* TODO: feature-macro these out etc... */
-#if !defined(_POSIX_SOURCE)
-#if !defined(_ZERO_SOURCE) && defined(PAGE_SIZE)
-#define PAGESIZE                PAGE_SIZE
-#elif defined(PAGESIZE)
+#if defined(_ZERO_SOURCE) && defined(MACH_PAGE_SIZE)
+#define PAGESIZE                MACH_PAGE_SIZE
+#endif
+#if defined(PAGESIZE)
 #define PAGE_SIZE               PAGESIZE
 #endif
 #endif /* !defined(_POSIX_SOURCE) */
@@ -93,7 +93,7 @@
 /*
  * POSIX values.
  */
-#define ARG_MAX                 65536 	// arg and env bytes to exec functions
+#define ARG_MAX                 65535 	// arg and env bytes to exec functions
 #define ATEXIT_MAX              32
 #define CHILD_MAX               256     // # of processes per real user ID
 #define HOST_NAME_MAX           255
@@ -118,13 +118,14 @@
 /*
  * Unix values
  */
-#define PASS_MAX                8       // significant characters in password
-#define LOGIN_MAX               8       // significant characters in login name
+#define PASS_MAX                15      // significant characters in password
+#define LOGIN_MAX               15      // significant characters in login name
 
 /*
  * Determinate (compile-time) values.
  */
-#define SSIZE_MAX               LONG_MAX
+#define FOPEN_MAX               INT16_MAX
+#define SSIZE_MAX               INT32_MAX
 
 #if !defined(NFDBITS)
 #define _POSIX_FD_SET_SIZE      32768

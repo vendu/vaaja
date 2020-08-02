@@ -6,12 +6,19 @@
 #include <mach/param.h>
 #include <mach/types.h>
 #include <mach/atomic.h>
+#include <sys/zen/util.h>
 
 #define ZEN_ADR_LK_BIT_POS  0
 
 #define ZEN_MEM_BLK         0
 #define ZEN_MEM_RUN         1
 #define ZEN_MEM_BIG         2
+
+static C_INLINE void *
+kmalloc(m_size_t size)
+{
+    kpanic("kmalloc() not implemented yet", SIGSYS);
+}
 
 struct zenmemconf {
     m_word_t    pagesize;

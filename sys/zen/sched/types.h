@@ -55,6 +55,7 @@ struct zenschedparm {
 //#define _zenprocunlkpageq(proc) mtunlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)
 struct zenproc {
     struct m_thr            m_tcb;  // task control block
+    struct k_zenvars       *zenvars;
     struct zenvmqueue       pagequeue;
     zenpid_t                ppid;
     zenpid_t                pid;

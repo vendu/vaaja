@@ -4,6 +4,8 @@
 #include <sys/zen/zen.h>
 #include <sys/zen/sched/task.h>
 
+#define ZEN_PANIC_REBOOT    (1 << 0)
+
 struct zensys {
     struct zencpu       cputab[ZEN_MAX_CPUS];
     struct zenproc     *proctab[ZEN_MAX_TASKS];
@@ -23,6 +25,21 @@ struct zensys {
 #endif
     struct zenmembuf   *membuftab;
 };
+
+static C_INLINE C_NORETURN void
+kreboot(int flg)
+{
+    if (!(flg & ZEN_PANIC_REBOOT)) {
+        /*
+         * - unmount filesystems
+         * - send processes SIGTERM
+         * - wait for, say, one minute
+         * - send still-existing processes SIGKILL
+         * - close user sessions
+         */
+    }
+    kpanic("kreboot() not implemented yet", SIGSYS);
+}
 
 #endif /* __SYS_ZEN_SYS_H__ */
 
