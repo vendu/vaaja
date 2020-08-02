@@ -1,4 +1,4 @@
-#include <sys/zen/test.h>
+#include <sys/zen/mem.h>
 #include <sys/zen/tmr.h>
 #include <sys/zen/errno.h>
 

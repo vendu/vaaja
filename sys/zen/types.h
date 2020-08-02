@@ -1,11 +1,9 @@
 #ifndef __SYS_ZEN_TYPES_H__
 #define __SYS_ZEN_TYPES_H__
 
-#include <sys/zen/conf.h>
-//#include <stddef.h>
 #include <stdint.h>
-#include <mt/tktlk.h>
 #include <mach/types.h>
+#include <mt/tktlk.h>
 
 typedef int32_t         zenid_t;        // generic object ID
 typedef uint32_t        zendev_t;       // device type

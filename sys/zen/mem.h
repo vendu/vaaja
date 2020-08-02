@@ -2,6 +2,7 @@
 #define __SYS_ZEN_MEM_H__
 
 #include <limits.h>
+#include <stddef.h>
 #include <zero/cdefs.h>
 #include <mach/param.h>
 #include <mach/types.h>
@@ -18,6 +19,8 @@ static C_INLINE void *
 kmalloc(m_size_t size)
 {
     kpanic("kmalloc() not implemented yet", SIGSYS);
+
+    return NULL;
 }
 
 struct zenmemconf {
@@ -28,17 +31,13 @@ struct zenmemconf {
 };
 
 struct zenmemqueue {
-    m_adr_t               (*free)(m_adr_t);
+    void                  (*free)(m_adr_t);
+    volatile m_atomic_t     nref;
     m_adr_t                 head;
     m_adr_t                 tail;
-    m_word_t                mark;
     m_word_t                type;
     m_word_t                slot;
     m_word_t                nitem;
-    volatile m_atomic_t     nref;
-#if defined(__v0__)
-    m_word_t                pad;
-#endif
 };
 
 /*
@@ -50,14 +49,14 @@ struct zenmemqueue {
 #define ZEN_MAX_SLAB_BLKS   (MACH_CL_SIZE * CHAR_BIT)
 #define ZEN_MEM_SLAB_SIZE   (ZEN_MIM_MEM_BLK * ZEN_MAX_SLAB_BLKS)
 struct zenmemslab {
+    struct zenmemqueue     *queue;
     volatile m_atomic_t     mtx;
+    volatile m_atomic_t     nref;
     m_adr_t                 prev;
     m_adr_t                 next;
-    m_adr_t                 queue; // struct zenmemqueue *
     m_adr_t                 base;
     m_size_t                size;
     m_word_t                type;
-    volatile m_atomic_t     nref;
     m_byte_t                bmap[C_VLA] C_ALIGNED(MACH_CL_SIZE);
 };
 

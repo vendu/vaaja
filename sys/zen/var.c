@@ -4,6 +4,8 @@
 #include <zero/cdefs.h>
 #include <sys/zen/var.h>
 
+/* set and query system configuration parameters (both static and dynamic) */
+
 struct zenvars  k_zenvars C_ALIGNED(MACH_PAGE_SIZE);
 
 /* TODO: map the rest of the variables from decice or address spaces */

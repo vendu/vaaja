@@ -1,5 +1,7 @@
 #include <sys/zen/conf.h>
 
+/* borrowed virtual time scheduler stub */
+
 #if (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED)
 
 #include <mach/types.h>

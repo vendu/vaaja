@@ -1,6 +1,8 @@
 #ifndef __SYS_ZEN_EV_H__
 #define __SYS_ZEN_EV_H__
 
+/* zen event interface stub */
+
 #include <stddef.h>
 #include <stdint.h>
 #include <limits.h>

@@ -1,4 +1,7 @@
 #include <sys/zen/conf.h>
+
+/* slightly revamped FreeBSD ULE-scheduler */
+
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
 
 #if 0

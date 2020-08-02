@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <mach/asm.h>
 
-#define MT_MEM_LK_BIT          ((uintptr_t)1 << MT_MEM_LK_BIT_OFS)
-#define MT_MEM_LK_BIT_OFS      0
+#define MT_ADR_LK_BIT          ((uintptr_t)1 << MT_ADR_LK_BIT_OFS)
+#define MT_ADR_LK_BIT_OFS      0
 
 static C_INLINE long
 mttrylkbit(volatile m_atomic_t *lp, long pos)
