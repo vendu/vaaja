@@ -1,6 +1,7 @@
 #ifndef __SYS_ZEN_TMR_H__
 #define __SYS_ZEN_TMR_H__
 
+#include <sys/zen/conf.h>
 #include <time.h>
 #include <sys/time.h>
 #include <mach/types.h>

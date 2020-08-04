@@ -2,7 +2,9 @@
 #define __MACH_V0_TYPES_H__
 
 #include <stdint.h>
+#if defined(__v0__)
 #include <v0/regs.h>
+#endif
 
 /* assembler types */
 typedef int32_t                 m_reg_t;
@@ -27,6 +29,8 @@ typedef uint32_t                m_page_t;
 
 /* virtual machine types */
 
+#if defined(__v0__)
+
 struct v0romparm {
     m_adr_t     buf;
     m_uword_t   bufsize;
@@ -46,6 +50,8 @@ struct m_thr {
     volatile m_word_t   sysregs[V0_GENERAL_REGISTERS];
     volatile m_word_t   segregs[V0_SEGMENT_REGISTERS];
 };
+
+#endif /* defined(__v0__) */
 
 #endif /* __MACH_V0_TYPES_H__ */
 

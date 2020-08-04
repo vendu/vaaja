@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <zero/randlfg2.h>
 //#include <zero/randmt32.h>
-#if defined(__KERNEL__) && (__KERNEL__)
+#if defined(__zen__)
 #include <kern/mem.h>
 #endif
 
@@ -25,7 +25,7 @@ randlfg2(void)
     int i;
 
     if (!randinit) {
-#if defined(__KERNEL__) && (__KERNEL__)
+#if defined(__zen__)
         randbuf = kmalloc(RAND_N * sizeof(int));
 #else
         randbuf = malloc(RAND_N * sizeof(int));

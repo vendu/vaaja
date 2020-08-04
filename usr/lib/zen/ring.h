@@ -1,8 +1,5 @@
-#ifndef __RING_H__
-#define __RING_H__
-
 /* FIXME: do this! :) */
-#define ZEN_RINGATOMIC 0
+#undef ZEN_RINGATOMIC
 
 /* ZEN_RING_MALLOC  - function used to allocate data buffer */
 /* ZEN_RING_FREE    - function used to free buffers */
@@ -23,32 +20,107 @@
 #include <kern/mem/obj.h>
 #endif
 #include <zero/cdefs.h>
+#include <mach/asm.h>
 #include <mach/param.h>
-#if (!ZEN_RINGATOMIC)
+
+#if !defined(ZEN_RINGATOMIC) && !defined(ZEN_RINGLOCKFREE)
+
 #include <mt/mtx.h>
-#endif
-#include <zero/trix.h>
-#if !defined(ZEN_RING_MALLOC) || !defined(ZEN_RING_FREE)
-#undef ZEN_RING_MALLOC
-#undef ZEN_RING_FREE
-#if defined(__KERNEL__)
-#include <kern/malloc.h>
-#define ZEN_RING_MALLOC(sz)            kmalloc(sz)
-#define ZEN_RING_FREE(ptr)             kfree(ptr)
-#else
-#include <stdlib.h>
-#define ZEN_RING_MALLOC(sz)            malloc(sz)
-#define ZEN_RING_FREE(ptr)             free(ptr)
-#endif
-#endif
-#if !defined(ZEN_RING_MEMCPY)
-#include <string.h>
-#define ZEN_RING_MEMCPY(dest, src, nb) memcpy(dest, src, nb)
+#define zenlkring(rb)                   mtlkfmtx(&rb->lk)
+#define zenunlkring(rb)                 mtunlkfmtx(&rb->lk)
+#define zenlkringinp(rb)
+#define zenunlkringinp(rb, inp)
+#define zenlkringoutp(rb)
+#define zenunlkringoutp(rb, outp)
+
+#elif defined(ZEN_RINGLOCKFREE)
+
+#define zenlkring(rb)
+#define zenunlkring(rb)
+#define zenlkringinp(rb)
+#define zenunlkringinp(rb, inp)
+#define zenlkringoutp(rb)
+#define zenunlkringoutp(rb, outp)
+
+#else /* defined(ZEN_RINGATOMIC) */
+
+#define zenlkring(rb)
+#define zenunlkring(rb)
+
+static C_INLINE void
+zenlkringinp(struct ringbuf *rb)
+{
+    do {
+        while ((uintptr_t)rb->inp & MT_ADR_LK_BIT) {
+            m_waitspin();
+        }
+        if (mttrylkbit(&rb->inptr, MT_ADR_LK_BIT_POS)) {
+
+            break;
+        }
+    } while (1);
+}
+
+static C_INLINE void
+zenunlkringinp(struct ringbuf *rb, RING_ITEM val)
+{
+    m_atomwrite(&rb->inptr, val);
+}
+
+static C_INLINE void
+zenlkringoutp(struct ringbuf *rb)
+{
+    do {
+        while ((uintptr_t)rb->outp & MT_ADR_LK_BIT) {
+            m_waitspin();
+        }
+        if (mttrylkbit(&rb->outptr, MT_ADR_LK_BIT_POS)) {
+
+            break;
+        }
+    } while (1);
+}
+
+static C_INLINE void
+zenunlkringoutp(struct ringbuf *rb, RING_ITEM val)
+{
+    m_atomwrite(&rb->outptr, val);
+}
+
 #endif
 
+#include <zero/trix.h>
+
+#if defined(__KERNEL__)
+#undef ZEN_RING_MALLOC
+#undef ZEN_RING_FREE
+#include <sys/zen/mem.h>
+#include <sys/zen/util.h>
+#define ZEN_RING_MALLOC(sz)             kmalloc(sz)
+#define ZEN_RING_FREE(ptr)              kfree(ptr)
+#define ZEN_RING_MEMCPY(dest, src, nb)  kmemcpy(dest, src, nb)
+
+#else /* !defined(__KERNEL__) */
+#include <stdlib.h>
+#define ZEN_RING_MALLOC(sz)             malloc(sz)
+#define ZEN_RING_FREE(ptr)              free(ptr)
+
+#if !defined(ZEN_RING_MEMCPY)
+#if defined(ZEN_RING_BCOPY)
+#include <strings.h>
+#define ZEN_RING_MEMCPY(dest, src, nb)  bcopy(src, dest, nb)
+#else /* !defined(ZEN_RING_BCOPY) */
+#include <string.h>
+#define ZEN_RING_MEMCPY(dest, src, nb)  memcpy(dest, src, nb)
+#endif /* defined(ZEN_RING_BCOPY) */
+#endif /* !defined(ZEN_RING_MEMCPY) */
+
+#endif /* defined(__KERNEL__) */
+
 #if (ZEN_RINGSHAREBUF) && !defined(__KERNEL__)
+
 #if defined(_ISOC11_SOURCE) && (_ISOC11_SOURCE)
-#defined ZEN_RING_VALLOC(n)           aligned_alloc(PAGESIZE, n)
+#defined ZEN_RING_VALLOC(n)           aligned_alloc(MACH_PAGE_SIZE, n)
 #elif (((defined(_BSD_SOURCE) && (_BSD_SOURCE))                         \
         || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE >= 500             \
                                        || ((defined(_XOPEN_SOURCE_EXTENDED) \
@@ -62,7 +134,7 @@ ZEN_RING_VALLOC(size_t n)
 {
     void *ptr;
 
-    if (posix_memalign(&ptr, PAGESIZE, n)) {
+    if (posix_memalign(&ptr, MACH_PAGE_SIZE, n)) {
 
         return NULL;
     }
@@ -70,8 +142,9 @@ ZEN_RING_VALLOC(size_t n)
     return ptr;
 }
 #else
-#define ZEN_RING_VALLOC(n) memalign(PAGESIZE, n)
+#define ZEN_RING_VALLOC(n) memalign(MACH_PAGE_SIZE, n)
 #endif
+
 #endif /* ZEN_RINGSHAREBUF && !__KERNEL__ */
 
 /* flg-member bits */
@@ -87,9 +160,9 @@ struct ringbuf {
     long            pad;
     /* data buffer */
 #if (ZEN_RINGSHAREBUF)
-    uint8_t   *data;
+    uint8_t        *data;
 #else
-    uint8_t    data[C_VLA];
+    uint8_t         data[C_VLA];
 #endif
 } C_ALIGNED(MACH_PAGE_SIZE);
 
@@ -392,6 +465,4 @@ ringresize(struct ringbuf *buf, long nitem)
 }
 
 #endif /* ZEN_RING_MALLOC */
-
-#endif /* __ZEN_RING_H__ */
 

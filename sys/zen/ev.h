@@ -122,6 +122,7 @@ typedef uint64_t zenevuword_t;
 #define zengetevtime(ev)    ((ev)->hdr.tm)
 #define zensetevtime(ev, t) ((ev)->hdr.tm = (t))
 
+struct zenev;
 /* API */
 #define zenevmask(id) (1U << (id))
 /* TODO: implement ring-buffers for event queues */
@@ -143,19 +144,20 @@ long   zenpeekev(struct zenev *ev, long mask);
  * - ZENGETEV:        remove from queue unless flg has the EVNOREMOVE-bit set
  */
 /* read events; zengetev() */
-#define ZEN_EV_CHECK            0x80000000 // check queue; don't flush
-#define ZEN_EV_PEEK             0x40000000 // do not remove event from queue
+#define ZEN_CHECK_EV            0x80000000 // check queue; don't flush
+#define ZEN_PEEK_EV             0x40000000 // do not remove event from queue
 /* queue events; zenputev() */
-#define ZEN_EV_QUEUE            0x20000000
-#define ZEN_EV_DEQUEUE          0x10000000
+#define ZEN_QUEUE_EV            0x20000000 // put event at back of queue
+#define ZEN_DEQUEUE_EV          0x10000000 // get evnt from front of queue
 /* flg-argument bits for zensyncevq() */
-#define ZEN_EV_SYNC             0x08000000 // asynchronous if not set
-#define ZEN_EV_DISCARD          0x04000000 // discard pending user input
+#define ZEN_SYNC_EV             0x08000000 // asynchronous if not set
+#define ZEN_DISCARD_EV          0x04000000 // discard pending user input
 
-#define zenpeekev(deck, ev, flg) zengetev((deck), (ev), (flg) | EVNOREMOVE)
-void    zengetev(struct deck *deck, struct zenev *ev, long flg);
-long    zenputev(struct deck *deck, struct zenev *ev, long flg);
-void    zensyncev(struct deck *deck, long flg);
+#define zenchkev(evq, ev, flg)) zengetev((evq), (ev), (flg) | ZEN_CHECK_EV)
+#define zenpeekev(evq, ev, flg) zengetev((evq), (ev), (flg) | ZEN_PEEK_EV)
+void    zengetev(struct zenev *evq, struct zenev *ev, long flg);
+long    zenputev(struct zenev *evq, struct zenev *ev, long flg);
+void    zensyncev(struct zenev *evq, long flg);
 
 #if defined(__zen__)
 
@@ -163,7 +165,7 @@ void    zensyncev(struct deck *deck, long flg);
 #define RING_ITEM  struct zenev
 #endif
 #if !defined(RING_INVAL)
-#define RING_INVAL { 0 }
+#define RING_INVAL (RING_ITEM){ 0 }
 #endif
 #if !defined(MALLOC)
 #define MALLOC(sz) kmalloc(sz)
@@ -175,7 +177,7 @@ void    zensyncev(struct deck *deck, long flg);
 #define RING_INVAL NULL
 #define MALLOC(sz) malloc(sz)
 
-#include <zero/ring.h>
+#include <zen/ring.h>
 
 #endif /* defined(__zen__) */
 
@@ -291,7 +293,7 @@ struct zencoord {
 
 struct zencmd {
     zenevword_t         func;   /* msg present iff ZEN_MSG_BIT is set in cmd */
-    zenevword_t         obj;    /* target object ID
+    zenevword_t         obj;    /* target object ID */
 };
 
 /* event structure for ZEN_SYS_EV, ZEN_HW_EV, and ZEN_FS_EV */

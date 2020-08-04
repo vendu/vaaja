@@ -15,10 +15,10 @@
 #define isprint(c)      ((c) >= 0x20 && (c) < 0x7f)
 
 #define CACHEPREWARM 0
-#if (MACH_LONG_SIZE == 4)
-#define LONGBUFSIZE 16
+#if (MACH_WORD_SIZE == 4)
+#define WORDBUFSIZE 16
 #else
-#define LONGBUFSIZE 32
+#define WORDBUFSIZE 32
 #endif
 
 /*
@@ -50,31 +50,31 @@ const char _ltoxtab[]
 
 /* assumes longword-aligned blocks with sizes of long-word multiples */
 void
-kbzero(void *adr, size_t len)
+kbzero(void *adr, m_size_t len)
 {
-    long *next;
-    long *ptr = adr;
-    long  val = 0;
-    long  incr = 8;
-    long  nleft = 0;
+    m_word_t   *next;
+    m_word_t   *ptr = adr;
+    m_word_t   val = 0;
+    m_word_t   incr = 8;
+    m_size_t   nleft = 0;
     
-    if (len > (1UL << (MACH_LONG_SIZE_LOG2 + 3))) {
+    if (len > (1UL << (MACH_WORD_SIZE_LOG2 + 3))) {
         /* zero non-cacheline-aligned head long-word by long-word */
-        nleft = ((uintptr_t)adr) & ((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
+        nleft = ((uintptr_t)adr) & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
         if (nleft) {
-            nleft = (1UL << (MACH_LONG_SIZE_LOG2 + 3)) - nleft;
-            nleft >>= MACH_LONG_SIZE_LOG2;
+            nleft = (1UL << (MACH_WORD_SIZE_LOG2 + 3)) - nleft;
+            nleft >>= MACH_WORD_SIZE_LOG2;
             len -= nleft;
             while (nleft--) {
                 *ptr++ = val;
             }
         }
-        nleft = len & ~((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
+        nleft = len & ~((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
     }
     next = ptr;
-    if (len >= (1UL << (MACH_LONG_SIZE_LOG2 + 3))) {
-        nleft = len & ((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
-        len >>= MACH_LONG_SIZE_LOG2 + 3;
+    if (len >= (1UL << (MACH_WORD_SIZE_LOG2 + 3))) {
+        nleft = len & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
+        len >>= MACH_WORD_SIZE_LOG2 + 3;
         /* zero aligned cachelines */
         while (len) {
             len--;
@@ -100,37 +100,37 @@ kbzero(void *adr, size_t len)
 
 /* assumes longword-aligned blocks with sizes of long-word multiples */
 void
-kmemset(void *adr, int byte, size_t len)
+kmemset(void *adr, int byte, m_size_t len)
 {
-    long *next;
-    long *ptr;
-    long  val = 0;
-    long  incr = 8;
-    long  nleft = 0;
+    m_word_t   *next;
+    m_word_t   *ptr;
+    m_word_t    val = 0;
+    m_word_t    incr = 8;
+    m_size_t    nleft = 0;
     
     val = byte;
     val |= (val << 8);
     val |= (val << 16);
-#if (MACH_LONG_SIZE == 8)
+#if (MACH_WORD_SIZE == 8)
     val |= (val << 32);
 #endif
-    if (len > (1UL << (MACH_LONG_SIZE_LOG2 + 3))) {
+    if (len > (1UL << (MACH_WORD_SIZE_LOG2 + 3))) {
         /* zero non-cacheline-aligned head long-word by long-word */
-        nleft = ((uintptr_t)adr) & ((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
+        nleft = ((uintptr_t)adr) & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
         if (nleft) {
-            nleft = (1UL << (MACH_LONG_SIZE_LOG2 + 3)) - nleft;
-            nleft >>= MACH_LONG_SIZE_LOG2;
+            nleft = (1UL << (MACH_WORD_SIZE_LOG2 + 3)) - nleft;
+            nleft >>= MACH_WORD_SIZE_LOG2;
             len -= nleft;
             while (nleft--) {
                 *ptr++ = val;
             }
         }
-        nleft = len & ~((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
+        nleft = len & ~((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
     }
     next = ptr;
-    if (len >= (1UL << (MACH_LONG_SIZE_LOG2 + 3))) {
-        nleft = len & ((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
-        len >>= MACH_LONG_SIZE_LOG2 + 3;
+    if (len >= (1UL << (MACH_WORD_SIZE_LOG2 + 3))) {
+        nleft = len & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
+        len >>= MACH_WORD_SIZE_LOG2 + 3;
         /* zero aligned cachelines */
         while (len) {
             len--;
@@ -155,24 +155,24 @@ kmemset(void *adr, int byte, size_t len)
 }
 
 void
-kbcopy(void *dest, void *src, unsigned long len)
+kmemcpy(void *dest, const void *src, m_size_t len)
 {
-    unsigned long  nleft = len;
-    long          *dptr = NULL;
-    long          *sptr = NULL;
-    long          *dnext;
-    long          *snext;
-    long           incr;
+    m_size_t    nleft = len;
+    m_word_t   *dptr = NULL;
+    m_word_t   *sptr = NULL;
+    m_word_t   *dnext;
+    m_word_t   *snext;
+    m_word_t    incr;
 #if (CACHEPREWARM) && !defined(__GNUC__)
-    long    tmp;
+    m_word_t    tmp;
 #endif
 
     dnext = dest;
     snext = src;
     incr = 8;
     /* set loop count */
-    len >>= MACH_LONG_SIZE_LOG2 + 3;
-    nleft -= len << (MACH_LONG_SIZE_LOG2 + 3);
+    len >>= MACH_WORD_SIZE_LOG2 + 3;
+    nleft -= len << (MACH_WORD_SIZE_LOG2 + 3);
     while (len) {
 #if defined(__GNUC__)
         __builtin_prefetch(dnext);
@@ -204,15 +204,15 @@ kbcopy(void *dest, void *src, unsigned long len)
 }
 
 void
-kbfill(void *adr, uint8_t byte, unsigned long len)
+kbfill(void *adr, uint8_t byte, m_size_t len)
 {
-    unsigned long  nleft = len;
-    long          *ptr = NULL;
-    long          *next;
-    long           val;
-    long           incr;
+    m_size_t    nleft = len;
+    m_word_t   *ptr = NULL;
+    m_word_t   *next;
+    m_word_t    val;
+    m_word_t    incr;
 #if (CACHEPREWARM)
-    long           tmp;
+    m_word_t    tmp;
 #endif
 
     next = adr;
@@ -221,11 +221,11 @@ kbfill(void *adr, uint8_t byte, unsigned long len)
     val |= val << 16;
     incr = 8;
     /* set loop count */
-    len >>= MACH_LONG_SIZE_LOG2 + 3;
-#if (MACH_LONG_SIZE == 8)
+    len >>= MACH_WORD_SIZE_LOG2 + 3;
+#if (MACH_WORD_SIZE == 8)
     val |= val << 32;
 #endif
-    nleft -= len << (MACH_LONG_SIZE_LOG2 + 3);
+    nleft -= len << (MACH_WORD_SIZE_LOG2 + 3);
     while (len) {
 #if (CACHEPREWARM)
         tmp = *next;    // cache prewarm; fetch first byte of cacheline
@@ -253,7 +253,7 @@ kbfill(void *adr, uint8_t byte, unsigned long len)
 int
 kmemcmp(const void *ptr1,
         const void *ptr2,
-        unsigned long nb)
+        m_size_t nb)
 {
     unsigned char *ucptr1 = (unsigned char *)ptr1;
     unsigned char *ucptr2 = (unsigned char *)ptr2;
@@ -291,10 +291,10 @@ kstrcmp(const char *str1,
     return retval;
 }
 
-long
-kstrncpy(char *dest, char *src, long len)
+m_size_t
+kstrncpy(char *dest, char *src, m_size_t len)
 {
-    long nb = 0;
+    m_size_t nb = 0;
 
     while ((*src) && len--) {
         *dest++ = *src++;
@@ -305,8 +305,8 @@ kstrncpy(char *dest, char *src, long len)
     return nb;
 }
 
-static long
-_ltoxn(long val, char *buf, unsigned long len)
+static m_size_t
+_ltoxn(long val, char *buf, m_size_t len)
 {
     uint8_t u8;
     long    l;
@@ -318,7 +318,7 @@ _ltoxn(long val, char *buf, unsigned long len)
     m = len - 2;
     buf[m] = 0;
     n = 0;
-    for (l = 0 ; l < 8 * MACH_LONG_SIZE ; l += incr) {
+    for (l = 0 ; l < 8 * MACH_WORD_SIZE ; l += incr) {
         u8 = (val >> l) & 0xf;
         buf[m] = _ltoxtab[u8];
         if (++n == len) {
@@ -337,7 +337,7 @@ _ltoxn(long val, char *buf, unsigned long len)
 }
 
 static long
-_ltodn(long val, char *buf, unsigned long len)
+_ltodn(long val, char *buf, m_size_t len)
 {
     uint8_t u8;
     long    l;
@@ -398,7 +398,7 @@ kprintf(const char *fmt, ...)
     long     l;
     long     len;
     va_list  al;
-    char     buf[LONGBUFSIZE];
+    char     buf[WORDBUFSIZE];
     char     str[MAXPRINTFSTR];
 
     va_start(al, fmt);
@@ -481,7 +481,7 @@ kprintf(const char *fmt, ...)
                                     break;
                                 case 'l':
                                     isdec = 1;
-                                    val = va_arg(al, unsigned long);
+                                    val = va_arg(al, m_size_t);
                                         
                                     break;
                                 default:
@@ -501,10 +501,10 @@ kprintf(const char *fmt, ...)
                         break;
                 }
                 if (ishex) {
-                    l = _ltoxn(val, buf, LONGBUFSIZE);
+                    l = _ltoxn(val, buf, WORDBUFSIZE);
                     conputs(&buf[l]);
                 } else if (isdec) {
-                    l = _ltodn(val, buf, LONGBUFSIZE);
+                    l = _ltodn(val, buf, WORDBUFSIZE);
                     conputs(&buf[l]);
                 } else if ((isch) && isprint(val)) {
                     conputchar((int)val);
@@ -537,11 +537,11 @@ kprintf(const char *fmt, ...)
  * return -1 if not found, offset otherwise
  */
 long
-kbfindzerol(unsigned long *bmap, long ofs, long nbit)
+kbfindzerol(m_uword_t *bmap, long ofs, long nbit)
 {
-    long cnt = ofs & ((1UL << (MACH_LONG_SIZE_LOG2 + 3)) - 1);
-    long ndx = ofs >> (MACH_LONG_SIZE_LOG2 + 3);
-    long val;
+    m_size_t    cnt = ofs & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
+    m_size_t    ndx = ofs >> (MACH_WORD_SIZE_LOG2 + 3);
+    m_size_t    val;
     
     nbit -= ofs;
     if (nbit > 0) {
@@ -556,7 +556,7 @@ kbfindzerol(unsigned long *bmap, long ofs, long nbit)
             } else {
                 ndx++;
                 nbit -= ofs + cnt;
-                ofs += (1L << (MACH_LONG_SIZE_LOG2 + 3)) - cnt;
+                ofs += (1L << (MACH_WORD_SIZE_LOG2 + 3)) - cnt;
                 while (nbit) {
                     val = bmap[ndx];
                     if (!val) {
@@ -570,7 +570,7 @@ kbfindzerol(unsigned long *bmap, long ofs, long nbit)
 
                         break;
                     } else {
-                        val = 1L << (MACH_LONG_SIZE_LOG2 + 3);
+                        val = 1L << (MACH_WORD_SIZE_LOG2 + 3);
                         ndx++;
                         nbit -= val;
                         ofs += val;
