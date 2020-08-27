@@ -5,7 +5,9 @@
 
 #include <mach/atomic.h>
 
+#if !defined(__zen__)
 #define MTPTHREAD       1
+#endif
 
 #define MTMTX           1
 #if !defined(MTFMTX)
@@ -97,6 +99,8 @@ mtunlkfmtx(volatile m_atomic_t *lp)
     return;
 }
 
+#if !defined(__zen__)
+
 /*
  * try to acquire fast mutex lock
  * - return non-zero on success, zero if already locked
@@ -153,6 +157,8 @@ mtunlkrecfmtx(volatile m_atomic_t *lp)
 
     return;
 }
+
+#endif /* !defined(__zen__) */
 
 #endif /* __MT_MTX_H__ */
 

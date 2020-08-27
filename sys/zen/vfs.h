@@ -4,7 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <zero/cdefs.h>
-#include <mach/types.h>
+//#include <mach/types.h>
+#include <sys/zen/types.h>
 
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0
@@ -37,13 +38,13 @@ typedef uintptr_t       vfsuid_t;
 typedef uintptr_t       vfsgid_t;
 
 struct zenvfsnode {
+    void                       *funcs;
     vfsuword_t                  desc;
     vfsuword_t                  type;
     vfsuword_t                  flags;
-    void                       *funcs;
     union {
-#if defined(ZEN_FS)
-        struct zenfscommon      zenfs;
+#if defined(ZEN_FS0)
+        struct zenfs0common     zenfs;
 #endif
     } node;
 };
@@ -66,7 +67,7 @@ struct zenvfsfuncs {
     void      (*map)(void *adr, size_t len, int prot, int flags,
                      int fd, vfsoff_t ofs);
     void      (*unmap)(void *adr, size_t len);
-    int       (*chmod)(const char *path, m_mode_t mode);
+    int       (*chmod)(const char *path, zenmode_t mode);
     int       (*chown)(const char *path, vfsuid_t owner, vfsgid_t grp);
     int       (*link)(const char *src, const char *dest);
     int       (*symlink)(const char *src, const char *dest);
@@ -81,7 +82,7 @@ struct zenvfsfuncs {
 };
 
 struct zenvfsdevfuncs {
-    int       (*mkdev)(const char *path, m_mode_t mode, vfsdev_t dev);
+    int       (*mkdev)(const char *path, zenmode_t mode, vfsdev_t dev);
     int       (*mount)(const char *devpath, const char *destpath,
                        const char *fstype, unsigned long flags,
                        const void *data);
@@ -91,7 +92,7 @@ struct zenvfsdevfuncs {
 struct zenvfsdirfuncs {
     _DIR          (*opendir)(const char *path);
     int           (*closedir)(_DIR *dir);
-    int           (*mkdir)(const char *path,  m_mode_t mode);
+    int           (*mkdir)(const char *path,  zenmode_t mode);
     int           (*rmdir)(const char *path);
     struct dirent (*readdir)(_DIR *dir);
     void          (*seekdir)(_DIR *dir, long loc);
@@ -133,7 +134,7 @@ struct zenvfssockfuncs {
 };
 
 struct zenvfsshmfuncs {
-    int       (*shmopen)(const char *path, int oflag, m_mode_t mode);
+    int       (*shmopen)(const char *path, int oflag, zenmode_t mode);
     int       (*shmunlink)(const char *path);
     void      (*shmat)(int shmfd, const void *shmadr, int flags);
 };

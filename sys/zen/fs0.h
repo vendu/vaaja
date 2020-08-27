@@ -7,7 +7,7 @@
 #include <zero/cdefs.h>
 #include <sys/zen/vfs.h>
 
-#define ZEN_FS                  1
+#define ZEN_FS0                 1
 #define FS0_NAME                "zenfs0"
 
 typedef int64_t zenfs0long_t;

@@ -3,6 +3,9 @@
 
 #include <mach/param.h>
 
+#if !defined(NULL)
+#define NULL            ((void *)0)
+#endif
 #define BUFSIZ          PAGESIZE
 #define FILENAME_MAX    255
 #define FOPEN_MAX       256
@@ -16,9 +19,6 @@
 #define SEEK_END        2
 #define TMP_MAX         16384
 #define EOF             (-1)
-#if !defined(NULL)
-#define NULL            ((void *)0)
-#endif
 #define P_tmpdir        "/tmp"
 
 extern char            *optarg;
@@ -26,5 +26,5 @@ extern int              opterr;
 extern int              optind;
 extern int              optopt;
 
-#endif __STDIO_H__
+#endif /* __STDIO_H__ */
 

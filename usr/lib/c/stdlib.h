@@ -1,6 +1,8 @@
 #ifndef __STDLIB_H__
 #define __STDLIB_H__
 
+#include <stddef.h>
+
 #if defined(_ISOC11_SOURCE)
 void  * aligned_alloc(size_t align, size_t size);
 #endif
@@ -12,5 +14,5 @@ int     posix_memalign(void **memptr, size_t align, size_t size);
 void  * valloc(size_t size);
 #endif
 
-#endif __STDLIB_H__
+#endif /* __STDLIB_H__ */
 

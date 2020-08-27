@@ -2,16 +2,29 @@
 #define __SYS_ZEN_TYPES_H__
 
 #include <stdint.h>
-#include <mach/types.h>
+//#include <mach/types.h>
 #include <mt/tktlk.h>
+#include <sys/zen/bsp/v0.h>
 
+/* sized types */
 typedef int32_t         zenid_t;        // generic object ID
 typedef uint32_t        zendev_t;       // device type
-typedef int64_t         zenoff_t;       // file-system offset
+typedef uint32_t        zenblk_t;       // block ID
+typedef uint16_t        zenbus_t;       // bus ID
+typedef uint16_t        zendevid_t;       // device ID
 typedef int32_t         zenpid_t;       // process ID
 typedef int32_t         zenuid_t;       // user ID
 typedef int32_t         zengid_t;       // group ID
+typedef int32_t         zenmode_t;      // file access mode
 typedef uint32_t        zenperm_t;      // I/O permission flags
+typedef int32_t         zentime_t;      // FIXME: wraps around in 2038 :)
+/* system types */
+typedef m_ptr_t         zenptr_t;       // void * or char * (compiler-type)
+typedef m_size_t        zensize_t;      // size for memory regions
+typedef m_ssize_t       zenssize_t;     // signed size for I/O
+typedef m_off_t         zenoff_t;       // file-system offset
+/* hardware types */
+typedef m_page_t        zenpage_t;      // page-table/directory entry
 
 struct zencred {
     zenuid_t            uid;
@@ -19,14 +32,15 @@ struct zencred {
 };
 
 struct zendev {
-    m_adr_t             vfsfuncs;
-    m_word_t            dev;        // 16-bit major + 16-bit minor device IDs
-    m_uhalf_t           bus;
-    m_uhalf_t           flg;
+    zenptr_t            vfsfuncs;
+    zendev_t            dev;        // 16-bit major + 16-bit minor device IDs
+    zenbus_t            bus;
+    zendevid_t          id;;
+    uint32_t            flg;
 };
 
 struct zencpu {
-    m_time_t            ntick;
+    zentime_t           ntick;
 };
 
 #define MEM_NULL_FLAGS          0
@@ -50,36 +64,33 @@ struct zencpu {
 #define ZEN_MEM_DYNAMIC         ZEN_MEM_FLAG
 #define ZEN_MEM_ZERO            (ZEN_MEM_FLAG << 1)
 struct zenseg {
-    m_adr_t             base;
-    m_adr_t             lim;
-    m_uword_t           size;
-    m_uword_t           flags;
+    zenptr_t            base;
+    zenptr_t            lim;
+    zensize_t           size;
+    uint32_t            flags;
 };
 
 struct zenmap {
-    m_adr_t             adr;
-    m_uword_t           size;
-    m_uword_t           flags;
     struct zencred      cred;
+    zenptr_t            adr;
+    zensize_t           size;
+    uint32_t            flags;
 };
 
 struct zenpage {
-    m_uword_t           blk;    // page-device block ID
-    zendev_t            dev;    // page-device
-    m_adr_t            *pte;    // pointer to page-table entry
-    m_uword_t           flags;  // page-flags
-    m_uword_t           nflt;   // # of page-faults
-    m_uword_t           qid;    // lruq, sizeof(m_word_t) * CHAR_BIT - clz(nflt)
-#if defined(__v0__)
-    m_word_t            pad;
-#endif
     struct zenpage     *prev;   // previous in queue
     struct zenpage     *next;   // next in queue
+    zenpage_t          *pte;    // pointer to page-table entry
+    zenblk_t            blk;    // page-device block ID
+    zendev_t            dev;    // page-device
+    uint32_t            flags;  // page-flags
+    uint32_t            nflt;   // # of page-faults
+    uint32_t            qid;    // lruq, sizeof(uint32_t) * CHAR_BIT - clz(nflt)
 };
 
 struct zendesc {
-    m_adr_t             buf;    // buffer [page] address
-    m_word_t             ofs;    // buffer offset
+    zenptr_t            buf;    // buffer [page] address
+    zensize_t           ofs;    // buffer offset
     uint32_t            flg;    // object/descriptor flags
 };
 
@@ -91,9 +102,6 @@ struct zennice {
 struct zentasktab {
     struct zentask     *tab;
     mttktlk             tkt;
-#if defined(__v0__)
-    m_word_t            pad;
-#endif
 };
 
 #endif /* __SYS_ZEN_TYPES_H__ */

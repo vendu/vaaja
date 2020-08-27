@@ -11,7 +11,8 @@
 /*
  * ISO limits.
  */
-#if (__GNUC__)
+#define CHAR_BIT                8
+#if defined(__GNUC__)
 #if defined(__arm__)
 #define CHAR_MAX                UCHAR_MAX
 #define CHAR_MIN                0
@@ -37,11 +38,11 @@
 #define INT_MAX       		    0xffffffff
 #define INT_MIN                 (-0x7fffffff - 1)
 #define UINT_MAX                (0xffffffffU)
-#if (LONGSIZE == 4)
+#if (MACH_WORD_SIZE == 4) || defined(_MSC_VER)
 #define LONG_MAX   		        0xffffffffL
 #define LONG_MIN                (-0x7fffffff - 1L)
 #define ULONG_MAX  		        0xffffffffUL
-#elif (LONGSIZE == 8)
+#elif (MACH_WORD_SIZE == 8)
 #define LONG_MAX   		        0x7fffffffffffffffL
 #define LONG_MIN                (-0x7fffffffffffffffL - 1L)
 #define ULONG_MAX  		        0xffffffffffffffffUL
@@ -58,7 +59,6 @@
 #if defined(PAGESIZE)
 #define PAGE_SIZE               PAGESIZE
 #endif
-#endif /* !defined(_POSIX_SOURCE) */
 
 #if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 200112L)
 
@@ -133,7 +133,7 @@
 #define _POSIX_FD_SET_SIZE      NFDBITS
 #endif
 
-#if (_ZERO_SOURCE)
+#if defined(_ZERO_SOURCE)
 #include <signal.h>
 #endif
 #define RTSIG_MAX               NRTSIG

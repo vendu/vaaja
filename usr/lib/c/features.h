@@ -16,6 +16,10 @@
 #define _POSIX_C_SOURCE     199506L
 #endif
 
+#if !defined(_BSD_SOURCE)
+#define _BSD_SOURCE         1
+#endif
+
 #if !defined(_LARGEFILE_SOURCE)
 #define _LARGEFILE_SOURCE   1
 #endif

@@ -3,7 +3,6 @@
 
 #include <mach/types.h>
 #include <sys/zen/types.h>
-#include <sys/zen/vm.h>
 #include <sys/zen/util.h>
 
 /*
@@ -32,7 +31,7 @@
 #define ZEN_TASK_HAS_INPUT      (1 << 0)
 
 C_NORETURN C_INLINE void
-k_jmptask(struct m_thr *thr)
+k_jmptask(struct v0thr *thr)
 {
     kpanic("k_jmptask() not implemented yet", SIGSYS);
     do {

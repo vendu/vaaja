@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 #include <mach/param.h>
-#if defined(__v0__)
-#include <v0/trap.h>
-#endif
+#include <sys/zen/bsp/v0/types.h>
 
 /* memory parameters */
 #define ZEN_CL_SIZE             32              // memory cacheline size

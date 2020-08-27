@@ -4,7 +4,7 @@
 #include <zero/cdefs.h>
 #include <zero/trix.h>
 #include <mach/param.h>
-#include <kern/dev/chr/con.h>
+//#include <kern/dev/chr/con.h>
 //#include <kern/io/drv/chr/con.h>
 //#include <kern/io/drv/pc/vga.h>
 
@@ -598,6 +598,6 @@ kpanic(const char *msg, int sig)
         ;
     } while (1);
 #else
-    kreboot(ZEN_PANIC_REBOOT);
+    //    kreboot(ZEN_PANIC_REBOOT);
 }
 

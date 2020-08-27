@@ -15,7 +15,7 @@
 extern struct zensys            k_zensys;
 
 struct zentask                 *k_getcurtask(void);
-C_NORETURN C_INLINE void        k_jmptask(struct m_thr *thr);
+C_NORETURN C_INLINE void        k_jmptask(struct v0thr *thr);
 
 #endif /* __SYS_ZEN_ZEN_H__ */
 

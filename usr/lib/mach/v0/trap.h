@@ -1,10 +1,8 @@
-#ifndef __V0_TRAP_H__
-#define __V0_TRAP_H__
+#ifndef __MACH_V0_TRAP_H__
+#define __MACH_V0_TRAP_H__
 
-#include <mach/types.h>
-
-#define v0trapirq(t)            ((t) & V0_IRQ_TRAP_BIT)
-#define v0trapirqid(t)          ((t) & ~V0_IRQ_TRAP_BIT)
+#define v0trapirq(t)        ((t) & V0_IRQ_TRAP_BIT)
+#define v0trapirqid(t)      ((t) & ~V0_IRQ_TRAP_BIT)
 
 /* hardware exceptions */
 #define V0_DZ_TRAP          0x00 // divizion by zero            - code is PC
@@ -98,12 +96,12 @@
  * - code
  */
 struct v0trapframe {
-    m_uword_t   code;                           // error code or 0 if none
-    m_uword_t   msw;                            // machine status-word
-    m_uword_t   usp;                   	        // user-mode stack-pointer
-    m_uword_t   ufp;                   	        // user-mode frame-pointer
-    m_uword_t   retp;                           // return address
+    int32_t                 code;               // error code or 0 if none
+    int32_t                 msw;                // machine status-word
+    int32_t                 usp;                // user-mode stack-pointer
+    int32_t                 ufp;                // user-mode frame-pointer
+    int32_t                 retp;               // return address
 };
 
-#endif /* __V0_TRAP_H__ */
+#endif /* __MACH_V0_TRAP_H__ */
 

@@ -1,10 +1,11 @@
 #ifndef __GFX_SWAP_H__
 #define __GFX_SWAP_H__
 
-#if defined(__HAVE_BYTESWAP_H__)
-
 #include <mach/param.h>
 #include <stdint.h>
+
+#if defined(__HAVE_BYTESWAP_H__)
+
 #include <byteswap.h>
 
 #else

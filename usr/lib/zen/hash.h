@@ -5,6 +5,13 @@
 
 #include <stdint.h>
 #include <zero/cdefs.h>
+#include <mach/param.h>
+
+#if (MACH_PTR_SIZE == 8)
+#define m_hashadr(p)    tmhash64((uint64_t)(p))
+#elif (MACH_PTR_SIZE == 4)
+#define m_hashadr(p)    tmhash32((uint32_t)(p))
+#endif
 
 #if !defined(ZEN_INLINE_HASH)
 
