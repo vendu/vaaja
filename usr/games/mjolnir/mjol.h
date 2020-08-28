@@ -41,6 +41,8 @@ extern uint8_t                  	mjolcanpickupmap[128 / CHAR_BIT];
 extern uint8_t                  	mjolcanwearmap[128 / CHAR_BIT];
 extern uint8_t                  	mjolcanwieldmap[128 / CHAR_BIT];
 
+#define MJOLNIR_GAME_NAME           "mjolnir"
+
 #define MJOLNIR_DEF_NICK            "johndoe"
 #define MJOLNIR_LEN_NICK            16
 
@@ -130,9 +132,14 @@ extern uint8_t                  	mjolcanwieldmap[128 / CHAR_BIT];
 #define MJOLNIR_SCR_X11             3
 
 struct mjolgame {
-    struct dnggame      data;
+    //    struct dnggame      data;
+    const char         *name;
+    volatile long       quit;
+    int                 argc;
+    char              **argv;
     struct mjolchr     *player;
-    unsigned char      *nick;           // names of players
+    struct mjolchr     *chaseq;
+    unsigned char     **nicktab;        // names of players
     struct mjolobj     *inventory;      // inventory
     long                scrtype;        // type of screen to use
     struct mjolscr     *scr;            // screen interface

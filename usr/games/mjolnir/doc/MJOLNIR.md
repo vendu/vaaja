@@ -39,15 +39,26 @@ hammer back to Thor and optionally bring Fenris back as well.
 - mainframes
   - direct access to mainframe let's you clone and steal the tape of the core
     war warriors that have ruled the machine
+  - beating the warrior running on the mainframe at least 5 out of 9 times shall
+    gain you masterhood of the mainframe; you shall also acquire the source code
+    of the old master warrior
+  - if you get physical access to a mainframe, you can inspect the tapes, dump
+    their contents on punchcards, or steal the tapes.
   - other software
-    - DBG       - warrior debugger
+    - RCDB      - redcode/warrior debugger
     - RCED      - redcode editor
+    - TED       - editor (ascii and hexadecimal)
     - SYS       - mainframe operating system
     - VTD       - virtual tape drive
     - TAP       - network sniffer
     - NET       - network access
     - DUMP      - copy program to punchcard
-    - ROT13     - 'decipher' file
+    - DECODE    - 'decipher' file; redcode and certain other files are ciphered
+                - the default encryption is ROT13
+    - CRAK      - different tools
+    - MM        - mastermind game
+    - BS        - battleship game
+    - Y38K      - Trojan for bank systems
 - terminals
   - equipped with punchcard readers to play core war and run other software
     on in-dungeon mainframes
@@ -162,26 +173,39 @@ u		| use an object with another one
 
 ## gameplay
 - console commands (invoke console with M-x)
-  - use
-  - bite
-  - buy
-  - eat
-  - drink
-  - walk
-  - talk
-  - look
-  - open
-  - close
-  - pick a lock
-  - shout
-  - unlock (use key)
-  - lock   (void)
+  - bite(obj);
+  - bargain(chr, obj, price);
+  - buy(chr, obj, src);
+  - eat(obj);
+  - drink(obj);
+  - pick(obj);
+  - drop(obj);
+  - use(obj, dest);
+  - walk(dest);
+  - talk(chr);
+  - listen(chr);
+  - look(loc);
+  - open(obj, key);
+  - close(obj);
+  - pick a lock(obj, key);
+  - read(obj);
+  - shout(str);
+  - search(loc);
+  - touch(obj);
+  - unlock(obj, key);
+  - lock(obj);
 - scrolls
   - teleport, levitation, identify, ice bolt, lightning
 - weapons
-  - longbow
   - submachine gun (special item Jatimatic)
-  - swords (special items Excalibur and Stormbringer)
+  - swords (special items Excalibur, Stormbringer, and Kara's Sword)
+  - cross of light
+  - bullet
+  - pistol
+  - whip
+  - knife
+  - laser
+  - mace
 - potions
   - green dragon, sweet leaf
 - plant
@@ -199,8 +223,8 @@ u		| use an object with another one
 	- brk	- set execution or memory breakpoint
 	- step	- execute a single instruction
 	- stepi - execute n instructions
-  - mastermind
-  - battleship
+  - mastermind(chr);
+  - battleship(chr);
   - bank robbery
     - different camo operations and strategies
     - the winning scenery uses maps of bank network nerve centers

@@ -24,6 +24,10 @@ or corridors
 
 ### < - stairway up
 
+### % - coffin
+
+Vampires don't like daylight, so they sleep in closed coffins.
+
 ### - - ATM-card
 
 ATM-cards may be used to withdraw money you have gotten or stolen from
@@ -96,7 +100,9 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### ¤ - money
 
-### ? - pipe
+### ? - fortune cookie
+
+### P - pipe
 
 ### 7 - pistol
 
@@ -130,7 +136,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 | punchcard       | 1/64		| corewar warriors to be run from terminals
 | tape	          | mainframes	        | software for in-dungeon mainframes
 | statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
-| trap	          | varies	        | trap; arrow, bomb
+| trap	          | varies	        | trap; arrow, bomb, pit, hole, teleport
 | wand	          | 1/32		| magic wand
 | scroll	  | 1/32		| spell or other scroll
 | ring	          | 1/64		| ring
@@ -169,9 +175,9 @@ not allowed to kill or attack anyone during those turns.
 Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
 very nice firearm against vampires and other demons.
 
-### ( - golden sword
-
-The sword of the princess of Atlantis, Kara, a strong weapon against demons.
+### ( - sword
+- the golden sword of the princess of Atlantis, Kara, is a strong weapon against
+  demons.
 
 ### M - Mjolnir
 

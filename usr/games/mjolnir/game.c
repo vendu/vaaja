@@ -20,9 +20,9 @@ extern long                 mjolchaseall(struct mjolgame *game);
 extern struct mjolchr      *mjolplayer;
 extern struct mjolchr      *mjolchaseq;
 
-static const char           mjolgamename[] = "mjolnir";
-static volatile long        mjolquitgame;
-struct mjolgame            *mjolgame;
+//static const char           mjolgamename[] = "mjolnir";
+//static volatile long        mjolquitgame;
+static struct mjolgame      mjolgame;
 
 void
 mjolquit(long val)
@@ -68,9 +68,38 @@ mjolintro(void)
 }
 
 void
+mjolgetopt(struct mjolgame *game, char *argv[], int argc)
+{
+    int                 cur = 1;
+    char               *arg;
+    char               *val;
+    
+    if (argc > 1) {
+        while (cur < argc) {
+        if (!strcmp(argv[cur], "--nick")) {
+            cur++;
+            if (cur < argc - 1) {
+                arg = argv[cur];
+                if (arg) {
+                    val = strdup(arg);
+                    if (!val) {
+                        fprintf(stderr, "failed to duplicate nick-argument\n");
+
+                        exit(1);
+                    }
+                    game->player->name = val;
+                }
+            }
+        }
+    }
+}
+
+void
 mjolinit(struct mjolgame *game, int argc, char *argv[])
 {
-    struct mjolgame    *data = calloc(1, sizeof(struct mjolgame *));
+    void               *data = (game)
+                               ? game
+                               : calloc(1, sizeof(struct mjolgame *));
     // struct mjolobj    **objtab;
     // struct mjolchr    **chrtab;
     long                y;
@@ -79,20 +108,24 @@ mjolinit(struct mjolgame *game, int argc, char *argv[])
     long                lvl;
     long                lim;
 
-    mjolgame = game;
+    mjolgame = data;
+    mjolgetopt(mjolgame, argv, argc);
     if (!data) {
-        fprintf(stderr, "failed to allocate game data\n");
+        fprintf(stderr, "failed to allocate game structure\n");
 
         exit(1);
     }
-    game->data.name = mjolgamename;
-    game->nick = calloc(1, sizeof(struct dngchr *));
+    game->name = MJOLNIR_GAME_NAME;
+    data = calloc(MJOLNIR_MAX_PLAYERS, sizeof(unsigned char *));
+    if (!data) {
+        fprintf(stderr, "failed to allocate nickname table\n");
+
+        exit(1);
+    }
+    game->nickdata = data;
     mjolgetopt(game, argc, argv);
     if (!game->player) {
         game->player = mjolmkplayer(game);
-    }
-    if (!game->nick) {
-        game->nick = MJOLNIR_DEF_NICK;
     }
     if (!game->scrtype) {
 #if (MJOLNIR_TTY)

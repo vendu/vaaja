@@ -53,7 +53,8 @@ dkms.conf
 
 # editor temporary files
 *~
-#*#
+\#*
+.\#*
 
 # valgrind core files
 vgcore.*

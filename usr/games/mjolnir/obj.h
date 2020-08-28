@@ -51,23 +51,31 @@
 #define MJOLNIR_OBJ_CRYSTAL_BALL    'Q'
 #define MJOLNIR_OBJ_DEMON_WHIP      '|'
 #define MJOLNIR_OBJ_JATIMATIC       'J'
-#define MJOLNIR_OBJ_GOLDEN_SWORD    '('
+#define MJOLNIR_OBJ_SWORD           '('
 #define MJOLNIR_OBJ_MJOLNIR         'M'
 #define MJOLNIR_OBJ_GLEIPNIR        'G'
 #define MJOLNIR_OBJ_STORMBRINGER    'S'
 #define MJOLNIR_OBJ_EXCALIBUR       'E'
 #define MJOLNIR_OBJ_CROSS_OF_LIGHT  'x'
-#define MJOLNIR_OBJ_HOLY_WATER      '~'
+#define MJOLNIR_OBJ_WATER           '~'
 #define MJOLNIR_OBJ_SILVER_BULLET   '='
 
 struct mjolobjfunc {
-    char   *str;
-    long  (*hit)(void *, void *);
-    long  (*def)(void *, void *);
-    long  (*pick)(void *, void *);
+    long              (*inv)(void *);                   // chr, returns objtab
+    long              (*bite)(void *);                  // obj
+    long              (*bargain)(void *, void *, long); // obj, chr, price
+    long              (*pay)(void *, long);             // obj, price or 0
+    long              (*use)(void *, void *, long);     // obj, dest, parm/flg
+    long              (*eat)(void *);                   // obj
+    long              (*drink)(void *);                 // obj
+    long              (*hit)(void *, void *);           // obj, dest
+    long              (*defend)(void *, void *);        // obj, dest
+    long              (*pick)(void *);                  // loc, returns objtab
+    long              (*menu)(void *);                  // objtab
+    long              (*drop)(void *, void *);          // obj, loc
 };
 
-/* data.flg values */
+/* flg values */
 #define MJOLNIR_OBJ_HIDDEN              (1L << 0)
 #define MJOLNIR_OBJ_HIDDEN_TRAP         (1L << 1)
 #define MJOLNIR_OBJ_HIDDEN_QUICK_SAND   (1L << 2)
@@ -81,7 +89,9 @@ struct mjolobjfunc {
 struct mjolobj {
 #if (MJOLNIR_VT) || (MJOLNIR_CURSES)
 //    int                 id;
-    long                id;
+    char               *name;           // object name string for inventory etc.
+    long                sym;            // ASCII-presentation
+    long                id;             // unique object ID
     long                special;        // non-0 for special items
 #endif
     long                flg;

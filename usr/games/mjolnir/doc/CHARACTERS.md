@@ -19,12 +19,15 @@ Ants are easy opponents to defaeat, except perhaps when they appear en masse.
 
 Soldier ants are the strongest type of ants.
 
+### B - bee hive
+- you may acquire honey from these; one queen per hive.
+
 ### b - bee
 
 Bees are relatively easy opponents, for they can only sting once after which
 they die. Bees will do anything to protect their queen.
 
-### B - bee queen
+### q - bee queen
 
 Bee queens may not be a good idea to attack, especially with lots of other bees
 in vicinity.
@@ -72,28 +75,32 @@ Oracles share pieces of wisdow to give you hints for the game.
 ### F - Fenris
 ### K - Kara
 ### T - Thor
+### V - Lady X (undead terrorist vampire)
 ### D - Dracula
 
-| character     |levels   | hit          | probability  | notes
-|:--------------|:--------|:--------------:-------------|:-----
-| ant           | any     | 1d4          | 1/16         |
-| soldier ant   | 2-      | 2d4          | 1/32         |
-| bee           | 4-      | 1d4          | 1/32         | masses around nests
-| bee queen     | 4-      | 2d4          | 1/128        | usually hiding in nest
-| alien         | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
-| ghoul         | 16-     | 3d20         | 1/64         | can bite lethally
-| human         | any     | 2d20         | 1/8          | usually friendly
-| oracle        | 8-      | 2d6 + 1d20   | 1/16         | friendly and helpful
-| rat           | 4-      | 4d4          | 1/8          |
-| remnants      | any     | N/A          | N/A          | corpses and belongings
-| shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
-| unicorn       | 16-     | 2d12         | 1/64         |
-| vampire       | 16-     | 4d20         | 1/64         |
-| wolf          | 12-     | 3d12 + 2d20  | 1/64         |
-| werewolf      | 16-     | 5d12 + 2d20  | 1/64         |
-| zombie        | 16-     | 3d12 + 1d20  | 1/64         |
-| Fenris        | 32-     | 4d12 + 3d20  | 1 in game    |
-| Kara          | 20-     | 1d12 + 2d20  | 1 in game    |
-| Thor          | 32-     | 6d12 + 6d20  | 1 in game    |
-| Dracula       | 32-     | 1d12 + 5d20  | 1 in game    |
+| symbol | character     |levels   | hit          | probability  | notes
+:--------|:--------------|:--------|:--------------:-------------|:-----
+|  a     | ant           | any     | 1d4          | 1/16         |
+|  A     | soldier ant   | 2-      | 2d4          | 1/32         |
+|  B     | beehive       | 4-      | N/A          | 1/16         | one queen per hive
+|  b     | bee           | 4-      | 1d4          | 1/32         | masses around hives
+|  q     | bee queen     | 4-      | 2d4          | 1/128        | usually hiding in nest
+|  d     | dog           | 1-      | 2d20 + 4d6   | initial pet  | likes munchies
+|  e     | space-alien   | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
+|  g     | ghoul         | 16-     | 3d20         | 1/64         | can bite lethally
+|  H     | human         | any     | 2d20         | 1/8          | usually friendly
+|  O     | oracle        | 8-      | 2d6 + 1d20   | 1/8         | friendly and helpful
+|  r     | rat           | 4-      | 4d4          | 1/8          |
+|  R     | remnants      | any     | N/A          | N/A          | corpses and belongings
+|  £     | shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
+|  u     | unicorn       | 16-     | 2d12         | 1/64         |
+|  v     | vampire       | 16-     | 4d20         | 1/64         |
+|  w     | wolf          | 12-     | 3d12 + 2d20  | 1/64         |
+|  W     | werewolf      | 16-     | 5d12 + 2d20  | 1/64         |
+|  Z     | zombie        | 16-     | 3d12 + 1d20  | 1/64         |
+|  F     | Fenris wolf   | 32-     | 4d12 + 3d20  | 1 in game    |
+|  K     | Princess      | 20-     | 1d12 + 2d20  | 1 in game    |
+|  T     | Thunder God   | 32-     | 6d12 + 6d20  | 1 in game    |
+|  V     | Lady X        | 0-      | 4d20         | 1 in game    |
+|  D     | Vlad Dracula  | 0-      | 1d12 + 5d20  | 1 in game    |
 
