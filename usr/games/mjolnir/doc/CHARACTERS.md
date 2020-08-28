@@ -74,26 +74,26 @@ Oracles share pieces of wisdow to give you hints for the game.
 ### T - Thor
 ### D - Dracula
 
-character       |levels   | hit          | probability  | notes
+| character     |levels   | hit          | probability  | notes
 ----------------|---------|-----------------------------|------
-ant             | any     | 1d4          | 1/16         |
-soldier ant     | 2-      | 2d4          | 1/32         |
-bee             | 4-      | 1d4          | 1/32         | masses around nests
-bee queen       | 4-      | 2d4          | 1/128        | usually hiding in nest
-alien           | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
-ghoul           | 16-     | 3d20         | 1/64         | can bite lethally
-human           | any     | 2d20         | 1/8          | usually friendly
-oracle          | 8-      | 2d6 + 1d20   | 1/16         | friendly and helpful
-rat             | 4-      | 4d4          | 1/8          |
-remnants        | any     | N/A          | N/A          | corpses and belongings
-shopkeeper      | 4-      | 3d12 + 2d20  | 1/16         | run shops
-unicorn         | 16-     | 2d12         | 1/64         |
-vampire         | 16-     | 4d20         | 1/64         |
-wolf            | 12-     | 3d12 + 2d20  | 1/64         |
-werewolf        | 16-     | 5d12 + 2d20  | 1/64         |
-zombie          | 16-     | 3d12 + 1d20  | 1/64         |
-Fenris          | 32-     | 4d12 + 3d20  | 1 in game    |
-Kara            | 20-     | 1d12 + 2d20  | 1 in game    |
-Thor            | 32-     | 6d12 + 6d20  | 1 in game    |
-Dracula         | 32-     | 1d12 + 5d20  | 1 in game    |
+| ant           | any     | 1d4          | 1/16         |
+| soldier ant   | 2-      | 2d4          | 1/32         |
+| bee           | 4-      | 1d4          | 1/32         | masses around nests
+| bee queen     | 4-      | 2d4          | 1/128        | usually hiding in nest
+| alien         | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
+| ghoul         | 16-     | 3d20         | 1/64         | can bite lethally
+| human         | any     | 2d20         | 1/8          | usually friendly
+| oracle        | 8-      | 2d6 + 1d20   | 1/16         | friendly and helpful
+| rat           | 4-      | 4d4          | 1/8          |
+| remnants      | any     | N/A          | N/A          | corpses and belongings
+| shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
+| unicorn       | 16-     | 2d12         | 1/64         |
+| vampire       | 16-     | 4d20         | 1/64         |
+| wolf          | 12-     | 3d12 + 2d20  | 1/64         |
+| werewolf      | 16-     | 5d12 + 2d20  | 1/64         |
+| zombie        | 16-     | 3d12 + 1d20  | 1/64         |
+| Fenris        | 32-     | 4d12 + 3d20  | 1 in game    |
+| Kara          | 20-     | 1d12 + 2d20  | 1 in game    |
+| Thor          | 32-     | 6d12 + 6d20  | 1 in game    |
+| Dracula       | 32-     | 1d12 + 5d20  | 1 in game    |
 

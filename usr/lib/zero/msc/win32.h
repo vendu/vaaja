@@ -3,6 +3,9 @@
 
 #include <intrin.h>
 
+#define MACH_LONG_SIZE           4
+#define MACH_LONG_LONG_SIZE      8
+
 #pragma intrinsic(_ReturnAddress)
 
 #define m_membar()               _ReadWriteBarrier()

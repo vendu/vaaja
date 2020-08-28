@@ -42,9 +42,15 @@ hammer back to Thor and optionally bring Fenris back as well.
   - other software
     - DBG       - warrior debugger
     - RCED      - redcode editor
+    - SYS       - mainframe operating system
+    - VTD       - virtual tape drive
     - TAP       - network sniffer
+    - NET       - network access
+    - DUMP      - copy program to punchcard
+    - ROT13     - 'decipher' file
 - terminals
-  - equipped with punchcard readers to play core war on in-dungeon mainframes
+  - equipped with punchcard readers to play core war and run other software
+    on in-dungeon mainframes
 
 ## magic and spells
 
@@ -126,6 +132,7 @@ i		| inventory
 I		| inventory single item
 q		| quaff potion
 r		| read scroll
+s               | shout
 e		| eat food
 w		| wield a weapon
 W		| wear armor
@@ -165,6 +172,8 @@ u		| use an object with another one
   - look
   - open
   - close
+  - pick a lock
+  - shout
   - unlock (use key)
   - lock   (void)
 - scrolls
