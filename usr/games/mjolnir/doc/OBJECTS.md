@@ -110,50 +110,50 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### X - altar
 
-object		| probability	| description
----------------------------------------------
-floor		| N/A   	| floor/ground
-sand            | 1/4           | may be quick-sand
-wall	        | N/A		| cave wall (may be hidden door)
-door		| N/A		| door
-stairway down	| 1 per level	| go down one level
-stairway up	| 1 per level	| go up one level
-ATM-card        | 1/128         | bank account access; need PIN-code
-ATM-machine     | 1/16          | cash withdrawals and deposits
-food		| 1/8		| food ration
-water		| 1/16		| water
-fountain	| 1/32		| fountain
-gold		| 1/64		| use to get merchandise
-bullet	        | 1/32		| bullet (silver ones work on daemons)
-potion		| 1/64		| potion
-plant		| 1/128		| plant
-punchcard	| 1/64		| corewar warriors to be run from terminals
-tape		| mainframes	| software for in-dungeon mainframes
-statue	 	| 1/32		| e.g. Buddha statue, elephant statue, ...
-trap		| varies	| trap; arrow, bomb
-wand		| 1/32		| magic wand
-scroll		| 1/32		| spell or other scroll
-ring		| 1/64		| ring
-whip		| 1/64		| whip
-armor		| 1/32		| suit or armor
-mirror		| 1/16		| mirror on a wall
-chest		| 1/32		| chest; may find treasury in them
-sub-machine gun | 1/128		| close-range combat
-honey		| bee nests	| from beehives after killing the queen
-knife		| 1/32		| knife, dagger, gurkha, ...
-kaleidoscope	| 1/128		| kaleidoscope
-lockpick	| 1/64		| thieves are naturally best at using these
-laser		| 1/128		| laser gun
-mace		| 1/32		| mace or hammer
-mainframe	| 1/16		| computer systems for running punchcards
-money           | 1/256         | money from shops or ATMs
-pipe		| 1/64		| pipe
-pistol		| 1/64		| pistol
-sword		| 1/128		| sword
-terminal	| 1/16		| terminal connected to mainframe
-well		| 1/8		| well (water, may be cursed/poisonous)
-cross		| 1/64		| cross; may be Holy Cross
-altar		| 1/32		| altar; sacrifice dead creatures on it
+| object	  | probability	        | description
+:-----------------|:--------------------|:-----------
+| floor	          | N/A   	        | floor/ground
+| sand            | 1/4                 | may be quick-sand
+| wall	          | N/A		        | cave wall (may be hidden door)
+| door	          | N/A		        | door
+| stairway down   | 1 per level	        | go down one level
+| stairway up     | 1 per level	        | go up one level
+| ATM-card        | 1/128               | bank account access; need PIN-code
+| ATM-machine     | 1/16                | cash withdrawals and deposits
+| food	          | 1/8		        | food ration
+| water	          | 1/16		| water
+| fountain        | 1/32		| fountain
+| gold	          | 1/64		| use to get merchandise
+| bullet	  | 1/32		| bullet (silver ones work on daemons)
+| potion	  | 1/64		| potion
+| plant	          | 1/128		| plant
+| punchcard       | 1/64		| corewar warriors to be run from terminals
+| tape	          | mainframes	        | software for in-dungeon mainframes
+| statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
+| trap	          | varies	        | trap; arrow, bomb
+| wand	          | 1/32		| magic wand
+| scroll	  | 1/32		| spell or other scroll
+| ring	          | 1/64		| ring
+| whip	          | 1/64		| whip
+| armor	          | 1/32		| suit or armor
+| mirror	  | 1/16		| mirror on a wall
+| chest	          | 1/32		| chest; may find treasury in them
+| sub-machine gun | 1/128		| close-range combat
+| honey		  | bee nests	        | from beehives after killing the queen
+| knife		  | 1/32		| knife, dagger, gurkha, ...
+| kaleidoscope	  | 1/128		| kaleidoscope
+| lockpick	  | 1/64		| thieves are naturally best at using these
+| laser		  | 1/128		| laser gun
+| mace		  | 1/32		| mace or hammer
+| mainframe	  | 1/16		| computer systems for running punchcards
+| money           | 1/256               | money from shops or ATMs
+| pipe		  | 1/64		| pipe
+| pistol          | 1/64		| pistol
+| sword		  | 1/128		| sword
+| terminal	  | 1/16		| terminal connected to mainframe
+| well		  | 1/8		        | well (water, may be cursed/poisonous)
+| cross		  | 1/64		| cross; may be Holy Cross
+| altar		  | 1/32		| altar; sacrifice dead creatures on it
 
 ## special objects
 

@@ -75,7 +75,7 @@ Oracles share pieces of wisdow to give you hints for the game.
 ### D - Dracula
 
 | character     |levels   | hit          | probability  | notes
-----------------|---------|-----------------------------|------
+|:--------------|:--------|:--------------:-------------|:-----
 | ant           | any     | 1d4          | 1/16         |
 | soldier ant   | 2-      | 2d4          | 1/32         |
 | bee           | 4-      | 1d4          | 1/32         | masses around nests
