@@ -1,3 +1,3 @@
-[Introduction](./INTRODUCTION.md)
-[Characters](./CHARACTERS.md)
-[Objects](./OBJECTS.md)
+[Introduction](INTRODUCTION.md)
+[Characters](CHARACTERS.md)
+[Objects](OBJECTS.md)
