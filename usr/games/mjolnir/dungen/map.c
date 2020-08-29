@@ -8,6 +8,8 @@
 #include <time.h>
 #include <math.h>
 #include <zero/trix.h>
+#include <mjolnir/chr.h>
+#include <mjolnir/obj.h>
 #include "map.h"
 
 typedef int                 (*const dirfunc)(const void *, const void *);
@@ -75,15 +77,13 @@ mapfail(const char *const message, ...)
 }
 
 static char **
-mapfill(char **blk, const int w, const int h, const int val)
+mapinit(char *blk, const int w, const int h, const int val)
 {
-    int row;
-    int col;
+    int                 lim = w * h;
+    int                 ndx;
     
-    for (row = 0; row < h; row++) {
-        for (col = 0; col < w; col++) {
-            blk[row][col] = val;
-        }
+    for (ndx = 0; ndx < lim; ndx++) {
+        blk[ndx] = val;
     }
     
     return blk;
@@ -92,13 +92,9 @@ mapfill(char **blk, const int w, const int h, const int val)
 static char **
 mapnewblk(const int w, const int h, const int val)
 {
-    char  **blk = malloc(h * sizeof(char *));
-    int     row;
-    
-    for (row = 0; row < h; row++) {
-        blk[row] = malloc(w * sizeof(char));
-    }
-    mapfill(blk, w, h, val);
+    char               *blk = malloc(w * h * sizeof(char));
+
+    mapinit(blk, w, h, val);
 
     return blk;
 }
@@ -110,7 +106,7 @@ mapnew(const int w, const int h)
     unsigned int    seed = time(NULL);
 
     map.bmap = calloc(roundup2(w * h, 8) / CHAR_BIT, sizeof(uint8_t));
-    map.wall = mapnewblk(w, h, '#');
+    map.celltab = mapnewblk(w, h, MJOLNIR_ITEM_WALL);
     map.nempty = 0;
     map.w = w;
     map.h = h;
@@ -451,34 +447,54 @@ static void
 mapmkroom(struct map map, const struct pnt where,
           const int w, const int h)
 {
-    const int   x = where.x;
-    const int   y = where.y;
-    int         ndx;
-    int         xx;
-    int         yy;
-    int         i;
-    int         j;
+    struct room        *room = malloc(sizeof(struct room));
+    struct room        *next;
+    const int           x = where.x;
+    const int           y = where.y;
+    int                 ndx;
+    int                 xx;
+    int                 yy;
+    int                 i;
+    int                 j;
 
+    if (!room) {
+        fprintf(stderr, "failed to allocate room structure\n");
+
+        exit(1);
+    }
+    room->prev = NULL;
+    room->x = x;
+    room->y = y;
+    room->w = w;
+    room->h = h;
+    next = map.roomlist;
+    if (next) {
+        next->prev = room;
+    }
+    room->next = next;
+    map.roomlist = room;
+#if 0
     i = 2 * w + 2 * h;
     map.nempty += i;
-#if 0
     for (i = -w; i < w; i++) {
         for (j = -h; j < h; j++) {
             xx = x + i;
             yy = y + j;
             ndx = yy * map.w + xx;
             setbit(map.bmap, ndx);
-            map.wall[yy][xx] = ' ';
+            map.celltab[ndx] = ' ';
         }
     }
 #endif
+    i = w + h;
+    map.nempty += i;
     for (i = -w / 2; i < w / 2; i++) {
         for (j = -h / 2; j < h / 2; j++) {
             xx = x + i;
             yy = y + j;
             ndx = yy * map.w + xx;
             setbit(map.bmap, ndx);
-            map.wall[yy][xx] = ' ';
+            map.celltab[ndx] = ' ';
         }
     }
 
@@ -508,13 +524,13 @@ mapmkcorr(struct map map, const struct pnt a, const struct pnt b)
         x += dx;
         ndx = y * map.w + x;
         setbit(map.bmap, ndx);
-        map.wall[y][x] = ' ';
+        map.celltab[ndx] = ' ';
     }
     for (i = 0; i < sy; i++) {
         y += dy;
         ndx = y * map.w + x;
         setbit(map.bmap, ndx);
-        map.wall[y][x] = ' ';
+        map.celltab[ndx] = ' ';
     }
 
     return;
@@ -564,7 +580,8 @@ mapcarve(const struct map map, const struct triset edges,
 }
 
 struct map
-dungenmap(const int w, const int h, const int grid, const int max)
+dungenmap(const int w, const int h,
+          const int grid, const int max)
 {
     const struct map    map = mapnew(w, h);
     const struct flags  flags = { { 0.0f, 0.0f }, { 1.0f, 1.0f } };
@@ -596,22 +613,21 @@ void dungenclose(const struct map map)
     int row;
 
     free(map.bmap);
-    for (row = 0; row < map.h; row++) {
-        free(map.wall[row]);
-    }
-    free(map.wall);
+    free(map.celltab);
 
     return;
 }
 
 void dungenprint(const struct map map)
 {
-    int row;
-    int col;
+    int                 lim = map.w * map.h;
+    int                 ndx;
+    int                 col;
     
-    for (row = 0; row < map.h; row++) {
+    while (ndx < lim) {
         for (col = 0; col < map.w; col++) {
-            printf("%c%s", map.wall[row][col], col == map.w - 1 ? "\n" : "");
+            printf("%c%s", map.celltab[ndx], col == map.w - 1 ? "\n" : "");
+            ndx++;
         }
     }
     putchar('\n');

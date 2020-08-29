@@ -8,17 +8,17 @@ plot.
 Floors are empty space in the dungeon, but may have traps and items hidden on
 them.
 
-### . - sand
-
-Sand is usually safe, but has a small probability to be quick-sand which is
-of course hazardous.
-
 ### # - wall
 
 Walls exist to separate rooms and corridors; they have hidden traps, cervings,
 or corridors
 
 ### + - door
+
+### . - sand
+
+Sand is usually safe, but has a small probability to be quick-sand which is
+of course hazardous.
 
 ### > - stairway down
 
@@ -205,9 +205,9 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 | Symbol | object	  | probability	        | description
 |:-------|:---------------|:--------------------|:-----------
 |  ' '   | floor	  | N/A   	        | floor/ground
-|   .    | sand           | 1/4                 | may be quick-sand
 |   #    | wall	          | N/A		        | cave wall (may be hidden door)
 |   +    | door	          | N/A		        | door
+|   .    | sand           | 1/4                 | may be quick-sand
 |   >    | stairway down  | 1 per level         | stairs one level down
 |   <    | stairway up    | 1 per level         | stairs one level up
 |   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)

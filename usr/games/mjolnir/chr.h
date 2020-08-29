@@ -59,8 +59,6 @@ typedef int   (*mjolmovefunc(int));
 typedef long  (*hitfunc(struct mjolchr *, struct mjolchr *));
 
 struct mjolchr {
-    struct mjolchr     *prev;
-    struct mjolchr     *next;
     char               *name;           // character name string
     /* Rogue [visible] attributes */
     long                hp;             // current hitpoints
@@ -68,14 +66,14 @@ struct mjolchr {
     long                gold;           // current gold
     long                str;            // current strength
     long                maxstr;         // max strength
-    long                arm;            // armor strength
+    long                armor;          // armor strength
     long                exp;            // experience
     long                lvl;            // level
     long                aln;            // alignment; CHAOTIC, NEUTRAL, LAWFUL
     long                flg;            // status bits
     struct mjolobjfunc  func;
     /* mjolnir [hidden] attributes */
-    long                pwr;            // power
+    long                power;          // power
     long                luck;           // luck-factor
     long                dex;            // dexterity
     long                intl;           // intelligence

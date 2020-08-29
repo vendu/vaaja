@@ -44,16 +44,35 @@ extern uint8_t                  	mjolcanwieldmap[128 / CHAR_BIT];
 #define MJOLNIR_GAME_NAME           "mjolnir"
 
 #define MJOLNIR_DEF_NICK            "johndoe"
-#define MJOLNIR_LEN_NICK            16
+#define MJOLNIR_NICK_MAX            16
 
-#define MJOLNIR_DEF_NLVL            48
+#define MJOLNIR_LEVEL_HEAVEN        (-1)
+#define MJOLNIR_LEVEL_GROUND        0       // Transylvania, Monastery
+#define MJOLNIR_LEVEL_DUNGEON_MIN   1
+#define MJOLNIR_LEVEL_DUNGEON_MAX   8
+#define MJOLNIR_LEVEL_ORACLE1       9
+#define MJOLNIR_LEVEL_ATLANTIS      10
+#define MJOLNIR_LEVEL_LABYRINTH_MIN 11
+#define MJOLNIR_LEVEL_LABYRINTH_MAX 14
+#define MJOLNIR_LEVEL_ORACLE2       15
+#define MJOLNIR_LEVEL_HELL_MIN      16
+#define MJOLNIR_LEVEL_HELL_MAX      19
+#define MJOLNIR_LEVEL_MAZE_MIN      20
+#define MJOLNIR_LEVEL_MAZE_MAX      23
+#define MJOLNIR_LEVEL_ORACLE3       24
+#define MJOLNIR_LEVEL_CYBERIA_MIN   25
+#define MJOLNIR_LEVEL_CYBERIA_MAX   28
+#define MJOLNIR_LEVEL_ORACLE4       29
+#define MJOLNIR_LEVEL_UNDERWORLD    30
+#define MJOLNIR_LEVEL_VALHALLA      31
+#define MJOLNIR_LEVELS              32
 #define MJOLNIR_DEF_WIDTH           80
 #define MJOLNIR_DEF_HEIGHT          48
 
 #define MJOLNIR_SCR_NONE            0
-#define MJOLNIR_SCR_VGA_TEXT        1
-#define MJOLNIR_SCR_TTY             2
-#define MJOLNIR_SCR_X11             3
+#define MJOLNIR_SCR_TTY             1
+#define MJOLNIR_SCR_NCURSES         2
+#define MJOLNIR_SCR_SDL2            3
 
 struct mjolgame {
     //    struct dnggame      data;

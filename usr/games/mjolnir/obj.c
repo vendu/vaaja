@@ -18,22 +18,7 @@ struct mjolobjcap {
     uint8_t canwield[256 / CHAR_BIT];
 };
 
-struct mjolobjparm  mjolobjparms[256];
 struct mjolobjcap   mjolobjcap C_ALIGNED(MACH_PAGE_SIZE);
-
-void
-mjolinitobjparm(sym, ntotal, nmax, minlvl, maxlvl, problim, probsft)
-{
-    mjolobjparms[sym].sym = sym;
-    mjolobjparms[sym].ntotal = ntotal;
-    mjolobjparms[sym].nmax = nmax;
-    mjolobjparms[sym].minlvl = minlvl;
-    mjolobjparms[sym].maxlvl = maxlvl;
-    mjolobjparms[sym].problim = problim;
-    mjolobjparms[sym].probsft = probsft;
-
-    return;
-}
 
 /* initialise bitmap for objects you can move on top of */
 void
@@ -68,7 +53,6 @@ mjolinitcanmove(void)
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_LOCKPICK);
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_LASER);
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_MACE);
-    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_MAINFRAME);
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PIPE);
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PISTOL);
     setbit(mjolobjcap.canmove, MJOLNIR_OBJ_SWORD);

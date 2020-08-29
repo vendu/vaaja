@@ -3,9 +3,19 @@
 
 #include <stdint.h>
 
+struct room {
+    struct room    *prev;
+    struct room    *next;
+    int             x;
+    int             y;
+    int             w;
+    int             h;
+};
+
 struct map {
+    struct room    *roomlist;
     uint8_t        *bmap;
-    char          **wall;
+    char           *celltab;
     int             nempty;
     int             w;
     int             h;

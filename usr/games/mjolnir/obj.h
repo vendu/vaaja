@@ -1,68 +1,9 @@
 #ifndef __MJOLNIR_OBJ_H__
 #define __MJOLNIR_OBJ_H__
 
-#include <dungeon/conf.h>
-#include <dungeon/dng.h>
-
-/* objects */
-#define MJOLNIR_OBJ_FLOOR           ' '
-#define MJOLNIR_OBJ_SAND            '.'
-#define MJOLNIR_OBJ_WALL            '#'
-#define MJOLNIR_OBJ_DOOR            '+'
-#define MJOLNIR_OBJ_STAIR_DOWN      '>'
-#define MJOLNIR_OBJ_STAIR_UP        '<'
-#define MJOLNIR_OBJ_COFFIN          '%'
-#define MJOLNIR_ATM_CARD            '-'
-#define MJOLNIR_ATM_MACHINE         'C'
-#define MJOLNIR_OBJ_FOOD            'f'
-#define MJOLNIR_OBJ_WATER           '~'
-#define MJOLNIR_OBJ_FOUNTAIN        '{'
-#define MJOLNIR_OBJ_GOLD            '$'
-#define MJOLNIR_OBJ_MONEY           '¤'
-#define MJOLNIR_OBJ_BULLET          '='
-#define MJOLNIR_OBJ_POTION          '!'
-#define MJOLNIR_OBJ_PLANT           '*'
-#define MJOLNIR_OBJ_PUNCHCARD       '0'
-#define MJOLNIR_OBJ_TAPE            't'
-#define MJOLNIR_OBJ_STATUE          '&'
-#define MJOLNIR_OBJ_TRAP            '^'
-#define MJOLNIR_OBJ_WAND            '\\'
-#define MJOLNIR_OBJ_SCROLL          '9'
-#define MJOLNIR_OBJ_RING            'o'
-#define MJOLNIR_OBJ_WHIP            '/'
-#define MJOLNIR_OBJ_ARMOR           ']'
-#define MJOLNIR_OBJ_MIRROR          '['
-#define MJOLNIR_OBJ_CHEST           'c'
-#define MJOLNIR_OBJ_SUBMACHINE_GUN  'g'
-#define MJOLNIR_OBJ_HONEY           'h'
-#define MJOLNIR_OBJ_KNIFE           'k'
-#define MJOLNIR_OBJ_KALEIDOSCOPE    'K'
-#define MJOLNIR_OBJ_LOCKPICK        'l'
-#define MJOLNIR_OBJ_LASER           'L'
-#define MJOLNIR_OBJ_MACE            'm'
-#define MJOLNIR_OBJ_MAINFRAME       '8'
-#define MJOLNIR_OBJ_FORTUNE_COOKIE  '?'
-#define MJOLNIR_OBJ_PIPE            'P'
-#define MJOLNIR_OBJ_PISTOL          '7'
-#define MJOLNIR_OBJ_REMNANTS        'R'
-#define MJOLNIR_OBJ_SWORD           's'
-#define MJOLNIR_OBJ_TERMINAL        'T'
-#define MJOLNIR_OBJ_WELL            'w'
-#define MJOLNIR_OBJ_CROSS           'x'
-#define MJOLNIR_OBJ_ALTAR           'X'
-/* special objects */
-#define MJOLNIR_OBJ_CRYSTAL_BALL    'Q'
-#define MJOLNIR_OBJ_DEMON_WHIP      '|'
-#define MJOLNIR_OBJ_JATIMATIC       'J'
-#define MJOLNIR_OBJ_GOLDEN_SWORD    '('
-#define MJOLNIR_OBJ_BOOMERANG       ')'
-#define MJOLNIR_OBJ_MJOLNIR         'M'
-#define MJOLNIR_OBJ_GLEIPNIR        'G'
-#define MJOLNIR_OBJ_STORMBRINGER    'S'
-#define MJOLNIR_OBJ_EXCALIBUR       'E'
-#define MJOLNIR_OBJ_CROSS_OF_LIGHT  'x'
-
-/* special items */
+#include <zero/cdefs.h>
+#include <mjolnir/chr.h>
+#include <mjolnir/item.h>
 
 struct mjolobjfunc {
     long              (*inv)(void *);                   // chr, returns objtab
@@ -82,6 +23,7 @@ struct mjolobjfunc {
 struct mjolobjparm {
     long                sym;        // ASCII-presentation/type
     long                ntotal;     // # of objects created
+    long                nmin;       // minimum number of objects per game
     long                nmax;       // maximum number of objects
     long                minlvl;     // minimum level to create
     long                maxlvl;     // maxiimum level to create
@@ -89,46 +31,17 @@ struct mjolobjparm {
     long                probsft;    // for constructing rand-masks
 };
 
-/* flg values */
-#define MJOLNIR_OBJ_HIDDEN              (1L << 0)
-#define MJOLNIR_OBJ_HIDDEN_TRAP         (1L << 1)
-#define MJOLNIR_OBJ_HIDDEN_QUICK_SAND   (1L << 2)
-#define MJOLNIR_OBJ_HIDDEN_CARVING      (1L << 3)
-#define MJOLNIR_OBJ_HIDDEN_DOOR         (1L << 4)
-/* bless values */
-#define MJOLNIR_OBJ_BLESSED             1
-#define MJOLNIR_OBJ_NEUTRAL             0
-#define MJOLNIR_OBJ_CURSED              (-1)
+union mjolobjdata {
+    struct mjolchr      chr;
+    struct mjolitem     item;
+};
 
 struct mjolobj {
     struct mjolobj     *prev;
     struct mjolobj     *next;
-    char               *name;           // object name string for inventory etc.
-    long                sym;            // ASCII-presentation
-    long                id;             // unique object ID
-    long                special;        // non-0 for special items
-    long                flg;
-    struct dngobj       data;           // common object data
-    struct mjolobjfunc  func;
-    long                weight;         // weight of object
-    long                bless;          // BLESSED, NEUTRAL, CURSED
-    long                parm;           // e.g. +1 or -1 for armor
+    long                type;
+    union mjolobjdata   data;
 };
-
-#if 0
-/* event handler function prototype */
-typedef void mjolfunc_t(struct dnggame *game,
-                        struct dngobj *src, struct dngobj *dest);
-#endif
-
-typedef struct mjolobj * mjolmkfunc(void);
-
-extern struct mjolobj * mjolmkfloor(void);
-extern struct mjolobj * mjolmksand(void);
-extern struct mjolobj * mjolmkwall(void);
-extern struct mjolobj * mjolmkdoor(void);
-extern struct mjolobj * mjolmkstairup(void);
-extern struct mjolobj * mjolmkstairdown(void);
 
 #endif /* __MJOLNIR_OBJ_H__ */
 
