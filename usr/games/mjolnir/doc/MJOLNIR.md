@@ -47,17 +47,32 @@ hammer back to Thor and optionally bring Fenris back as well.
   - other software
     - RCDB      - redcode/warrior debugger
     - RCED      - redcode editor
-    - TED       - editor (ascii and hexadecimal)
+    - TED       - editor (ASCII/ISO 8859-1 and hexadecimal)
     - SYS       - mainframe operating system
-    - VTD       - virtual tape drive
-    - TAP       - network sniffer
-    - NET       - network access
+    - IO        - [file-based] I/O utilities
+                - mkfs, list, run, copy, move, wipe, read, write
+    - TAP       - network sniffer (port, address, log)
+    - NET       - network access interface (login, list, copy, wipe)
     - DUMP      - copy program to punchcard
-    - DECODE    - 'decipher' file; redcode and certain other files are ciphered
-                - the default encryption is ROT13
-    - CRAK      - different tools
-    - MM        - mastermind game
-    - BS        - battleship game
+    - ROT13     - 'decipher' file; redcode and certain other files are ciphered
+                - the default encryption is ROT13; this is done for fun and to
+                  allow relatively easy modifications to the game with some
+                  background work
+    - HASH      - hash and unhash functions
+                - tmhash32(), tmunhash32()
+                - better privacy than simple ROT13
+    - CRAK      - different malware tools
+                - root, single, log(on|off), unlog, crack
+    - MEM       - memory logger and editor
+                - save(adr, fd, ofs, nrec), load(adr, fd, ofs, nrec)
+                - poke(adr, val), peek(adr)
+    - MMIND     - mastermind game
+    - BSHIP     - battleship game
+                - 10x10 grid
+                - 1 4-block ship
+                - 2 3-block ships
+                - 3 2-block ships
+                - 4 1-block ships
     - Y38K      - Trojan for bank systems
 - terminals
   - equipped with punchcard readers to play core war and run other software

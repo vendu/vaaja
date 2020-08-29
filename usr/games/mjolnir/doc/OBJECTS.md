@@ -22,11 +22,16 @@ or corridors
 
 ### > - stairway down
 
+Stairs one level down.
+
 ### < - stairway up
+
+Stairs one level up.
 
 ### % - coffin
 
-Vampires don't like daylight, so they sleep in closed coffins.
+Vampires don't like daylight, so they sleep in closed coffins. These are located
+at graveyards, often inside tombs.
 
 ### - - ATM-card
 
@@ -65,34 +70,49 @@ Mainframes store Core War warriors and other software + data on tapes.
 ### & - statue
 
 ### ^ - trap
+- arrow
+- bomb
+- pit
+- hole
+- teleport
 
 ### \ - wand
+- magic wands used to cast different spells
 
 ### 9 - scroll
+- scrolls contains spell to be casted
 
 #### spells
-- scroll of identify
-- scroll of teleport
-- scroll of activate cross - 'Terra pestem teneto, salus hic maneto'
-- scroll of paralyze
-- scroll of icebolt
-- scroll of thunderbolt
-- scroll of lightning
+- spell of identify
+- spell of teleport
+- spell of activate cross - 'Terra pestem teneto, salus hic maneto'
+- spell of paralyze
+- spell of icebolt
+- spell of thunderbolt
+- spell of lightning
+- spell of show map - shows the map of the current level
+- spell of stop time - 'TOPAR'
+- spell of bless
 
 ### o - ring
 - ring of levitation
 - ring of invisibility
 - ring of teleport
+- ring of see in the dark
 
 ### / - whip
+- may be used to slay non-demonic, usually smaller creatures
 
 ### ] - armor
+- different kinds and strengths
 
 ### [ - mirror
+- vampires do not show in mirrors
 
 ### c - chest
 
 ### g - submachine gun
+- may be special weapon Jatimatic
 
 ### h - honey
 
@@ -126,9 +146,14 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### X - altar
 
+This is where you sacrifice to a dedicated god. You may get special items in
+return.
+
 ## Special Objects
 
 ### Q - crystal ball
+
+The crystal ball shows things happening right now and/or in the future.
 
 ### | - demon whip
 
@@ -142,7 +167,10 @@ very nice firearm against vampires and other demons.
 
 ### ( - golden sword
 - the golden sword of the princess of Atlantis, Kara, is a strong weapon against
-  demons.
+  demons and may be used to travel through dimensions
+
+### ) - boomerang
+- may be special itgem Silver boomerang
 
 ### M - Mjolnir
 
