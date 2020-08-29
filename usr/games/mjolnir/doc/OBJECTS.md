@@ -70,9 +70,19 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### 9 - scroll
 
+#### spells
+- scroll of identify
+- scroll of teleport
+- scroll of activate cross - 'Terra pestem teneto, salus hic maneto'
+- scroll of paralyze
+- scroll of icebolt
+- scroll of thunderbolt
+- scroll of lightning
+
 ### o - ring
 - ring of levitation
 - ring of invisibility
+- ring of teleport
 
 ### / - whip
 
@@ -116,52 +126,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### X - altar
 
-| object	  | probability	        | description
-:-----------------|:--------------------|:-----------
-| floor	          | N/A   	        | floor/ground
-| sand            | 1/4                 | may be quick-sand
-| wall	          | N/A		        | cave wall (may be hidden door)
-| door	          | N/A		        | door
-| stairway down   | 1 per level	        | go down one level
-| stairway up     | 1 per level	        | go up one level
-| ATM-card        | 1/128               | bank account access; need PIN-code
-| ATM-machine     | 1/16                | cash withdrawals and deposits
-| food	          | 1/8		        | food ration
-| water	          | 1/16		| water
-| fountain        | 1/32		| fountain
-| gold	          | 1/64		| use to get merchandise
-| bullet	  | 1/32		| bullet (silver ones work on daemons)
-| potion	  | 1/64		| potion
-| plant	          | 1/128		| plant
-| punchcard       | 1/64		| corewar warriors to be run from terminals
-| tape	          | mainframes	        | software for in-dungeon mainframes
-| statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
-| trap	          | varies	        | trap; arrow, bomb, pit, hole, teleport
-| wand	          | 1/32		| magic wand
-| scroll	  | 1/32		| spell or other scroll
-| ring	          | 1/64		| ring
-| whip	          | 1/64		| whip
-| armor	          | 1/32		| suit or armor
-| mirror	  | 1/16		| mirror on a wall
-| chest	          | 1/32		| chest; may find treasury in them
-| sub-machine gun | 1/128		| close-range combat
-| honey		  | bee nests	        | from beehives after killing the queen
-| knife		  | 1/32		| knife, dagger, gurkha, ...
-| kaleidoscope	  | 1/128		| kaleidoscope
-| lockpick	  | 1/64		| thieves are naturally best at using these
-| laser		  | 1/128		| laser gun
-| mace		  | 1/32		| mace or hammer
-| mainframe	  | 1/16		| computer systems for running punchcards
-| money           | 1/256               | money from shops or ATMs
-| pipe		  | 1/64		| pipe
-| pistol          | 1/64		| pistol
-| sword		  | 1/128		| sword
-| terminal	  | 1/16		| terminal connected to mainframe
-| well		  | 1/8		        | well (water, may be cursed/poisonous)
-| cross		  | 1/64		| cross; may be Holy Cross
-| altar		  | 1/32		| altar; sacrifice dead creatures on it
-
-## special objects
+## Special Objects
 
 ### Q - crystal ball
 
@@ -175,7 +140,7 @@ not allowed to kill or attack anyone during those turns.
 Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
 very nice firearm against vampires and other demons.
 
-### ( - sword
+### ( - golden sword
 - the golden sword of the princess of Atlantis, Kara, is a strong weapon against
   demons.
 
@@ -189,25 +154,76 @@ Ribbon that can hold Fenris leashed.
 
 ### S - Stormbringer
 
+Special sword.
+
 ### E - Excalibur
 
+Special sword.
+
 ### x - Cross of Light
+
+Special cross, the player's default white-magic weapon.
 
 Distinguished from other crosses by having the names of 4 archangels - Michael,
 Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 
-special objects | probability   | description
-----------------|---------------|------------
-Crystal ball    | 1/64		| may show things happening elsewhere
-Demon Whip	| 1 per game	| weapon against different forms of undead
-Jatimatic	| 1/256		| sub-machine gun for close range combat
-				  - may be loaded with 9-mm rounds, perhaps with
-				    silver bullets... ;)
-Golden Sword	| 1 per game	| princess Kara's golden sword
-Mjolnir		| 1 per game	| the hammer of Thor
-Gleipnir	| 1 at start	| ribbon that can hold Fenris
-Stormbringer	| 1 per game    | Stormbringer special sword
-Excalibur	| 1 per game	| Excalibur special sword
-Cross of Light	| 1 per game	| holy cross with the names of 4 archangels
-     		  		| - Michael, Raphael, Gabriel, Uriel
+| Symbol | object	  | probability	        | description
+|:-------|:---------------|:--------------------|:-----------
+|  ' '   | floor	  | N/A   	        | floor/ground
+|   .    | sand           | 1/4                 | may be quick-sand
+|   #    | wall	          | N/A		        | cave wall (may be hidden door)
+|   +    | door	          | N/A		        | door
+|   >    | stairway down  | 1 per level         | stairs one level down
+|   <    | stairway up    | 1 per level         | stairs one level up
+|   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)
+|   -    | ATM-card       | 1/128               | bank account access; need PIN-code
+|   C    | ATM-machine    | 1/16                | cash withdrawals and deposits
+|   f    | food	          | 1/8		        | food ration
+|   ~    | water	  | 1/16		| water, may be blessed
+|   {    | fountain       | 1/32		| fountain
+|   $    | gold	          | 1/64		| use to get merchandise
+|   =    | bullet	  | 1/32		| bullet (silver ones work on daemons)
+|   !    | potion	  | 1/64		| potion
+|   *    | plant          | 1/128		| plant
+|   0    | punchcard      | 1/64		| corewar warriors to be run from terminals
+|   t    | tape	          | mainframes	        | software for in-dungeon mainframes
+|   &    | statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
+|   ^    | trap	          | varies	        | trap; arrow, bomb, pit, hole, teleport
+|   \    | wand	          | 1/32		| magic wand
+|   9    | scroll	  | 1/32		| spell or other scroll
+|   o    | ring	          | 1/64		| ring
+|   /    | whip	          | 1/64		| whip
+|   ]    | armor	  | 1/32		| suit or armor
+|   [    | mirror	  | 1/16		| mirror on a wall
+|   c    | chest          | 1/32		| chest; may find treasury in them
+|   g    | sub-machine gun | 1/128		| close-range combat
+|   h    | honey	  | bee nests	        | from beehives after killing the queen
+|   k    | knife          | 1/32		| knife, dagger, gurkha, ...
+|   K    | kaleidoscope	  | 1/128		| kaleidoscope
+|   l    | lockpick	  | 1/64		| thieves are naturally best at using these
+|   L    | laser	  | 1/128		| laser gun, from aliens
+|   m    | mace		  | 1/32		| mace or hammer
+|   8    | mainframe	  | 1/16		| computer systems for running punchcards
+|   #    | money          | 1/256               | money from shops or ATMs
+|   ?    | fortune cookie | 1/64                |
+|   P    | pipe		  | 1/64		| pipe
+|   p    | pistol         | 1/64		| pistol
+|   s    | sword	  | 1/128		| sword
+|   T    | terminal	  | 1/16		| terminal connected to mainframe
+|   w    | well		  | 1/8		        | well (water, may be cursed/poisonous)
+|   x    | cross	  | 1/64		| cross; may be Holy Cross
+|   X    | altar	  | 1/32		| altar; sacrifice dead creatures on it
+
+| symbol | special object | probability    | description
+--------------------------|----------------|------------
+|   Q   | Crystal ball    | 1/256	   | may show things happening elsewhere or in the future
+|   |   | Demon Whip	  | 1 per game	   | weapon against different forms of undead
+|   J   | Jatimatic	  | 1/256          | sub-machine gun for close range combat
+- may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
+|   (   | Golden Sword	  | 1 per game	   | princess Kara's golden sword
+|   M   | Mjolnir         | 1 per game	   | the hammer of Thor
+|   G   | Gleipnir	  | 1 at start	   | ribbon that can hold Fenris
+|   S   | Stormbringer	  | 1 per game     | Stormbringer special sword
+|   E   | Excalibur	  | 1 per game	   | Excalibur special sword
+|   x   | Cross of Light  | 1 per game	   | the blessed cross of Ezekiel with the names of 4 archangels - Michael, Raphael, Gabriel, Uriel
 

@@ -71,12 +71,31 @@ Oracles share pieces of wisdow to give you hints for the game.
 
 ## special characters
 
-### I - Iku-Turso
-### F - Fenris
-### K - Kara
-### T - Thor
+### F - Fenris (the guardian and petwolf of gods)
+
+Fenris has turned evil and stolen Mjolnir the hammer from Thor. Your mission is
+to bring his tool back to Thor, although you may experiment by sacrificing the
+hammer to other superhuman beings.
+
+### K - Kara (the princess of Atlantis)
+
+Kara carries a golden sword which she may drop for you to use when the going
+gets really tough. :)
+
+### T - Thor (the viking god of thunder)
+
+### U - Ukko Ylijumala (Ukko 'Overlord' from Finnish mythologies)
+
+An ancient Finnish belief concerns Ukko to be 'the god of gods'.
+
 ### V - Lady X (undead terrorist vampire)
-### D - Dracula
+
+Lady X carries a submachine gun which may be loaded with silver rounds.
+
+### D - Dracula (master vampire Vlad the Impaler)
+
+Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
+Bran Castle in Transylvania.
 
 | symbol | character     |levels   | hit          | probability  | notes
 :--------|:--------------|:--------|:--------------:-------------|:-----
@@ -87,20 +106,21 @@ Oracles share pieces of wisdow to give you hints for the game.
 |  q     | bee queen     | 4-      | 2d4          | 1/128        | usually hiding in nest
 |  d     | dog           | 1-      | 2d20 + 4d6   | initial pet  | likes munchies
 |  e     | space-alien   | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
-|  g     | ghoul         | 16-     | 3d20         | 1/64         | can bite lethally
+|  g     | ghoul         | 16-     | 3d20         | 1/64         | can bite lethally, corpse eater
 |  H     | human         | any     | 2d20         | 1/8          | usually friendly
 |  O     | oracle        | 8-      | 2d6 + 1d20   | 1/8         | friendly and helpful
 |  r     | rat           | 4-      | 4d4          | 1/8          |
 |  R     | remnants      | any     | N/A          | N/A          | corpses and belongings
 |  £     | shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
-|  u     | unicorn       | 16-     | 2d12         | 1/64         |
-|  v     | vampire       | 16-     | 4d20         | 1/64         |
+|  u     | unicorn       | 16-     | 2d12         | 1/32         |
+|  v     | vampire       | 16-     | 4d20         | 1/64         | probability 1/32 in Transylvania
 |  w     | wolf          | 12-     | 3d12 + 2d20  | 1/64         |
 |  W     | werewolf      | 16-     | 5d12 + 2d20  | 1/64         |
-|  Z     | zombie        | 16-     | 3d12 + 1d20  | 1/64         |
-|  F     | Fenris wolf   | 32-     | 4d12 + 3d20  | 1 in game    |
-|  K     | Princess      | 20-     | 1d12 + 2d20  | 1 in game    |
-|  T     | Thunder God   | 32-     | 6d12 + 6d20  | 1 in game    |
-|  V     | Lady X        | 0-      | 4d20         | 1 in game    |
+|  Z     | zombie        | 16-     | 3d12 + 1d20  | 1/64         | flesh eater
+|  F     | Fenris        | 32-     | 4d12 + 3d20  | 1 in game    | the guardian and pet wolf of germanic gods
+|  K     | Kara          | 20-     | 1d12 + 2d20  | 1 in game    |
+|  T     | Thor          | 32-     | 6d12 + 6d20  | 1 in game    | viking god of thunder
+|  U     | Ukko Ylijumala| Valhalla| 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
+|  V     | Lady X        | 0-      | 4d20 + 4d6   | 1 in game    |
 |  D     | Vlad Dracula  | 0-      | 1d12 + 5d20  | 1 in game    |
 
