@@ -16,26 +16,34 @@
 #define MJOLNIR_CHAR_HUMAN          'H'
 #define MJOLNIR_CHAR_ORACLE         'O'
 #define MJOLNIR_CHAR_RAT            'r'
-#define MJOLNIR_CHAR_REMNANTS       'R'
 #define MJOLNIR_CHAR_SHOPKEEPER     '£'
 #define MJOLNIR_CHAR_UNICORN        'u'
 #define MJOLNIR_CHAR_VAMPIRE        'v'
 #define MJOLNIR_CHAR_WOLF           'w'
 #define MJOLNIR_CHAR_WEREWOLF       'W'
 #define MJOLNIR_CHAR_ZOMBIE         'Z'
-
-#define MJOLNIR_CHAR_IKU_TURSO      'I'
+/* special characters */
 #define MJOLNIR_CHAR_FENRIS         'F'
 #define MJOLNIR_CHAR_KARA           'K'
 #define MJOLNIR_CHAR_THOR           'T'
+#define MJOLNIR_CHAR_UKKO           'U'
 #define MJOLNIR_CHAR_DRACULA        'D'
 
+/* alignment values */
+#define MJOLNIR_CHAR_CHAOTIC        (-1)
+#define MJOLNIR_CHAR_NEUTRAL        0'
+#define MJOLNIR_CHAR_LAWFUL         1'
+
 /* character flags */
-#define MJOLNIR_CHAR_NO_AUTOPICK    (1 << 0) // don't pick object up automatically
-#define MJOLNIR_CHAR_BLIND          (1 << 1) // character is blind
-#define MJOLNIR_CHAR_LEVITATES      (1 << 2) // character is levitating
-#define MJOLNIR_CHAR_DRUNK          (1 << 3)
-#define MJOLNIR_CHAR_STONED         (1 << 4)
+#define MJOLNIR_CHAR_BLIND          (1 << 0)    // character blind
+#define MJOLNIR_CHAR_LEVITATES      (1 << 1)    // character levitating
+#define MJOLNIR_CHAR_INVISIBLE      (1 << 2)    // character invisible
+#define MJOLNIR_CHAR_STARVING       (1 << 3)    // character starving
+#define MJOLNIR_CHAR_DROWNING       (1 << 4)    // character drowning
+#define MJOLNIR_CHAR_SINKING        (1 << 5)    // character sinking
+#define MJOLNIR_CHAR_POISONED       (1 << 5)    // ghoul-bite or other poison
+#define MJOLNIR_CHAR_DRUNK          (1 << 6)    // character drunk
+#define MJOLNIR_CHAR_HIGH           (1 << 7)    // character is high
 
 /* speed values */
 #define MJOLNIR_CHAR_FAST           2           // character is moving faster
@@ -51,9 +59,9 @@ typedef int   (*mjolmovefunc(int));
 typedef long  (*hitfunc(struct mjolchr *, struct mjolchr *));
 
 struct mjolchr {
-    struct dngobj       data;           // common character data
-    char               *name;
-    struct mjolobjfunc  func;
+    struct mjolchr     *prev;
+    struct mjolchr     *next;
+    char               *name;           // character name string
     /* Rogue [visible] attributes */
     long                hp;             // current hitpoints
     long                maxhp;          // max hitpoints
@@ -64,12 +72,21 @@ struct mjolchr {
     long                exp;            // experience
     long                lvl;            // level
     long                aln;            // alignment; CHAOTIC, NEUTRAL, LAWFUL
+    long                flg;            // status bits
+    struct mjolobjfunc  func;
     /* mjolnir [hidden] attributes */
-    long                pwr;
+    long                pwr;            // power
+    long                luck;           // luck-factor
     long                dex;            // dexterity
-    long                lock;           // lock-pick skill
     long                intl;           // intelligence
     long                def;            // defense
+    long                lock;           // lock-pick skill
+    long                spell;          // skill-level for casting spells
+    long                throw;          // skill-level for throwing objects
+    long                knife;          // skill-level for knives
+    long                gun;            // skill-level for guns
+    long                sword;          // skill-level for swords
+    long                whip;           // skill-level for whips
     long                speed;          // FAST, NORMAL, FROZEN, SLOW
     unsigned long       turn;           // next turn ID
     unsigned long       nturn;          // # of turns used

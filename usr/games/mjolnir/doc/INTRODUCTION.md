@@ -26,9 +26,11 @@ shelter for before you go idle.
 # Game Start
 
 At the beginning of game, you will have the following possessions
-- 4 food rations
-- a bit of Gleipnir
-- the blessed silver cross of Ezekiel
+f - 4 food rations
+~ - 8 potions of water
+G - a bit of Gleipnir
+x - the blessed silver cross of Ezekiel
+| - the rod of Buddha
 
 # Levels and Quests
 

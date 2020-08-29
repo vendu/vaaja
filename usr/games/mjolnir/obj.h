@@ -11,12 +11,14 @@
 #define MJOLNIR_OBJ_DOOR            '+'
 #define MJOLNIR_OBJ_STAIR_DOWN      '>'
 #define MJOLNIR_OBJ_STAIR_UP        '<'
+#define MJOLNIR_OBJ_COFFIN          '%'
 #define MJOLNIR_ATM_CARD            '-'
 #define MJOLNIR_ATM_MACHINE         'C'
 #define MJOLNIR_OBJ_FOOD            'f'
 #define MJOLNIR_OBJ_WATER           '~'
 #define MJOLNIR_OBJ_FOUNTAIN        '{'
 #define MJOLNIR_OBJ_GOLD            '$'
+#define MJOLNIR_OBJ_MONEY           '¤'
 #define MJOLNIR_OBJ_BULLET          '='
 #define MJOLNIR_OBJ_POTION          '!'
 #define MJOLNIR_OBJ_PLANT           '*'
@@ -39,26 +41,28 @@
 #define MJOLNIR_OBJ_LASER           'L'
 #define MJOLNIR_OBJ_MACE            'm'
 #define MJOLNIR_OBJ_MAINFRAME       '8'
-#define MJOLNIR_OBJ_PIPE            '?'
-#define MJOLNIR_OBJ_PISTOL          'P'
+#define MJOLNIR_OBJ_FORTUNE_COOKIE  '?'
+#define MJOLNIR_OBJ_PIPE            'P'
+#define MJOLNIR_OBJ_PISTOL          '7'
+#define MJOLNIR_OBJ_REMNANTS        'R'
 #define MJOLNIR_OBJ_SWORD           's'
 #define MJOLNIR_OBJ_TERMINAL        'T'
 #define MJOLNIR_OBJ_WELL            'w'
 #define MJOLNIR_OBJ_CROSS           'x'
 #define MJOLNIR_OBJ_ALTAR           'X'
-
-/* special items */
+/* special objects */
 #define MJOLNIR_OBJ_CRYSTAL_BALL    'Q'
 #define MJOLNIR_OBJ_DEMON_WHIP      '|'
 #define MJOLNIR_OBJ_JATIMATIC       'J'
-#define MJOLNIR_OBJ_SWORD           '('
+#define MJOLNIR_OBJ_GOLDEN_SWORD    '('
+#define MJOLNIR_OBJ_BOOMERANG       ')'
 #define MJOLNIR_OBJ_MJOLNIR         'M'
 #define MJOLNIR_OBJ_GLEIPNIR        'G'
 #define MJOLNIR_OBJ_STORMBRINGER    'S'
 #define MJOLNIR_OBJ_EXCALIBUR       'E'
 #define MJOLNIR_OBJ_CROSS_OF_LIGHT  'x'
-#define MJOLNIR_OBJ_WATER           '~'
-#define MJOLNIR_OBJ_SILVER_BULLET   '='
+
+/* special items */
 
 struct mjolobjfunc {
     long              (*inv)(void *);                   // chr, returns objtab
@@ -75,6 +79,16 @@ struct mjolobjfunc {
     long              (*drop)(void *, void *);          // obj, loc
 };
 
+struct mjolobjparm {
+    long                sym;        // ASCII-presentation/type
+    long                ntotal;     // # of objects created
+    long                nmax;       // maximum number of objects
+    long                minlvl;     // minimum level to create
+    long                maxlvl;     // maxiimum level to create
+    long                problim;    // for upper probability bound
+    long                probsft;    // for constructing rand-masks
+};
+
 /* flg values */
 #define MJOLNIR_OBJ_HIDDEN              (1L << 0)
 #define MJOLNIR_OBJ_HIDDEN_TRAP         (1L << 1)
@@ -87,21 +101,18 @@ struct mjolobjfunc {
 #define MJOLNIR_OBJ_CURSED              (-1)
 
 struct mjolobj {
-#if (MJOLNIR_VT) || (MJOLNIR_CURSES)
-//    int                 id;
+    struct mjolobj     *prev;
+    struct mjolobj     *next;
     char               *name;           // object name string for inventory etc.
     long                sym;            // ASCII-presentation
     long                id;             // unique object ID
     long                special;        // non-0 for special items
-#endif
     long                flg;
     struct dngobj       data;           // common object data
     struct mjolobjfunc  func;
     long                weight;         // weight of object
     long                bless;          // BLESSED, NEUTRAL, CURSED
     long                parm;           // e.g. +1 or -1 for armor
-    struct mjolobj     *prev;
-    struct mjolobj     *next;
 };
 
 #if 0

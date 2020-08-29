@@ -61,7 +61,6 @@ by looting human remnants or by trading items with them.
 Oracles share pieces of wisdow to give you hints for the game.
 
 ### r - rat
-### R - remnants
 ### £ - shopkeeper
 ### u - unicorn
 ### v - vampire
@@ -110,7 +109,6 @@ Bran Castle in Transylvania.
 |  H     | human         | any     | 2d20         | 1/8          | usually friendly
 |  O     | oracle        | 8-      | 2d6 + 1d20   | 1/8         | friendly and helpful
 |  r     | rat           | 4-      | 4d4          | 1/8          |
-|  R     | remnants      | any     | N/A          | N/A          | corpses and belongings
 |  £     | shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
 |  u     | unicorn       | 16-     | 2d12         | 1/32         |
 |  v     | vampire       | 16-     | 4d20         | 1/64         | probability 1/32 in Transylvania

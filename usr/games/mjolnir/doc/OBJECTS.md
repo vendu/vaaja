@@ -136,6 +136,8 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### 7 - pistol
 
+### R - remnants
+
 ### s - sword
 
 ### T - terminal
@@ -155,7 +157,12 @@ return.
 
 The crystal ball shows things happening right now and/or in the future.
 
-### | - demon whip
+### | - rod of buddha
+
+The holder of Buddha rod may stop time for a short period to flee from or do
+preparations for fights.
+
+### y - demon whip
 
 The holder of the demon whip may stop time for 5 turns by shouting Topar - it is
 not allowed to kill or attack anyone during those turns.
@@ -205,14 +212,14 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   <    | stairway up    | 1 per level         | stairs one level up
 |   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)
 |   -    | ATM-card       | 1/128               | bank account access; need PIN-code
-|   C    | ATM-machine    | 1/16                | cash withdrawals and deposits
-|   f    | food	          | 1/8		        | food ration
-|   ~    | water	  | 1/16		| water, may be blessed
+|   C    | ATM-machine    | 1/32                | cash withdrawals and deposits
+|   f    | food	          | 1/16	        | food ration
+|   ~    | water	  | 1/16		| water, may be blessed potion
 |   {    | fountain       | 1/32		| fountain
 |   $    | gold	          | 1/64		| use to get merchandise
 |   =    | bullet	  | 1/32		| bullet (silver ones work on daemons)
-|   !    | potion	  | 1/64		| potion
-|   *    | plant          | 1/128		| plant
+|   !    | potion	  | 1/32		| potion
+|   *    | plant/mushroom | 1/16                | plant on land, mushroom underground
 |   0    | punchcard      | 1/64		| corewar warriors to be run from terminals
 |   t    | tape	          | mainframes	        | software for in-dungeon mainframes
 |   &    | statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
@@ -232,10 +239,11 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   L    | laser	  | 1/128		| laser gun, from aliens
 |   m    | mace		  | 1/32		| mace or hammer
 |   8    | mainframe	  | 1/16		| computer systems for running punchcards
-|   #    | money          | 1/256               | money from shops or ATMs
+|   ¤    | money          | 1/256               | money from shops or ATMs
 |   ?    | fortune cookie | 1/64                |
 |   P    | pipe		  | 1/64		| pipe
-|   p    | pistol         | 1/64		| pistol
+|   7    | pistol         | 1/64		| pistol
+|   R    | remnants       | N/A                 | corpses and belongings
 |   s    | sword	  | 1/128		| sword
 |   T    | terminal	  | 1/16		| terminal connected to mainframe
 |   w    | well		  | 1/8		        | well (water, may be cursed/poisonous)
@@ -245,7 +253,8 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 | symbol | special object | probability    | description
 --------------------------|----------------|------------
 |   Q   | Crystal ball    | 1/256	   | may show things happening elsewhere or in the future
-|   |   | Demon Whip	  | 1 per game	   | weapon against different forms of undead
+|   |   | Rod of Buddha   | 1 per game     | may be used to stop time
+|   y   | Demon Whip	  | 1 per game	   | weapon against different forms of undead
 |   J   | Jatimatic	  | 1/256          | sub-machine gun for close range combat
 - may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
 |   (   | Golden Sword	  | 1 per game	   | princess Kara's golden sword

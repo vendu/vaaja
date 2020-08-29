@@ -537,10 +537,12 @@ mapcarve(const struct map map, const struct triset edges,
         
         if (!mapeqpnt(edg.p3, flags.one)) {
             // Min room size ensures room will not be smaller than min x min.
+            //            const int   min = 2;
             const int   min = 2;
-            const int   size = grid / 2 - min;
-            const int   w = min + rand() % size;
-            const int   h = min + rand() % size;
+            //            const int   size = grid / 2 - min;
+            const int   size = grid / 2;
+            const int   w = min + (rand() % size);
+            const int   h = min + (rand() % size);
             
             mapmkbone(map, edg, w, h);
         }
@@ -565,8 +567,8 @@ dungenmap(const int w, const int h, const int grid, const int max)
     tset = mapdlntri(pset, w, h, 9 * max, flags);
     edges = mapgetedges(mapnewtriset(27 * max), tset, flags);
 #endif
-    tset = mapdlntri(pset, w, h, 13 * max, flags);
-    edges = mapgetedges(mapnewtriset(39 * max), tset, flags);
+    tset = mapdlntri(pset, w, h, 17 * max, flags);
+    edges = mapgetedges(mapnewtriset(51 * max), tset, flags);
     mapdelrev(edges, w, h, flags);
     mapchkdups(edges, flags);
     mapcarve(map, edges, flags, grid);

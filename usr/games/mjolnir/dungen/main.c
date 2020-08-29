@@ -24,9 +24,9 @@ main(int argc, char *argv[])
     mjolsrand(time(NULL));
     dungenlvl(80,
               48 + (mjolrand() & 0x1f),
-              6 + (mjolrand() & 0x07),
+              8 + (mjolrand() & 0x07),
               //              4 + (rand() & 0x07),
-              8 + (mjolrand() & 0x1f));
+              12 + (mjolrand() & 0x1f));
 
     exit(0);
 }

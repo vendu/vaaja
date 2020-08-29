@@ -11,88 +11,133 @@
 #include <mjolnir/mjol.h>
 
 struct mjolobjcap {
-    uint8_t mjolcanmovetomap[256 / CHAR_BIT];
-    uint8_t mjolcanpickupmap[256 / CHAR_BIT];
-    uint8_t mjolcanwearmap[256 / CHAR_BIT];
-    uint8_t mjolcanwieldmap[256 / CHAR_BIT];
+    uint8_t canmove[256 / CHAR_BIT];
+    uint8_t canhit[256 / CHAR_BIT];
+    uint8_t canpick[256 / CHAR_BIT];
+    uint8_t canwear[256 / CHAR_BIT];
+    uint8_t canwield[256 / CHAR_BIT];
 };
 
-struct mjolobjcap   mjolobjcaps C_ALIGNED(MACH_PAGE_SIZE);
+struct mjolobjparm  mjolobjparms[256];
+struct mjolobjcap   mjolobjcap C_ALIGNED(MACH_PAGE_SIZE);
 
-/* initialise bitmap for objects you can move on top of */
 void
-mjolinitcanmoveto(void)
+mjolinitobjparm(sym, ntotal, nmax, minlvl, maxlvl, problim, probsft)
 {
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_FLOOR);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_SAND);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_DOOR);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_FOOD);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_WATER);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_FOUNTAIN);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_GOLD);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_BULLET);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_POTION);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_PLANT);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_PUNCHCARD);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_TAPE);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_STAIR_DOWN);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_STAIR_UP);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_STATUE);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_TRAP);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_WAND);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_SCROLL);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_RING);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_WHIP);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_ARMOR);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_CHAIN);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_CHEST);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_SUBMACHINE_GUN);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_HONEY);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_KNIFE);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_LOCKPICK);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_LASER);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_MACE);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_MAINFRAME);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_PIPE);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_PISTOL);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_SWORD);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_WELL);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_CROSS);
-    setbit(mjolcanmovetomap, MJOLNIR_OBJ_ALTAR);
+    mjolobjparms[sym].sym = sym;
+    mjolobjparms[sym].ntotal = ntotal;
+    mjolobjparms[sym].nmax = nmax;
+    mjolobjparms[sym].minlvl = minlvl;
+    mjolobjparms[sym].maxlvl = maxlvl;
+    mjolobjparms[sym].problim = problim;
+    mjolobjparms[sym].probsft = probsft;
 
     return;
 }
 
+/* initialise bitmap for objects you can move on top of */
+void
+mjolinitcanmove(void)
+{
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_FLOOR);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_SAND);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_DOOR);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_FOOD);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_WATER);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_FOUNTAIN);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_GOLD);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_BULLET);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_POTION);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PLANT);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PUNCHCARD);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_TAPE);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_STAIR_DOWN);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_STAIR_UP);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_STATUE);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_TRAP);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_WAND);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_SCROLL);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_RING);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_WHIP);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_ARMOR);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_CHAIN);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_CHEST);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_SUBMACHINE_GUN);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_HONEY);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_KNIFE);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_LOCKPICK);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_LASER);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_MACE);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_MAINFRAME);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PIPE);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_PISTOL);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_SWORD);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_WELL);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_CROSS);
+    setbit(mjolobjcap.canmove, MJOLNIR_OBJ_ALTAR);
+
+    return;
+}
+
+void
+mjolinitcanhit(void)
+{
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_SOLDIER_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_BEE);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_BEE_QUEEN);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_DOG);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ALIEN);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_GHOUL);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_HUMAN);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ORACLE);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_RAT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_SHOPKEEPER);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_UNICORN);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_VAMPIRE);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_WOLF);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_WEREWOLF);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ZOMBIE);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+    setbit(mjolobjcap.canhit, MJOLNIR_CHAR_ANT);
+}
+
 /* initialise bitmap for objects you can pick up */
 void
-mjolinitcanpickup(void)
+mjolinitcanpick(void)
 {
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_FOOD);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_WATER);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_GOLD);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_BULLET);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_POTION);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_PLANT);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_PUNCHCARD);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_TAPE);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_STATUE);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_WAND);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_SCROLL);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_RING);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_ARMOR);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_CHAIN);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_CHEST);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_SUBMACHINE_GUN);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_HONEY);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_KNIFE);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_LOCKPICK);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_LASER);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_MACE);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_MAINFRAME);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_PIPE);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_PISTOL);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_SWORD);
-    setbit(mjolcanpickupmap, MJOLNIR_OBJ_CROSS);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_FOOD);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_WATER);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_GOLD);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_BULLET);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_POTION);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_PLANT);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_PUNCHCARD);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_TAPE);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_STATUE);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_WAND);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_SCROLL);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_RING);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_ARMOR);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_CHAIN);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_CHEST);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_SUBMACHINE_GUN);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_HONEY);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_KNIFE);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_LOCKPICK);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_LASER);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_MACE);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_MAINFRAME);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_PIPE);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_PISTOL);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_SWORD);
+    setbit(mjolobjcap.canpick, MJOLNIR_OBJ_CROSS);
 
     return;
 }
@@ -101,7 +146,7 @@ mjolinitcanpickup(void)
 void
 mjolinitcanwear(void)
 {
-    setbit(mjolcanwearmap, MJOLNIR_OBJ_ARMOR);
+    setbit(mjolobjcap.canwear, MJOLNIR_OBJ_ARMOR);
 
     return;
 }
@@ -110,16 +155,15 @@ mjolinitcanwear(void)
 void
 mjolinitcanwield(void)
 {
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_CHAIN);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_SUBMACHINE_GUN);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_KNIFE);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_LASER);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_MACE);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_PIPE);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_PISTOL);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_LONGBOW);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_SWORD);
-    setbit(mjolcanwieldmap, MJOLNIR_OBJ_CROSS);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_CHAIN);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_SUBMACHINE_GUN);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_KNIFE);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_LASER);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_MACE);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_PIPE);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_PISTOL);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_SWORD);
+    setbit(mjolobjcap.canwield, MJOLNIR_OBJ_CROSS);
 
     return;
 }
@@ -127,8 +171,8 @@ mjolinitcanwield(void)
 void
 mjolinitobj(void)
 {
-    mjolinitcanmoveto();
-    mjolinitcanpickup();
+    mjolinitcanmove();
+    mjolinitcanpick();
     mjolinitcanwear();
     mjolinitcanwield();
 }
