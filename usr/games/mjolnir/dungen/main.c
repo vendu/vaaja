@@ -26,7 +26,7 @@ main(int argc, char *argv[])
               48 + (mjolrand() & 0x1f),
               8 + (mjolrand() & 0x07),
               //              4 + (rand() & 0x07),
-              12 + (mjolrand() & 0x1f));
+              16 + (mjolrand() & 0x1f));
 
     exit(0);
 }

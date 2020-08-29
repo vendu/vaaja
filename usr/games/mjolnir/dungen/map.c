@@ -1,3 +1,4 @@
+#include <mjolnir/conf.h>
 #include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -310,13 +311,13 @@ maprandpnt(const int w, const int h, const int max, const int grid,
     for (i = set.cnt; i < set.max; i++)
     {
         const struct pnt pnt = {
-            (float) (rand() % (w - border) + border / 2),
-            (float) (rand() % (h - border) + border / 2)
+            (float) (mjolrand() % (w - border) + border / 2),
+            (float) (mjolrand() % (h - border) + border / 2)
         };
 #if 0
         const struct pnt pnt = {
-            (float) (rand() % (w - border) + border),
-            (float) (rand() % (h - border) + border)
+            (float) (mjolrand() % (w - border) + border),
+            (float) (mjolrand() % (h - border) + border)
         };
 #endif
         const struct pnt snapped = mapsnappnt(pnt, grid);
@@ -460,8 +461,19 @@ mapmkroom(struct map map, const struct pnt where,
 
     i = 2 * w + 2 * h;
     map.nempty += i;
+#if 0
     for (i = -w; i < w; i++) {
         for (j = -h; j < h; j++) {
+            xx = x + i;
+            yy = y + j;
+            ndx = yy * map.w + xx;
+            setbit(map.bmap, ndx);
+            map.wall[yy][xx] = ' ';
+        }
+    }
+#endif
+    for (i = -w / 2; i < w / 2; i++) {
+        for (j = -h / 2; j < h / 2; j++) {
             xx = x + i;
             yy = y + j;
             ndx = yy * map.w + xx;
@@ -538,11 +550,11 @@ mapcarve(const struct map map, const struct triset edges,
         if (!mapeqpnt(edg.p3, flags.one)) {
             // Min room size ensures room will not be smaller than min x min.
             //            const int   min = 2;
-            const int   min = 2;
+            const int   min = 4;
             //            const int   size = grid / 2 - min;
             const int   size = grid / 2;
-            const int   w = min + (rand() % size);
-            const int   h = min + (rand() % size);
+            const int   w = min + (mjolrand() % size);
+            const int   h = min + (mjolrand() % size);
             
             mapmkbone(map, edg, w, h);
         }
