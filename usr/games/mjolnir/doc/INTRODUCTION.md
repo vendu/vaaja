@@ -37,14 +37,14 @@ x - the blessed silver cross of Ezekiel
 Different levels [and quests] in the game feature themed environment and
 characters to interact with.
 
-# Level -1 - Demigodhood
+# Level -1 - Heaven
 
 Once you have returned Mjolnir to Thor or Ukko, you will be ascended to demigod-
 hood by the corresponding god. In short, you win the game.
 
-# Level #0 - Surface
+# Level 0 - Ground
 
-The surface level has locations such as shops, offices, other buildings, and
+The ground level has locations such as shops, offices, other buildings, and
 graveyards.
 
 Your quests on the surface of Earth include a digital bank robbery or two as
@@ -75,7 +75,8 @@ advice.
 # Level 11 - Atlantis
 
 Your mission in Atlantis is to rescue the captured princess Kara from the
-continent falling under the sea.
+continent falling under the sea. You also must return her golden sword back to
+Kara.
 
 # Levels 12-15 - Death Labyrinth
 
