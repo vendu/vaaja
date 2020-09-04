@@ -1,6 +1,9 @@
 #ifndef __SYS_ZEN_VAR_H__
 #define __SYS_ZEN_VAR_H__
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define ZEN_VAR_INVAL           (-1)
 #define ZEN_VAR_HIRES_TMR       offsetof(struct zenvars, hirestmr)
 #define ZEN_VAR_RTC_TIME        offsetof(struct zenvars, rtctime)
@@ -16,18 +19,18 @@
 #define ZEN_VAR_EVQ_MAX         offsetof(struct zenvars, evqmax)
 
 struct zenvars {
-    m_word_t                   *hirestmr;
-    m_time_t                   *rtctime;
-    m_half_t                    tmrhz;
-    m_half_t                    openmax;
-    m_half_t                    streammax;
-    m_half_t                    wordsize;
-    m_half_t                    adrbits;
-    m_half_t                    clsize;
-    m_half_t                    banksize;
-    m_half_t                    pagesize;
-    m_half_t                    shmmax;
-    m_half_t                    evqmax;
+    m_time_t                   *hirestmr;
+    time_t                     *rtctime;
+    int16_t                     tmrhz;
+    int16_t                     openmax;
+    int16_t                     streammax;
+    int16_t                     wordsize;
+    int16_t                     adrbits;
+    int16_t                     clsize;
+    int16_t                     banksize;
+    int16_t                     pagesize;
+    int16_t                     shmmax;
+    int16_t                     evqmax;
 };
 
 #endif /* __SYS_ZEN_VAR_H__ */
