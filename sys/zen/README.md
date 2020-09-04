@@ -22,7 +22,6 @@ interest would be the following
 | ZEN_PAGE_SIZE         | virtual memory page size
 | ZEN_JUMBO_SIZE        | virtual memory huge page size (if applicable, else 0)
 | ZEN_BANK_SIZE         | physical memory bank size
-|-----------------------|------
 
 ### conf        - system compile-time configuration
 
