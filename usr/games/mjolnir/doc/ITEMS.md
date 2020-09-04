@@ -118,6 +118,10 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### k - knife
 
+### ¿ - crowbar
+
+### 4 - c4 plastic explosive
+
 ### K - kaleidoscope
 
 ### l - lockpick

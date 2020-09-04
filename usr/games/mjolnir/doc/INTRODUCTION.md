@@ -47,14 +47,13 @@ hood by the corresponding god. In short, you win the game.
 The ground level has locations such as shops, offices, other buildings, and
 graveyards.
 
-Your quests on the surface of Earth include a digital bank robbery or two as
-well as trying to hunt down as many demons haunting people as you can.
-
 ## Transylvania
 
 Your quest in Transylvania is to slay the master vampire Vlad Dracula alias
 Vlad III Tepes. He's often present at the Bran castle; welcome to the vampire
 country. :)
+
+Pay attention to graveyards, especially at dusk and dawn.
 
 ## Monastery
 
@@ -66,6 +65,9 @@ and ghost hunting. Pay attention to the monastery library.
 The dungeon levels consist of procedurally generated rooms and walls generated
 procedurally, somewhat pseudo-randomly, to guarantee a unique experience every
 game.
+
+Your quests in the dungeons include a digital bank robbery or two. You'll also
+meet plenty of demons and other hostile enemies to combat with in the dungeons.
 
 # Level 10 - Oracle
 
