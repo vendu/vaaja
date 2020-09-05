@@ -99,18 +99,23 @@ vtsetcolor(const char *str)
     return;
 }
 
+/*
+ * #define VT_SET_256_COLOR_STRING     "\033[%d;5;%d"
+ * vtset256color(VT_SET_FG_COLOR, VT_BLACK_COLOR_ID)
+ * vtset256color(VT_SET_BG_COLOR, VT_WHITE_COLOR_ID)
+ */
 void
-vtset256color(int cmd, int num)
+vtset256color(int id, int num)
 {
-    printf(VT_SET_256_COLOR_STRING, cmd, num);
+    printf(VT_SET_256_COLOR_STRING, id, num);
 
     return;
 }
 
 void
-vtset24bitcolor(int cmd, int r, int g, int b)
+vtset24bitcolor(int id, int r, int g, int b)
 {
-    printf(VT_SET_24BIT_COLOR_STRING, cmd, r, g, b);
+    printf(VT_SET_24BIT_COLOR_STRING, id, r, g, b);
 
     return;
 }

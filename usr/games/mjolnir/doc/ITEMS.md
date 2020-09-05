@@ -255,7 +255,7 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   X    | altar	  | 1/32		| altar; sacrifice dead creatures on it
 
 | symbol | special object | probability    | description
---------------------------|----------------|------------
+|-------------------------|----------------|------------
 |   Q   | Crystal ball    | 1/256	   | may show things happening elsewhere or in the future
 |   |   | Rod of Buddha   | 1 per game     | may be used to stop time
 |   y   | Demon Whip	  | 1 per game	   | weapon against different forms of undead

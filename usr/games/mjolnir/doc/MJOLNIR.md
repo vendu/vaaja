@@ -130,61 +130,61 @@ Good luck, adventurer, and beware of Fenris!
 ### rogue command
 
 keybard command | description
-----------------|------------
-ESC		| boss key
-m		| open command menu
-/		| identify object
-h		| left
-j		| down
-k		| up
-l		| right
-y		| up & left
-u		| up & right
-b		| down & left
-n		| down & right
-<SHIFT><dir>	| run
-<CTRL><dir>	| run till adjacent
-f<dir>		| fight till death or near death
-t<dir>		| throw
-m<dir>		| move on top but don't pick up
-z<dir>		| zap a wand
-^<dir>		| identify trap type
-s		| search for trap/secret door
->		| go down
-<		| go up
-.		| rest for a turn
-,		| pick up
-i		| inventory
-I		| inventory single item
-q		| quaff potion
-r		| read scroll
-s               | shout
-e		| eat food
-w		| wield a weapon
-W		| wear armor
-T		| take armor off
-P		| put on ring
-R		| remove ring
-d		| drop object
-c		| call object
-a		| repeat last command
-)		| print current weapon
-]		| print current armor
-=		| print current rings
-@		| print current stats
-D		| recall what's been discovered
-o		| examine/set options
-^R		| redraw screen
-^P		| repeat last message
-^[		| cancel command
-S		| save game
+|----------------|------------
+| ESC		| boss key
+| m		| open command menu
+| /		| identify object
+| h		| left
+| j		| down
+| k		| up
+| l		| right
+| y		| up & left
+| u		| up & right
+| b		| down & left
+| n		| down & right
+| <SHIFT><dir>	| run
+| <CTRL><dir>	| run till adjacent
+| f<dir>	| fight till death or near death
+| t<dir>	| throw
+| m<dir>	| move on top but don't pick upz<
+| z<dir>	| zap a wand
+| ^<dir>	| identify trap type
+| s		| search for trap/secret door
+| >		| go down
+| <		| go up
+| .		| rest for a turn
+| ,		| pick up
+| i		| inventory
+| I		| inventory single item
+| q		| quaff potion
+| r		| read scroll
+| s             | shout
+| e		| eat food
+| w		| wield a weapon
+| W		| wear armor
+| T		| take armor off
+| P		| put on ring
+| R		| remove ring
+| d		| drop object
+| c		| call object
+| a		| repeat last command
+| )		| print current weapon
+| ]		| print current armor
+| =		| print current rings
+| @		| print current stats
+| D		| recall what's been discovered
+| o		| examine/set options
+| ^R		| redraw screen
+| ^P		| repeat last message
+| ^[		| cancel command
+| S		| save game
 Q		| quit
 
 mjolnir actions | description
-----------------|------------
-u		| use an object with another one
-0		| turn off
-1		| turn on
+|---------------|------------
+| u		| use an object with another one
+| 0		| turn off
+| 1		| turn on
 
 ## gameplay
 - console commands (invoke console with M-x)

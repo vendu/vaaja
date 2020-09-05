@@ -3,7 +3,7 @@
 
 #define VT_ATTRIBUTE_PREFIX         "\033["
 #define VT_PALETTE_PREFIX           "\033]P"
-/* terminal attributes */
+/* terminal attributes - vtsetparm() */
 #define VT_RESET_DEFAULTS           0
 #define VT_SET_BOLD_ON              1
 #define VT_SET_HALF_BRIGHT_ON       2
@@ -16,9 +16,25 @@
 #define VT_SET_REVERSE_VIDEO_OFF    27
 #define VT_SET_DEFAULT_FG_COLOR     39
 #define VT_SET_DEFAULT_BG_COLOR     49
-#define VT_SET_RGB_FG               38
-#define VT_SET_RGB_BG               48
+#define VT_SET_FG_COLOR             38
+#define VT_SET_BG_COLOR             48
 /* foreground colors */
+#define VT_BLACK_COLOR_ID           0
+#define VT_RED_COLOR_ID             1
+#define VT_GREEN_COLOR_ID           2
+#define VT_YELLOW_COLOR_ID          3
+#define VT_BLUE_COLOR_ID            4
+#define VT_MAGENTA_COLOR_ID         5
+#define VT_CYAN_COLOR_ID            6
+#define VT_LIGHT_GRAY_COLOR_ID      7
+#define VT_DARK_GRAY_COLOR_ID       8
+#define VT_LIGHT_RED_COLOR_ID       9
+#define VT_LIGHT_GREEN_COLOR_ID     10
+#define VT_LIGHT_YELLOW_COLOR_ID    11
+#define VT_LIGHT_BLUE_COLOR_ID      12
+#define VT_LIGHT_MAGENTA_COLOR_ID   13
+#define VT_LIGHT_CYAN_COLOR_ID      14
+#define VT_WHITE_COLOR_ID           15
 #define VT_BLACK_FG                 "0;30"
 #define VT_BLUE_FG                  "0;34"
 #define VT_GREEN_FG                 "0;32"
