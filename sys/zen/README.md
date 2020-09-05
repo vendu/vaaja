@@ -11,7 +11,7 @@ on inexpensive FPGA-kits.
 ### bsp/v0      - V0 board support package
 
 The board support packages contain platform-specific declarations. Of particular
-interest would be the following
+interest would be the following, i
 
 #### System Parameters
 

@@ -100,7 +100,7 @@ vtsetcolor(const char *str)
 }
 
 void
-vgaset256color(int cmd, int num)
+vtset256color(int cmd, int num)
 {
     printf(VT_SET_256_COLOR_STRING, cmd, num);
 
@@ -108,7 +108,7 @@ vgaset256color(int cmd, int num)
 }
 
 void
-vgaset24bitcolor(int cmd, int r, int g, int b)
+vtset24bitcolor(int cmd, int r, int g, int b)
 {
     printf(VT_SET_24BIT_COLOR_STRING, cmd, r, g, b);
 

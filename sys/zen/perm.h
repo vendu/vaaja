@@ -13,7 +13,7 @@
 struct zenperm {
     zenuid_t            uid;
     zenuid_t            gid;
-    zenperm_t           flags;
+    long                perm;
 };
 
 /* I/O permission-bits */

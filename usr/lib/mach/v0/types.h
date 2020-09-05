@@ -5,8 +5,12 @@
 #include <mach/v0/regs.h>
 
 /* machine types */
-typedef int32_t                 m_reg_t;
-typedef uint32_t                m_ureg_t;
+typedef int64_t                 m_reg_t;
+typedef uint64_t                m_ureg_t;
+#if defined(V0_HAVE_LONG64)
+typedef int64_t                 m_long_t;
+typedef uint64_t                m_ulong_t;
+#endif
 typedef int32_t                 m_word_t;
 typedef uint32_t                m_uword_t;
 typedef int16_t                 m_half_t;
@@ -18,7 +22,10 @@ typedef void                   *m_ptr_t;
 typedef int64_t                 m_long_t;
 typedef uint64_t                m_ulong_t;
 
-/* virtual machine types */
+/* coprocessor types */
+typedef float                   m_fpsingle_t;
+typedef double                  m_fpdouble_t;
+typedef int64_t                 m_fxp_t;
 
 struct v0romparm {
     void                   *buf;
