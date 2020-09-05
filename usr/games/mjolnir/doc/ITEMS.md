@@ -155,58 +155,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 This is where you sacrifice to a dedicated god. You may get special items in
 return.
 
-## Special Objects
-
-### Q - crystal ball
-
-The crystal ball shows things happening right now and/or in the future.
-
-### | - rod of buddha
-
-The holder of Buddha rod may stop time for a short period to flee from or do
-preparations for fights.
-
-### y - demon whip
-
-The holder of the demon whip may stop time for 5 turns by shouting Topar - it is
-not allowed to kill or attack anyone during those turns.
-
-### J - Jatimatic
-
-Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
-very nice firearm against vampires and other demons.
-
-### ( - golden sword
-- the golden sword of the princess of Atlantis, Kara, is a strong weapon against
-  demons and may be used to travel through dimensions
-
-### ) - boomerang
-- may be special itgem Silver boomerang
-
-### M - Mjolnir
-
-The hammer you need to return to Thor after Fenris stole it.
-
-### G - Gleipnir
-
-Ribbon that can hold Fenris leashed.
-
-### S - Stormbringer
-
-Special sword.
-
-### E - Excalibur
-
-Special sword.
-
-### x - Cross of Light
-
-Special cross, the player's default white-magic weapon.
-
-Distinguished from other crosses by having the names of 4 archangels - Michael,
-Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
-
-| Symbol | object	  | probability	        | description
+| symbol | object	  | probability	        | description
 |:-------|:---------------|:--------------------|:-----------
 |  ' '   | floor	  | N/A   	        | floor/ground
 |   #    | wall	          | N/A		        | cave wall (may be hidden door)
@@ -253,6 +202,57 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   w    | well		  | 1/8		        | well (water, may be cursed/poisonous)
 |   x    | cross	  | 1/64		| cross; may be Holy Cross
 |   X    | altar	  | 1/32		| altar; sacrifice dead creatures on it
+
+## Special Objects
+
+### Q - Crystal ball
+
+The crystal ball shows things happening right now and/or in the future.
+
+### | - Rod of Buddha
+
+The holder of Buddha rod may stop time for a short period to flee from or do
+preparations for fights.
+
+### y - demon whip
+
+The holder of the demon whip may stop time for 5 turns by shouting Topar - it is
+not allowed to kill or attack anyone during those turns.
+
+### J - Jatimatic
+
+Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
+very nice firearm against vampires and other demons.
+
+### ( - golden sword
+- the golden sword of the princess of Atlantis, Kara, is a strong weapon against
+  demons and may be used to travel through dimensions
+
+### ) - boomerang
+- may be special itgem Silver boomerang
+
+### M - Mjolnir
+
+The hammer you need to return to Thor after Fenris stole it.
+
+### G - Gleipnir
+
+Ribbon that can hold Fenris leashed.
+
+### S - Stormbringer
+
+Special sword.
+
+### E - Excalibur
+
+Special sword.
+
+### x - Cross of Light
+
+Special cross, the player's default white-magic weapon.
+
+Distinguished from other crosses by having the names of 4 archangels - Michael,
+Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 
 | symbol | special object | probability    | description
 |:-------|:---------------|:---------------|:-----------
