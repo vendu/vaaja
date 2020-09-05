@@ -259,8 +259,8 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   Q    | Crystal ball   | 1/256	   | may show things happening elsewhere or in the future
 |   |   | Rod of Buddha   | 1 per game     | may be used to stop time
 |   y   | Demon Whip	  | 1 per game	   | weapon against different forms of undead
-|   J   | Jatimatic	  | 1/256          | sub-machine gun for close range combat
-- may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
+|   J   | Jatimatic	  | 1/256          | sub-machine gun for close range combat,
+                                             may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
 |   (   | Golden Sword	  | 1 per game	   | princess Kara's golden sword
 |   M   | Mjolnir         | 1 per game	   | the hammer of Thor
 |   G   | Gleipnir	  | 1 at start	   | ribbon that can hold Fenris

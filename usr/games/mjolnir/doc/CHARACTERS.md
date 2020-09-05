@@ -107,7 +107,7 @@ Bran Castle in Transylvania.
 |  e     | space-alien   | 8-      | 2d8 + 2d20   | 1/64         | may have super-powers
 |  g     | ghoul         | 16-     | 3d20         | 1/64         | can bite lethally, corpse eater
 |  H     | human         | any     | 2d20         | 1/8          | usually friendly
-|  O     | oracle        | 8-      | 2d6 + 1d20   | 1/8         | friendly and helpful
+|  O     | oracle        | 8-      | 2d6 + 1d20   | 1/8          | friendly and helpful
 |  r     | rat           | 4-      | 4d4          | 1/8          |
 |  £     | shopkeeper    | 4-      | 3d12 + 2d20  | 1/16         | run shops
 |  u     | unicorn       | 16-     | 2d12         | 1/32         |
