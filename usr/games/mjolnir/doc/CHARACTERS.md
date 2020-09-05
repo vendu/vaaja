@@ -97,7 +97,7 @@ Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.
 
 | symbol | character     | levels   | hit          | probability  | notes 
-|:-------|:--------------|:---------|:-------------|:-------------|:------
+|--------|---------------|----------|--------------|--------------|-------
 |  a     | ant           | any      | 1d4          | 1/16         | regular ant
 |  A     | soldier ant   | 2 up     | 2d4          | 1/32         | soldier ant
 |  B     | beehive       | 4 up     | N/A          | 1/16         | one queen per hive
