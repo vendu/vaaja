@@ -98,8 +98,8 @@ Bran Castle in Transylvania.
 
 | symbol | character     |levels   | hit          | probability  | notes 
 |:-------|:--------------|:--------|:--------------:-------------|:------
-|  a     | ant           | any     | 1d4          | 1/16         |
-|  A     | soldier ant   | 2-      | 2d4          | 1/32         |
+|  a     | ant           | any     | 1d4          | 1/16         | regular ant
+|  A     | soldier ant   | 2-      | 2d4          | 1/32         | soldier ant
 |  B     | beehive       | 4-      | N/A          | 1/16         | one queen per hive
 |  b     | bee           | 4-      | 1d4          | 1/32         | masses around hives
 |  q     | bee queen     | 4-      | 2d4          | 1/128        | usually hiding in nest
