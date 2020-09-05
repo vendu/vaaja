@@ -96,29 +96,29 @@ Lady X carries a submachine gun which may be loaded with silver rounds.
 Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.
 
-| symbol | character     |levels   | hit          | probability  | notes 
-|:-------|:--------------|:--------|:--------------:-------------|:------
-|  a     | ant           | any     | 1d4          | 1/16         | regular ant
-|  A     | soldier ant   | 2 up    | 2d4          | 1/32         | soldier ant
-|  B     | beehive       | 4 up    | N/A          | 1/16         | one queen per hive
-|  b     | bee           | 4 up    | 1d4          | 1/32         | masses around hives
-|  q     | bee queen     | 4 up    | 2d4          | 1/128        | usually hiding in nest
-|  d     | dog           | 1 up    | 2d20 and 4d6   | initial pet  | likes munchies
-|  e     | space-alien   | 8 up    | 2d8 and 2d20   | 1/64         | may have super-powers
+| symbol | character     | levels   | hit          | probability  | notes 
+|:-------|:--------------|:---------|:-------------|:-------------|:------
+|  a     | ant           | any      | 1d4          | 1/16         | regular ant
+|  A     | soldier ant   | 2 up     | 2d4          | 1/32         | soldier ant
+|  B     | beehive       | 4 up     | N/A          | 1/16         | one queen per hive
+|  b     | bee           | 4 up     | 1d4          | 1/32         | masses around hives
+|  q     | bee queen     | 4 up     | 2d4          | 1/128        | usually hiding in nest
+|  d     | dog           | 1 up     | 2d20 and 4d6   | initial pet  | likes munchies
+|  e     | space-alien   | 8 up     | 2d8 and 2d20   | 1/64         | may have super-powers
 |  g     | ghoul         | graveyard | 3d20         | 1/64         | can bite lethally, corpse eater
-|  H     | human         | any     | 2d20         | 1/8          | usually friendly
-|  O     | oracle        | 8 up      | 2d6 and 1d20   | 1/8          | friendly and helpful
-|  r     | rat           | 4 up    | 4d4          | 1/8          |
-|  £     | shopkeeper    | 4 up    | 3d12 and 2d20  | 1/16         | run shops
-|  u     | unicorn       | 16 up   | 2d12         | 1/32         |
+|  H     | human         | any      | 2d20         | 1/8          | usually friendly
+|  O     | oracle        | 8 up     | 2d6 and 1d20   | 1/8          | friendly and helpful
+|  r     | rat           | 4 up     | 4d4          | 1/8          |
+|  £     | shopkeeper    | 4 up     | 3d12 and 2d20  | 1/16         | run shops
+|  u     | unicorn       | 16 up    | 2d12         | 1/32         |
 |  v     | vampire       | graveyard | 4d20         | 1/64         | probability 1/32 in Transylvania
-|  w     | wolf          | 12 up   | 3d12 and 2d20  | 1/64         |
-|  W     | werewolf      | 16 up   | 5d12 and 2d20  | 1/64         |
-|  Z     | zombie        | 16 up   | 3d12 and 1d20  | 1/64         | flesh eater
+|  w     | wolf          | 12 up    | 3d12 and 2d20  | 1/64         |
+|  W     | werewolf      | 16 up    | 5d12 and 2d20  | 1/64         |
+|  Z     | zombie        | 16 up    | 3d12 and 1d20  | 1/64         | flesh eater
 |  F     | Fenris        | Valhalla | 4d12 and 3d20  | 1 in game    | the guardian and pet wolf of germanic gods
-|  K     | Kara          | 20 up   | 1d12 and 2d20  | 1 in game    |
-|  T     | Thor          | Heaven  | 6d12 and 6d20  | 1 in game    | viking god of thunder
-|  U     | Ukko Ylijumala | Valhalla | 8d20 and 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
-|  V     | Lady X        | graveyard | 4d20 and 4d6   | 1 in game    |
+|  K     | Kara          | 20 up    | 1d12 and 2d20  | 1 in game    |
+|  T     | Thor          | Heaven   | 6d12 and 6d20  | 1 in game    | viking god of thunder
+|  U     | Ukko Ylijumala | Valhalla    | 8d20 and 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
+|  V     | Lady X        | graveyard    | 4d20 and 4d6   | 1 in game    |
 |  D     | Vlad Dracula  | Transylvanie | 1d12 and 5d20  | 1 in game    |
 
