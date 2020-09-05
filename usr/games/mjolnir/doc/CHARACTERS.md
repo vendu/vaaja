@@ -120,5 +120,5 @@ Bran Castle in Transylvania.
 |  T     | Thor          | Heaven   | 6d12 + 6d20  | 1 in game    | viking god of thunder
 |  U     | Ukko Ylijumala | Valhalla    | 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
 |  V     | Lady X        | graveyard    | 4d20 + 4d6   | 1 in game    |
-|  D     | Vlad Dracula  | Transylvanie | 1d12 + 5d20  | 1 in game    |
+|  D     | Vlad Dracula  | Transylvania | 1d12 + 5d20  | 1 in game    |
 
