@@ -96,8 +96,8 @@ Lady X carries a submachine gun which may be loaded with silver rounds.
 Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.
 
-| symbol | character     |levels   | hit          | probability  | notes |
-|:-------|:--------------|:--------|:--------------:-------------|:------|
+| symbol | character     |levels   | hit          | probability  | notes 
+|:-------|:--------------|:--------|:--------------:-------------|:------
 |  a     | ant           | any     | 1d4          | 1/16         |
 |  A     | soldier ant   | 2-      | 2d4          | 1/32         |
 |  B     | beehive       | 4-      | N/A          | 1/16         | one queen per hive
