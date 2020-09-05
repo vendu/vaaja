@@ -118,7 +118,7 @@ Bran Castle in Transylvania.
 |  F     | Fenris        | 32-     | 4d12 + 3d20  | 1 in game    | the guardian and pet wolf of germanic gods
 |  K     | Kara          | 20-     | 1d12 + 2d20  | 1 in game    |
 |  T     | Thor          | 32-     | 6d12 + 6d20  | 1 in game    | viking god of thunder
-|  U     | Ukko Ylijumala| Valhalla| 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
+|  U     | Ukko Ylijumala | Valhalla | 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
 |  V     | Lady X        | 0-      | 4d20 + 4d6   | 1 in game    |
 |  D     | Vlad Dracula  | 0-      | 1d12 + 5d20  | 1 in game    |
 
