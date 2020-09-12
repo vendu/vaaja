@@ -4,8 +4,9 @@
 #include <features.h>
 #include <stdint.h>
 #include <errno.h>
+#include <unistd.h>
 #include <mach/param.h>
-#if (USEBSD) && (!USEPOSIX)
+#if defined(_BSD_SOURCE) && !defined(_POSIX_SOURCE)
 #include <ucontext.h>
 #include <zero/types.h>
 #endif
@@ -13,14 +14,16 @@
 #include <pthread.h>
 #endif
 #if defined(__x86_64__) || defined(__amd64__)
-#include <x86-64/signal.h>
+#include <bsp/amd64/signal.h>
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))
-#include <ia32/signal.h>
+#include <bsp/ia32/signal.h>
 #elif defined(__arm__)
-#include <arm/signal.h>
+#include <bsp/arm/signal.h>
 #endif
 //#include <sys/types.h>
+
+typedef void (*__sighandler_t)(int);
 
 /* internal. */
 #define __sigisvalid(sig)                                               \
@@ -30,12 +33,22 @@
 #define __SIGNOCATCHBITS                                                \
     ((UINT64_C(1) << SIGKILL) | (UINT64_C(1) << SIGSTOP))
 
-#if (defined(__x86_64__) || defined(__amd64__) || defined(___alpha__)   \
+#if (defined(__x86_64__) || defined(__amd64__) || defined(___alpha__)  \
+     || defined(__ppc64__)                                              \
      || defined(__i386__) || defined(__i486__)                          \
      || defined(__i586__) || defined(__i686__))
 #define SIG32BIT        0
 #else
 #define SIG32BIT        1
+#endif
+
+#if (SIG32BIT)
+typedef struct {
+    int norm;
+    int rt;
+} sigset_t;
+#else
+typedef uint64_t sigset_t;
 #endif
 
 /* private values for signal actions */
@@ -56,7 +69,7 @@ typedef int32_t         pid_t;
 #define __pid_t_defined 1
 #endif
 
-#if (USEBSD) && (!USEPOSIX)
+#if defined(_BSD_SOURCE) && !defined(_POSIX_SOURCE)
 typedef void            __bsdsig_t(int sig, int code,
                                    struct sigcontext *ctx, char *adr);
 #endif
@@ -76,7 +89,7 @@ typedef __sighandler_t  sighandler_t;
 #define SA_ONESHOT      SA_RESETHAND
 #define SA_SIGINFO   	SIG_SIGINFO
 /* non-POSIX */
-#if (!USEPOSIX) || (USEBSD) || (USEGNU)
+#if !defined(_POSIX_SOURCE) || defined(_BSD_SOURCE) || defined(_GNU_SOURCE)
 #define SA_ONSTACK   	SIG_ONSTACK
 #define SA_RESTART   	SIG_RESTART
 #define SA_INTERRUPT 	SIG_FASTINTR
@@ -86,7 +99,7 @@ typedef __sighandler_t  sighandler_t;
 union sigval {
     void       *sival_ptr;
     int         sival_int;
-#if (PTRBITS == 64)
+#if (MACH_PTR_BITS == 64)
     int         _pad;
 #endif
 };
@@ -105,7 +118,7 @@ struct sigevent {
     int                 sigev_signo;
 };
 
-#if defined(_POSIX_SOURCE) && (USEPOSIX199309)
+#if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199309L)
 
 #if !defined(__ctid_t_defined)
 typedef long            ctid_t;
@@ -199,7 +212,7 @@ typedef struct {
 struct sigstack {
     char       *ss_sp;          // signal stack pointer
     int         ss_onstack;     // non-zero when signal-stack in use
-#if (PTRBITS == 64)
+#if (MACH_PTR_BITS == 64)
     int   _pad;
 #endif
 };
@@ -223,7 +236,7 @@ struct sigaltstack {
     int         ss_onstack;
 };
 
-#elif (!USEPOSIX)
+#elif !defined(_POSIX_SOURCE)
 
 struct sigaltstack {
     void       *ss_sp;
@@ -233,7 +246,7 @@ struct sigaltstack {
 
 #endif
 
-#if (USEBSD) && (!USEPOSIX)
+#if defined(_BSD_SOURCE) && !defined(_POSIX_SOURCE)
 
 /* bits for sv_flags */
 #define SV_INTERRUPT    SIG_RESTART     // opposite sense

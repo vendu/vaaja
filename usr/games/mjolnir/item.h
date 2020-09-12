@@ -37,7 +37,6 @@
 #define MJOLNIR_ITEM_HONEY                  'h'
 #define MJOLNIR_ITEM_KNIFE                  'k'
 #define MJOLNIR_ITEM_CROWBAR                '¿'
-#define MJOLNIR_ITEM_KALEIDOSCOPE           'K'
 #define MJOLNIR_ITEM_LOCKPICK               'l'
 #define MJOLNIR_ITEM_LASER                  'L'
 #define MJOLNIR_ITEM_MACE                   'm'

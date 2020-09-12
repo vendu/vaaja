@@ -2,7 +2,7 @@
 #define __MACH_BIGNUM_H__
 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_AMD64)
-#include <mach/x86-64/bignum.h>
+#include <mach/amd64/bignum.h>
 #include <mach/op128.h>
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))

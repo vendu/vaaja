@@ -1,5 +1,5 @@
-#ifndef __MACH_X86_64_TYPES_H_
-#define __MACH_X86_64_TYPES_H_
+#ifndef __MACH_AMD64_TYPES_H_
+#define __MACH_AMD64_TYPES_H_
 
 #include <stdint.h>
 #include <mach/x86/types.h>
@@ -119,5 +119,5 @@ struct m_task {
     struct m_fpstate64 fpstate;  // X bytes @ 256; FPU state
 };
 
-#endif /* __MACH_X86_64_TYPES_H_ */
+#endif /* __MACH_AMD64_TYPES_H_ */
 

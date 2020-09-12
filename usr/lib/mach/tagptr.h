@@ -14,7 +14,7 @@
 
 #elif defined(__x86_64__) || defined(__amd64__)
 
-#include <mach/x86-64/tagptr.h>
+#include <mach/amd64/tagptr.h>
 
 #endif
 

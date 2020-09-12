@@ -49,8 +49,9 @@
 #define SIGRT13         SIGRT(13)
 #define SIGRT14         SIGRT(14)
 #define SIGRT15         SIGRT(15)
-#define SIGRTMAX        63
-#define RTSIGMAX        32
+#define _SIGRTMAX       63
+#define _NRTSIG         32
+#define _NSIG           (_SIGRTMAX + 1)
 
 #endif /* __SYS_ZEN_SIGNAL_H__ */
 

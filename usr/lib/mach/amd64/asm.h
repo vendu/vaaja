@@ -1,5 +1,5 @@
-#ifndef __MACH_X86_64_ASM_H__
-#define __MACH_X86_64_ASM_H__
+#ifndef __MACH_AMD64_ASM_H__
+#define __MACH_AMD64_ASM_H__
 
 #include <stdint.h>
 #include <zero/cdefs.h>
@@ -388,5 +388,5 @@ m_bsr64(uint64_t val)
     return ret;
 }
 
-#endif /* __MACH_X86_64_ASM_H__ */
+#endif /* __MACH_AMD64_ASM_H__ */
 

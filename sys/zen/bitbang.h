@@ -5,21 +5,21 @@
 
 #if defined(__GNUC__) || defined(__clang__)
 
-#define m_clz32(x)      ((x) ? __builtin_clz(x) : 32)
-#define m_clz64(x)      ((x) ? __builtin_clzll(x) : 64)
-#define m_ctz32(x)      ((x) ? __builtin_ctz(x) : 32)
-#define m_ctz64(x)      ((x) ? __builtin_ctzll(x) : 64)
-#define m_ham32(x)      __builtin_popcount(x)
-#define m_ham64(x)      __builtin_popcountll(x)
-#define bswap16(x)      __builtin_bswap16(x)
-#define bswap32(x)      __builtin_bswap32(x)
-#define bswap64(x)      __builtin_bswap64(x)
+#define m_clz32(x)              ((x) ? __builtin_clz(x) : 32)
+#define m_clz64(x)              ((x) ? __builtin_clzll(x) : 64)
+#define m_ctz32(x)              ((x) ? __builtin_ctz(x) : 32)
+#define m_ctz64(x)              ((x) ? __builtin_ctzll(x) : 64)
+#define m_ham32(x)              __builtin_popcount(x)
+#define m_ham64(x)              __builtin_popcountll(x)
+#define bswap16(x)              __builtin_bswap16(x)
+#define bswap32(x)              __builtin_bswap32(x)
+#define bswap64(x)              __builtin_bswap64(x)
 
 #else /* !(defined(__GNUC__ || defined(__clang__))) */
 
-#define ZEN_NEED_CLZ    1
-#define ZEN_NEED_CTZ    1
-#define ZEN_NEED_HAM    1
+#define ZEN_NEED_CLZ            1
+#define ZEN_NEED_CTZ            1
+#define ZEN_NEED_HAM            1
 
 #define bswap16(u)                                                      \
     ((((u) & 0xff00U) >> 8)                                             \
@@ -39,7 +39,7 @@
      | (((u) & UINT64_C(0x000000000000ff00)) << 40)                     \
      | (((u) & UINT64_C(0x00000000000000ff)) << 56))
 
-#endif
+#endif /* defined(__GNUC__) || defined(__clang__) */
 
 #endif /* __SYS_ZEN_BITBANG_H__ */
 

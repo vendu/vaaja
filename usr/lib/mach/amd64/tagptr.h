@@ -1,5 +1,5 @@
-#ifndef __MACH_X86_64_TAGPTR_H__
-#define __MACH_X86_64_TAGPTR_H__
+#ifndef __MACH_AMD64_TAGPTR_H__
+#define __MACH_AMD64_TAGPTR_H__
 
 #include <stddef.h>
 #include <xmmintrin.h>
@@ -75,5 +75,5 @@ tagptrcmp(TAGPTR_T *tp1, TAGPTR_T *tp2)
     return (diff == 0);
 }
 
-#endif /* __MACH_X86_64_TAGPTR_H__ */
+#endif /* __MACH_AMD64_TAGPTR_H__ */
 

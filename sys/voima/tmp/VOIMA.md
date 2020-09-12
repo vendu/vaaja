@@ -132,7 +132,7 @@ _kthr:
   	ldr %sp, %r2            ;;      16-bit  26      r2 = sp;
   	ldr %slim, %r3          ;;      16-bit  26      r3 = slim;
   	csr ksetsched           ;;      ksetsched(*pret, stk, slim, flg);
-        
+
 ### THX ri1                     exit thread
 
 .align 32
@@ -154,3 +154,4 @@ _kthr:
 - i16                           short (16-bit) immediate operand
 
 #### STM    i16, r2             sp -= i16; stm(sp, r2);
+

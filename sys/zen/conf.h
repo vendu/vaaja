@@ -1,6 +1,7 @@
 #ifndef __SYS_ZEN_CONF_H__
 #define __SYS_ZEN_CONF_H__
 
+#include <zero/cdefs.h>
 #include <sys/zen/ev.h>
 #if defined(__v0__)
 #include <sys/zen/bsp/v0.h>

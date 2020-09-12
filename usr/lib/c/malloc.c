@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
+#include <mem.h>
 #include <zero/cdefs.h>
 #include "_malloc.h"
 
@@ -109,7 +110,7 @@ memalign(size_t align, size_t size)
 void *
 valloc(size_t size)
 {
-    void       *ptr = memget(size, PAGESIZE, NULL);
+    void       *ptr = memget(size, MACH_PAGE_SIZE, NULL);
 
     return ptr;
 }
@@ -117,8 +118,8 @@ valloc(size_t size)
 void *
 pvalloc(size_t size)
 {
-    size_t      blksz = roundup2(size, PAGESIZE);
-    void       *ptr = memget(blksz, PAGESIZE, NULL);
+    size_t      blksz = roundup2(size, MACH_PAGE_SIZE);
+    void       *ptr = memget(blksz, MACH_PAGE_SIZE, NULL);
 
     return ptr;
 }

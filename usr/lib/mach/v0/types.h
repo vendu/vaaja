@@ -10,6 +10,9 @@ typedef uint64_t                m_ureg_t;
 #if defined(V0_HAVE_LONG64)
 typedef int64_t                 m_long_t;
 typedef uint64_t                m_ulong_t;
+typedef uint64_t                m_size_t;
+#else
+typedef uint32_t                m_size_t;
 #endif
 typedef int32_t                 m_word_t;
 typedef uint32_t                m_uword_t;

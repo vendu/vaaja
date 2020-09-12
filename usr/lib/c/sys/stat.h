@@ -62,5 +62,5 @@ struct stat {
     blkcnt_t    st_blocks;
 };
 
-#endif __SYS_STAT_H__
+#endif /* __SYS_STAT_H__ */
 

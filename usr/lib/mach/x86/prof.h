@@ -69,7 +69,7 @@ _rdtsc(struct _tickval *tp)
 
     return ret;
 }
-#else /* x86-64 */
+#else /* amd64 */
 static __inline__ uint64_t
 _rdtsc(struct _tickval *tp)
 {

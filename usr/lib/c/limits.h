@@ -124,7 +124,9 @@
 /*
  * Determinate (compile-time) values.
  */
-#define FOPEN_MAX               INT16_MAX
+#if !defined(FOPEN_MAX)
+#define FOPEN_MAX               256
+#endif
 #define SSIZE_MAX               INT32_MAX
 
 #if !defined(NFDBITS)

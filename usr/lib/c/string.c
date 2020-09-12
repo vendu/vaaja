@@ -66,7 +66,7 @@ memcpy(void *dest,
             }
         }
         ldest = (long *)bdest;
-        n = nleft >> (LONGSIZELOG2 + 3);
+        n = nleft >> (MACH_LONG_SIZE_LOG2 + 3);
         lsrc = (long *)bsrc;
         nleft -= 8 * n * sizeof(long);
         while (n--) {
@@ -113,7 +113,7 @@ _memcpybk(void *dest, const void *src, size_t len)
             }
         }
         ldest = (long *)bdest;
-        n = nleft >> (LONGSIZELOG2 + 3);
+        n = nleft >> (MACH_LONG_SIZE_LOG2 + 3);
         lsrc = (long *)bsrc;
         nleft -= 8 * n * sizeof(long);
         while (n--) {
@@ -128,7 +128,7 @@ _memcpybk(void *dest, const void *src, size_t len)
             ldest -= 8;
             lsrc -= 8;
         }
-        n = nleft >> LONGSIZELOG2;
+        n = nleft >> MACH_LONG_SIZE_LOG2;
         nleft -= n * sizeof(long);
         while (n--) {
             *--ldest = *--lsrc;
@@ -145,8 +145,8 @@ _memcpybk(void *dest, const void *src, size_t len)
 
 /* TESTED OK */
 void *
-memmove(void *RESTRICT dest,
-        const void *RESTRICT src,
+memmove(void * C_RESTRICT dest,
+        const void * C_RESTRICT src,
         size_t n)
 {
     if (n) {
@@ -161,12 +161,14 @@ memmove(void *RESTRICT dest,
     return dest;
 }
 
+POISON(strcpy);
+#if 0
 /* TESTED OK */
 char *
 strcpy(char *dest,
-       const char *RESTRICT src)
+       const char * C_RESTRICT src)
 {
-    char *RESTRICT      cdest = dest;
+    char * C_RESTRICT      cdest = dest;
 
     while (*src) {
         *cdest++ = *src++;
@@ -175,6 +177,7 @@ strcpy(char *dest,
 
     return dest;
 }
+#endif
 
 /* TESTED OK */
 char *
@@ -182,7 +185,7 @@ strncpy(char *dest,
         const char *src,
         size_t n)
 {
-    char *RESTRICT      bdest = dest;
+    char * C_RESTRICT      bdest = dest;
 
     if (n) {
         while ((*src) && (n--)) {
@@ -198,10 +201,10 @@ strncpy(char *dest,
 
 /* TESTED OK */
 char *
-strcat(char *RESTRICT dest,
+strcat(char * C_RESTRICT dest,
        const char *src)
 {
-    char *RESTRICT      bdest = dest;
+    char * C_RESTRICT      bdest = dest;
 
     while (*bdest) {
         bdest++;
@@ -220,7 +223,7 @@ strncat(char *dest,
         const char *src,
         size_t n)
 {
-    char *RESTRICT 	bdest = dest;
+    char * C_RESTRICT 	bdest = dest;
 
     if (n) {
         while (*bdest) {
@@ -240,7 +243,7 @@ strncat(char *dest,
 /* TODO: optimise the *cmp() functions with word-size access */
 
 /* TESTED OK */
-PURE int
+C_PURE int
 memcmp(const void *ptr1,
        const void *ptr2,
        size_t len)
@@ -272,7 +275,7 @@ memcmp(const void *ptr1,
                 }
             }
         }
-        n = nleft >> LONGSIZELOG2;
+        n = nleft >> MACH_LONG_SIZE_LOG2;
         ulptr1 = (const unsigned long *)ucptr1;
         nleft -= n * sizeof(long);
         ulptr2 = (const unsigned long *)ucptr2;
@@ -308,7 +311,7 @@ memcmp(const void *ptr1,
 #if !defined(__GLIBC__)
 
 /* TESTED OK */
-PURE int
+C_PURE int
 strcmp(const char *str1,
        const char *str2)
 {
@@ -328,7 +331,7 @@ strcmp(const char *str1,
 }
 
 /* TESTED OK */
-PURE int
+C_PURE int
 strncmp(const char *str1,
         const char *str2,
         size_t n)
@@ -353,7 +356,7 @@ strncmp(const char *str1,
 #endif /* !__GLIBC__ */
 
 #if 0
-PURE int
+C_PURE int
 strcoll(const char *str1,
         const char *str2)
 {
@@ -392,7 +395,7 @@ memchr(const void *ptr,
     return retval;
 }
 
-PURE
+C_PURE
 void *
 memrchr(const void *ptr,
         int ch,
@@ -704,7 +707,7 @@ memset(void *ptr, int byte, size_t len)
         nleft -= n;
         bptr += n;
     }
-    n = nleft >> (LONGSIZELOG2 + 3);
+    n = nleft >> (MACH_LONG_SIZE_LOG2 + 3);
     lptr = (long *)bptr;
     nleft -= 8 * n * sizeof(long);
     if (n) {
@@ -722,7 +725,7 @@ memset(void *ptr, int byte, size_t len)
         }
         bptr = (int8_t *)lptr;
     }
-    n = nleft >> LONGSIZELOG2;
+    n = nleft >> MACH_LONG_SIZE_LOG2;
     lptr = (long *)bptr;
     nleft -= n * sizeof(long);
     if (n) {

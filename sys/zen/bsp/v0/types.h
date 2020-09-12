@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+typedef int32_t             m_atomic32_t;
+
 /* other system types */
 typedef int64_t             m_off_t;
 typedef int32_t             m_time_t;

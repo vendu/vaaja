@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <zero/cdefs.h>
 #if defined(__x86_64__) || defined(__amd64__)
-#include <mach/x86-64/asm.h>
+#include <mach/amd64/asm.h>
 #elif defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__)
 #include <mach/ia32/asm.h>
 #endif

@@ -85,20 +85,20 @@ Mainframes store Core War warriors and other software + data on tapes.
 #### spells
 - spell of identify
 - spell of teleport
-- spell of activate cross - 'Terra pestem teneto, salus hic maneto'
+- spell of activate cross
 - spell of paralyze
 - spell of icebolt
 - spell of thunderbolt
 - spell of lightning
 - spell of show map - shows the map of the current level
-- spell of stop time - 'TOPAR'
+- spell of stop time
 - spell of bless
 
 ### o - ring
 - ring of levitation
 - ring of invisibility
 - ring of teleport
-- ring of see in the dark
+- ring of night vision
 
 ### / - whip
 - may be used to slay non-demonic, usually smaller creatures
@@ -121,8 +121,6 @@ Mainframes store Core War warriors and other software + data on tapes.
 ### ¿ - crowbar
 
 ### 4 - c4 plastic explosive
-
-### K - kaleidoscope
 
 ### l - lockpick
 
@@ -187,7 +185,6 @@ return.
 |   g    | sub-machine gun | 1/128		| close-range combat
 |   h    | honey	  | bee nests	        | from beehives after killing the queen
 |   k    | knife          | 1/32		| knife, dagger, gurkha, ...
-|   K    | kaleidoscope	  | 1/128		| kaleidoscope
 |   l    | lockpick	  | 1/64		| thieves are naturally best at using these
 |   L    | laser	  | 1/128		| laser gun, from aliens
 |   m    | mace		  | 1/32		| mace or hammer

@@ -13,7 +13,7 @@
 #include <zero/msc/win32.h>
 #elif defined(_x86_64__) || defined(__amd64__)
 #include <mach/x86/types.h>
-#include <mach/x86-64/types.h>
+#include <mach/amd64/types.h>
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))
 #include <mach/x86/types.h>

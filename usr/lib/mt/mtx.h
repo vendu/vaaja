@@ -5,9 +5,10 @@
 
 #include <mach/atomic.h>
 
-#if !defined(__zen__)
+#if !defined(__zen__) && 0
 #define MTPTHREAD       1
 #endif
+#define pthread_self()  0
 
 #define MTMTX           1
 #if !defined(MTFMTX)

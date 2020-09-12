@@ -8,9 +8,9 @@
 #include <limits.h>
 #include <gfx/rgb.h>
 
-#define ZEN_EV_OBJ_BITS  32
-#define ZEN_EV_TIME_BITS 32
-#define ZEN_EV_WORD_BITS 32
+#define ZEN_EV_OBJ_BITS         32
+#define ZEN_EV_TIME_BITS        32
+#define ZEN_EV_WORD_BITS        32
 
 #if (ZEN_EV_TIME_BITS == 64)
 typedef uint64_t zenevtime_t;
@@ -28,62 +28,62 @@ typedef int32_t                 zenkeystate_t; // modifier + button state
 
 /* library/user-level keycode type */
 #if (ZEN_EV_KEYCODE_BITS <= 16)
-typedef int16_t  zenevkey_t;
+typedef int16_t                 zenevkey_t;
 #else
-typedef int32_t  zenevkey_t;
+typedef int32_t                 zenevkey_t;
 #endif
 
 #if (ZEN_EV_WORD_BITS == 32)
-typedef int32_t  zenevword_t;
-typedef uint32_t zenevuword_t;
+typedef int32_t                 zenevword_t;
+typedef uint32_t                zenevuword_t;
 #elif (ZEN_EV_WORD_BITS == 64)
-typedef int64_t  zenevword_t;
-typedef uint64_t zenevuword_t;
+typedef int64_t                 zenevword_t;
+typedef uint64_t                zenevuword_t;
 #endif
 
 /* internal protocol events
  * - response event ID of 0 is protocol messages, event ID 1 for protocol errors
  */
-#define ZEN_EV_MASK(id)                  ((id) - 2)
-#define ZEN_ERROR_MASK(id)               (0xf0 | ZEN_EV_MASK(id))
-#define ZEN_REQUEST_MASK(id)             (0x80 | ZEN_EV_MASK(id))
-#define ZEN_NOTIFY_MASK(id)              (0x40 | ZEN_EV_MASK(id))
-#define ZEN_HINT_MASK(id)                (0x20 | ZEN_EV_MASK(id))
+#define ZEN_EV_MASK(id)         ((id) - 2)
+#define ZEN_ERROR_MASK(id)      (0xf0 | ZEN_EV_MASK(id))
+#define ZEN_REQUEST_MASK(id)    (0x80 | ZEN_EV_MASK(id))
+#define ZEN_NOTIFY_MASK(id)     (0x40 | ZEN_EV_MASK(id))
+#define ZEN_HINT_MASK(id)       (0x20 | ZEN_EV_MASK(id))
 /* protocol events */
-#define ZEN_PROTO_MSG                    0 // protocol message
-#define ZEN_PROTO_ERROR                  1 // protocol error
+#define ZEN_PROTO_MSG           0 // protocol message
+#define ZEN_PROTO_ERROR         1 // protocol error
 /* keyboard events */
-#define ZEN_KEY_PRESS                    2 // keypress event
-#define ZEN_KEY_RELEASE                  3 // keyrelease event
+#define ZEN_KEY_PRESS           2 // keypress event
+#define ZEN_KEY_RELEASE         3 // keyrelease event
 /* pointer events */
-#define ZEN_BUTTON_PRESS                 4 // buttonpress event
-#define ZEN_BUTTON_RELEASE               5 // buttonrelease event
+#define ZEN_BUTTON_PRESS        4 // buttonpress event
+#define ZEN_BUTTON_RELEASE      5 // buttonrelease event
 /* window events */
-#define ZEN_MAP                          6 // map notification
-#define ZEN_UNMAP                        7 // unmap notification
-#define ZEN_CREATE                       8 // create notification
-#define ZEN_DESTROY                      9 // destroy notification
-#define ZEN_ENTER                       10 // enter window event
-#define ZEN_LEAVE                       11 // leave window event
-#define ZEN_MOTION                      12 // pointer/cursor motion event
-#define ZEN_FOCUS_IN                    13 // focus in event
-#define ZEN_FOCUS_OUT                   14 // focus out event
-#define ZEN_CONFIGURE                   15 // configure notfication
-#define ZEN_MOVE                        16
-#define ZEN_RESIZE                      17
-#define ZEN_MOVE_RESIZE                 18
-#define ZEN_REPARENT                    19 // reparent notification
-#define ZEN_CIRCULATE                   20 // circulation notification
-#define ZEN_GRAVITY                     21 // gravity notification
-#define ZEN_PROPERTY                    22 // property notification
-#define ZEN_COLORMAP                    23 // colormap notification
-#define ZEN_KEYMAP                      24 // keymap notification
+#define ZEN_MAP                 6 // map notification
+#define ZEN_UNMAP               7 // unmap notification
+#define ZEN_CREATE              8 // create notification
+#define ZEN_DESTROY             9 // destroy notification
+#define ZEN_ENTER               10 // enter window event
+#define ZEN_LEAVE               11 // leave window event
+#define ZEN_MOTION              12 // pointer/cursor motion event
+#define ZEN_FOCUS_IN            13 // focus in event
+#define ZEN_FOCUS_OUT           14 // focus out event
+#define ZEN_CONFIGURE           15 // configure notfication
+#define ZEN_MOVE                16
+#define ZEN_RESIZE              17
+#define ZEN_MOVE_RESIZE         18
+#define ZEN_REPARENT            19 // reparent notification
+#define ZEN_CIRCULATE           20 // circulation notification
+#define ZEN_GRAVITY             21 // gravity notification
+#define ZEN_PROPERTY            22 // property notification
+#define ZEN_COLORMAP            23 // colormap notification
+#define ZEN_KEYMAP              24 // keymap notification
 /* struct deckevnote */
-#define ZEN_MESSAGE                     25 // message from another client
-#define ZEN_EXPOSE                      26 // exposure notification
-#define ZEN_VISIBILITY                  27 // visibility notification
-#define ZEN_KILL                        28 // kill window
-#define ZEN_LOG_OUT                     29
+#define ZEN_MESSAGE             25 // message from another client
+#define ZEN_EXPOSE              26 // exposure notification
+#define ZEN_VISIBILITY          27 // visibility notification
+#define ZEN_KILL                28 // kill window
+#define ZEN_LOG_OUT             29
 #define ZEN_SHUT_DOWN                   30
 /* events for window managers */
 
@@ -252,7 +252,7 @@ void    zensyncev(struct zenev *evq, long flg);
 
 /* pointer such as mouse device events */
 
-#define zenpnthasbutton(ev, b) ((ev)->state & (1 << (b)))
+#define zenpnthasbutton(ev, b)  ((ev)->state & (1 << (b)))
 /* pointer device, e.g. mouse event */
 struct zencoord {
     zenevword_t         x;      // screen X coordinate
@@ -285,21 +285,21 @@ struct zencoord {
 #define ZEN_FS_NO_OP            0
 #define ZEN_FS_MOUNT            1 // filesystem mount event
 #define ZEN_FS_UNMOUNT          2 // filesystem unmount event
-#define ZEN_FS_CREAT            3 // file creation event
-#define ZEN_FS_UNLINK           4 // file unlink event
+#define ZEN_FS_CREAT            3 // file or symlink creation event
+#define ZEN_FS_UNLINK           4 // unlink event
 #define ZEN_FS_MKDIR            5 // add directory
 #define ZEN_FS_RMDIR            6 // remove directory
 #define ZEN_FS_EVENT_TYPES      7
 
 struct zencmd {
-    zenevword_t         func;   /* msg present iff ZEN_MSG_BIT is set in cmd */
-    zenevword_t         obj;    /* target object ID */
+    zenevword_t                 func;   /* set iff ZEN_MSG_BIT is set in cmd */
+    zenevword_t                 obj;    /* target object ID */
 };
 
 /* event structure for ZEN_SYS_EV, ZEN_HW_EV, and ZEN_FS_EV */
 struct zenmsg {
-    zenevword_t size; // # of bytes in msg
-    uint8_t     data[C_VLA]; // message text/data
+    zenevword_t                 size; // # of bytes in msg
+    uint8_t                     data[C_VLA]; // message text/data
 };
 
 struct zenreqev {

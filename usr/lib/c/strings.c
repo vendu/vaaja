@@ -20,8 +20,8 @@ bzero(void *ptr, size_t nb)
             *bptr = 0;
         }
     }
-    if (nb >= 2 * CLSIZE) {
-        val = (uintptr_t)bptr & (CLSIZE - 1);
+    if (nb >= 2 * MACH_CL_SIZE) {
+        val = (uintptr_t)bptr & (MACH_CL_SIZE - 1);
         if (val) {
             val = sizeof(uintptr_t) - val;
             uptr = (uintptr_t *)bptr;
@@ -32,8 +32,8 @@ bzero(void *ptr, size_t nb)
         } else {
             uptr = (uintptr_t *)bptr;
         }
-        val = nb >> CLSIZELOG2;
-        nb -= val * CLSIZE;
+        val = nb >> MACH_CL_SIZE_LOG2;
+        nb -= val * MACH_CL_SIZE;
         if (nb) {
             do {
                 uptr[0] = zero;

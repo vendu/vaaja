@@ -8,7 +8,9 @@
 #endif
 #define BUFSIZ          PAGESIZE
 #define FILENAME_MAX    255
+#if !defined(FOPEN_MAX)
 #define FOPEN_MAX       256
+#endif
 #define _IONBF          0
 #define _IOLBF          1
 #define _IOFBF          2
@@ -21,10 +23,12 @@
 #define EOF             (-1)
 #define P_tmpdir        "/tmp"
 
+#if 0
 extern char            *optarg;
 extern int              opterr;
 extern int              optind;
 extern int              optopt;
+#endif
 
 #endif /* __STDIO_H__ */
 

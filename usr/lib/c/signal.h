@@ -14,31 +14,20 @@ typedef uint32_t                pid_t;
 #define __pid_t_defined         1
 #endif
 #include <bits/signal.h>
-#if defined(__ZEN__)
-#include <zen/signal.h>
-#endif
-#if (_POSIX_SOURCE) && (USEPOSIX199309)
+#include <sys/zen/signal.h>
+#if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199309L)
 struct timespec;
 #include <time.h>
 #endif
+#if ((_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500) && 0)
+//#include <pthread.h>
+#endif
 #include <mach/param.h>
 #include <mach/atomic.h>
-#if (USEPOSIX199506) || (_XOPEN_SOURCE >= 500) && 0
-#include <pthread.h>
-#endif
 
-typedef void          (*__sighandler_t)(int);
+//typedef void          (*__sighandler_t)(int);
 
 typedef m_atomic_t      sig_atomic_t;
-
-#if defined(SIG32BIT)
-typedef struct {
-    int32_t     norm;
-    int32_t     rt;
-} sigset_t;
-#else
-typedef int64_t         sigset_t;
-#endif
 
 /* special values; standard ones */
 #define SIG_ERR         ((__sighandler_t)-1)
@@ -53,14 +42,14 @@ typedef int64_t         sigset_t;
 /* set handler for signal sig; returns old handler */
 extern void           (*signal(int sig, void (*func)(int)))(int);
 extern __sighandler_t   __sysv_signal(int sig, __sighandler_t func);
-#if (_GNU_SOURCE)
+#if defined(_GNU_SOURCE)
 extern __sighandler_t   sysv_signal(int sig, __sighandler_t func);
 #endif
 #if (_XOPEN_SOURCE)
 extern __sighandler_t   bsd_signal(int sig, __sighandler_t func);
 #endif
 
-#if (_BSD_SOURCE) || (USEXOPENEXT)
+#if (_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
 extern void             psiginfo(const siginfo_t *info, const char *msg);
 void                    psignal(int sig, const char *message);
 #endif
@@ -74,14 +63,14 @@ void                    psignal(int sig, const char *message);
  */
 extern int              kill(pid_t pid, int sig);
 
-#if ((USEPOSIX199506) || (_XOPEN_SOURCE >= 500)) && 0
-int pthread_kill(pthread_t thr, int sig);
-int pthread_sigmask(int how, const sigset_t *set, sigset_t *oldset);
+#if (_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500)
+//int pthread_kill(pthread_t thr, int sig);
+//int pthread_sigmask(int how, const sigset_t *set, sigset_t *oldset);
 #endif
 
 #endif /* _POSIX_SOURCE */
 
-#if (_BSD_SOURCE) || (USEXOPENEXT)
+#if (_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
 /*
  * send signal sig to all processes in the group pgrp
  * - if pid is zero, send sig to all processes in the current one's group
@@ -90,12 +79,12 @@ extern int              killpg(pid_t pgrp, int sig);
 #endif /* _BSD_SOURCE || USEXOPENEXT */
 
 extern int              raise(int sig);
-#if (USESVID)
+#if defined(_SVID_SOURCE)
 extern                  __sighandler_t ssignal(int sig, __sighandler_t func);
 extern int              gsignal(int sig);
 #endif /* USESVID */
 //extern void           psignal(int sig);
-#if defined(FAVORBSD)
+#if defined(_FAVOR_BSD)
 /* set mask to blocked signals, wait for signal, restore the mask */
 extern int              sigpause(int mask);
 #elif (_XOPEN_SOURCE)
@@ -118,7 +107,7 @@ extern int              sigsetmask(int mask);
 /* return current signal mask */
 extern int              siggetmask(void);
 
-#if (USEBSD) && (!USEPOSIX)
+#if (defined(_BSD_SOURCE)) && !defined(_POSIX_SOURCE)
 int                     sigvec(int sig, const struct sigvec *vec,
                                struct sigvec *oldvec);
 #endif
@@ -127,7 +116,7 @@ int                     sigvec(int sig, const struct sigvec *vec,
 
 #endif /* _BSD_SOURCE */
 
-#if (USEPOSIX)
+#if defined(_POSIX_SOURCE)
 
 /* get and/or change set of blocked signals */
 extern int              sigprocmask(int how, const sigset_t *restrict set,
@@ -141,7 +130,7 @@ extern int 		sigaction(int sig, const struct sigaction *restrict act,
 extern int 		sigpending(sigset_t *set);
 /* wait for a signal in set */
 extern int 		sigwait(const sigset_t *set, int *restrict sig);
-#if (USEPOSIX199309)
+#if (_POSIX_C_SOURCE >= 199309L)
 extern int 		sigwaitinfo(const sigset_t *restrict set,
                                     siginfo_t *restrict info);
 extern int 		sigtimedwait(const sigset_t *restrict set,
@@ -164,7 +153,7 @@ extern const char *const        sys_siglist[_NSIG];
  */
 extern int              siginterrupt(int sig, int intr);
 
-#if (_BSD_SOURCE) || (USEXOPENEXT)
+#if (_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
 extern int              sigstack(struct sigstack *stk, struct sigstack *oldstk);
 extern int              sigaltstack(const stack_t *restrict stk,
                                     stack_t *restrict oldstk);
@@ -177,7 +166,7 @@ extern int              sigaltstack(const struct sigaltstack *stk,
 #include <ucontext.h>
 #endif
 
-#if (USEXOPENEXT)
+#if defined(_XOPEN_SOURCE_EXTENDED)
 extern int              sighold(int sig);
 extern int              sigrelse(int sig);
 extern int              sigignore(int sig);

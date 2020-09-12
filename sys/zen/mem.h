@@ -4,8 +4,8 @@
 #include <limits.h>
 #include <stddef.h>
 #include <zero/cdefs.h>
-#include <mach/types.h>
-#include <mach/atomic.h>
+//#include <mach/types.h>
+//#include <mach/atomic.h>
 #include <sys/zen/util.h>
 
 #define ZEN_ADR_LK_BIT_POS  0

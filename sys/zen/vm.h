@@ -11,11 +11,11 @@
 #include <sys/zen/types.h>
 
 #if (MACH_WORD_SIZE == 4)
-#define zenvmcalcqid    lzero32
-#define ZEN_VM_QUEUES   32
+#define zenvmcalcqid            lzero32
+#define ZEN_VM_QUEUES           32
 #elif (MACH_WORD_SIZE == 8)
-#define zenvmcalcqid    lzero64
-#define ZEN_VM_QUEUES   64
+#define zenvmcalcqid            lzero64
+#define ZEN_VM_QUEUES           64
 #endif
 
 #define _zencalcvmqueue(page)   ceilpow2l(page->qcnt)
@@ -23,10 +23,10 @@
 #define _zenvmunlkqueue(queue)  mtunlktkt(&queue->lk)
 
 struct zenvmqueue {
-    mttktlk             lk;
-    m_atomic_t          n;
-    struct zenvmpage   *head;
-    struct zenvmpage   *tail;
+    mttktlk                     lk;
+    m_atomic_t                  n;
+    struct zenvmpage           *head;
+    struct zenvmpage           *tail;
 };
 
 struct zenvmpage {
@@ -39,12 +39,12 @@ struct zenvmpage {
 };
 
 struct zenvmseg {
-    const char         *name;
-    m_adr_t             ptr;
-    m_size_t            size;
-    m_word_t            flag;
+    const char                 *name;
+    m_adr_t                     ptr;
+    m_size_t                    size;
+    m_word_t                    flag;
 #if defined(__v0__)
-    m_word_t            pad;
+    m_word_t                    pad;
 #endif
 };
 

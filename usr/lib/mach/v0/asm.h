@@ -19,10 +19,10 @@
 #define m_waitint()  __asm__ __volatile__ ("" : : : "memory")
 
 /* compare-and-swap */
-#define m_cmpswap(lp, want, need)                                       \
+#define m_cmpswap(lp, want, need)                                     \
     (*(lp) == (want) ? *(lp) = need, 1 : 0)
-#define m_cmpswapu32(u32p, want, need)                                  \
-    (*(u32p) == (want) ? *(u32p) = need, 1 : 0)
+#define m_cmpswapu(up, want, need)                                  \
+    (*(up) == (want) ? *(up) = need, 1 : 0)
 
 /* fetch-and-add */
 
@@ -73,7 +73,6 @@ m_clrbit(volatile m_atomic_t *lp, int32_t ndx)
     m_atomic_t  bit = INT32_C(1) << ndx;
 
     val &= ~bit;
-
     *lp = val;
 
     return;

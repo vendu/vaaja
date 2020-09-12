@@ -18,7 +18,7 @@
 #if defined(__v0__)
 #include <mach/v0/param.h>
 #elif defined(__x86_64__) || defined(__amd64__)
-#include <mach/x86-64/param.h>
+#include <mach/amd64/param.h>
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))
 #include <mach/ia32/param.h>

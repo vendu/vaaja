@@ -15,14 +15,14 @@
 #define SYS_IO_SIZE_BIT  (1U << 5)
 #define SYS_IO_DESC_SIZE (8 * V0_WORD_SIZE)
 struct v0iodesc {
-    m_word_t    flg;    // flags listing parameters present
-    m_word_t    dev;    // device ID
-    m_word_t    bus;    // bus ID
-    m_word_t    perm;   // I/O-permission bits
-    m_adr_t     base;   // I/O-map such as framebuffer base address
-    m_adr_t     buf;    // I/O read buffer base address
-    m_size_t    size;   // I/O-map size in bytes
-    m_word_t    _pad;   // pad to boundary of 8 v0regs
+    void       *base;   // I/O-map such as framebuffer base address
+    void       *buf;    // I/O read buffer base address
+    int32_t     flg;    // flags listing parameters present
+    int32_t     dev;    // device ID
+    int32_t     bus;    // bus ID
+    int32_t     perm;   // I/O-permission bits
+    size_t      size;   // I/O-map size in bytes
+    int32_t     _pad;   // pad to boundary of 8 v0regs
 };
 
 #endif /* __SYS_ZEN_IO_H__ */

@@ -1,6 +1,7 @@
 #ifndef __STDLIB_H__
 #define __STDLIB_H__
 
+#include <features.h>
 #include <stddef.h>
 
 #if defined(_ISOC11_SOURCE)

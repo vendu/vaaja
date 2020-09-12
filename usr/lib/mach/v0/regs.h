@@ -166,7 +166,7 @@
 /* FXSR; fixed-point status register */
 
 /* process segment registers; 64-bit, limit + page-address + flags */
-#define V0_CODE_REG             0       
+#define V0_CODE_REG             0
 #define V0_RODATA_REG           1
 #define V0_DATA_REG             2
 #define V0_HEAP_REG             3
