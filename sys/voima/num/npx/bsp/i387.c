@@ -92,7 +92,6 @@ m_fstcw(void)
     uint16_t                    u16;
 
     __asm__ __volatile__ ("fstcw %0\n"
-                          "fwait\n"
                           : "m" (u16));
 
     return u16;
@@ -105,7 +104,6 @@ m_fnstcw(void)
     uint16_t                    u16;
 
     __asm__ __volatile__ ("fnstcw %0\n"
-                          "fwait\n"
                           : "m" (u16));
     return u16;
 }
@@ -117,7 +115,6 @@ m_fstsw(void)
     uint16_t                    u16;
 
     __asm__ __volatile__ ("fstsw %0\n"
-                          "fwait\n"
                           : "rm" (u16));
 
     return u16;
@@ -130,7 +127,6 @@ m_fnstsw(void)
     uint16_t                    u16;
 
     __asm__ __volatile__ ("fnstsw %0\n"
-                          "fwait\n"
                           : "rm" (u16));
 
     return u16;
@@ -141,7 +137,6 @@ void
 m_fstenv(fenv_t *env)
 {
     __asm__ __volatile__ ("fstenv %0\n"
-                          "fwait\n"
                           : "=m" (*(env)));
 
     return;
@@ -152,8 +147,7 @@ void
 m_fnstenv(fenv_t *env)
 {
     __asm__ __volatile__ ("fnstenv %0\n"
-                          "fwait\n"
-                          : "=m" (*(env)));
+: "=m" (*(env)));
 
     return;
 }
@@ -210,6 +204,15 @@ m_fincstp(void)
 
 /* free register st(1) */
 double
+m_ffree0(void)
+{
+    __asm__ __volatile__ ("ffree st(0)\n");
+
+    return;
+}
+
+/* free register st(2) */
+double
 m_ffree1(void)
 {
     __asm__ __volatile__ ("ffree st(1)\n");
@@ -217,7 +220,7 @@ m_ffree1(void)
     return;
 }
 
-/* free register st(2) */
+/* free register st(3) */
 double
 m_ffree2(void)
 {
@@ -226,7 +229,7 @@ m_ffree2(void)
     return;
 }
 
-/* free register st(3) */
+/* free register st(4) */
 double
 m_ffree3(void)
 {
@@ -235,7 +238,7 @@ m_ffree3(void)
     return;
 }
 
-/* free register st(4) */
+/* free register  st(5) */
 double
 m_ffree4(void)
 {
@@ -244,7 +247,7 @@ m_ffree4(void)
     return;
 }
 
-/* free register  st(5) */
+/* free register  st(6) */
 double
 m_ffree5(void)
 {
@@ -253,7 +256,7 @@ m_ffree5(void)
     return;
 }
 
-/* free register  st(6) */
+/* free register  st(7) */
 double
 m_ffree6(void)
 {
@@ -262,20 +265,11 @@ m_ffree6(void)
     return;
 }
 
-/* free register  st(7) */
+/* free register  st(8) */
 double
 m_ffree7(void)
 {
     __asm__ __volatile__ ("ffree st(7)\n");
-
-    return;
-}
-
-/* free register  st(8) */
-double
-m_ffree8(void)
-{
-    __asm__ __volatile__ ("ffree st(8)\n");
 
     return;
 }
@@ -1240,6 +1234,7 @@ m_ceil(double d)
 
     return ret;
 }
+#endif
 
 #if (TEST_NUM_X87)
 

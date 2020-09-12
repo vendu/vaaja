@@ -1,11 +1,11 @@
-.globl	m_getcontext, m_swapcontext
+.global	getcontext, setcontext
 
-.text 32
+.text   32
 
-.align 32
+.align  32
 
-	/* ASMLINK void m_getcontext(ucontext_t *uc); */
-m_getcontext:
+	/* ASMLINK void getcontext(ucontext_t *uc); */
+getcontext:
 	/* prologue */
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -36,8 +36,8 @@ m_getcontext:
 	popl	%ebp
 	ret
 
-	/* ASMLINK void m_setcontext(ucontext_t *uc); */
-m_setcontext:	
+	/* ASMLINK void setcontext(ucontext_t *uc); */
+setcontext:
 	/* prologue */
 	pushl	%ebp
 	movl	%esp, %ebp

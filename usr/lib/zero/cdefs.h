@@ -63,6 +63,7 @@
 #define C_NO_REORDER                    __attribute__ ((__no_reorder__))
 #define C_INTERRUPT                     __attribute__ ((__interrupt__))
 #define C_UNREACHABLE                   __builtin_unreachable
+#define C_HIDDEN                        __attribute__ ((visibility ("hidden")))
 #define C_NO_CALLER_SAVED_REGISTERS     __attribute__ ((__no_caller_saved_registers__))
 #else /* defined(__GNUC__) || defined(__clang__) */
 #define C_GENREGS_ONLY

@@ -25,7 +25,7 @@ struct timespec;
 #include <mach/param.h>
 #include <mach/atomic.h>
 
-//typedef void          (*__sighandler_t)(int);
+typedef void          (*sighandler_t)(int);
 
 typedef m_atomic_t      sig_atomic_t;
 
@@ -42,6 +42,9 @@ typedef m_atomic_t      sig_atomic_t;
 /* set handler for signal sig; returns old handler */
 extern void           (*signal(int sig, void (*func)(int)))(int);
 extern __sighandler_t   __sysv_signal(int sig, __sighandler_t func);
+#if defined(_SVID_SOURCE)
+extern sighandler_t     ssignal(int sig, sighandler_t action);
+extern int              gsignal(int sig);
 #if defined(_GNU_SOURCE)
 extern __sighandler_t   sysv_signal(int sig, __sighandler_t func);
 #endif

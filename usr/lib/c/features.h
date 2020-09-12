@@ -44,6 +44,9 @@
 #define _BSD_SOURCE                     1
 #endif
 #define _FAVOR_BSD                      0
+#if !defined(_MISC_SOURCE)
+#define _MISC_SOURCE                    1
+#endif
 
 #if !defined(_LARGEFILE_SOURCE)
 #define _LARGEFILE_SOURCE               1
