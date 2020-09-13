@@ -16,6 +16,7 @@
 
 #if (__STDC_VERSION__ >= 201112L)
 #include <stdalign.h>
+#define C_STATIC_ASSERT                 _Static_assert
 #endif /* __STDC_VERSION__ >= 201112L */
 #if !defined(__STDC_NO_THREADS__)
 //#include <threads.h>

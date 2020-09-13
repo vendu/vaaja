@@ -93,6 +93,31 @@ memcpy(void *dest,
     return dest;
 }
 
+char *
+memccpy(void *dest,
+        const void *src,
+        int c,
+        size_t len)
+{
+    unsigned char  *ucptr1 = (unsigned char *)dest;
+    unsigned char  *ucptr2 = (unsigned char *)src;
+    unsigned char   uc;
+
+    if (len) {
+        while ((*ucptr2) && (len--)) {
+            uc = *ucptr2;
+            *ucptr1++ = uc;
+            ucptr2++;
+            if (uc == (unsigned char)ch) {
+
+                return (char *)ucptr1;
+            }
+        }
+    }
+
+    return NULL;
+}
+
 static void *
 _memcpybk(void *dest, const void *src, size_t len)
 {
@@ -161,38 +186,31 @@ memmove(void * C_RESTRICT dest,
     return dest;
 }
 
-POISON(strcpy);
-#if 0
 /* TESTED OK */
 char *
-strcpy(char *dest,
+strcpy(char * C_RESTRICT dest,
        const char * C_RESTRICT src)
 {
-    char * C_RESTRICT      cdest = dest;
-
     while (*src) {
-        *cdest++ = *src++;
+        *dest++ = *src++;
     }
-    *cdest = *src;
+    *dest = *src;
 
     return dest;
 }
-#endif
 
 /* TESTED OK */
 char *
-strncpy(char *dest,
-        const char *src,
+strncpy(char * RESTRICT dest,
+        const char * RESTRICT src,
         size_t n)
 {
-    char * C_RESTRICT      bdest = dest;
-
     if (n) {
         while ((*src) && (n--)) {
-            *bdest++ = *src++;
+            *dest++ = *src++;
         }
         if (n) {
-            *bdest = *src;
+            *dest = *src;
         }
     }
 
@@ -202,38 +220,34 @@ strncpy(char *dest,
 /* TESTED OK */
 char *
 strcat(char * C_RESTRICT dest,
-       const char *src)
+       const char * RESTRICT src)
 {
-    char * C_RESTRICT      bdest = dest;
-
-    while (*bdest) {
-        bdest++;
+    while (*dest) {
+        dest++;
     }
     while (*src) {
-        *bdest++ = *src++;
+        *dest++ = *src++;
     }
-    *bdest = *src;
+    *dest = *src;
 
     return dest;
 }
 
 /* TESTED OK */
 char *
-strncat(char *dest,
-        const char *src,
+strncat(char * RESTRICT dest,
+        const char * RESTRICT src,
         size_t n)
 {
-    char * C_RESTRICT 	bdest = dest;
-
     if (n) {
-        while (*bdest) {
-            bdest++;
+        while (*dest) {
+            dest++;
         }
         while ((*src) && (n--)) {
-            *bdest++ = *src++;
+            *dest++ = *src++;
         }
         if (n) {
-            *bdest = *src;
+            *dest = *src;
         }
     }
 
@@ -308,8 +322,6 @@ memcmp(const void *ptr1,
     return retval;
 }
 
-#if !defined(__GLIBC__)
-
 /* TESTED OK */
 C_PURE int
 strcmp(const char *str1,
@@ -352,8 +364,6 @@ strncmp(const char *str1,
 
     return retval;
 }
-
-#endif /* !__GLIBC__ */
 
 #if 0
 C_PURE int

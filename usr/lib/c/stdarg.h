@@ -6,24 +6,25 @@
 
 #if defined(__zen__)
 #include <sys/zen/malloc.h>
-#define MALLOC(n) kmalloc(n)
-#define FREE(ptr) kfree(ptr)
+#define MALLOC(n)                       kmalloc(n)
+#define FREE(ptr)                       kfree(ptr)
 #else
-#define MALLOC(n) malloc(n)
-#define FREE(ptr) free(ptr)
+#define MALLOC(n)                       malloc(n)
+#define FREE(ptr)                       free(ptr)
 #endif
 
+#if !defined(__va_list_defined)
 struct __valist {
-    int32_t        gpregofs;
-    int32_t        fpregofs;
+    int32_t                             gpregofs;
+    int32_t                             fpregofs;
     union {
-        uintptr_t  ofs;
-        int8_t    *args;
+        uintptr_t                       ofs;
+        int8_t                         *args;
     } stk;
-    int8_t        *regsave;
+    int8_t                             *regsave;
 };
-
-typedef struct __valist *va_list;
+typedef struct __valist                *va_list;
+#define __va_list_defined               1
 
 #if defined(__GNUC__)
 #define va_start(ap, last)                                              \

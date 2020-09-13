@@ -24,10 +24,6 @@ typedef int32_t                         clockid_t;
 typedef uint32_t                        dev_t;
 #define __dev_t_defined                 1
 #endif
-#if !defined(__gid_t_defined)
-typedef uint32_t                        gid_t;
-#define __gid_t_defined                 1
-#endif
 #if !defined(__id_t_defined)
 typedef uint32_t                        id_t;
 #define __id_t_defined                  1
@@ -44,6 +40,10 @@ typedef int32_t                         pid_t;
 typedef uint32_t                        uid_t;
 #define __uid_t_defined                 1
 #endif
+#if !defined(__gid_t_defined)
+typedef uint32_t                        gid_t;
+#define __gid_t_defined                 1
+#endif
 #if !defined(__mode_t_defined)
 typedef uint32_t                        mode_t;
 #define __mode_t_defined                1
@@ -53,7 +53,11 @@ typedef uint32_t                        nlink_t;
 #define __nlink_t_defined               1
 #endif
 #if !defined(__off_t_defined)
+#if (_FILE_OFFSET_BITS == 32)
+typedef int32_t                         off_t;
+#elif (_FILE_OFFSET_BITS == 64)
 typedef int64_t                         off_t;
+#endif
 #define __off_t_defined                 1
 #endif
 #if defined(_LARGEFILE_SOURCE) && (_FILE_OFFSET_BITS == 64) && !defined(__off64_t_defined)

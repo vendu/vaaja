@@ -3,9 +3,38 @@
 
 #include <features.h>
 #include <stddef.h>
+#include <sys/wait.h>
 #if defined(_MISC_SOURCE)
 #include <alloca.h>
 #endif
+
+#define EXIT_SUCCESS    0
+#define EXIT_FAILURE    1
+#define RAND_MAX        0x00ffffff  // 16 M
+#define MB_CUR_MAX      1
+
+#if !defined(NULL)
+#define NULL            ((void *)0)
+#endif
+
+#if !defined(__size_t_defined)
+typedef uintptr_t       size_t;
+#endif
+
+typedef struct {
+    int                 quot;
+    int                 rem;
+} div_t;
+
+typedef struct {
+    long                quot;
+    long                rem;
+} ldiv_t;
+
+typedef struct {
+    long long           quot;
+    long long           rem;
+} lldiv_t;
 
 void  * malloc(size_t size) C_MALLOC C_ALLOC_SIZE(1);
 void  * calloc(size_t n, size_t size) C_ALLOC_SIZE((1, 2));

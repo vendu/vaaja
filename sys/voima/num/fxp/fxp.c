@@ -20,12 +20,11 @@ struct fxpdivu32                    fxpdivcache[FXP_DIV_CACHE_MAX];
 int
 main(int argc, char *argv[])
 {
-    struct fxpdivu32                fxd = fxpinitdivu32(4);
     fxp_t                           fx1 = double2fxpbig(8.0);
     fxp_t                           fx2 = double2fxpbig(-4.0);
 
     printfxpbig(fx1, 0);
-    fxpdivu32(16, fxd);
+    fxpdivu32(16, 3);
     printfxpbig(fx1, 0);
     fprintf(stderr, "\t*\t");
     printfxpbig(fx2, 0);

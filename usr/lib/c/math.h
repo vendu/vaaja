@@ -117,28 +117,50 @@ extern int              matherr(struct exception *exc);
 
 extern int              signgam;
 
-extern double           acos(double);
-extern double           asin(double);
-extern double           atan(double);
-extern double           atan2(double, double);
+extern double           acos(double d);
+extern double           asin(double d);
+extern double           atan(double d);
+extern double           acosh(double d);
+extern double           asinh(double d);
+extern double           atanh(double d);
+extern double           cos(double d);
+extern double           sin(double d);
+extern double           tan(double d);
+extern double           cosh(double d);
+extern double           sinh(double d);
+extern double           tanh(double d);
+extern double           exp(double d);
+extern double           log(double d);
+extern double           pow(double d, double p);
+extern double           sqrt(double d);
+extern double           fabs(double d);
+
+extern float            acosf(float f);
+extern float            asinf(float f);
+extern float            atanf(float f);
+extern float            acoshf(float f);
+extern float            asinhf(float f);
+extern float            atanhf(float f);
+extern float            cosf(float f);
+extern float            sinf(float f);
+extern float            tanf(float f);
+extern float            coshf(float f);
+extern float            sinhf(float f);
+extern float            tanhf(float f);
+extern float            expf(float f);
+extern float            logf(float f);
+extern float            powf(float f, float p);
+extern float            sqrtf(float f);
+extern float            fabsf(float f);
+
+#if 0
 extern double           ceil(double);
-extern double           cos(double);
-extern double           cosh(double);
-extern double           exp(double);
-extern double           fabs(double);
 extern double           floor(double);
 extern double           fmod(double, double);
 extern double           frexp(double, int *);
 extern double           ldexp(double, int);
-extern double           log(double);
 extern double           log10(double);
 extern double           modf(double, double *);
-extern double           pow(double, double);
-extern double           sin(double);
-extern double           sinh(double);
-extern double           sqrt(double);
-extern double           tan(double);
-extern double           tanh(double);
 extern double           erf(double);
 extern double           erfc(double);
 extern double           gamma(double);
@@ -151,9 +173,6 @@ extern double           y0(double);
 extern double           y1(double);
 extern double           yn(int, double);
 //extern int         isnan(double);
-extern double           acosh(double);
-extern double           asinh(double);
-extern double           atanh(double);
 extern double           cbrt(double);
 extern double           expm1(double);
 extern int              ilogb(double);
@@ -163,29 +182,14 @@ extern double           nextafter(double, double);
 extern double           remainder(double, double);
 extern double           rint(double);
 extern double           scalb(double, double);
-
-extern float            acosf(float);
-extern float            asinf(float);
-extern float            atanf(float);
 extern float            atan2f(float, float);
 extern float            ceilf(float);
-extern float            cosf(float);
-extern float            coshf(float);
-extern float            expf(float);
-extern float            fabsf(float);
 extern float            floorf(float);
 extern float            fmodf(float, float);
 extern float            frexpf(float, int *);
 extern float            ldexpf(float, int);
-extern float            logf(float);
 extern float            log10f(float);
 extern float            modff(float, float *);
-extern float            powf(float, float);
-extern float            sinf(float);
-extern float            sinhf(float);
-extern float            sqrtf(float);
-extern float            tanf(float);
-extern float            tanhf(float);
 extern float            erff(float);
 extern float            erfcf(float);
 extern float            gammaf(float);
@@ -198,9 +202,6 @@ extern float            y0f(float);
 extern float            y1f(float);
 extern float            ynf(int, float);
 //extern int         isnanf(float);
-extern float            acoshf(float);
-extern float            asinhf(float);
-extern float            atanhf(float);
 extern float            cbrtf(float);
 extern float            expm1f(float);
 extern int              ilogbf(float);
@@ -264,6 +265,7 @@ void                    sincosf(float x, float *sin, float *cos);
 void                    sincosl(long double x, long double *sin,
                                 long double *cos);
 #endif
+#endif /* 0 */
 
 #endif /* __MATH_H__ */
 

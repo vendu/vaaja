@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <signal.h>
 #include <zero/cdefs.h>
+#include <voima/num/npx/ieee754.h>
 
 #define FXP_ERROR                       FXP_SIGN_BIT
 #define FXP_SIGN_BIT                    (UINT64_C(1) << (FXP_BITS - 1))

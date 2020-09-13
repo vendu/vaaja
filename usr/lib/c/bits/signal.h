@@ -180,6 +180,7 @@ typedef long zoneid_t;
 #define SI_ASYNCIO      5 // asynchronous I/O request completed
 #define SI_MESGQ        6 // message arrived on empty message queue
 /* linux has SI_SIGIO, SI_TKILL */
+#if !defined(__siginfo_t_defined)
 typedef struct {
     int         	si_signo;       // signal number
     int         	si_errno;       // errno-value or zero
@@ -204,6 +205,8 @@ typedef struct {
     clock_t             si_utime;       // user time consumed
     clock_t             si_stime;       // system time consumed
 } siginfo_t;
+#define __siginfo_t_defined         1
+#endif
 
 #endif /* _POSIX_SOURCE && USEPOSIX199309 */
 

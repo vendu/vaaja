@@ -6,9 +6,6 @@
 #define EXIT_MAX_HANDLERS               64
 #define AT_QUICK_EXIT_MAX_HANDLERS      32
 
-#define EXIT_SUCCESS                    0
-#define EXIT_FAILURE                    1
-
 typedef void (*__exitfunc)(void);
 
 struct __exitfuncs {
