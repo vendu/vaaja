@@ -66,7 +66,7 @@ Oracles share pieces of wisdow to give you hints for the game.
 ### v - vampire
 ### w - wolf
 ### W - werewolf
-### Z - zombie
+### z - zombie
 
 ## special characters
 
@@ -87,16 +87,16 @@ gets really tough. :)
 
 An ancient Finnish belief concerns Ukko to be 'the god of gods'.
 
-### V - Lady X (undead terrorist vampire)
+### X - Lady X (undead terrorist vampire)
 
 Lady X carries a submachine gun which may be loaded with silver rounds.
 
-### D - Dracula (master vampire Vlad the Impaler)
+### V - Dracula (master vampire Vlad the Impaler)
 
 Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.
 
-| symbol | character     | levels      | hit          | probability  | notes 
+| symbol | character     | levels      | hit          | probability  | notes
 |--------|---------------|-------------|--------------|--------------|-------
 |  a     | ant           | any         | 1d4          | 1/16         | regular ant
 |  A     | soldier ant   | 2 up        | 2d4          | 1/32         | soldier ant
@@ -114,11 +114,18 @@ Bran Castle in Transylvania.
 |  v     | vampire       | graveyard   | 4d20        | 1/64         | probability 1/32 in Transylvania
 |  w     | wolf          | 12 up       | 3d12 + 2d20  | 1/64         | regular wolf
 |  W     | werewolf      | 16 up       | 5d12 + 2d20  | 1/64         | werewolf
-|  Z     | zombie        | 16 up       | 3d12 + 1d20  | 1/64         | flesh eater
+|  z     | zombie        | 16 up       | 3d12 + 1d20  | 1/64         | flesh eater
 |  F     | Fenris           | Valhalla | 4d12 + 3d20  | 1 in game    | the guardian and pet wolf of germanic gods
 |  K     | Kara             | 20 up    | 1d12 + 2d20  | 1 in game    | Princess of Atlantis
 |  T     | Thor             | Heaven   | 6d12 + 6d20  | 1 in game    | viking god of thunder
 |  U     | Ukko Ylijumala   | Valhalla | 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
-|  V     | Lady X        | graveyard    | 4d20 + 4d6   | 1 in game    |
-|  D     | Vlad Dracula  | Transylvania | 1d12 + 5d20  | 1 in game    |
+|  X     | Lady X        | graveyard    | 4d20 + 4d6   | 1 in game    |
+|  V     | Vlad Dracula  | Transylvania | 1d12 + 5d20  | 1 in game    |
+
+Gods
+----
+
+Z       - Zeus
+T       - Thor
+U       - Ukko Ylijumala
 

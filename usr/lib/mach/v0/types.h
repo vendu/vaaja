@@ -31,23 +31,47 @@ typedef double                  m_fpdouble_t;
 typedef int64_t                 m_fxp_t;
 
 struct v0romparm {
-    void                   *buf;
-    m_size_t                bufsize;
+    void                       *buf;
+    m_size_t                    bufsize;
 };
 
-struct v0uframe {
-    int32_t                 oldfp;
-    int32_t                 retadr;
-    int32_t                 r1_5[5];
-    int32_t                 rx0_rx15[16];
-    int32_t                 r12_r15[4];     // FP, SP, PC, LR
-    /* 416 bytes reserved for coprocessor use */
+struct v0trapframe {
+    int32_t                     code;
+    int32_t                     msw;
+    int32_t                     sp1;
+    int32_t                     pc1;
+};
+
+struct v0retframe {
+    int32_t                     oldfp;
+    int32_t                     retadr;
+    int32_t                     r5_r13[V0_CALLEE_SAVE_REGISTERS];
+};
+
+struct v0callframe {
+    int32_t                     r1_4[V0_CALLER_SAVE_REGISTERS];
+    int32_t                     r14_r15[4];     // LR, PC
+    int32_t                     xr0_xr15[16];
+};
+
+struct v0seg {
+    uint32_t                info;   // page-address + flags
+    uint32_t                lim;
 };
 
 struct v0thr {
+    int32_t                 id;
+    volatile int32_t        jointhr;
+    volatile int32_t        sigpend;
+    volatile int32_t        sigmask;
+    volatile int32_t       *statptr;
+    volatile int32_t        waitchan;
     volatile int32_t        genregs[V0_INTEGER_REGISTERS];
     volatile int32_t        sysregs[V0_SYSTEM_REGISTERS];
-    volatile int64_t        segregs[V0_SEGMENT_REGISTERS];
+    volatile struct v0seg   segtab[V0_SEGMENT_ENTRIES];
+    volatile fxp_t          fxp64regs[V0_FXP_REGISTERS];
+    volatile double         fpu64regs[V0_FPU_REGISTERS];
+    volatile float          dsp32regs[V0_DSP_REGISTERS];
 };
 
 #endif /* __MACH_V0_TYPES_H__ */

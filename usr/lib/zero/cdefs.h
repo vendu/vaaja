@@ -149,7 +149,7 @@
 #define C_L1CODE
 #endif
 #if !defined(C_INLINE)
-#define C_INLINE
+#define C_INLINE                        __inline__
 #endif
 #if !defined(C_INLINE)
 #define C_FLATTEN

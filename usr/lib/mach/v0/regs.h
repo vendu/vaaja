@@ -17,15 +17,17 @@
 #define V0_R9_REG               9   // function scratch-register #5
 #define V0_R10_REG              10  // function scratch-register #6
 #define V0_R11_REG              11  // function scratch-register #7
-#define V0_FP_REG               V0_R12_REG   // stack-frame pointer
-#define V0_SP_REG               V0_R13_REG   // stack pointer
-#define V0_LR_REG               V0_R14_REG   // link register
+#define V0_SP_REG               V0_R12_REG   // stack pointer
+#define V0_LR_REG               V0_R13_REG   // link register
+#define V0_FP_REG               V0_R14_REG   // stack-frame pointer
 #define V0_PC_REG               V0_R15_REG   // program counter
 #define V0_R12_REG              12
 #define V0_R13_REG              13
 #define V0_R14_REG              14
 #define V0_R15_REG              15
 #define V0_INTEGER_REGISTERS    16  // # of user registers
+#define V0_CALLER_REGISTERS     4   // r1..r4
+#define V0_CALLEE_REGISTERS     9   // r1..r13
 
 /* integer-mode system registers */
 
