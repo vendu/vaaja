@@ -46,12 +46,12 @@
 #define V0_FXP_IDIV             0x03    // fxd = fx1 / i2;
 #define V0_FXP_DIV              0x04    // fxd = fx1 / fx2;
 #define V0_FXP_INV              0x05    // fxd = 1 / fx1;
-#define V0_FXP_AVG              0x05    // fxd = (fx1 + fx2) >> 1;
-#define V0_FXP_HAM              0x06    // fxd = ham(fx1);
-#define V0_FXP_CTZ              0x07    // fxd = ctz(fx1);
-#define V0_FXP_CLZ              0x08    // fxd = clz(fx1);
-#define V0_FXP_HSH              0x09    // fxd = hsh(fx1);
-#define V0_FXP_HUN              0x0a    // fxd = hun(fx1);
+#define V0_FXP_AVG              0x06    // fxd = (fx1 + fx2) >> 1;
+#define V0_FXP_HAM              0x07    // fxd = ham(fx1);
+#define V0_FXP_CTZ              0x08    // fxd = ctz(fx1);
+#define V0_FXP_CLZ              0x09    // fxd = clz(fx1);
+#define V0_FXP_HSH              0x0a    // fxd = hsh(fx1);
+#define V0_FXP_HUN              0x0b    // fxd = hun(fx1);
 
 #define V0_DSP_COPROC           0x03    // digital signal processor
 
