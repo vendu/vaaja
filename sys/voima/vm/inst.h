@@ -262,6 +262,10 @@ struct v0inst {
 #define V0_PSH_OP               0x14    // push register to memory
 #define V0_STM_OP               0x15    // store many registers; immediate bits
 
+/*
+ * atomic operations
+ * - conditional execution, condition code in parm
+ */
 #define V0_ATOMIC_UNIT          0x08
 /* instruction ID */
 #define V0_XORR                 0x00    // atomic OR, memory destination
