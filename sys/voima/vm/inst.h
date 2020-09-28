@@ -309,7 +309,7 @@ struct v0inst {
 #define V0_IOW_OP               0x13    // I/O-port write operation
 #define V0_IOC_OP               0x14    // I/O-control operation
 #define V0_REG_OP               0x15    // shared-register operation e.g. time
-#define V0_IPI_OP               0x16    // Inter-Processor Interrupt
+#define V0_IPI_OP               0x16    // inter-processor interrupt
 #define V0_BUS_OP               0x17    // bus operation
 #define v0_DEV_OP               0x18    // peripheral device operation
 #define V0_MPC_OP               0x19    // [multi]processor control operation
