@@ -39,10 +39,14 @@
 #define V0_MSW_ZF_BIT			(1 << 1)    // zero-bit, equal
 #define V0_MSW_SF_BIT			(1 << 2)    // sign-bit, negative
 #define V0_MSW_OF_BIT			(1 << 3)    // overflow
-#define V0_INST_COND_BITS       5
+#define V0_INST_COND_BITS       4
 #define V0_MSW_TF_BIT           (1 << 5)    // trap-flag/single-step
 #define V0_MSW_IF_BIT           (1 << 6)    // interrupt enable
-#define V0_MSW_FR_BIT           (1 << 30)   // round-up (fraction MSB set)
+#define V0_MSW_BC_BIT           (1 << 27)   // check array access boundaries
+#define V0_MSW_RF_BIT           (1 << 28)   // ring-bit, set in system mode
+#define V0_MSW_IV_BIT           (1 << 29)   // interrupt-vector present
+#define V0_MSW_MT_BIT           (1 << 30)   // multithread; honor bus-locks
+#define V0_MSW_PF_BIT           (1 << 31)   // paging active
 
 /* SYSTEM-registers */
 /* read-only registers in user-mode; 32-bit wide */
@@ -138,6 +142,24 @@
 #define V0_L1_MISS_REGISTER     0x03
 #define V0_L2_MISS_REGISTER     0x04
 #define V0_L3_MISS_REGISTER     0x04
+
+/* FSR; floating-point status register */
+#define V0_FSR_RND_BIT          (1 << 0)    // round to nearest
+#define V0_FSR_RTZ_BIT          (1 << 1)    // round towards zero
+#define V0_FSR_RPI_BIT          (1 << 2)    // towards positive infinity
+#define V0_FSR_RNI_BIT          (1 << 3)    // towards negative infinity
+#define V0_FSR_INV_BIT          (1 << 4)    // invalid operand
+#define V0_FSR_DVZ_BIT          (1 << 5)    // division by zero
+#define V0_FSR_OFL_BIT          (1 << 6)    // overflow
+#define V0_FSR_UFL_BIT          (1 << 7)    // overflow
+#define V0_FSR_LT_BIT           (1 << 8)    // less than
+#define V0_FSR_EQ_BIT           (1 << 9)    // equal
+#define V0_FSR_GE_BIT           (1 << 10)   // greater than or equal
+#define V0_FSR_UNO_BIT          (1 << 11)   // unordered
+#define V0_FSR_PINF_BIT         (1 << 12)   // positive infinity result
+#define V0_FSR_NINF_BIT         (1 << 13)   // negative infinity result
+#define V0_FSR_NAN_BIT          (1 << 14)   // not-a-number (NaN)
+#define V0_FSR_SNAN_BIT         (1 << 15)   // signaling NaN
 
 #endif /*  __V0_VM_REGS_H__ */
 

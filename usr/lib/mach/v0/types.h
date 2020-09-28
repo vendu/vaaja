@@ -35,11 +35,24 @@ struct v0romparm {
     m_size_t                    bufsize;
 };
 
+/*
+ * trap stack-frame
+ * - LR holds the return address back to interrupted function
+ */
+/*
+ * top-to-bottom
+ * -------------
+ * - ufp        - user mode frame pointer
+ * - usp        - user mode stack pointer
+ * - msw        - user mode MSW
+ * - code       - trap-defined status/error code
+ */
 struct v0trapframe {
-    int32_t                     code;
-    int32_t                     msw;
-    int32_t                     sp1;
-    int32_t                     pc1;
+    int32_t                     code;   // error code
+    int32_t                     msw;    // machine status-word
+    int32_t                     usp;    // user-mode stack-pointer
+    int32_t                     ufp;    // user-mode frame-pointer
+    //    int32_t                     ret;    // return address
 };
 
 struct v0retframe {

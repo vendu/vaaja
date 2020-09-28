@@ -105,6 +105,7 @@ struct v0inst {
 
 /*
  * logical instructions
+ * - conditional execution, condition code in parm
  */
 #define V0_LOGIC_UNIT           0x00    /* op-member */
 /* instruction ID */
@@ -118,6 +119,7 @@ struct v0inst {
 
 /*
  * shift and rotate instructions
+ * - conditional execution, condition code in parm
  */
 #define V0_SHIFT_UNIT           0x01
 /* instruction ID */
@@ -130,7 +132,8 @@ struct v0inst {
 #define V0_RCL_OP               0x06    // rd = rcl(rs1, ri2);
 
 /*
- * arithmetic instructions
+ * add/sub instructions
+ * - conditional execution, condition code in parm
  */
 #define V0_ADDER_UNIT           0x02
 /* instruction ID */
@@ -145,6 +148,10 @@ struct v0inst {
 #define V0_USUB_OP              0x08    // unsigned varinat
 #define V0_SBB_OP               0x09    // sets CF in the MSW
 
+/*
+ * multiplication and division
+ * - conditional execution, condition code in parm
+ */
 #define V0_MULDIV_UNIT          0x03
 /* instruction ID */
 #define V0_MUL_OP               0x00    // dst = rs2 * rs1;
@@ -158,7 +165,10 @@ struct v0inst {
 #define V0_IRP_OP               0x08    // rs2 = irp(rs1) so x * rs2 => x / rs2
 #define V0_UIRP_OP              0x09    // unsigned variant
 
-/* bit operations */
+/*
+ * bit operations
+ * - conditional execution, condition code in parm
+ */
 #define V0_BIT_UNIT             0x04
 /* instruction ID */
 #define V0_ZEXB_OP              0x00    // zero-extend byte to register size
@@ -223,50 +233,53 @@ struct v0inst {
 #define V0_TWT_OP               0x1d    // wait on channel
 #define V0_TWK_OP               0x1e    // wake-up from wait
 
-/* load and store operations */
+/*
+ * load and store operations
+ * - conditional execution, condition code in parm
+ */
 #define V0_LDSTR_UNIT           0x07
 /* instruction ID */
 #define V0_ADR_OP               0x00
 #define V0_MVR_OP               0x01    // user-to-user register
 #define V0_MVU_OP               0x02    // user-to-system register
 #define V0_MVX_OP               0x03    // system-to-user register
-#define V0_MVC_OP               0x04    // conditional user-to-user register
-#define V0_LDB_OP               0x05    // load byte (8-bit)
-#define V0_LDH_OP               0x06    // load halfword (16-bit)
-#define V0_LDW_OP               0x07    // load word (32-bit)
-#define V0_LDD_OP               0x08    // load doubleword (64-bit)
-#define V0_LFS_OP               0x09    // load single-precision float (32-bit)
-#define V0_LFD_OP               0x0a    // load double-precision float (64-bit)
-#define V0_LFX_OP               0x0b    // load fixed-point number (64-bit)
-#define V0_POP_OP               0x0c    // pop from stack to register
-#define V0_LDM_OP               0x0d    // load many registers
-#define V0_CLD_OP               0x0e    // conditional load
-#define V0_STB_OP               0x0f    // store byte to memory
-#define V0_STH_OP               0x10    // store halfword to memory
-#define V0_STW_OP               0x11    // store word to memory
-#define V0_STD_OP               0x12    // store doubleword to memory
-#define V0_SFS_OP               0x13    // store single-precision float
-#define V0_SFD_OP               0x14    // store double-precision float
-#define V0_SFX_OP               0x15    // store fixed-point number
-#define V0_PSH_OP               0x16    // push register to memory
-#define V0_STM_OP               0x17    // store many registers; immediate bits
-#define V0_CST_OP               0x18    // conditional user-to-memory
+#define V0_LDB_OP               0x04    // load byte (8-bit)
+#define V0_LDH_OP               0x05    // load halfword (16-bit)
+#define V0_LDW_OP               0x06    // load word (32-bit)
+#define V0_LDD_OP               0x07    // load doubleword (64-bit)
+#define V0_LFS_OP               0x08    // load single-precision float (32-bit)
+#define V0_LFD_OP               0x09    // load double-precision float (64-bit)
+#define V0_LFX_OP               0x0a    // load fixed-point number (64-bit)
+#define V0_POP_OP               0x0b    // pop from stack to register
+#define V0_LDM_OP               0x0c    // load many registers
+#define V0_STB_OP               0x0d    // store byte to memory
+#define V0_STH_OP               0x0e    // store halfword to memory
+#define V0_STW_OP               0x0f    // store word to memory
+#define V0_STD_OP               0x10    // store doubleword to memory
+#define V0_SFS_OP               0x11    // store single-precision float
+#define V0_SFD_OP               0x12    // store double-precision float
+#define V0_SFX_OP               0x13    // store fixed-point number
+#define V0_PSH_OP               0x14    // push register to memory
+#define V0_STM_OP               0x15    // store many registers; immediate bits
 
 #define V0_ATOMIC_UNIT          0x08
 /* instruction ID */
-#define V0_XINC_OP              0x00    // fetch result
-#define V0_XDEC_OP              0x01    // fetch result
-#define V0_XADD_OP              0x02    // fetch result
-#define V0_BST_OP               0x03    // set bit; dst |= rs2 << rs1;
-#define V0_BCL_OP               0x04    // clear bit; dst &= ~(rs2 << rs1);
-#define V0_BFL_OP               0x05    // flip bit; dst ^= rs2 << rs1;
-#define V0_BIC_OP               0x06    // bitwise clear; dst = rs2 & ~rs1;
-#define V0_BTS_OP               0x07    // bit test-and-set
-#define V0_BTC_OP               0x08    // bit test-and-clear
-#define V0_BTF_OP               0x09    // bit test-and-flip
-#define V0_CAS_OP               0x0a    // [atomic] compare and swap
-#define V0_SMT_OP               0x0b    // start memory tramsaction [page]
-#define V0_FMT_OP               0x0c    // end memory transaction [page]
+#define V0_XORR                 0x00    // atomic OR, memory destination
+#define V0_XX0R                 0x01    // atomic XOR, memory destination
+#define V0_XAND                 0x02    // atomic AND, memory destination
+#define V0_XINC_OP              0x03    // atomic increment, fetch result
+#define V0_XDEC_OP              0x04    // atomic decrement, fetch result
+#define V0_XADD_OP              0x05    // atomic addition, fetch result
+#define V0_BST_OP               0x06    // set bit; dst |= rs2 << rs1;
+#define V0_BCL_OP               0x07    // clear bit; dst &= ~(rs2 << rs1);
+#define V0_BFL_OP               0x08    // flip bit; dst ^= rs2 << rs1;
+#define V0_BIC_OP               0x09    // bitwise clear; dst = rs2 & ~rs1;
+#define V0_BTS_OP               0x0a    // bit test-and-set
+#define V0_BTC_OP               0x0b    // bit test-and-clear
+#define V0_BTF_OP               0x0c    // bit test-and-flip
+#define V0_CAS_OP               0x0d    // [atomic] compare and swap
+#define V0_SMT_OP               0x0e    // start memory tramsaction [page]
+#define V0_FMT_OP               0x0f    // end memory transaction [page]
 
 #define V0_SYSTEM_UNIT          0x09
 /* instruction ID */
