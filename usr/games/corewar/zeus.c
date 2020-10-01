@@ -13,7 +13,7 @@
 #endif
 
 extern struct cwmars    g_cwmars;
-extern long             g_rcnargtab[CWNOP];
+extern long             g_rcnargtab[CW_OPS];
 
 struct zeussel          g_zeussel;
 
@@ -93,7 +93,7 @@ zeusdisasm(long pc, int *lenret)
                 }
             }
             if (op->aflg & CWSIGNBIT) {
-                ret = snprintf(str, len, "%d,", op->a - CWCORESIZE);
+                ret = snprintf(str, len, "%d,", op->a - CW_CORE_SIZE);
                 if (ret < 0) {
                     free(ptr);
 
@@ -136,7 +136,7 @@ zeusdisasm(long pc, int *lenret)
             str += ret;
         }
         if (op->bflg & CWSIGNBIT) {
-            ret = snprintf(str, len, "%d", op->b - CWCORESIZE);
+            ret = snprintf(str, len, "%d", op->b - CW_CORE_SIZE);
             if (ret < 0) {
                 free(ptr);
 
@@ -176,7 +176,7 @@ zeusshowmem(void)
     long            pc;
     int             dummy;
 
-    for (pc = 0 ; pc < CWCORESIZE ; pc++) {
+    for (pc = 0 ; pc < CW_CORE_SIZE ; pc++) {
         op = &g_cwmars.optab[pc];
         if (*(uint64_t *)op) {
             fprintf(stderr, "%ld\t", pc);

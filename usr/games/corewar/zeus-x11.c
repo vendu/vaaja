@@ -88,7 +88,7 @@ zeustogglesel(struct zeusx11 *x11, XEvent *event)
 //    pc = y * (x11->w / 5) + x;
     pc = y * (x11->simw / 5) + x;
     if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CWCORESIZE >> 3, sizeof(uint8_t));
+        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
     }
     if (!g_zeussel.bmap) {
         fprintf(stderr, "memory allocation failure\n");
@@ -99,6 +99,7 @@ zeustogglesel(struct zeusx11 *x11, XEvent *event)
     }
     g_zeussel.last = pc;
     zeusdrawsimop(x11, pc);
+    XSync(x11->disp, False);
 
     return;
 }
@@ -116,7 +117,7 @@ zeusaddsel(struct zeusx11 *x11, XEvent *event)
 //    pc = y * (x11->w / 5) + x;
     pc = y * (x11->simw / 5) + x;
     if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CWCORESIZE >> 3, sizeof(uint8_t));
+        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
     }
     if (!g_zeussel.bmap) {
         fprintf(stderr, "memory allocation failure\n");
@@ -134,6 +135,7 @@ zeusaddsel(struct zeusx11 *x11, XEvent *event)
         }
         g_zeussel.last = pc;
     }
+    XSync(x11->disp, False);
 
     return;
 }
@@ -142,10 +144,11 @@ void
 zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     if (g_zeussel.bmap) {
-        memset(g_zeussel.bmap, 0, CWCORESIZE >> 3);
+        memset(g_zeussel.bmap, 0, CW_CORE_SIZE >> 3);
     }
     g_zeussel.last = -1;
     zeusdrawsim(x11);
+    XSync(x11->disp, False);
 }
 
 C_PURE
@@ -761,7 +764,6 @@ zeusaddx11button(struct zeusx11 *x11, int id, const char *str,
                  | ButtonPressMask
                  | ButtonReleaseMask);
     XMapRaised(x11->disp, win);
-    XSync(x11->disp, False);
 
     return;
 }
@@ -865,7 +867,7 @@ zeusprintop(struct zeusx11 *x11, long pc, int x, int y)
         if (pid) {
 
         }
-        if (op->op == CWOPDAT) {
+        if (op->op == CW_DAT_OP) {
             if (!*((uint64_t *)op)) {
                 XDrawString(x11->disp, win, x11->datgc,
                             x, y,
@@ -889,6 +891,7 @@ zeusprintop(struct zeusx11 *x11, long pc, int x, int y)
                         str, len);
         }
         free(str);
+        XSync(x11->disp, False);
     }
 
     return len;
@@ -922,7 +925,7 @@ zeusprintdb(struct zeusx11 *x11, int simx, int simy)
                    x11->dbw, x11->dbh);
     len = zeusprintop(x11, pc, 0, x11->fontasc);
     op = &g_cwmars.optab[pc];
-    if (op->op == CWOPDAT) {
+    if (op->op == CW_DAT_OP) {
         if (!*((uint64_t *)op)) {
             XDrawString(x11->disp, win, x11->datgc,
                         len * x11->fontw, x11->fontasc,
@@ -946,12 +949,13 @@ zeusprintdb(struct zeusx11 *x11, int simx, int simy)
                     str, slen);
     }
     pc++;
-    pc %= CWCORESIZE;
+    pc %= CW_CORE_SIZE;
     for (i = 0 ; i < 15 ; i++) {
         zeusprintop(x11, pc, 0, (i + 2) * x11->fontasc);
         pc++;
-        pc %= CWCORESIZE;
+        pc %= CW_CORE_SIZE;
     }
+    XSync(x11->disp, False);
 
     return;
 }
@@ -1100,7 +1104,7 @@ zeusdrawsimop(struct zeusx11 *x11, long pc)
                        x11->selgc,
                        x, y,
                        4, 4);
-    } else if (op->op == CWOPDAT) {
+    } else if (op->op == CW_DAT_OP) {
         if (!*((uint64_t *)op)) {
             XFillRectangle(x11->disp, x11->pixbuf,
                            x11->datgc,
@@ -1134,6 +1138,7 @@ zeusdrawsimop(struct zeusx11 *x11, long pc)
               x, y,
               4, 4,
               x, y);
+    XSync(x11->disp, False);
 
     return;
 }
@@ -1143,7 +1148,7 @@ zeusdrawsim(struct zeusx11 *x11)
 {
     long pc;
 
-    for (pc = 0 ; pc < CWCORESIZE ; pc++) {
+    for (pc = 0 ; pc < CW_CORE_SIZE ; pc++) {
         zeusdrawsimop(x11, pc);
     }
     XCopyArea(x11->disp, x11->pixbuf, x11->simwin,
@@ -1151,6 +1156,7 @@ zeusdrawsim(struct zeusx11 *x11)
               0, 0,
               x11->simw, x11->simh,
               0, 0);
+    XSync(x11->disp, False);
 
     return;
 }

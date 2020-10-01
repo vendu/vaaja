@@ -1,3 +1,7 @@
+#include <corewar/conf.h>
+
+#if defined(ZEUSWINSDL)
+
 #include <unistd.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_main.h>
@@ -181,7 +185,7 @@ sdlcleanup(void)
         SDL_DestroyWindow(zeussdl.win);
     }
     SDL_Quit();
-    
+
     return;
 }
 
@@ -246,7 +250,7 @@ sdlloadbuttonimgs(struct zeussdlbuttonimgs *imgs)
 {
     SDL_Rect    destrect;
     int         ret = 0;
-    
+
     imgs->norm = IMG_Load("buttonnormal.png");
     imgs->hover = IMG_Load("buttonhilite.png");
     imgs->click = IMG_Load("buttonpress.png");
@@ -274,9 +278,9 @@ sdlloadbuttonimgs(struct zeussdlbuttonimgs *imgs)
     imgs->clicktexture = SDL_CreateTextureFromSurface(imgs->rend,
                                                       imgs->click);
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
-    destrect.y += CWSDLBUTTONHEIGHT; 
+    destrect.y += CWSDLBUTTONHEIGHT;
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
-    destrect.y += CWSDLBUTTONHEIGHT; 
+    destrect.y += CWSDLBUTTONHEIGHT;
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
     SDL_RenderPresent(imgs->rend);
 
@@ -338,7 +342,7 @@ sdlinit(void)
                 zeusguiwinid = SDL_GetWindowID(zeussdl.gui);
                 if (!sdlloadbuttonimgs(&zeussdlbuttonimgs)) {
                     sdlinitrects(zeussdlrects);
-                    
+
                     return 0;
                 }
             }
@@ -472,12 +476,11 @@ zeusdrawsim(struct zeussdl *sdl)
                                                    zeussdl.surface);
     //    SDL_RenderClear(zeussdl.rend);
     SDL_RenderCopy(zeussdl.rend, zeussdl.texture, NULL, &rect);
-    SDL_RenderPresent(zeussdl.rend); 
+    SDL_RenderPresent(zeussdl.rend);
 
     return;
 }
 
-#if defined(ZEUSWINSDL)
 int
 main(int argc, char *argv[])
 {
@@ -553,5 +556,6 @@ main(int argc, char *argv[])
     /* NOTREACHED */
     exit(0);
 }
+
 #endif /* defined(ZEUSWINSDL) */
 

@@ -13,8 +13,9 @@
 #undef  ZEUSWINX11
 #undef  ZEUSWINEFL
 #else
-//#define ZEUSWINX11       1
-//#define ZEUSIMLIB2       1
+#define ZEUS             1
+#define ZEUSWINX11       1
+#define ZEUSIMLIB2       1
 //#define ZEUSWINSDL       1
 #endif
 

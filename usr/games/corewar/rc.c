@@ -9,7 +9,7 @@
 extern struct cwmars    g_cwmars;
 
 static void            *g_rcparsetab[128];  // instruction lookup table
-long                    g_rcnargtab[CWNOP]  // per-instruction argument counts
+long                    g_rcnargtab[CW_OPS]  // per-instruction argument counts
 = {
     1, /* DAT */
     2, /* MOV */
@@ -82,7 +82,7 @@ rcaddop(const char *name, long id)
 long
 rcfindop(char *str, long *narg)
 {
-    long  op = CWNONE;
+    long  op = CW_NONE;
     char *cp = str;
     void *ptr;
 
@@ -99,7 +99,7 @@ rcfindop(char *str, long *narg)
             }
         }
     }
-    if (op != CWNONE) {
+    if (op != CW_NONE) {
         *narg = g_rcnargtab[op];
     }
 
@@ -110,17 +110,17 @@ rcfindop(char *str, long *narg)
 void
 rcinitop(void)
 {
-    rcaddop("DAT", CWOPDAT);
-    rcaddop("MOV", CWOPMOV);
-    rcaddop("ADD", CWOPADD);
-    rcaddop("SUB", CWOPSUB);
-    rcaddop("JMP", CWOPJMP);
-    rcaddop("JMZ", CWOPJMZ);
-    rcaddop("JMN", CWOPJMN);
-    rcaddop("CMP", CWOPCMP);
-    rcaddop("SLT", CWOPSLT);
-    rcaddop("DJN", CWOPDJN);
-    rcaddop("SPL", CWOPSPL);
+    rcaddop("DAT", CW_DAT_OP);
+    rcaddop("MOV", CW_MOV_OP);
+    rcaddop("ADD", CW_ADD_OP);
+    rcaddop("SUB", CW_SUB_OP);
+    rcaddop("JMP", CW_JMP_OP);
+    rcaddop("JMZ", CW_JMZ_OP);
+    rcaddop("JMN", CW_JMN_OP);
+    rcaddop("CMP", CW_CMP_OP);
+    rcaddop("SLT", CW_SLT_OP);
+    rcaddop("DJN", CW_DJN_OP);
+    rcaddop("SPL", CW_SPL_OP);
 
     return;
 }
@@ -146,11 +146,11 @@ rcgetop(char *str)
         while (isspace(*cp)) {
             cp++;
         }
-        op = CWNONE;
+        op = CW_NONE;
         if (isalpha(*cp)) {
             op = rcfindop(cp, &narg);
         }
-        if (op != CWNONE) {
+        if (op != CW_NONE) {
             instr->op = op;
             while (isalpha(*cp)) {
                 cp++;
@@ -184,7 +184,7 @@ rcgetop(char *str)
                     } else {
                         instr->aflg |= CWRELBIT;
                     }
-                    val = CWNONE;
+                    val = CW_NONE;
                     sign = 0;
                     if (*cp == '-') {
                         sign = 1;
@@ -204,7 +204,7 @@ rcgetop(char *str)
                     }
                     if (sign) {
                         instr->aflg |= CWSIGNBIT;
-                        val = CWCORESIZE - val;
+                        val = CW_CORE_SIZE - val;
                     }
                     instr->a = val;
                 }
@@ -231,7 +231,7 @@ rcgetop(char *str)
                 } else {
                     instr->aflg |= CWRELBIT;
                 }
-                val = CWNONE;
+                val = CW_NONE;
                 sign = 0;
                 if (*cp == '-') {
                     sign = 1;
@@ -251,7 +251,7 @@ rcgetop(char *str)
                 }
                 if (sign) {
                     instr->bflg |= CWSIGNBIT;
-                    val = CWCORESIZE - val;
+                    val = CW_CORE_SIZE - val;
                 }
                 instr->b = val;
             }
@@ -354,7 +354,7 @@ rcxlate(FILE *fp, long pid, long base, long *baseret, long *limret)
                         exit(1);
                     }
                     *((uint64_t *)(&g_cwmars.optab[pc])) = *((uint64_t *)op);
-                    if (ret < 0 && op->op != CWOPDAT) {
+                    if (ret < 0 && op->op != CW_DAT_OP) {
                         /* execution starts at first non-DAT instruction */
                         ret = pc;
                     }
@@ -366,7 +366,7 @@ rcxlate(FILE *fp, long pid, long base, long *baseret, long *limret)
                     }
 #endif
                     pc++;
-                    pc %= CWCORESIZE;
+                    pc %= CW_CORE_SIZE;
                 } else {
                     fprintf(stderr, "invalid instruction: %s\n", linebuf);
 
