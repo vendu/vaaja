@@ -3,6 +3,10 @@
 
 /* LOGIC-unit #0 */
 
+/*
+ * not  %r0                     - R0 = ~R0;
+ * not  %r0, %r1                - R0 = ~R1;
+ */
 static void
 v0_not32(const void * C_RESTRICT dest,
          const void * C_RESTRICT src1,
@@ -14,6 +18,10 @@ v0_not32(const void * C_RESTRICT dest,
     *(int32_t *)dest = res;
 }
 
+/*
+ * orr  %r0, %r1                - R0 = R0 | R1;
+ * orr  %r0, %r1, %r2           - R0 = R1 | R2;
+ */
 static void
 v0_orr32(const void * C_RESTRICT dest,
          const void * C_RESTRICT src1,
@@ -27,6 +35,10 @@ v0_orr32(const void * C_RESTRICT dest,
     *(int32_t *)dest = res;
 }
 
+/*
+ * xor  %r0, %r1                - R0 = R0 ^ R1;
+ * xor  %r0, %r1, %r2           - R0 = R1 ^ R2;
+ */
 static void
 v0_xor32(const void * C_RESTRICT dest,
          const void * C_RESTRICT src1,
@@ -40,6 +52,10 @@ v0_xor32(const void * C_RESTRICT dest,
     *(int32_t *)dest = res;
 }
 
+/*
+ * and  %r0, %r1                - R0 = R0 & R1;
+ * and  %r0, %r1, %r2           - R0 = R1 & R2;
+ */
 static void
 v0_and32(const void * C_RESTRICT dest,
          const void * C_RESTRICT src1,
@@ -100,7 +116,7 @@ v0_slr32(const void * C_RESTRICT dest,
          const void * C_RESTRICT src2)
 {
     uint32_t    ures = *(uint32_t *)src1;
-    int32_t     cnt = *(int32_t *)src2;
+    int32_t     cnt = *(int32_t *)src2;;
 
     ures >>= cnt;
 

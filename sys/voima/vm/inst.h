@@ -41,41 +41,54 @@
 #define V0_OP_MAX               0x0f
 #define V0_VAL_MAX              0x3f
 
-#define V0_ANY_COND             0x00
-#define V0_EQ_COND              0x01
-#define V0_NE_COND              0x02
-#define V0_GT_COND              0x03
-#define V0_LT_COND              0x04
-#define V0_GE_COND              0x05
-#define V0_LE_COND              0x06
-#define V0_HS_COND              0x07
-#define V0_LO_COND              0x08
-#define V0_MI_COND              0x09
-#define V0_PL_COND              0x0a
-#define V0_OF_COND              0x0b
-#define V0_NO_COND              0x0c
-#define V0_HI_COND              0x0d
-#define V0_LS_COND              0x0e
+/* for conditional execution, cond-member is set and the conditional in src2 */
+#define V0_ANY_COND             0x00            // execute always
+#define V0_EQ_COND              0x01            // ZF
+#define V0_NE_COND              0x02            // !ZF
+#define V0_GT_COND              0x03            // !ZF && (SF == OF)
+#define V0_LT_COND              0x04            // (SF != OF)
+#define V0_GE_COND              0x05            // (SF == OF)
+#define V0_LE_COND              0x06            // ZF || (SF != OF)
+#define V0_HS_COND              0x07            // CF
+#define V0_LO_COND              0x08            // !CF
+#define V0_MI_COND              0x09            // SF
+#define V0_PL_COND              0x0a            // !SF
+#define V0_OF_COND              0x0b            // OF
+#define V0_NO_COND              0x0c            // !OF
+#define V0_HI_COND              0x0d            // CF || !ZF
+#define V0_LS_COND              0x0e            // !CF || ZF
+#define V0_PARM_COND_BITS       4               // see above
+#define V0_PARM_COND_MASK       0x0f
 
-/* argsize = 8 << (parm & argsizebits) */
-#define V0_SRC2_COND_MASK       0x0f
-#define V0_PARM_COND_BITS       5
+#define v0parmcond(i)           ((i)->src2)
+#define v0parmshift(i)          ((i)->parm & V0_PARM_SHIFT_MASK)
+#define V0parmfold(i)           ((i)->parm & V0_PARM_FOLD_MASK)
+#define V0_PARM_SHIFT_BITS      6
+#define V0_PARM_SHIFT_MASK      0x1f
+#define V0_PARM_FOLD_SLL        0x00            // fold left shift
+#define V0_PARM_FOLD_SRL        0x40            // fold logical right shift
+#define V0_PARM_FOLD_SAR        0x80            // fold arithmetic right shift
+#define V0_PARM_FOLD_ROR        0xc0            // fold rotate right
+#define V0_PARM_FOLD_MASK       0xc0
 #define V0_PARM_IMM_SIZE_BITS   2
-#define V0_PARM_IMM_SIZE_MASK   0x03
-#define V0_PARM_IMM_SIZE_SHIFT  2
-#define V0_PARM_SRC_ADR         (1 << 2)        // source address (else target)
-#define V0_PARM_SEX_BIT         (1 << 3)        // sign-extend (zero-extend)
-#define V0_PARM_ADR_MASK        0x70            // addressing-mode bits
+#define V0_PARM_IMM_SIZE_MASK   0x03            // 1-, 2-, 4-, or 8-bit operand
+#define V0_PARM_SEX_BIT         (1 << 2)        // sign-extend (zero-extend)
+#define V0_PARM_IMM_ALN         (1 << 3)        // aligned 64-bit immediate
+#define V0_PARM_ADR_MASK        0xe0            // addressing-mode bits
+#define V0_PARM_SRC_ADR         (1 << 4)        // source address (else target)
 #define V0_PARM_ADR_BASE        (1 << 5)        // base register in use
 #define V0_PARM_ADR_NDX         (1 << 6)        // index register in use
-#define V0_PARM_ADR_OFS         (1 << 7)        // [immediate] offset in use
+#define V0_PARM_IMM             (1 << 7)        // immediate operand present
+#define V0_PARM_ADR_OFS         V0_PARM_IMM     // immediate address offset
 struct v0inst {
     unsigned                    unit    : 4;    // instruction type, coproc-flag
     unsigned                    dest    : 4;    // destination register
     unsigned                    src1    : 4;    // source register #1
     unsigned                    src2    : 4;    // source register #2
-    unsigned                    op      : 8;    // instruction ID
-    int8_t                      parm;           // shift count, size-info, cond
+    unsigned                    op      : 6;    // instruction ID
+    unsigned                    cond    : 1;    // execution condition in src2
+    unsigned                    trap    : 1;    // instruction breakpoint
+    int8_t                      parm;           // shift-count, size-info, cond
     int32_t                     imm32[C_VLA];   // optional immediate operand
 };
 
@@ -88,9 +101,6 @@ struct v0inst {
 #define V0_IMM32_BIT            (1 << 6)    // 32-bit immediate follows opcode
 #define V0_IMM64_BIT            (1 << 7)    // 64-bit immediate follows opcode
 #endif
-
-#define V0_SHIFT_BITS           6   // room for 64-bit
-#define V0_SHIFT_RIGHT_BIT      (1 << 7)
 
 #if 0
 #define V0_INT_UNIT             0x0     // integer processor unit
@@ -105,7 +115,9 @@ struct v0inst {
 
 /*
  * logical instructions
- * - conditional execution, condition code in parm
+ * - register-only operands
+ * - conditional execution, condition code in src2
+ * - instruction folding, shift-count and operation in parm
  */
 #define V0_LOGIC_UNIT           0x00    /* op-member */
 /* instruction ID */
@@ -119,21 +131,24 @@ struct v0inst {
 
 /*
  * shift and rotate instructions
- * - conditional execution, condition code in parm
+ * - register-only operands
+ * - conditional execution, condition code in src2
  */
 #define V0_SHIFT_UNIT           0x01
 /* instruction ID */
-#define V0_SLR_OP               0x00    // rd = rs1 >> ri2;
-#define V0_SAR_OP               0x01    // rd = rs1 >>> ri2; /* arithmetic */
-#define V0_SLL_OP               0x02    // rd = rs1 << ri2;
-#define V0_ROR_OP               0x03    // rd = ror(rs1, ri2);
-#define V0_ROL_OP               0x04    // rd = rol(rs1, ri2);
-#define V0_RCR_OP               0x05    // rd = rcr(rs1, ri2);
-#define V0_RCL_OP               0x06    // rd = rcl(rs1, ri2);
+#define V0_SLR_OP               0x00    // rd = rs1 >> r2;
+#define V0_SAR_OP               0x01    // rd = rs1 >>> r2; /* arithmetic */
+#define V0_SLL_OP               0x02    // rd = rs1 << r2;
+#define V0_ROR_OP               0x03    // rd = ror(rs1, r2);
+#define V0_ROL_OP               0x04    // rd = rol(rs1, r2);
+#define V0_RCR_OP               0x05    // rd = rcr(rs1, r2);
+#define V0_RCL_OP               0x06    // rd = rcl(rs1, r2);
 
 /*
  * add/sub instructions
- * - conditional execution, condition code in parm
+ * - register-only operands
+ * - conditional execution, condition code in src2
+ * - instruction folding, shift-count and operation in parm
  */
 #define V0_ADDER_UNIT           0x02
 /* instruction ID */
@@ -150,7 +165,9 @@ struct v0inst {
 
 /*
  * multiplication and division
- * - conditional execution, condition code in parm
+ * - register-only operands
+ * - conditional execution, condition code in src2
+ * - instruction folding, shift-count and operation in parm
  */
 #define V0_MULDIV_UNIT          0x03
 /* instruction ID */
@@ -167,7 +184,8 @@ struct v0inst {
 
 /*
  * bit operations
- * - conditional execution, condition code in parm
+ * - register-only operands
+ * - conditional execution, condition code in src2
  */
 #define V0_BIT_UNIT             0x04
 /* instruction ID */
@@ -187,6 +205,7 @@ struct v0inst {
 
 /*
  * comparison operations
+ * - register- and address-operands
  */
 #define V0_COMP_UNIT            0x05
 /* instruction ID */
@@ -195,7 +214,10 @@ struct v0inst {
 #define V0_TST_OP               0x02    // dst = rs2 & rs1;
 #define V0_TEQ_OP               0x03    // dst = rs2 ^ rs1;
 
-/* branch and subroutine operations */
+/*
+ * branch and subroutine operations
+ * - register- and address operands
+ */
 #define V0_BRANCH_UNIT          0x06
 /* instruction ID */
 #define V0_JMP_OP               0x00    // unconditional jump
@@ -235,7 +257,8 @@ struct v0inst {
 
 /*
  * load and store operations
- * - conditional execution, condition code in parm
+ * - register- and address-operands
+ * - conditional execution, condition code in src2
  */
 #define V0_LDSTR_UNIT           0x07
 /* instruction ID */
@@ -264,7 +287,7 @@ struct v0inst {
 
 /*
  * atomic operations
- * - conditional execution, condition code in parm
+ * - conditional execution, condition code in src2
  */
 #define V0_ATOMIC_UNIT          0x08
 /* instruction ID */
@@ -313,6 +336,12 @@ struct v0inst {
 #define V0_BUS_OP               0x17    // bus operation
 #define v0_DEV_OP               0x18    // peripheral device operation
 #define V0_MPC_OP               0x19    // [multi]processor control operation
+
+/* IOC-commands (in parm-field) */
+#define IO_PROBE_BUS            0x00
+#define IO_CONF_BUS             0x01
+#define IO_PROBE_DEV            0x02
+#define IO_CONF_DEV             0x03
 
 #endif /* __SYS_VOIMA_INST_H__ */
 

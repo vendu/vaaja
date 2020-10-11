@@ -23,14 +23,14 @@ extern struct cwmars            g_cwmars;
 extern struct zeussel           g_zeussel;
 
 struct zeussdl                  zeussdl;
-struct zeussdlguiwin            zeussdlguiwins[CWSDLGUIBUTTONS]
+struct zeussdlguiwin            zeussdlguiwins[CW_SDL_GUI_BUTTONS]
 = {
     { "run", zeusrun },
     { "stop", zeusstop },
     { "step", zeusstep }
 };
 struct zeussdlbuttonimgs        zeussdlbuttonimgs;
-SDL_Rect                        zeussdlrects[CWSDLVERTRECTS * CWSDLHORIZRECTS];
+SDL_Rect                        zeussdlrects[CW_SDL_VERT_RECTS * CW_SDL_HORIZ_RECTS];
 Uint32                          zeussimwinid;
 Uint32                          zeusguiwinid;
 
@@ -93,9 +93,9 @@ zeustogglesel(struct zeussdl *sdl, SDL_Event *event)
 
     x /= 4;
     y /= 4;
-    pc = y * (CWSDLWIDTH / 4) + x;
+    pc = y * (CW_SDL_WIDTH / 4) + x;
     if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CWCORESIZE >> 3, sizeof(uint8_t));
+        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
     }
     if (!g_zeussel.bmap) {
         fprintf(stderr, "memory allocation failure\n");
@@ -120,9 +120,9 @@ zeusaddsel(struct zeussdl *sdl, SDL_Event *event)
 
     x /= 4;
     y /= 4;
-    pc = y * (CWSDLWIDTH / 4) + x;
+    pc = y * (CW_SDL_WIDTH / 4) + x;
     if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CWCORESIZE >> 3, sizeof(uint8_t));
+        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
     }
     if (!g_zeussel.bmap) {
         fprintf(stderr, "memory allocation failure\n");
@@ -148,7 +148,7 @@ void
 zeusclear(struct zeussdl *sdl, C_UNUSED SDL_Event *event)
 {
     if (g_zeussel.bmap) {
-        memset(g_zeussel.bmap, 0, CWCORESIZE >> 3);
+        memset(g_zeussel.bmap, 0, CW_CORE_SIZE >> 3);
     }
     g_zeussel.last = -1;
     zeusdrawsim(sdl);
@@ -193,24 +193,24 @@ void
 sdlinitrects(SDL_Rect *tab)
 {
     SDL_Rect   *rect = tab;
-    int         gridw = CWSDLRECTSIZE * CWSDLHORIZRECTS;
-    int         gridh = CWSDLRECTSIZE * CWSDLVERTRECTS;
+    int         gridw = CW_SDL_RECT_SIZE * CW_SDL_HORIZ_RECTS;
+    int         gridh = CW_SDL_RECT_SIZE * CW_SDL_VERT_RECTS;
     int         x;
     int         y;
 
     rect = tab;
-    for (y = 0 ; y < gridh ; y += CWSDLRECTSIZE) {
-        for (x = 0 ; x < gridw ; x += CWSDLRECTSIZE) {
+    for (y = 0 ; y < gridh ; y += CW_SDL_RECT_SIZE) {
+        for (x = 0 ; x < gridw ; x += CW_SDL_RECT_SIZE) {
             rect->x = x;
             rect->y = y;
-            rect->w = CWSDLRECTSIZE;
-            rect->h = CWSDLRECTSIZE;
+            rect->w = CW_SDL_RECT_SIZE;
+            rect->h = CW_SDL_RECT_SIZE;
             rect++;
         }
     }
     SDL_FillRects(zeussdl.surface,
                   tab,
-                  CWSDLVERTRECTS * CWSDLHORIZRECTS,
+                  CW_SDL_VERT_RECTS * CW_SDL_HORIZ_RECTS,
                   SDL_MapRGB(zeussdl.surface->format, 255, 255, 255));
 
     return;
@@ -220,8 +220,8 @@ int
 sdlmksurface(void)
 {
     zeussdl.surface = SDL_CreateRGBSurface(0,
-                                           CWSDLHORIZRECTS * CWSDLRECTSIZE,
-                                           CWSDLVERTRECTS * CWSDLRECTSIZE,
+                                           CW_SDL_HORIZ_RECTS * CW_SDL_RECT_SIZE,
+                                           CW_SDL_VERT_RECTS * CW_SDL_RECT_SIZE,
                                            32,
 #if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                                            0xff000000,
@@ -269,8 +269,8 @@ sdlloadbuttonimgs(struct zeussdlbuttonimgs *imgs)
                                     | SDL_RENDERER_PRESENTVSYNC);
     destrect.x = 0;
     destrect.y = 0;
-    destrect.w = CWSDLBUTTONWIDTH;
-    destrect.h = CWSDLBUTTONHEIGHT;
+    destrect.w = CW_SDL_BUTTON_WIDTH;
+    destrect.h = CW_SDL_BUTTON_HEIGHT;
     imgs->normtexture = SDL_CreateTextureFromSurface(imgs->rend,
                                                      imgs->norm);
     imgs->hovertexture = SDL_CreateTextureFromSurface(imgs->rend,
@@ -278,9 +278,9 @@ sdlloadbuttonimgs(struct zeussdlbuttonimgs *imgs)
     imgs->clicktexture = SDL_CreateTextureFromSurface(imgs->rend,
                                                       imgs->click);
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
-    destrect.y += CWSDLBUTTONHEIGHT;
+    destrect.y += CW_SDL_BUTTON_HEIGHT;
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
-    destrect.y += CWSDLBUTTONHEIGHT;
+    destrect.y += CW_SDL_BUTTON_HEIGHT;
     SDL_RenderCopy(imgs->rend, imgs->normtexture, NULL, &destrect);
     SDL_RenderPresent(imgs->rend);
 
@@ -328,13 +328,13 @@ sdlinit(void)
     zeussdl.win = SDL_CreateWindow("Zeus",
                                    SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED,
-                                   CWSDLWIDTH, CWSDLHEIGHT,
+                                   CW_SDL_WIDTH, CW_SDL_HEIGHT,
                                    SDL_WINDOW_SHOWN);
     if (zeussdl.win) {
         zeussdl.gui = SDL_CreateWindow("Zeus GUI",
-                                       100 + CWSDLWIDTH, 100,
-                                       CWSDLBUTTONWIDTH,
-                                       CWSDLGUIBUTTONS * CWSDLBUTTONHEIGHT,
+                                       100 + CW_SDL_WIDTH, 100,
+                                       CW_SDL_BUTTON_WIDTH,
+                                       CW_SDL_GUI_BUTTONS * CW_SDL_BUTTON_HEIGHT,
                                        SDL_WINDOW_SHOWN);
         if (zeussdl.gui) {
             if (!sdlsetbgimg()) {
@@ -391,7 +391,7 @@ sdlevloop(void)
                 if (event.button.windowID == zeusguiwinid) {
                     Uint16 y = event.button.y;
 
-                    y /= CWSDLBUTTONHEIGHT;
+                    y /= CW_SDL_BUTTON_HEIGHT;
                     func = zeussdlguiwins[y].func;
                     func(&zeussdl, &event);
                 }
@@ -416,17 +416,17 @@ zeusdrawsimop(struct zeussdl *sdl, long pc, int sync)
 {
     struct cwinstr *op;
     SDL_Rect       *rect;
-    int             row = pc / CWSDLHORIZRECTS;
-    int             col = pc - row * CWSDLVERTRECTS;
-    int             x = col * CWSDLRECTSIZE;
-    int             y = row * CWSDLRECTSIZE;
+    int             row = pc / CW_SDL_HORIZ_RECTS;
+    int             col = pc - row * CW_SDL_VERT_RECTS;
+    int             x = col * CW_SDL_RECT_SIZE;
+    int             y = row * CW_SDL_RECT_SIZE;
 
-    rect = &zeussdlrects[CWSDLHORIZRECTS * y + x];
+    rect = &zeussdlrects[CW_SDL_HORIZ_RECTS * y + x];
     op = &g_cwmars.optab[pc];
     if ((g_zeussel.bmap) && bitset(g_zeussel.bmap, pc)) {
         SDL_FillRect(zeussdl.surface, rect,
                      SDL_MapRGB(zeussdl.surface->format, 255, 255, 255));
-    } else if (op->op == CWOPDAT) {
+    } else if (op->op == CW_DAT_OP) {
         if (!*((uint64_t *)op)) {
             SDL_FillRect(zeussdl.surface, rect,
                          SDL_MapRGB(zeussdl.surface->format, 255, 0, 255));
@@ -459,13 +459,13 @@ void
 zeusdrawsim(struct zeussdl *sdl)
 {
     long        pc;
-    int     	simw = CWSDLHORIZRECTS * CWSDLRECTSIZE;
-    int     	simh = CWSDLVERTRECTS * CWSDLRECTSIZE;
-    int     	simx = (CWSDLWIDTH - simw) / 2;
-    int     	simy = (CWSDLHEIGHT - simh) / 2;
+    int     	simw = CW_SDL_HORIZ_RECTS * CW_SDL_RECT_SIZE;
+    int     	simh = CW_SDL_VERT_RECTS * CW_SDL_RECT_SIZE;
+    int     	simx = (CW_SDL_WIDTH - simw) / 2;
+    int     	simy = (CW_SDL_HEIGHT - simh) / 2;
     SDL_Rect    rect;
 
-    for (pc = 0 ; pc < CWCORESIZE ; pc++) {
+    for (pc = 0 ; pc < CW_CORE_SIZE ; pc++) {
         zeusdrawsimop(sdl, pc, 0);
     }
     rect.x = simx;
@@ -497,10 +497,10 @@ main(int argc, char *argv[])
         exit(1);
     }
     cwinit();
-#if defined(CWRANDMT32)
-    base = randmt32() % CWCORESIZE;
+#if defined(CW_RANDMT32)
+    base = randmt32() % CW_CORE_SIZE;
 #else
-    base = rand() % CWCORESIZE;
+    base = rand() % CW_CORE_SIZE;
 #endif
     fp = fopen(argv[1], "r");
     if (!fp) {
@@ -515,10 +515,10 @@ main(int argc, char *argv[])
         exit(1);
     }
     fclose(fp);
-#if defined(CWRANDMT32)
-    base = randmt32() % CWCORESIZE;
+#if defined(CW_RANDMT32)
+    base = randmt32() % CW_CORE_SIZE;
 #else
-    base = rand() % CWCORESIZE;
+    base = rand() % CW_CORE_SIZE;
 #endif
     fp = fopen(argv[2], "r");
     if (!fp) {
@@ -537,11 +537,11 @@ main(int argc, char *argv[])
     g_cwmars.proccnt[1] = 1;
     g_cwmars.curproc[0] = 0;
     g_cwmars.curproc[1] = 0;
-    g_cwmars.nturn[0] = CWNTURN;
-    g_cwmars.nturn[1] = CWNTURN;
+    g_cwmars.nturn[0] = CW_MAX_TURNS;
+    g_cwmars.nturn[1] = CW_MAX_TURNS;
     g_cwmars.runqtab[0][0] = pc1;
     g_cwmars.runqtab[1][0] = pc2;
-#if defined(CWRANDMT32)
+#if defined(CW_RANDMT32)
     g_cwmars.curpid = randmt32() & 0x01;
 #else
     g_cwmars.curpid = rand() & 0x01;

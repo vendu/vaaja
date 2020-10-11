@@ -500,7 +500,7 @@ cwexec(long pid)
 #endif
 
 #if defined(ZEUS) && defined(ZEUSWINX11)
-    while (XEventsQueued(g_cwmars.zeusx11.disp, QueuedAfterFlush)) {
+    while (XPending(g_cwmars.zeusx11.disp)) {
         zeusprocev(&g_cwmars.zeusx11);
     }
 #endif
@@ -621,7 +621,6 @@ cwinit(void)
     return;
 }
 
-#if defined(ZEUSWINX11)
 int
 main(int argc, char *argv[])
 {
@@ -696,8 +695,8 @@ main(int argc, char *argv[])
     g_cwmars.prog1name = argv[1];
     g_cwmars.prog2name = argv[2];
 #if defined(ZEUS) && defined(ZEUSWINX11)
-    zeusdrawsim(&g_cwmars.zeusx11);
     while (1) {
+        zeusdrawsim(&g_cwmars.zeusx11);
         zeusprocev(&g_cwmars.zeusx11);
     }
 #else
@@ -707,5 +706,4 @@ main(int argc, char *argv[])
     /* NOTREACHED */
     exit(0);
 }
-#endif /* defined(ZEUSWINX11) */
 

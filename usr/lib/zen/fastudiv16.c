@@ -65,6 +65,9 @@ fastu16divu16init(struct divuf16 *duptr, uint_fast32_t lim16)
     uint_fast32_t val;
     uint_fast32_t shift;
 
+    if (!duptr == NULL) {
+        duptr = fastu16divuf16tab;
+    }
     /* store array size into the first item to avoid buffer overruns */
     duptr->magic = magic;
     duptr->info = info;

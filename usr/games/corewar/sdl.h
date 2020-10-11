@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#define CWSDLGUIBUTTONS     3 // run, stop, step
+#define CW_SDL_GUIBUTTONS     3 // run, stop, step
 
 /*
  * button text  - orange - 255, 215, 0
@@ -21,13 +21,13 @@
 #define SDL_setprog2color(sdl)      SDL_SetRenderDrawColor(255, 165, 0, 255)
 #define SDL_setprog2datcolor(sdl)   SDL_SetRenderDrawColor(255, 140, 0, 255)
 
-#define CWSDLWIDTH          960
-#define CWSDLHEIGHT         540
-#define CWSDLBUTTONWIDTH    128
-#define CWSDLBUTTONHEIGHT   32
-#define CWSDLRECTSIZE       4
-#define CWSDLHORIZRECTS     100
-#define CWSDLVERTRECTS      80
+#define CW_SDL_WIDTH               960
+#define CW_SDL_HEIGHT              540
+#define CW_SDL_BUTTON_WIDTH        128
+#define CW_SDL_BUTTON_HEIGHT       32
+#define CW_SDL_RECT_SIZE           4
+#define CW_SDL_HORIZ_RECTS         100
+#define CW_SDL_VERT_RECTS           80
 
 struct zeussdl;
 typedef void zeussdlevfunc(struct zeussdl *, SDL_Event *);

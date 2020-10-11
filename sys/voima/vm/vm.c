@@ -17,9 +17,11 @@
 #define V0_FULL_BARRIER     (V_READ_BARRIER | V0_WRITE_BARRIER)
 
 /* op(dest, src1, src2) */
-typedef void (*v0opfunc)(const void * C_RESTRICT,
-                         const void * C_RESTRICT,
-                         const void * C_RESTRICT);
+typedef void *            (*v0opfunc)(const void * C_RESTRICT dest,
+                                      const void * C_RESTRICT src1,
+                                      const void * C_RESTRICT src2);
+typedef (*v0unitfunc)(struct v0vm *vm, const struct v0inst *inst);
+v0unitfunc                 *vmunitfunctab[V0_UNITS];
 v0opfunc                   *vmopfunctab[V0_UNITS][V0_UNIT_INSTRUCTIONS];
 static const unsigned char  vmham32tab[256]
 = {
@@ -154,36 +156,40 @@ v0initvm(struct v0vm *vm, int flg, size_t bramsize, size_t dramsize)
 }
 
 /*
- * - store pointer to immediate operand via immret
- * - store immediate operand size via immszret
+ * - return fetched instruction word/structure
+ * - store pointer to possible immediate operand via immret
  */
 static const struct v0inst
 v0fetchinst(struct v0vm * C_RESTRICT vm,
-            void **immret,
-            size_t *immszret)
+            void **immret)
 {
     int32_t                     pc = vm->genregs[V0_PC_REGISTER];
-    const struct v0inst        *inst = &vm->mem[pc];
-    int_fast8_t                 parm = inst.parm;
-    size_t                      immsft = parm & V0_PARM_IMM_SIZE_MASK;
-    size_t                      ofs = parm & V0_PARM_ADR_OFS;
-    size_t                      immsz = 8 << immsft;
-    int8_t                     *immptr = &inst->imm32;
+    const struct v0inst        *iptr = &vm->mem[pc];
+    int_fast8_t                 parm = iptr->parm;
+    int8_t                      immsft;
+    int8_t                     *immptr;
+    int8_t                      immsz;
 
     pc += sizeof(struct v0inst);
-    if (imm && immsz <= 32) {                       // immediate fits in 32 bits
-        pc += sizeof(int32_t);                      // adjust instruction size
-    } else if ((uintptr_t)immptr & 0x3f) {          // not 64-bit aligned?
-        immptr += sizeof(int32_t);                  // align immediate operand
-        pc += sizeof(int32_t) + sizeof(int64_t);    // adjust instruction size
-    } else {                                        // 64-bit aligned
-        pc += sizeof(int64_t);                      // adjust instruction sizeM
+    if (parm & V0_PARM_IMM) {
+        immsft = parm & V0_PARM_IMM_SIZE_MASK;
+        immptr = &iptr->imm32;
+        immsz = 1 << immsft;
+        if (imm && immsz <= 4) {                    // immediate fits in 32 bits
+            pc += sizeof(int32_t);                  // adjust instruction size
+        } else if (parm & V0_PARM_IMM_ALN) {        // aligned by 32 bits to 64
+            immptr += sizeof(int32_t);              // align immediate operand
+            pc += sizeof(int32_t) + sizeof(int64_t); // adjust instruction size
+        } else {                                    // 64-bit aligned
+            pc += sizeof(int64_t);                  // adjust instruction sizeM
+        }
+        *(void *)immret = immptr;                   // store immediate address
+    } else if (parm) {
+        *(void *)immret = NULL;                     // no imm32/16/8/64 present
     }
-    vm->genregs[V0_PC_REGISTER] += pc;              // adjust program counter
-    *immszret = immsz;                              // store immediate address
-    *immret = immptr;
+    vm->genregs[V0_PC_REGISTER] = pc;               // adjust program counter
 
-    return *inst;
+    return *iptr;
 }
 
 /* decode source address */
@@ -200,17 +206,15 @@ v0decsrcadr(struct v0vm * C_RESTRICT vm,
     void                   *s1ptr = &vm->genregs[src1];
     void                   *s2ptr = &vm->genregs[src2];
 
-    if (parm & V0_PARM_ADR_MASK) {
-        /* address operand */
-        if (parm & V0_PARM_ADR_BASE) {
-            ptr += *(uint32_t *)s1ptr;
-        }
-        if ((src2) && parm & V0_PARM_ADR_NDX) {
-            ptr += *(uint32_t *)s2ptr;
-        }
-        if (parm & V0_PARM_ADR_OFS) {
-            ptr += *(int32_t *)immptr;
-        }
+    /* address operand */
+    if (parm & V0_PARM_ADR_BASE) {
+        ptr += *(uint32_t *)s1ptr;
+    }
+    if ((src2) && parm & V0_PARM_ADR_NDX) {
+        ptr += *(uint32_t *)s2ptr;
+    }
+    if (parm & V0_PARM_ADR_OFS) {
+        ptr += *(int32_t *)immptr;
     }
 
     return ptr;
@@ -229,30 +233,28 @@ v0decdestadr(struct v0vm * C_RESTRICT vm,
     int8_t                 *ptr = NULL;
     void                   *s1ptr = &vm->genregs[src1];
 
-    if (parm & V0_PARM_ADR_MASK) {
-        /* address operand */
-        if (parm & V0_PARM_ADR_BASE) {
-            ptr += *(uint32_t *)dptr;
-        }
-        if (parm & V0_PARM_ADR_NDX) {
-            ptr += *(uint32_t *)s1ptr;
-        }
-        if (parm & V0_PARM_ADR_OFS) {
-            ptr += *(int32_t *)immptr;
-        }
+    /* address operand */
+    if (parm & V0_PARM_ADR_BASE) {
+        ptr += *(uint32_t *)dptr;
+    }
+    if (parm & V0_PARM_ADR_NDX) {
+        ptr += *(uint32_t *)s1ptr;
+    }
+    if (parm & V0_PARM_ADR_OFS) {
+        ptr += *(int32_t *)immptr;
     }
 
     return ptr;
 }
 
-static void
+static struct v0inst
 v0decinst(struct v0vm * C_RESTRICT vm,
           struct v0inst * C_RESTRICT inst)
 {
     do {
         const void             *immptr;
         size_t                  immsize;
-        const struct v0inst     inst = v0fetchinst(vm, &immptr, &immsize);
+        const struct v0inst     inst = v0fetchinst(vm, &immptr);
         void                   *dptr;
         void                   *s1ptr;
         void                   *s2ptr;
@@ -262,29 +264,149 @@ v0decinst(struct v0vm * C_RESTRICT vm,
         int_fast8_t             unit = inst.unit;
         int_fast9_t             op = inst.op;
         int_fast8_t             parm = inst.parm;
+        int_fast8_t             fold;
         void                   *ptr;
 
         func = v0opfunctab[unit][op];
-        if (parm & V0_PARM_ADR_MASK) {
-            if (parm & V0_PARM_SRC_ADR) {
-                s1ptr = v0decsrcadr(vm, inst, immptr);
-            } else {
-                s1ptr = &vm->genregs[src1];
-                dptr = v0decdestadr(vm, inst, immptr);
+        dptr = &vm->genregs[dest];
+        s1ptr = &vm->genregs[src1];
+        s2ptr = &vm->genregs[src2];
+        if (unit == V0_LOGIC_UNIT) {
+            if (!src1) {
+                s1ptr = dptr;
             }
-            s2ptr = NULL;
+            if (inst.cond) {
+                cond = vm->genregs[src2];
+                if (cond == V0_ANY_COND) {
+                } else {
+                }
+            }
+        } else if (unit >= V0_BRANCH_UNIT && unit <= V0_ATOMIC_UNIT) {
+            if (parm) {
+                if (parm & V0_PARM_ADR_MASK) {
+                    if (parm & V0_PARM_SRC_ADR) {
+                        s1ptr = v0decsrcadr(vm, inst, immptr);
+                        if (!s1ptr) {
+                            v0crash("missing source-address operand for %d(%d)\n",
+                                    op, unit);
+                        }
+                    } else {
+                        dptr = v0decdestadr(vm, inst, immptr);
+                        if (!dptr) {
+                            v0crash("missing destination-address operand for %d(%d)\n",
+                                    op, unit);
+                        }
+                    }
+                }
+            }
+            func(dptr, s1ptr, s2ptr);
+        } else if (parm) {
+            if (parm & V0_PARM_SHIFT_MASK) {
+                parm &= V0_PARM_SHIFT_MASK;
+                if (unit == V0_SHIFT_UNIT) {
+                    /* shift or rotate instruction */
+                    func(dptr, s1ptr, &parm);
+                } else {
+                    /* instruction folded with a shift */
+                    int32_t     val;
+                    uint32_t    uval;
+
+                    fold = parm & V0_PARM_FOLD_MASK;
+                    func(val, s1ptr, s2ptr);
+                    uval = *(uint32_t *)&val;
+                    if (fold == V0_PARM_FOLD_SLL) {
+                        uval <<= parm;
+                        *(uint32_t *)dptr = uval;
+                    } else if (fold == V0_PARM_FOLD_SRL) {
+                        uval >>= parm;
+                        *(uint32_t *)dptr = uval;
+                    } else if (fold == V0_PARM_FOLD_SAR) {
+                        val >>= parm;
+                        *(int32_t *)dptr = val;
+                    } else if (fold == V0_PARM_FOLD_ROR) {
+                        int32_t     lo = uval >> parm;
+
+                        uval <<= -parm & 31;
+                        uval |= lo;
+                        *(uint32_t *)dest = uval;
+                    }
+                }
+            } else {
+                parm &= V0_PARM_COND_MASK;
+                switch (parm) {
+                    case V0_ANY_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_EQ_COND:
+                        if (vm->sysregs[V0_MSW_REGISTER] & V0_MSW_ZF_BIT) {
+                            func(dptr, s1ptr, s2ptr);
+                        }
+
+                        break;
+                    case V0_NE_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_GT_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_LT_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_GE_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_LE_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_HS_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_LO_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_MI_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_PL_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_OF_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_NO_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_HI_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                    case V0_LS_COND:
+                        func(dptr, s1ptr, s2ptr);
+
+                        break;
+                }
+            }
         } else {
-            dptr = &vm->genregs[dest];
-            s1ptr = &vm->genregs[src1];
-            s2ptr = &vm->genregs[src2];
+            func(dptr, s1ptr, s2ptr);
         }
-        func(dptr, s1ptr, s2ptr);
     } while (!vm->status);
 
     exit(vm->status);
 }
 
-static void
+static struct v0inst
 v0procinst(struct v0vm *vm, const struct v0inst inst)
 {
     int_fast32_t                unit = inst.unit;

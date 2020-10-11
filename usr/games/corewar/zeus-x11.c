@@ -130,7 +130,7 @@ zeusaddsel(struct zeusx11 *x11, XEvent *event)
         }
         while (pc < lim) {
             setbit(g_zeussel.bmap, pc);
-            zeusdrawsimop(x11, pc);
+            zeusdrawsim(x11);
             pc++;
         }
         g_zeussel.last = pc;
@@ -147,7 +147,7 @@ zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
         memset(g_zeussel.bmap, 0, CW_CORE_SIZE >> 3);
     }
     g_zeussel.last = -1;
-    zeusdrawsim(x11);
+    //    zeusdrawsim(x11);
     XSync(x11->disp, False);
 }
 
@@ -393,7 +393,7 @@ zeusinitx11win(struct zeusx11 *x11)
     }
     x11->buttonwin = win;
 #if defined(ZEUSDEBUG)
-    XSelectInput(x11->buttonwin, ExporuseMask);
+    XSelectInput(x11->disp, x11->buttonwin, ExposureMask);
 #endif
 #endif
 
@@ -849,6 +849,9 @@ zeusinitx11(struct zeusx11 *info)
     zeusaddx11button(info, ZEUSSAVEBUTTON, "save", zeusstep);
     g_zeussel.last = -1;
 #endif
+    while (XPending(info->disp)) {
+        zeusprocev(info);
+    }
 
     return;
 }
@@ -976,6 +979,7 @@ zeusprocev(struct zeusx11 *x11)
     if (win == x11->buttonwin) {
         switch (ev.type) {
             case Expose:
+                zeusexposex11button(x11, &ev);
 
                 break;
             default:
