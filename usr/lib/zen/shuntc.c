@@ -44,7 +44,7 @@ shuntcnot64(struct shuntctoken *arg1, struct shuntctoken *dummy)
 
 C_PURE SHUNT_INT
 shuntcand64(struct shuntctoken *arg1, struct shuntctoken *arg2)
-{
+
     SHUNT_INT src = arg1->data.i64;
     SHUNT_INT res = arg2->data.i64;
 
