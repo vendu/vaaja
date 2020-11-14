@@ -35,8 +35,8 @@
 #define C_L1CODE                        __attribute__ ((__l1_text__))
 #define C_SEGMENT(name)                 __attribute__ ((#name))
 #define HAVE_C_PREFETCH
-#define C_PREFREAD(a)                   __builtin_prefetch(a, 0)
-#define C_PREFWRITE(a)                  __builtin_prefetch(a, 1)
+#define C_PREFETCHRD(a)                 __builtin_prefetch(a, 0)
+#define C_PREFETCHWR(a)                 __builtin_prefetch(a, 1)
 #endif
 
 #if defined(_MSC_VER) || defined(__CC_ARM)

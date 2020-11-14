@@ -19,8 +19,8 @@
 #define MJOLNIR_CHAR_SHOPKEEPER     '£'
 #define MJOLNIR_CHAR_UNICORN        'u'
 #define MJOLNIR_CHAR_VAMPIRE        'v'
-#define MJOLNIR_CHAR_WOLF           'w'
-#define MJOLNIR_CHAR_WEREWOLF       'W'
+#define MJOLNIR_CHAR_WEREWOLF       'w'
+#define MJOLNIR_CHAR_WIZARD         'W'
 #define MJOLNIR_CHAR_ZOMBIE         'Z'
 /* special characters */
 #define MJOLNIR_CHAR_FENRIS         'F'
@@ -58,6 +58,7 @@
 typedef int   (*mjolmovefunc(int));
 typedef long  (*hitfunc(struct mjolchr *, struct mjolchr *));
 
+#if 0
 struct mjolchr {
     char               *name;           // character name string
     /* Rogue [visible] attributes */
@@ -89,6 +90,7 @@ struct mjolchr {
     unsigned long       turn;           // next turn ID
     unsigned long       nturn;          // # of turns used
 };
+#endif
 
 #endif /* __MJOLNIR_CHR_H__ */
 

@@ -58,7 +58,7 @@ Silver bullets are good for demon-hunting.
 
 ### * - plant
 
-### 0 - punchcard
+### : - punchcard
 
 Punchcards contain Core War warriors for competing on mainframe masterhood as
 well as other software tools.

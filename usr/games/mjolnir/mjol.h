@@ -28,18 +28,18 @@ extern struct mjolchr              *mjolchaseq;
 #define mjolsetdir(ch)              setbit(mjolcmdhasdirmap, ch)
 #define mjolhasarg(ch)              bitset(mjolcmdhasargmap, ch)
 #define mjolsetarg(ch)              setbit(mjolcmdhasargmap, ch)
-extern uint8_t                  	mjolcmdismovemap[128];
-extern uint8_t                  	mjolcmdhasdirmap[128];
-extern uint8_t                  	mjolcmdhasargmap[128];
+extern uint8_t                      mjolcmdismovemap[128];
+extern uint8_t                      mjolcmdhasdirmap[128];
+extern uint8_t                      mjolcmdhasargmap[128];
 
 #define mjolcanmoveto(type)         bitset(mjolcanmovetomap, type)
 #define mjolcanpickup(type)         bitset(mjolcanpickupmap, type)
 #define mjolcanwear(type)           bitset(mjolcanwearmap, type)
 #define mjolcanwield(type)          bitset(mjolcanwieldmap, type)
-extern uint8_t                  	mjolcanmovetomap[128 / CHAR_BIT];
-extern uint8_t                  	mjolcanpickupmap[128 / CHAR_BIT];
-extern uint8_t                  	mjolcanwearmap[128 / CHAR_BIT];
-extern uint8_t                  	mjolcanwieldmap[128 / CHAR_BIT];
+extern uint8_t                      mjolcanmovetomap[128 / CHAR_BIT];
+extern uint8_t                      mjolcanpickupmap[128 / CHAR_BIT];
+extern uint8_t                      mjolcanwearmap[128 / CHAR_BIT];
+extern uint8_t                      mjolcanwieldmap[128 / CHAR_BIT];
 
 #define MJOLNIR_GAME_NAME           "mjolnir"
 

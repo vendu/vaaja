@@ -2,7 +2,10 @@
 #define __MACH_V0_TYPES_H__
 
 #include <stdint.h>
+#if defined(__v0__)
 #include <mach/v0/regs.h>
+#include <mach/v0/regs-ext.h>
+#endif
 
 /* machine types */
 typedef int64_t                 m_reg_t;
@@ -29,6 +32,7 @@ typedef uint64_t                m_ulong_t;
 typedef float                   m_fpsingle_t;
 typedef double                  m_fpdouble_t;
 typedef int64_t                 m_fxp_t;
+typedef uint64_t                m_ufxp_t;
 
 struct v0romparm {
     void                       *buf;
@@ -58,13 +62,14 @@ struct v0trapframe {
 struct v0retframe {
     int32_t                     oldfp;
     int32_t                     retadr;
-    int32_t                     r5_r13[V0_CALLEE_SAVE_REGISTERS];
+    int32_t                     r5_r11[V0_CALLEE_SAVE_REGISTERS];
 };
 
 struct v0callframe {
+    int32_t                     sp;
     int32_t                     r1_4[V0_CALLER_SAVE_REGISTERS];
-    int32_t                     r14_r15[4];     // LR, PC
-    int32_t                     xr0_xr15[16];
+    int32_t                     sr0_sr15[V0_SYSTEM_REGISTERS];
+    int32_t                     r14_r15[2];     // LR, PC
 };
 
 struct v0seg {
@@ -82,7 +87,7 @@ struct v0thr {
     volatile int32_t        genregs[V0_INTEGER_REGISTERS];
     volatile int32_t        sysregs[V0_SYSTEM_REGISTERS];
     volatile struct v0seg   segtab[V0_SEGMENT_ENTRIES];
-    volatile fxp_t          fxp64regs[V0_FXP_REGISTERS];
+    volatile m_fxp_t        fxp64regs[V0_FXP_REGISTERS];
     volatile double         fpu64regs[V0_FPU_REGISTERS];
     volatile float          dsp32regs[V0_DSP_REGISTERS];
 };

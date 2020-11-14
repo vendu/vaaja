@@ -22,7 +22,7 @@
 #define MJOLNIR_ITEM_BULLET                 '='
 #define MJOLNIR_ITEM_POTION                 '!'
 #define MJOLNIR_ITEM_PLANT                  '*'
-#define MJOLNIR_ITEM_PUNCHCARD              '0'
+#define MJOLNIR_ITEM_PUNCHCARD              ':'
 #define MJOLNIR_ITEM_TAPE                   't'
 #define MJOLNIR_ITEM_STATUE                 '&'
 #define MJOLNIR_ITEM_TRAP                   '^'

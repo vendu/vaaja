@@ -1,4 +1,11 @@
-## game characters
+# character classes
+
+- hacker
+- wizard
+
+# character skills
+
+# game characters
 
 To make the most fun off the game and keep it playable on old terminals too,
 the standard "graphics" are drawn as characters.
@@ -9,89 +16,89 @@ and even Christianity. In addition, some characters in the game are based on
 common horror stories such as John Sinclair adventures from 'Jason Dark'. Here
 are some current ideas for in-game characters.
 
-### @ - the player
+## @ - the player
 
-### a - ant
+## a - ant
 
 Ants are easy opponents to defaeat, except perhaps when they appear en masse.
 
-### A - soldier ant
+## A - soldier ant
 
 Soldier ants are the strongest type of ants.
 
-### B - bee hive
+## B - bee hive
 - you may acquire honey from these; one queen per hive.
 
-### b - bee
+## b - bee
 
 Bees are relatively easy opponents, for they can only sting once after which
 they die. Bees will do anything to protect their queen.
 
-### q - bee queen
+## q - bee queen
 
 Bee queens may not be a good idea to attack, especially with lots of other bees
 in vicinity.
 
-### d - dog
+## d - dog
 
 Your pet dog is smart and may bring you things after which it would be a good
 idea to feed it. The dog may hit small creatures to defend you. Don't forget to
 feed your beloved dog now and again, even though it eats corpses of the monsters
 you slay.
 
-### e - alien/extraterrestrial creature
+## e - alien/extraterrestrial creature
 
 Aliens may have superhuman powers, and as such, can be tricky opponents to beat
 in combat.
 
-### g - ghoul
+## g - ghoul
 
 Ghouls are corpse-eaters, therefore common around graveyards. Ghoul wounds may
 cause infections which may even be deadly. Ghouls can use the guise of an
 animal, especially a hyena. Ghouls drink blood, steal gold, and eat the dead,
 then taking the form of the person most recently eaten.
 
-### H - human
+## H - human
 
 Human beings are usally friendly unless you attack them. You may get rare items
 by looting human remnants or by trading items with them.
 
-### O - oracle
+## O - oracle
 
 Oracles share pieces of wisdow to give you hints for the game.
 
-### r - rat
-### £ - shopkeeper
-### u - unicorn
-### v - vampire
-### w - wolf
-### W - werewolf
-### z - zombie
+## r - rat
+## £ - shopkeeper
+## u - unicorn
+## v - vampire
+## w - werewolf
+## W - wizard
+## z - zombie
 
-## special characters
+# special characters
 
-### F - Fenris (the guardian and petwolf of gods)
+## F - Fenris (the guardian and petwolf of gods)
 
 Fenris has turned evil and stolen Mjolnir the hammer from Thor. Your mission is
 to bring his tool back to Thor, although you may experiment by sacrificing the
 hammer to other superhuman beings.
 
-### K - Kara (the princess of Atlantis)
+## K - Kara (the princess of Atlantis)
 
 Kara carries a golden sword which she may drop for you to use when the going
 gets really tough. :)
 
-### T - Thor (the viking god of thunder)
+## T - Thor (the viking god of thunder)
 
-### U - Ukko Ylijumala (Ukko 'Overlord' from Finnish mythologies)
+## U - Ukko Ylijumala (Ukko 'Overlord' from Finnish mythologies)
 
 An ancient Finnish belief concerns Ukko to be 'the god of gods'.
 
-### X - Lady X (undead terrorist vampire)
+## X - Lady X (undead terrorist vampire)
 
 Lady X carries a submachine gun which may be loaded with silver rounds.
 
-### V - Dracula (master vampire Vlad the Impaler)
+## V - Dracula (master vampire Vlad the Impaler)
 
 Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.

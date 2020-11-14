@@ -2,7 +2,7 @@
 #define __SYS_ZEN_TRAP_H__
 
 #include <sys/zen/signal.h>
-#if defined(__v0__)
+#if defined(__voima__)
 #include <v0/trap.h>
 #endif
 
