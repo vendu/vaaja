@@ -46,10 +46,10 @@ deiceinitclass(struct deicestat *stat)
 
             break;
         case MJOLNIR_CYBORG_CLASS:
-            stat->basehp = 64;
-            stat->maxhp = 64;
-            stat->nhp = 64;
-            stat->defdie = 8;
+            stat->basehp = 32;
+            stat->maxhp = 32;
+            stat->nhp = 32;
+            stat->defdie = 32;
             stat->hitdie = 12;
 
             break;
