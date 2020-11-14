@@ -11,6 +11,7 @@
 #define MJOLNIR_CYBORG_CLASS        2
 #define MJOLNIR_THIEF_CLASS         3
 #define MJOLNIR_ENGINEER_CLASS      4
+#define MJOLNIR_CHARACTER_CLASSES   5
 
 struct deicestat {
     long                            chrclass;

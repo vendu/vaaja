@@ -8,6 +8,14 @@
 #include <dice/d20.h>
 #include <deice/deice.h>
 
+static const char              *chrclassnames[MJOLNIR_CHARACTER_CLASSES]
+= {
+    "programmer",
+    "cracker",
+    "cyborg",
+    "thief",
+    "engineer"
+};
 static struct deicestat         deicestats[2];
 
 struct deice                    deice
@@ -131,6 +139,7 @@ deicehit(struct deicestat *stat,
 static void
 deiceinitstat(struct deicestat *stat)
 {
+    stat->chrclass = d20rolln(1, MJOLNIR_CHARACTER_CLASSES);
     if (!stat->xp) {
         d20initrand();
         deiceinitclass(stat);
@@ -175,8 +184,9 @@ deiceloop(struct deice *deice)
 void
 deiceprintstat(const char *msg, struct deicestat *stat)
 {
-    printf("%s: lvl = %ld, xp = %ld, hp = %ld, nhp = %ld\n",
+    printf("%s: class = %s, lvl = %ld, xp = %ld, hp = %ld, nhp = %ld\n",
            msg,
+           chrclassnames[stat->chrclass],
            stat->lvl,
            stat->xp,
            stat->hp,
