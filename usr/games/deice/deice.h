@@ -17,8 +17,8 @@ struct deicestat {
     long                            chrclass;
     long                            xp;
     long                            lvl;
+    long                            basehp;
     long                            maxhp;
-    long                            hp;
     long                            nhp;
     long                            defdie;
     long                            hitdie;

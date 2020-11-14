@@ -30,40 +30,40 @@ deiceinitclass(struct deicestat *stat)
 
     switch(chrclass) {
         case MJOLNIR_PROGRAMMER_CLASS:
+            stat->basehp = 32;
             stat->maxhp = 32;
-            stat->hp = 32;
             stat->nhp = 32;
             stat->defdie = 20;
             stat->hitdie = 4;
 
             break;
         case MJOLNIR_CRACKER_CLASS:
+            stat->basehp = 32;
             stat->maxhp = 32;
-            stat->hp = 32;
             stat->nhp = 32;
             stat->defdie = 12;
             stat->hitdie = 8;
 
             break;
         case MJOLNIR_CYBORG_CLASS:
+            stat->basehp = 64;
             stat->maxhp = 64;
-            stat->hp = 64;
             stat->nhp = 64;
             stat->defdie = 8;
             stat->hitdie = 12;
 
             break;
         case MJOLNIR_THIEF_CLASS:
+            stat->basehp = 32;
             stat->maxhp = 32;
-            stat->hp = 32;
             stat->nhp = 32;
             stat->defdie = 6;
             stat->hitdie = 6;
 
             break;
         case MJOLNIR_ENGINEER_CLASS:
+            stat->basehp = 32;
             stat->maxhp = 32;
-            stat->hp = 32;
             stat->nhp = 32;
             stat->defdie = 10;
             stat->hitdie = 4;
@@ -122,15 +122,15 @@ deicehit(struct deicestat *stat,
     lvl = __builtin_ctzl(xp) + 1;
     if (lvl > stat->lvl) {
         maxhp = stat->maxhp;
-        hp = stat->hp;
+        hp = stat->basehp;
         nd = lvl;
         stat->lvl = lvl;
         maxhp += hp;
         nhp += hp;
         stat->ndefdice += nd;
         stat->nhitdice += nd;
+        stat->basehp = hp;
         stat->maxhp = maxhp;
-        stat->hp = nhp;
     }
 
     return nhp;
@@ -184,12 +184,13 @@ deiceloop(struct deice *deice)
 void
 deiceprintstat(const char *msg, struct deicestat *stat)
 {
-    printf("%s: class = %s, lvl = %ld, xp = %ld, hp = %ld, nhp = %ld\n",
+    printf("%s: class = %s, lvl = %ld, xp = %ld, basehp = %ld, maxhp = %ld, nhp = %ld\n",
            msg,
            chrclassnames[stat->chrclass],
            stat->lvl,
            stat->xp,
-           stat->hp,
+           stat->basehp,
+           stat->maxhp,
            stat->nhp);
 
     return;
