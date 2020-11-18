@@ -441,7 +441,6 @@ cwexec(long pid)
     pc = g_cwmars.runqtab[pid][cur];
     op = g_cwmars.core[pc];
     assert(pc >= 0 && pc <= CW_CORE_SIZE);
-    fprintf(stderr, "%ld\t%ld\t", pid, pc);
     if (cwisdat(op)) {
 #if defined(ZEUS) && defined(ZEUSWINX11)
         zeusdrawsim(&g_cwmars.zeusx11);
@@ -512,8 +511,8 @@ cwloop(void)
 {
     long                pid = g_cwmars.curpid;
 
-    //    while (g_cwmars.nturn[pid]--) {
-    while (1) {
+    while (g_cwmars.nturn[pid]--) {
+        fprintf(stderr, "%ld\n", g_cwmars.nturn[pid]);
         cwexec(pid);
         pid++;
         pid &= 0x01;

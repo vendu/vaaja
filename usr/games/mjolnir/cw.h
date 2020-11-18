@@ -21,7 +21,7 @@
 long                    cwinit(int argc, char *argv[]);
 void                    cwexec(long pid);
 
-#define CW_TURNS        (128 * 1024)
+#define CW_TURNS        (128 * 1024 * 1024)
 #define CW_PROCS        1024
 #define CW_NO_OP        0
 #define CW_INVAL        ((struct cwinstr){ 0 })
