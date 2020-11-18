@@ -1,17 +1,26 @@
-# Mjolnir Video Game
+# mjolnir roadmap
 
-## Basic Plot
+## code modules
 
-The wolf of gods, Fenris, has turned evil and stolen his hammer Mjolnir from
-Thor. Your duty is to bring Mjolnir back from the depths of the dungeons of
-Valhalla. Along your adventure, you will be faced with puzzles, battles with
-other game characters, a bit of magic and some cyberpunk.
+### chr         - character types and classes
 
-## Implementation
+### cw          - core war subgame base implementation
 
-Mjolnir will be implemented in C. The graphics will be 2D or "2.5D" (isometric)
-rendered on 2D-screens. Graphical objects, "sprites", will have mask bitmaps to
-choose which pixels of them to draw for different shapes. The audio will be
-CD-rate digital signal mixed with output from synthesizers and other audio
-equipment. Graphics will [initially] be bitmapped.
+### d20         - routines for rolling virtual dice
+
+### deice       - deice subgame
+
+### dng         - dungeon generator
+
+### map         - map generator
+
+### rc          - core war redcode support
+
+### scr         - screen/display support
+
+### sdl         - SDL2 user interface
+
+### tty         - terminal user interface (optionally with ncurses)
+
+### util        - miscellaneous routines
 

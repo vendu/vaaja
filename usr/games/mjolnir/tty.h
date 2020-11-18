@@ -3,19 +3,19 @@
 
 #include <mjolnir/conf.h>
 
-#if (MJOLNIR_TTY)
+#if defined(MJOLNIR_TTY)
 
-#if (MJOLNIR_VT)
+#if defined(MJOLNIR_VT)
 #include <stdio.h>
-#else
+#elif defined(MJOLNIR_CURSES)
 #include <curses.h>
 #endif
 
-struct mjolwindatatty {
-    void *mainwin;
-    void *msgwin;
-    void *statwin;
-    void *gamewin;
+struct ttywins {
+    void               *mainwin;
+    void               *msgwin;
+    void               *statwin;
+    void               *gamewin;
 };
 
 #endif /* MJOLNIR_TTY */

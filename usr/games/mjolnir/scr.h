@@ -17,7 +17,7 @@ struct mjolscr {
     long                y;
     int               (*getch)(void);
     void              (*moveto)(int, int);
-    void              (*drawchr)(struct mjolgame *, struct mjolchr *);
+    void              (*drawchr)(struct game *, struct chr *);
     int               (*printmsg)(const char *fmt, ...);
     int               (*refresh)(void);
     void              (*close)(void);

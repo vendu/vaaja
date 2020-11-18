@@ -38,6 +38,12 @@ at graveyards, often inside tombs.
 ATM-cards may be used to withdraw money you have gotten or stolen from
 somewhere. They can also be used to pay for items in shops.
 
+### B - bee hive
+- you may acquire honey from these; one queen per hive.
+
+### c - carving
+- may be hidden under sand
+
 ### C - ATM-machine
 
 ATM-machines can be used for cash withdrawals and deposits.
@@ -132,19 +138,19 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### ¤ - money
 
-### ? - fortune cookie
+### p - paper
 
-### P - pipe
+### ? - pipe
 
 ### 7 - pistol
 
 ### R - remnants
 
-### s - sword
+### s - software/program
+
+### S - sword
 
 ### T - terminal
-
-### w - well
 
 ### x - cross
 
@@ -153,52 +159,51 @@ Mainframes store Core War warriors and other software + data on tapes.
 This is where you sacrifice to a dedicated god. You may get special items in
 return.
 
-| symbol | object	  | probability	        | description
+| symbol | object         | probability         | description
 |:-------|:---------------|:--------------------|:-----------
-|  ' '   | floor	  | N/A   	        | floor/ground
-|   #    | wall	          | N/A		        | cave wall (may be hidden door)
-|   +    | door	          | N/A		        | door
+|  ' '   | floor          | N/A                 | floor/ground
+|   #    | wall           | N/A                 | cave wall (may be hidden door)
+|   +    | door           | N/A                 | door
 |   .    | sand           | 1/4                 | may be quick-sand
 |   >    | stairway down  | 1 per level         | stairs one level down
 |   <    | stairway up    | 1 per level         | stairs one level up
 |   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)
 |   -    | ATM-card       | 1/128               | bank account access; need PIN-code
 |   C    | ATM-machine    | 1/32                | cash withdrawals and deposits
-|   f    | food	          | 1/16	        | food ration
-|   ~    | water	  | 1/16		| water, may be blessed potion
-|   {    | fountain       | 1/32		| fountain
-|   $    | gold	          | 1/64		| use to get merchandise
-|   =    | bullet	  | 1/32		| bullet (silver ones work on daemons)
-|   !    | potion	  | 1/32		| potion
+|   f    | food           | 1/16                | food ration
+|   ~    | water          | 1/16                | water, may be blessed potion
+|   {    | fountain       | 1/32                | fountain
+|   $    | gold           | 1/64                | use to get merchandise
+|   =    | bullet         | 1/32                | bullet (silver ones work on daemons)
+|   !    | potion         | 1/32                | potion
 |   *    | plant/mushroom | 1/16                | plant on land, mushroom underground
-|   0    | punchcard      | 1/64		| corewar warriors to be run from terminals
-|   t    | tape	          | mainframes	        | software for in-dungeon mainframes
-|   &    | statue	  | 1/32		| e.g. Buddha statue, elephant statue, ...
-|   ^    | trap	          | varies	        | trap; arrow, bomb, pit, hole, teleport
-|   \    | wand	          | 1/32		| magic wand
-|   9    | scroll	  | 1/32		| spell or other scroll
-|   o    | ring	          | 1/64		| ring
-|   /    | whip	          | 1/64		| whip
-|   ]    | armor	  | 1/32		| suit or armor
-|   [    | mirror	  | 1/16		| mirror on a wall
-|   c    | chest          | 1/32		| chest; may find treasury in them
-|   g    | sub-machine gun | 1/128		| close-range combat
-|   h    | honey	  | bee nests	        | from beehives after killing the queen
-|   k    | knife          | 1/32		| knife, dagger, gurkha, ...
-|   l    | lockpick	  | 1/64		| thieves are naturally best at using these
-|   L    | laser	  | 1/128		| laser gun, from aliens
-|   m    | mace		  | 1/32		| mace or hammer
-|   8    | mainframe	  | 1/16		| computer systems for running punchcards
+|   :    | punchcard      | 1/64                | corewar warriors to be run from terminals
+|   t    | tape           | mainframes          | software for in-dungeon mainframes
+|   &    | statue         | 1/32                | e.g. Buddha statue, elephant statue, ...
+|   ^    | trap           | varies              | trap; arrow, bomb, pit, hole, teleport
+|   \    | wand           | 1/32                | magic wand
+|   9    | scroll         | 1/32                | spell or other scroll
+|   o    | ring           | 1/64                | ring
+|   /    | whip           | 1/64                | whip
+|   ]    | armor          | 1/32                | suit or armor
+|   [    | mirror         | 1/16                | mirror on a wall
+|   c    | chest          | 1/32                | chest; may find treasury in them
+|   g    | sub-machine gun | 1/128              | close-range combat
+|   h    | hammer          | bee nests          |
+|   k    | knife          | 1/32                | knife, dagger, gurkha, ...
+|   l    | lockpick       | 1/64                | thieves are naturally best at using these
+|   L    | laser          | 1/128               | laser gun, from aliens
+|   m    | mace           | 1/32                | mace or hammer
+|   8    | mainframe      | 1/16                | computer systems for running punchcards
 |   ¤    | money          | 1/256               | money from shops or ATMs
-|   ?    | fortune cookie | 1/64                |
-|   P    | pipe		  | 1/64		| pipe
-|   7    | pistol         | 1/64		| pistol
+|   p    | paper          | N/A                 | paper pieces such as fortunes
+|   ?    | pipe           | 1/64                | pipe
+|   7    | pistol         | 1/64                | pistol
 |   R    | remnants       | N/A                 | corpses and belongings
-|   s    | sword	  | 1/128		| sword
-|   T    | terminal	  | 1/16		| terminal connected to mainframe
-|   w    | well		  | 1/8		        | well (water, may be cursed/poisonous)
-|   x    | cross	  | 1/64		| cross; may be Holy Cross
-|   X    | altar	  | 1/32		| altar; sacrifice dead creatures on it
+|   s    | sword          | 1/128               | sword
+|   T    | terminal       | 1/16                | terminal connected to mainframe
+|   x    | cross          | 1/64                | cross; may be Holy Cross
+|   X    | altar          | 1/32                | altar; sacrifice dead creatures on it
 
 ## Special Objects
 
@@ -253,14 +258,14 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 
 | symbol | special object | probability    | description
 |:-------|:---------------|:---------------|:-----------
-|   Q    | Crystal ball   | 1/256	   | may show things happening elsewhere or in the future
+|   Q    | Crystal ball   | 1/256          | may show things happening elsewhere or in the future
 |   |   | Rod of Buddha   | 1 per game     | may be used to stop time
-|   y   | Demon Whip	  | 1 per game	   | weapon against different forms of undead
-|   J   | Jatimatic	  | 1/256          | sub-machine gun for close range combat, may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
-|   (   | Golden Sword	  | 1 per game	   | princess Kara's golden sword
-|   M   | Mjolnir         | 1 per game	   | the hammer of Thor
-|   G   | Gleipnir	  | 1 at start	   | ribbon that can hold Fenris
-|   S   | Stormbringer	  | 1 per game     | Stormbringer special sword
-|   E   | Excalibur	  | 1 per game	   | Excalibur special sword
-|   x   | Cross of Light  | 1 per game	   | the blessed cross of Ezekiel with the names of 4 archangels - Michael, Raphael, Gabriel, Uriel
+|   y   | Demon Whip      | 1 per game     | weapon against different forms of undead
+|   J   | Jatimatic       | 1/256          | sub-machine gun for close range combat, may be loaded with 9-mm rounds, perhaps with silver bullets... ;)
+|   (   | Golden Sword    | 1 per game     | princess Kara's golden sword
+|   M   | Mjolnir         | 1 per game     | the hammer of Thor
+|   G   | Gleipnir        | 1 at start     | ribbon that can hold Fenris
+|   S   | Stormbringer    | 1 per game     | Stormbringer special sword
+|   E   | Excalibur       | 1 per game     | Excalibur special sword
+|   x   | Cross of Light  | 1 per game     | the blessed cross of Ezekiel with the names of 4 archangels - Michael, Raphael, Gabriel, Uriel
 

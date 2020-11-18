@@ -26,9 +26,6 @@ Ants are easy opponents to defaeat, except perhaps when they appear en masse.
 
 Soldier ants are the strongest type of ants.
 
-## B - bee hive
-- you may acquire honey from these; one queen per hive.
-
 ## b - bee
 
 Bees are relatively easy opponents, for they can only sting once after which
@@ -94,11 +91,11 @@ gets really tough. :)
 
 An ancient Finnish belief concerns Ukko to be 'the god of gods'.
 
+## V - Dracula (master vampire Vlad the Impaler)
+
 ## X - Lady X (undead terrorist vampire)
 
 Lady X carries a submachine gun which may be loaded with silver rounds.
-
-## V - Dracula (master vampire Vlad the Impaler)
 
 Dracula is the most powerful of all vampires. Oftentimes, he can be found at the
 Bran Castle in Transylvania.
@@ -126,13 +123,12 @@ Bran Castle in Transylvania.
 |  K     | Kara             | 20 up    | 1d12 + 2d20  | 1 in game    | Princess of Atlantis
 |  T     | Thor             | Heaven   | 6d12 + 6d20  | 1 in game    | viking god of thunder
 |  U     | Ukko Ylijumala   | Valhalla | 8d20 + 8d6   | 1 in game    | (Ukko 'Overlord' from Finnish mythologies)
-|  X     | Lady X        | graveyard    | 4d20 + 4d6   | 1 in game    |
 |  V     | Vlad Dracula  | Transylvania | 1d12 + 5d20  | 1 in game    |
+|  X     | Lady X        | graveyard    | 4d20 + 4d6   | 1 in game    |
 
 Gods
 ----
 
-Z       - Zeus
 T       - Thor
 U       - Ukko Ylijumala
 
