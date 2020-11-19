@@ -14,7 +14,7 @@ const char             *chrcatnames[CHR_MAX_CATEGORY + 1]
     { "cracker", "stak" },
     { "cyborg", "hak" }.
     { "thief", "snax" },
-    { "engineer", "tune }
+    { "engineer", "tune" }
 };
 
 /* per-category ice skill initialization */
