@@ -1,7 +1,8 @@
 #ifndef __MJOLNIR_CW_H__
 #define __MJOLNIR_CW_H__
 
-#define CW_CORE_SIZE    1024            // fits on a 80x24 terminal in 64 * 16
+#define CW_CORE_SIZE        1024    // fits on a 80x24 terminal in 64 * 16
+#define CW_CORE_ADR_BITS
 
 #include <mjolnir/conf.h>
 #include <stdint.h>
@@ -11,56 +12,56 @@
 #include <mjolnir/sdl.h>
 #endif
 
-#define cwpow2(x)       (!((x) & ((x) - 1)))
+#define cwpow2(x)           (!((x) & ((x) - 1)))
 #if (cwpow2(CW_CORE_SIZE))
-#define cwwrapcore(a)   ((a) & (CW_CORE_SIZE - 1))
+#define cwwrapcore(a)       ((a) & (CW_CORE_SIZE - 1))
 #else
-#define cwwrapcore(a)   ((a) % CW_CORE_SIZE)
+#define cwwrapcore(a)       ((a) % CW_CORE_SIZE)
 #endif
 
-long                    cwinit(int argc, char *argv[]);
-void                    cwexec(long pid);
+long                        cwinit(int argc, char *argv[]);
+void                        cwexec(long pid);
 
-#define CW_TURNS        (128 * 1024 * 1024)
-#define CW_PROCS        1024
-#define CW_NO_OP        0
-#define CW_INVAL        ((struct cwinstr){ 0 })
+#define CW_TURNS            (1024 * 1024)
+#define CW_PROCS            1024
+#define CW_NO_OP            0
+#define CW_INVAL            ((struct cwinstr){ 0 })
 
 /* opcodes */
-#define CW_OP_DAT       1
-#define CW_OP_MOV       2
-#define CW_OP_ADD       3
-#define CW_OP_SUB       4
-#define CW_OP_JMP       5
-#define CW_OP_JMZ       6
-#define CW_OP_JMN       7
-#define CW_OP_CMP       8
-#define CW_OP_SLT       9
-#define CW_OP_DJN       10
-#define CW_OP_SPL       11
-#define CW_MAX_OP       11
+#define CW_OP_DAT           1
+#define CW_OP_MOV           2
+#define CW_OP_ADD           3
+#define CW_OP_SUB           4
+#define CW_OP_JMP           5
+#define CW_OP_JMZ           6
+#define CW_OP_JMN           7
+#define CW_OP_CMP           8
+#define CW_OP_SLT           9
+#define CW_OP_DJN           10
+#define CW_OP_SPL           11
+#define CW_MAX_OP           11
 
 /* flags */
 /* addressing modes, default is direct (relative) */
-#define CW_ARG_IMM      (1 << 0)    // immediate
-#define CW_ARG_INDIR    (1 << 1)    // indirect
-#define CW_ARG_PREDEC   (1 << 2)    // predecrement
+#define CW_ARG_IMM          (1 << 0)        // immediate
+#define CW_ARG_INDIR        (1 << 1)        // indirect
+#define CW_ARG_PREDEC       (1 << 2)        // predecrement
 
-#define cwisdat(ins)    ((ins).op == CW_OP_DAT)
+#define cwisdat(ins)        ((ins).op == CW_OP_DAT)
 
 #if defined(CW_32BIT_INSTRUCTIONS)
 
-typedef int32_t         cwintop_t;
+typedef int32_t             cwintop_t;
 
 /* signed value */
 #define CW_OPERAND_BITS 11
 
 struct cwinstr {
-    unsigned            op     : 4;    // maximum # of instructions is 16
-    unsigned            aflg   : 3;    // operand a flags
-    unsigned            bflg   : 3;    // operand b flags
-    signed              a      : 11;   // operand a; max 0x3ff (1023)
-    signed              b      : 11;   // operand b; max 0x3ff (1023)
+    unsigned                op      : 4;    // maximum # of instructions is 16
+    unsigned                aflg    : 3;    // operand a flags
+    unsigned                bflg    : 3;    // operand b flags
+    signed                  a       : 11;   // operand a; max 0x3ff (1023)
+    signed                  b       : 11;   // operand b; max 0x3ff (1023)
 };
 
 #else
@@ -71,13 +72,13 @@ typedef int64_t         cwintop_t;
 
 /* 64-bit instruction structure */
 struct cwinstr {
-    unsigned            op      : 4;    // operation ID
-    unsigned            aflg    : 3;    // operand #1 flags
-    unsigned            bflg    : 3;    // operand #2 flags
-    unsigned            pid     : 1;    // 0 = program #1
-    unsigned            sign    : 1;    // signed-operation flag
-    unsigned            a       : 26;   // operand #1
-    unsigned            b       : 26;   // operand #2
+    unsigned                op      : 4;    // operation ID
+    unsigned                aflg    : 3;    // operand #1 flags
+    unsigned                bflg    : 3;    // operand #2 flags
+    unsigned                pid     : 1;    // 0 = program #1
+    unsigned                sign    : 1;    // signed-operation flag
+    unsigned                a       : 26;   // operand #1
+    unsigned                b       : 26;   // operand #2
 };
 
 #endif

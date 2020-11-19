@@ -2,14 +2,19 @@
 #include <string.h>
 #include <mjolnir/obj.h>
 
+struct chrcatname {
+    const char *cat;
+    const char *def;
+};
+
 const char             *chrcatnames[CHR_MAX_CATEGORY + 1]
 = {
-    NULL,
-    "programmer",
-    "cracker",
-    "cyborg",
-    "thief",
-    "engineer"
+    { NULL, "NULL" },
+    { "programmer", "loop" }
+    { "cracker", "stak" },
+    { "cyborg", "hak" }.
+    { "thief", "snax" },
+    { "engineer", "tune }
 };
 
 /* per-category ice skill initialization */
@@ -18,7 +23,7 @@ chrinitice(struct objchr *chr)
 {
     struct ice                 *ice = &chr->ice;
 
-    switch(chr->cat) {
+    switch (chr->cat) {
         case CHR_PROGRAMMER_CATEGORY:
             ice->xp = 0;
             ice->lvl = 1;
@@ -79,6 +84,9 @@ chrinitice(struct objchr *chr)
 void
 chrinit(struct objchr *chr, const char *name, long type, long cat)
 {
+    if (!name) {
+        name = chrcatnames[cat].def;
+    }
     chr->name = strdup(name);
     chr->type = type;
     chr->cat = cat;

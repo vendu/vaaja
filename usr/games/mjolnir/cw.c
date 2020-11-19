@@ -47,10 +47,11 @@ struct zeussel          g_zeussel;
 
 /* disassemble instruction */
 void
-cwdisasm(struct cwinstr *op, FILE *fp)
+cwdisasm(struct cwinstr *op, long pc, FILE *fp)
 {
     char                ch;
 
+    fprintf(fp, "%ld: ", pc);
     if (*(cwintop_t *)op) {
         fprintf(fp, "\t%s\t", g_cwopnametab[op->op]);
         ch = '\0';
@@ -79,7 +80,9 @@ cwdisasm(struct cwinstr *op, FILE *fp)
             } else {
                 fprintf(fp, "\t");
             }
-            fprintf(stderr, "%d\n", op->b);
+            fprintf(fp, "%d\n", op->b);
+        } else {
+            fprintf(fp, "\n");
         }
     }
 
@@ -90,44 +93,55 @@ cwdisasm(struct cwinstr *op, FILE *fp)
 static void
 cwgetargs(struct cwinstr op, long pc, long *argp1, long *argp2)
 {
-    struct cwinstr     *ptr = NULL;
+    struct cwinstr     *ptr = &g_cwmars.core[pc];
     long                narg = g_rcnargtab[op.op];
-    long                ofs = pc;
     long                arg1 = 0;
     long                arg2 = 0;
 
     arg1 = op.a;
     if (op.aflg) {
-        arg1 += ofs;
-        arg1 = cwwrapcore(arg1);
         if (op.aflg & (CW_ARG_INDIR | CW_ARG_PREDEC)) {
-            ptr = &g_cwmars.core[arg1];
-            arg2 = ptr->b;
-            ofs = arg1;
+            arg1 = op.b;
             if (op.aflg & CW_ARG_PREDEC) {
-                arg2--;
-                ptr->b = arg2;
+                arg1--;
+                if (arg1 < 0) {
+                    arg1 = CW_CORE_SIZE + arg1;
+                }
+                arg1 = cwwrapcore(arg1);
+                ptr->b = arg1;
             }
+            arg1 += pc;
+            ptr->a = arg1;
+        } else {
+            arg1 += pc;
+            arg1 = cwwrapcore(arg1);
         }
     } else {
-        arg1 = pc;
+        arg1 += pc;
     }
     arg1 = cwwrapcore(arg1);
     if (narg == 2) {
+        arg2 = op.b;
         if (op.bflg) {
-            arg2 += ofs;
-            arg2 = cwwrapcore(arg2);
             if (op.bflg & (CW_ARG_INDIR | CW_ARG_PREDEC)) {
-                ptr = &g_cwmars.core[arg2];
-                arg2 = ptr->b;
+                arg2 = op.b;
                 if (op.bflg & CW_ARG_PREDEC) {
                     arg2--;
+                    if (arg2 < 0) {
+                        arg2 = CW_CORE_SIZE + arg2;
+                    }
+                    arg2 = cwwrapcore(arg2);
                     ptr->b = arg2;
                 }
+                arg2 += pc;
+                ptr->a = arg2;
+            } else {
+                arg2 += pc;
+                arg2 = cwwrapcore(arg2);
             }
+        } else {
+            arg2 += pc;
         }
-    } else {
-        arg2 = pc;
     }
     arg2 = cwwrapcore(arg2);
     *argp1 = arg1;
@@ -160,12 +174,12 @@ cwmovop(C_UNUSED long pid, long pc)
 
     cwgetargs(op, pc, &arg1, &arg2);
     ptr = &g_cwmars.core[arg2];
+    pc++;
     if (op.aflg & CW_ARG_IMM) {
         ptr->b = arg1;
     } else {
         g_cwmars.core[arg2] = g_cwmars.core[arg1];
     }
-    pc++;
     pc = cwwrapcore(pc);
 
     return pc;
@@ -185,6 +199,7 @@ cwaddop(C_UNUSED long pid, long pc)
     cwgetargs(op, pc, &arg1, &arg2);
     ptr = &g_cwmars.core[arg2];
     a = op.a;
+    pc++;
     if (op.aflg & CW_ARG_IMM) {
         ptr->b += a;
     } else {
@@ -192,7 +207,6 @@ cwaddop(C_UNUSED long pid, long pc)
         ptr->a += a;
         ptr->b += b;
     }
-    pc++;
     pc = cwwrapcore(pc);
 
     return pc;
@@ -212,6 +226,7 @@ cwsubop(C_UNUSED long pid, long pc)
     cwgetargs(op, pc, &arg1, &arg2);
     ptr = &g_cwmars.core[arg2];
     a = op.a;
+    pc++;
     if (op.aflg & CW_ARG_IMM) {
         ptr->b -= a;
     } else {
@@ -219,7 +234,6 @@ cwsubop(C_UNUSED long pid, long pc)
         ptr->a -= a;
         ptr->b -= b;
     }
-    pc++;
     pc = cwwrapcore(pc);
 
     return pc;
@@ -234,9 +248,11 @@ cwjmpop(C_UNUSED long pid, long pc)
     long                arg2;
 
     cwgetargs(op, pc, &arg1, &arg2);
-    pc = arg1;
+    if (op.aflg & CW_ARG_IMM) {
+        arg1 += pc;
+    }
 
-    return pc;
+    return arg1;
 }
 
 /* instruction handler for JMZ */
@@ -457,6 +473,7 @@ cwexec(long pid)
         exit(0);
     }
     func = g_cwmars.functab[op.op];
+    //    cwdisasm(&op, pc, stderr);
     ret = func(pid, pc);
     if (ret < 0) {
         cnt--;

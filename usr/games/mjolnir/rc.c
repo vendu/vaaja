@@ -161,6 +161,7 @@ rcgetop(char *str)
                 cp++;
             }
             if (*cp) {
+                instr.aflg = 0;
                 if (*cp == '#') {
                     instr.aflg |= CW_ARG_IMM;
                     cp++;
@@ -204,6 +205,7 @@ rcgetop(char *str)
                             cp++;
                         }
                     }
+                    instr.bflg = 0;
                     if (*cp == '#') {
                         instr.bflg |= CW_ARG_IMM;
                         cp++;
