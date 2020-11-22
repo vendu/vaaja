@@ -569,10 +569,11 @@ cwexec(long pid)
 {
     struct cwinstr  op;
     cwinstrfunc    *func;
+    long           *runq;
     long            cur;
     long            cnt;
     long            pc;
-    long            l;
+    long            ndx;
 #if defined(ZEUS) && 0
     static long     ref = 0;
 #endif
@@ -605,11 +606,23 @@ cwexec(long pid)
     func = g_cwmars.functab[op.op];
     pc = func(pid, pc);
     cnt = g_cwmars.proccnt[pid];
-    if (op.op == CW_NO_OP) {
+    if (op.op == CW_OP_DAT) {
         if (cnt > 1) {
-            for (l = cur ; l < cnt - 1 ; l++) {
-                g_cwmars.runqueue[pid][l] = g_cwmars.runqueue[pid][l + 1];
+            runq = &g_cwmars.runqueue[pid][0];
+            if (cur == cnt - 1) {
+                runq[cur] = 0;
+                cur = 0;
+            } else {
+                for (ndx = cur ; ndx < cnt - 1 ; ndx++) {
+                    runq[ndx] = runq[ndx + 1];
+                }
+                runq[ndx] = 0;
+                cur++;
+                if (cur == cnt) {
+                    cur = 0;
+                }
             }
+            cnt--;
         } else {
 #if defined(ZEUS) && defined(ZEUSSDL)
             zeusdrawsim(&g_cwmars.zeusx11);
@@ -622,16 +635,12 @@ cwexec(long pid)
 
             exit(0);
         }
-        cnt--;
-        g_cwmars.proccnt[pid] = cnt;
     } else if (op.op != CW_OP_SPL) {
-        g_cwmars.runqueue[pid][cur] = pc;
+        g_cwmars.runqueue[pid][cnt] = pc;
+        cnt++;
         cur++;
     }
-    cnt = g_cwmars.proccnt[pid];
-    if (cur == cnt) {
-        cur = 0;
-    }
+    g_cwmars.proccnt[pid] = cnt;
     g_cwmars.curproc[pid] = cur;
 #if defined(ZEUS) && defined(ZEUSSDL)
     //    ref++;
@@ -647,7 +656,7 @@ cwexec(long pid)
 /* virtual machine main loop */
 C_NORETURN
 void
-cwloop(long nturn)
+cwrun(long nturn)
 {
     long                pid = g_cwmars.curpid;
 
@@ -818,7 +827,7 @@ main(int argc, char *argv[])
         zeusprocev(&g_cwmars.zeussdl);
     }
 #else
-    cwloop(CW_TURNS);
+    cwrun(CW_TURNS);
 #endif
 
     /* NOTREACHED */
