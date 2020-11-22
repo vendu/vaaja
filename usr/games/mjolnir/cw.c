@@ -549,6 +549,7 @@ cwsplop(long pid, long pc)
 
     cwgetargs(pc, &arg1, &arg2);
     cnt = g_cwmars.proccnt[pid];
+    pc++;
     pc = cwwrapval(pc);
     if (cnt < CW_PROCS) {
         runq[cnt - 1] = pc;
