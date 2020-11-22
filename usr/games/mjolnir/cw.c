@@ -208,6 +208,7 @@ cwgetargs(struct cwinstr op, long pc, long *argp1, long *argp2)
             if (bflg & CW_ARG_PREDEC) {
                 arg2--;
                 arg2 = cwwrapval(arg2);
+                instr->b = arg1;
             } else {
                 arg2 += pc;
                 arg2 = cwwrapval(arg2);
