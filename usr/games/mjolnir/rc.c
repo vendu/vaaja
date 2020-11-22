@@ -8,70 +8,63 @@
 
 extern struct cwmars    g_cwmars;
 
-static void            *g_rcparsetab[128];          // instruction lookup table
-long                    g_rcnargtab[CW_MAX_OP + 1]  // argument counts
-= {
-    0,
-    1, /* DAT */
-    2, /* MOV */
-    2, /* ADD */
-    2, /* SUB */
-    1, /* JMP */
-    2, /* JMZ */
-    2, /* JMN */
-    2, /* CMP */
-    2, /* SLT */
-    2, /* DJN */
-    1  /* SPL */
-};
+static void            *g_rcparsetab[128];
 
 /* register supported operation */
-static void
-rcaddop(const char *name, long id)
+void
+rcaddop(const char *str, long id)
 {
+    long                ch = *str;
     void               *ptr1;
     void               *ptr2;
-    long                ndx = toupper(*name);
 
-    name++;
-    if (ndx) {
-        ptr1 = g_rcparsetab[ndx];
-        if (!ptr1) {
-            ptr1 = calloc(128, sizeof(void *));
-            g_rcparsetab[ndx] = ptr1;
-        }
-        if (!ptr1) {
-            fprintf(stderr, "failed to allocate operation\n");
-
-            exit(1);
-        }
-        ndx = toupper(*name);
-        name++;
-        if (ndx) {
-            ptr2 = ((void **)ptr1)[ndx];
-            if (!ptr2) {
-                ptr2 = calloc(128, sizeof(void *));
-                ((void **)ptr1)[ndx] = ptr2;
-            }
-            if (!ptr2) {
-                fprintf(stderr, "failed to allocate operation\n");
-
-                exit(1);
-            }
-            ndx = toupper(*name);
-            name++;
-            if (ndx) {
-                ptr1 = ((long **)ptr2)[ndx];
+    if (ch) {
+        ch = *str;
+        if (ch) {
+            str++;
+            ch = toupper(ch);
+            /* 1st level table */
+            ptr1 = g_rcparsetab[ch];
+            if (!ptr1) {
+                ptr1 = calloc(128, sizeof(void *));
                 if (!ptr1) {
-                    ptr1 = calloc(128, sizeof(long));
-                    ((long **)ptr2)[ndx] = ptr1;
-                }
-                if (!ptr1) {
-                    fprintf(stderr, "failed to allocate operation\n");
+                    fprintf(stderr, "failed to allocate 1st level parse table\n");
 
                     exit(1);
                 }
-                *((long *)ptr1) = id;
+                g_rcparsetab[ch] = ptr1;
+            }
+            ch = *str;
+            if (ch) {
+                str++;
+                ch = toupper(ch);
+                /* 2nd level table */
+                ptr2 = ((void **)ptr1)[ch];
+                if (!ptr2) {
+                    ((void **)ptr1)[ch] = ptr2;
+                    ptr2 = calloc(128, sizeof(void *));
+                    if (!ptr2) {
+                        fprintf(stderr, "failed to allocate 2nd level parse table\n");
+
+                        exit(1);
+                    }
+                    ((void **)ptr1)[ch] = ptr2;
+                }
+                ch = *str++;
+                if (ch) {
+                    ch = toupper(ch);
+                    ptr1 = ((void **)ptr2)[ch];
+                    if (!ptr1) {
+                        ptr1 = calloc(128, sizeof(long));
+                        if (!ptr1) {
+                            fprintf(stderr, "failed to allocate 3rd level parse table\n");
+
+                            exit(1);
+                        }
+                        ((void **)ptr2)[ch] = ptr1;
+                        ((long *)ptr1)[ch] = id;
+                    }
+                }
             }
         }
     }
@@ -81,24 +74,45 @@ rcaddop(const char *name, long id)
 
 /* look instruction up */
 static long
-rcfindop(char *str)
+rcfindop(char *str, long *lenret)
 {
     long                op = CW_NO_OP;
     char               *cp = str;
-    void               *ptr;
+    void               *ptr = NULL;
+    void               *tab = NULL;
+    long                len = 0;
+    long                ch;
 
-    ptr = g_rcparsetab[toupper(*cp)];
-    cp++;
-    if ((ptr) && isalpha(*cp)) {
-        ptr = ((void **)ptr)[toupper(*cp)];
+    ch = *cp;
+    ch = toupper(ch);
+    if (isalpha(ch)) {
         cp++;
-        if ((ptr) && isalpha(*cp)) {
-            ptr = ((void **)ptr)[toupper(*cp)];
+        /* 1st level table */
+        ptr = g_rcparsetab[ch];
+        if (!ptr) {
+            return -1;
+        }
+        ch = *cp;
+        if (isalpha(ch)) {
+            ch = toupper(ch);
             cp++;
-            if (isspace(*cp)) {
-                op = *((long *)ptr);
+            /* 2nd level table */
+            tab = ((void **)ptr)[ch];
+            ch = *cp;
+            if (tab) {
+                ch = toupper(ch);
+                cp++;
+                /* 3rd level table */
+                ptr = ((void **)tab)[ch];
+                if (ptr) {
+                    op = ((long *)ptr)[ch];
+                }
             }
         }
+        len = cp - str;
+    }
+    if (lenret) {
+        *lenret = len;
     }
 
     return op;
@@ -125,30 +139,28 @@ rcinitop(void)
 
 /* read instruction from source string */
 static struct cwinstr
-rcgetop(char *str)
+rcgetinstr(char *str)
 {
     char               *cp = str;
     long                op = CW_NO_OP;
-    struct cwinstr      instr = CW_INVAL;
-    long                narg = 0;
+    struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
     long                sign = 0;
-    long                val;
+    long                val = 0;
+    int                 ch;
 
+    instr.op = CW_NO_OP;
     if (cp) {
         while (isspace(*cp)) {
             cp++;
         }
         if (isalpha(*cp)) {
-            op = rcfindop(cp);
+            op = rcfindop(cp, &val);
+            cp += val;
         }
         if (op != CW_NO_OP) {
-            narg = g_rcnargtab[op];
             instr.op = op;
-            while (isalpha(*cp)) {
-                cp++;
-            }
         } else {
-            fprintf(stderr, "invalid mnemonic: %s\n", str);
+            fprintf(stderr, "invalid mnemonic: %s\n", cp);
 
             exit(1);
         }
@@ -156,37 +168,51 @@ rcgetop(char *str)
         instr.bflg = 0;
         instr.a = 0;
         instr.b = 0;
-        if (*cp) {
-            while (isspace(*cp)) {
-                cp++;
+        ch = *cp++;
+        if (ch) {
+            while (isspace(ch)) {
+                ch = *cp++;
             }
-            if (*cp) {
+            if (ch) {
                 instr.aflg = 0;
-                if (*cp == '#') {
+                if (ch == '#') {
                     instr.aflg |= CW_ARG_IMM;
-                    cp++;
-                } else if (*cp == '@') {
+                    ch = *cp++;
+                } else if (ch == '@') {
                     instr.aflg |= CW_ARG_INDIR;
-                    cp++;
-                } else if (*cp == '<') {
+                    ch = *cp++;
+                } else if (ch == '<') {
                     instr.aflg |= CW_ARG_PREDEC;
-                    cp++;
-                } else if (*cp == '$') {
-                    cp++;
+                    ch = *cp++;
+                } else if (ch == '$') {
+                    ch = *cp++;
+                } else if (ch == ';') {
+                    fprintf(stderr, "missing A-field: %s (%c)\n", str, ch);
+
+                    exit(1);
                 }
-                if (*cp == '-') {
+                if (ch == '-') {
                     sign = 1;
-                    cp++;
+                    ch = *cp++;
                 }
-                val = 0;
-                if (isdigit(*cp)) {
-                    while (isdigit(*cp)) {
+                val = -1;
+                if (isdigit(ch)) {
+                    val = 0;
+                    while (isdigit(ch)) {
                         val *= 10;
-                        val += *cp - '0';
-                        cp++;
+                        val += ch - '0';
+                        ch = *cp++;
                     }
-                    if (sign) {
-                        val = -val;
+                    if (val >= 0) {
+                        if (sign) {
+                            val = -val;
+                        }
+                        instr.a = val;
+                    } else {
+                        fprintf(stderr, "missing A-field: %s (%ld)\n",
+                                str, val);
+
+                        exit(1);
                     }
                 } else {
                     fprintf(stderr, "invalid A-field: %s (%ld)\n",
@@ -194,49 +220,55 @@ rcgetop(char *str)
 
                     exit(1);
                 }
-                instr.a = val;
-                if (narg == 2) {
-                    while (isspace(*cp)) {
-                        cp++;
+                ch = *cp++;
+                if (ch) {
+                    while (isspace(ch)) {
+                        ch = *cp++;
                     }
-                    if (*cp == ',') {
-                        cp++;
-                        while (isspace(*cp)) {
-                            cp++;
+                    if (ch == ',') {
+                        ch = *cp++;
+                        while (isspace(ch)) {
+                            ch = *cp++;
+                        }
+                        instr.bflg = 0;
+                        ch = *cp++;
+                        if (ch == '#') {
+                            instr.bflg |= CW_ARG_IMM;
+                            ch = *cp++;
+                        } else if (ch == '@') {
+                            instr.bflg |= CW_ARG_INDIR;
+                            ch = *cp++;
+                        } else if (ch == '<') {
+                            instr.bflg |= CW_ARG_PREDEC;
+                            ch = *cp++;
+                        } else if (ch == '$') {
+                            ch = *cp++;
+                        }
+                        if (ch == '-') {
+                            sign = 1;
+                            ch = *cp++;
+                        }
+                        val = -1;
+                        if (isdigit(ch)) {
+                            val = 0;
+                            while (isdigit(ch)) {
+                                val *= 10;
+                                val += ch - '0';
+                                ch = *cp++;
+                            }
+                            if (val >= 0) {
+                                if (sign) {
+                                    val = -val;
+                                }
+                                instr.arg2 = 1;
+                                instr.b = val;
+                            }
+                        } else {
+                            fprintf(stderr, "missing B-field: %s\n", str);
                         }
                     }
-                    instr.bflg = 0;
-                    if (*cp == '#') {
-                        instr.bflg |= CW_ARG_IMM;
-                        cp++;
-                    } else if (*cp == '@') {
-                        instr.bflg |= CW_ARG_INDIR;
-                        cp++;
-                    } else if (*cp == '<') {
-                        instr.bflg |= CW_ARG_PREDEC;
-                        cp++;
-                    }
-                    if (*cp == '-') {
-                        sign = 1;
-                        cp++;
-                    }
-                    val = 0;
-                    if (isdigit(*cp)) {
-                        while (isdigit(*cp)) {
-                            val *= 10;
-                            val += *cp - '0';
-                            cp++;
-                        }
-                        if (sign) {
-                            val = -val;
-                        }
-                    } else {
-                        fprintf(stderr, "invalid B-field: %s (%ld)\n",
-                                str, val);
-
-                        exit(1);
-                    }
-                    instr.b = val;
+                } else {
+                    instr.arg2 = 0;
                 }
             }
         }
@@ -279,18 +311,7 @@ rcgetline(FILE *fp)
                 ndx++;
                 ch = fgetc(fp);
             }
-            if (ndx == n) {
-                n <<= 1;
-                ptr = realloc(buf, n * sizeof(char));
-                if (!ptr) {
-                    free(buf);
-                    fprintf(stderr, "failed to allocate line buffer\n");
-
-                    exit(1);
-                }
-                buf = ptr;
-            }
-            buf[ndx] = '\n';
+            buf[ndx] = '\0';
         }
     }
 
@@ -299,18 +320,17 @@ rcgetline(FILE *fp)
 
 /* translate source file to bytecode */
 long
-rcxlate(FILE *fp, long pid, long base, long *baseret, long *limret)
+rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
 {
-    char           *linebuf = NULL;
-    char           *cp;
     struct cwinstr  op;
-    struct cwinstr  instr;
-    long            pc = base;
-    long            ret = -1;
-    long            n = 0;
+    char           *linebuf = NULL;
+    long            adr = base;
     long            wrap = 0;
+    long            entry = 0;
+    char           *cp = NULL;
+    long            pc = CW_NO_OP;
+    long            n = 0;
 
-    *baseret = pc;
     while (1) {
         linebuf = rcgetline(fp);
         if (linebuf) {
@@ -327,25 +347,19 @@ rcxlate(FILE *fp, long pid, long base, long *baseret, long *limret)
                 continue;
             }
             if (isalpha(*cp)) {
-                op = rcgetop(cp);
-                if (*(cwintop_t *)&op) {
+                op = rcgetinstr(cp);
+                if (op.op != CW_NO_OP) {
+                    if (!entry && op.op != CW_OP_DAT) {
+                        pc = adr;
+                        entry = 1;
+                    }
                     n++;
-                    *(cwintop_t *)&instr = *(cwintop_t *)&g_cwmars.core[pc];
-                    if (*((cwintop_t *)&instr)) {
-                        fprintf(stderr, "programs overlap\n");
-
-                        exit(1);
-                    }
-                    *(cwintop_t *)&g_cwmars.core[pc] = *(cwintop_t *)&op;
-                    if (ret < 0 && op.op != CW_OP_DAT) {
-                        /* execution starts at first non-DAT instruction */
-                        ret = pc;
-                    }
+                    g_cwmars.core[adr] = op;
                     if (pid) {
-                        setbit(g_cwmars.pidmap, pc);
+                        setbit(g_cwmars.pidmap, adr);
                     }
-                    pc++;
-                    pc %= CW_CORE_SIZE;
+                    adr++;
+                    adr = cwwrapval(adr);
                 } else {
                     fprintf(stderr, "invalid instruction: %s\n", linebuf);
 
@@ -367,8 +381,9 @@ rcxlate(FILE *fp, long pid, long base, long *baseret, long *limret)
     if (linebuf) {
         free(linebuf);
     }
-    *limret = pc;
+    *baseret = base;
+    *limret = adr;
 
-    return ret;
+    return pc;
 }
 
