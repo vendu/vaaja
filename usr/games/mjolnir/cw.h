@@ -128,13 +128,12 @@ struct cwmars {
     cwinstrfunc       **functab;                // instruction handler table
     long                runqueue[2][CW_PROCS];  // process run queues
     long                proccnt[2];             // numbers of processes
-    long                procsz[2];              // process sizes in instructions
+    long                progsz[2];              // process sizes in instructions
     long                curproc[2];             // current running process IDs
     long                nturn[2];               // number of turns available
     long                running;                // flag to indicate if running
     long                curpid;                 // current program ID
-    char               *prog1name;              // program one path
-    char               *prog2name;              // program two path
+    char               *progpaths[2];           // paths to warrior files
     char               *pidmap;                 // core owner bitmap
     char               *memmap;                 // allocation bitmap
     struct cwinstr     *core;                   // operation memory
