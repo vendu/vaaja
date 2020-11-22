@@ -317,10 +317,12 @@ cwaddop(C_UNUSED long pid, long pc)
         arg1 += val;
         arg1 = cwwrapval(arg1);
         dest->a = arg1;
-        val = dest->b;
-        arg2 += val;
-        arg2 = cwwrapval(arg1);
-        dest->b = arg2;
+        if (dest->arg2) {
+            val = dest->b;
+            arg2 += val;
+            arg2 = cwwrapval(arg1);
+            dest->b = arg2;
+        }
     }
     pc = cwwrapval(pc);
 
@@ -353,10 +355,12 @@ cwsubop(C_UNUSED long pid, long pc)
         arg1 -= val;
         arg1 = cwwrapval(arg2);
         dest->a = arg1;
-        val = dest->b;
-        arg2 -= val;
-        arg2 = cwwrapval(arg2);
-        dest->b = arg2;
+        if (dest->arg2) {
+            val = dest->b;
+            arg2 -= val;
+            arg2 = cwwrapval(arg2);
+            dest->b = arg2;
+        }
     }
 
     return pc;
