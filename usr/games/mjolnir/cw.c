@@ -665,11 +665,10 @@ cwexec(long pid)
             exit(0);
         }
     } else if (op.op != CW_OP_SPL) {
-        g_cwmars.runqueue[pid][cnt] = pc;
-        cnt++;
+        cnt = g_cwmars.proccnt[pid];
+        g_cwmars.runqueue[pid][cnt - 1] = pc;
         cur++;
     }
-    g_cwmars.proccnt[pid] = cnt;
     g_cwmars.curproc[pid] = cur;
 #if defined(ZEUS) && defined(ZEUSSDL)
     //    ref++;
