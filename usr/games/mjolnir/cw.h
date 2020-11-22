@@ -55,22 +55,6 @@
 
 #define cwisdat(ins)        ((ins).op == CW_OP_DAT)
 
-#if defined(CW_BIG_CORE)
-
-struct cwargflg {
-    uint8_t                 a;
-    uint8_t                 b;
-};
-
-#else
-
-struct cwargflg {
-    unsigned                aflg    : 4;
-    unsigned                bflg    : 4;
-};
-
-#endif
-
 #if defined (CW_BIG_CORE)
 
 typedef int8_t              cwintop_t;
@@ -83,8 +67,8 @@ struct cwinstr {
     unsigned                brk     : 1;
     uint8_t                 aflg;
     uint8_t                 bflg;
-    unsigned                a       : 20;
-    unsigned                b       : 20;
+    signed                  a       : 20;
+    signed                  b       : 20;
 };
 
 #elif defined(CW_32BIT_INSTRUCTIONS)

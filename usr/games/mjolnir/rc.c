@@ -144,7 +144,7 @@ rcgetinstr(char *str)
     char               *cp = str;
     long                op = CW_NO_OP;
     struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
-    long                sign = 0;
+    long                sign;
     long                val = 0;
     int                 ch;
 
@@ -174,6 +174,7 @@ rcgetinstr(char *str)
                 ch = *cp++;
             }
             if (ch) {
+                sign = 0;
                 instr.aflg = 0;
                 if (ch == '#') {
                     instr.aflg |= CW_ARG_IMM;
@@ -203,6 +204,7 @@ rcgetinstr(char *str)
                         val += ch - '0';
                         ch = *cp++;
                     }
+                    fprintf(stderr, "A: %ld\n", val);
                     if (val >= 0) {
                         if (sign) {
                             val = -val;
@@ -214,61 +216,73 @@ rcgetinstr(char *str)
 
                         exit(1);
                     }
+                    if (ch) {
+                        while (isspace(ch)) {
+                            ch = *cp++;
+                        }
+                        if (ch == ',') {
+                            ch = *cp++;
+                            while (isspace(ch)) {
+                                ch = *cp++;
+                            }
+                            sign = 0;
+                            instr.bflg = 0;
+                            ch = *cp++;
+                            if (ch == '#') {
+                                instr.bflg |= CW_ARG_IMM;
+                                ch = *cp++;
+                            } else if (ch == '@') {
+                                instr.bflg |= CW_ARG_INDIR;
+                                ch = *cp++;
+                            } else if (ch == '<') {
+                                instr.bflg |= CW_ARG_PREDEC;
+                                ch = *cp++;
+                            } else if (ch == '$') {
+                                ch = *cp++;
+                            } else if (ch == ';') {
+                                fprintf(stderr, "missing B-field: %s\n",
+                                        str);
+                            }
+                            if (ch == '-') {
+                                sign = 1;
+                                ch = *cp++;
+                            }
+                            val = -1;
+                            if (isdigit(ch)) {
+                                val = 0;
+                                while (isdigit(ch)) {
+                                    val *= 10;
+                                    val += ch - '0';
+                                    ch = *cp++;
+                                }
+                                fprintf(stderr, "B: %ld\n", val);
+                                if (val >= 0) {
+                                    if (sign) {
+                                        val = -val;
+                                    }
+                                    instr.arg2 = 1;
+                                    instr.b = val;
+                                }
+                            } else {
+                                fprintf(stderr, "invalid B-field: %s\n", str);
+                            }
+                        } else {
+                            while (isspace(ch) && ch != '\n') {
+                                ch = *cp++;
+                            }
+                            if (ch == ';') {
+                                instr.arg2 = 0;
+                            } else {
+                                fprintf(stderr, "junk at end of line: %s\n",
+                                        str);
+                            }
+                        }
+                    }
                 } else {
                     fprintf(stderr, "invalid A-field: %s (%ld)\n",
                             str, val);
 
                     exit(1);
-                }
-                ch = *cp++;
-                if (ch) {
-                    while (isspace(ch)) {
-                        ch = *cp++;
-                    }
-                    if (ch == ',') {
-                        ch = *cp++;
-                        while (isspace(ch)) {
-                            ch = *cp++;
-                        }
-                        instr.bflg = 0;
-                        ch = *cp++;
-                        if (ch == '#') {
-                            instr.bflg |= CW_ARG_IMM;
-                            ch = *cp++;
-                        } else if (ch == '@') {
-                            instr.bflg |= CW_ARG_INDIR;
-                            ch = *cp++;
-                        } else if (ch == '<') {
-                            instr.bflg |= CW_ARG_PREDEC;
-                            ch = *cp++;
-                        } else if (ch == '$') {
-                            ch = *cp++;
-                        }
-                        if (ch == '-') {
-                            sign = 1;
-                            ch = *cp++;
-                        }
-                        val = -1;
-                        if (isdigit(ch)) {
-                            val = 0;
-                            while (isdigit(ch)) {
-                                val *= 10;
-                                val += ch - '0';
-                                ch = *cp++;
-                            }
-                            if (val >= 0) {
-                                if (sign) {
-                                    val = -val;
-                                }
-                                instr.arg2 = 1;
-                                instr.b = val;
-                            }
-                        } else {
-                            fprintf(stderr, "missing B-field: %s\n", str);
-                        }
-                    }
-                } else {
-                    instr.arg2 = 0;
                 }
             }
         }
@@ -343,6 +357,7 @@ rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
             }
             if (*cp == ';') {
                 free(linebuf);
+                linebuf = NULL;
 
                 continue;
             }
@@ -365,8 +380,10 @@ rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
 
                     exit(1);
                 }
+                cwprintinstr(op, -1, -1);
             } else if (wrap) {
                 free(linebuf);
+                linebuf = NULL;
 
                 continue;
             } else {
