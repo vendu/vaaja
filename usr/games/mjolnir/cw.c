@@ -219,6 +219,8 @@ cwgetargs(struct cwinstr op, long pc, long *argp1, long *argp2)
                 }
             }
         }
+    } else {
+        arg2 += pc;
     }
     arg1 = cwwrapval(arg1);
     arg2 = cwwrapval(arg2);
