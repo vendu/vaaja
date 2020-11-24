@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <time.h>
 #include <zero/cdefs.h>
-#include <zero/trix.h>
 #include <mach/param.h>
 #include <prng/randmt32.h>
 #include <mjolnir/cw.h>
@@ -777,7 +776,7 @@ cwloadfile(const char *name, long base, long *sizeret)
     size = lim - adr;
     if (g_cwmars.memmap) {
         csize = CW_CORE_SIZE;
-        if (!powerof2(CW_CORE_SIZE)) {
+        if (csize & (CHAR_BIT - 1)) {
             csize /= CHAR_BIT;
             csize++;
         } else {

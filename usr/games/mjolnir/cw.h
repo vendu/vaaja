@@ -28,8 +28,8 @@
                              : ((a) % CW_CORE_SIZE))
 #endif
 
-#define CW_TURNS            (1024 * 1024)
-#define CW_PROCS            1024
+#define CW_TURNS            80000
+#define CW_PROCS            8000
 #define CW_NO_OP            0x3f
 #define CW_INVAL            ((struct cwinstr){ 0 })
 

@@ -149,11 +149,12 @@ rcgetinstr(char *str)
     int                 ch;
 
     instr.op = CW_NO_OP;
-    if (cp) {
-        while (isspace(*cp)) {
-            cp++;
+    ch = *cp;
+    if (ch) {
+        while (isspace(ch)) {
+            ch = *cp++;
         }
-        if (isalpha(*cp)) {
+        if (isalpha(ch)) {
             op = rcfindop(cp, &val);
             cp += val;
         }
@@ -204,94 +205,91 @@ rcgetinstr(char *str)
                         val += ch - '0';
                         ch = *cp++;
                     }
-                    if (val >= 0) {
-                        if (sign) {
-                            val = -val;
-                        }
-                        instr.a = val;
-                    } else {
-                        fprintf(stderr, "missing A-field: %s (%ld)\n",
-                                str, val);
-
-                        exit(1);
+                }
+                if (val >= 0) {
+                    if (sign) {
+                        val = -val;
                     }
-                    if (ch) {
-                        while (isspace(ch)) {
-                            ch = *cp++;
-                        }
-                        if (ch == ',') {
-                            ch = *cp++;
-                            while (isspace(ch) && ch != '\n') {
-                                ch = *cp++;
-                            }
-                            if (ch == '\n') {
-                                fprintf(stderr, "invalid B-field: %s\n",
-                                        str);
-                            }
-                            sign = 0;
-                            instr.bflg = 0;
-                            if (ch == '#') {
-                                instr.bflg |= CW_ARG_IMM;
-                                ch = *cp++;
-                            } else if (ch == '@') {
-                                instr.bflg |= CW_ARG_INDIR;
-                                ch = *cp++;
-                            } else if (ch == '<') {
-                                instr.bflg |= CW_ARG_PREDEC;
-                                ch = *cp++;
-                            } else if (ch == '$') {
-                                ch = *cp++;
-                            } else if (ch == ';') {
-                                fprintf(stderr, "invalid B-field: %s\n",
-                                        str);
-                            }
-                            if (ch) {
-                                if (ch == '-') {
-                                    sign = 1;
-                                    ch = *cp++;
-                                }
-                                val = -1;
-                                if (isdigit(ch)) {
-                                    val = 0;
-                                    while (isdigit(ch)) {
-                                        val *= 10;
-                                        val += ch - '0';
-                                        ch = *cp++;
-                                    }
-                                    if (val >= 0) {
-                                        if (sign) {
-                                            val = -val;
-                                        }
-                                        instr.arg2 = 1;
-                                        instr.b = val;
-                                    }
-                                } else {
-                                    fprintf(stderr, "invalid B-field: %s\n",
-                                            str);
-                                }
-                            } else {
-                                fprintf(stderr, "invalid B-field: %s\n",
-                                        str);
-                            }
-                        } else {
-                            while (isspace(ch) && ch != '\n') {
-                                ch = *cp++;
-                            }
-                            if (ch == ';') {
-                                instr.arg2 = 0;
-                            } else {
-                                fprintf(stderr, "junk at end of line: %s\n",
-                                        str);
-                            }
-                        }
-                    }
+                    instr.a = val;
                 } else {
-                    fprintf(stderr, "invalid A-field: %s (%ld)\n",
+                    fprintf(stderr, "missing A-field: %s (%ld)\n",
                             str, val);
 
                     exit(1);
                 }
+                if (!ch) {
+
+                    return instr;
+                }
+                while (isspace(ch) && ch != '\n') {
+                    ch = *cp++;
+                }
+                if (!ch || ch == ';') {
+
+                    return instr;
+                }
+                if (ch == ',') {
+                    ch = *cp++;
+                    while (isspace(ch) && ch != '\n') {
+                        ch = *cp++;
+                    }
+                    if (ch == '\n') {
+                        fprintf(stderr, "invalid B-field: %s\n",
+                                str);
+                    }
+                    sign = 0;
+                    instr.bflg = 0;
+                    if (ch == '#') {
+                        instr.bflg |= CW_ARG_IMM;
+                        ch = *cp++;
+                    } else if (ch == '@') {
+                        instr.bflg |= CW_ARG_INDIR;
+                        ch = *cp++;
+                    } else if (ch == '<') {
+                        instr.bflg |= CW_ARG_PREDEC;
+                        ch = *cp++;
+                    } else if (ch == '$') {
+                        ch = *cp++;
+                        } else if (ch == ';') {
+                        fprintf(stderr, "invalid B-field: %s\n",
+                                str);
+                    }
+                    if (ch) {
+                        if (ch == '-') {
+                            sign = 1;
+                            ch = *cp++;
+                        }
+                        val = -1;
+                            if (isdigit(ch)) {
+                                val = 0;
+                                while (isdigit(ch)) {
+                                    val *= 10;
+                                    val += ch - '0';
+                                    ch = *cp++;
+                                }
+                            }
+                            if (val >= 0) {
+                                if (sign) {
+                                    val = -val;
+                                }
+                                instr.arg2 = 1;
+                                instr.b = val;
+                            } else {
+                                fprintf(stderr, "invalid B-field: %s\n",
+                                        str);
+                            }
+                    } else {
+                        fprintf(stderr, "junk at end of line: %s\n",
+                                str);
+                    }
+                }
+            } else {
+                fprintf(stderr, "invalid A-field: %s\n",
+                        str);
             }
+        } else {
+            fprintf(stderr, "invalid A-field: %s\n",
+                    str);
         }
     }
 
