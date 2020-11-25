@@ -11,13 +11,7 @@ struct rcprog {
 
 void                    rcinitop(void);
 void                    rcaddop(const char *name, long id);
-long                    rcxlatef(FILE *fp,
-                                 long pid,
-                                 long base,
-                                 long *baseret,
-                                 long *sizeret);
-void                    rcdisasm(struct cwinstr *op,
-                                 FILE *fp);
+long                    rcloadfile(const char *name, long base, long *sizeret);
 
 #endif /* __MJOLNIR_RC_H__ */
 

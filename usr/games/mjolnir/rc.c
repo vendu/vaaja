@@ -6,6 +6,11 @@
 #include <zero/trix.h>
 #include <mjolnir/cw.h>
 
+static long             rcxlatef(FILE *fp,
+                                 long pid,
+                                 long base,
+                                 long *sizeret);
+
 extern struct cwmars    g_cwmars;
 
 static void            *g_rcparsetab[128];
@@ -146,7 +151,7 @@ rcgetinstr(char *str)
     struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
     long                sign;
     long                val = 0;
-    int                 ch;
+    long                ch;
 
     instr.op = CW_NO_OP;
     ch = *cp;
@@ -189,7 +194,7 @@ rcgetinstr(char *str)
                 } else if (ch == '$') {
                     ch = *cp++;
                 } else if (ch == ';') {
-                    fprintf(stderr, "missing A-field: %s (%c)\n", str, ch);
+                    fprintf(stderr, "missing A-field: %s (%c)\n", str, (int)ch);
 
                     exit(1);
                 }
@@ -210,6 +215,7 @@ rcgetinstr(char *str)
                     if (sign) {
                         val = -val;
                     }
+                    val = cwwrapval(val);
                     instr.a = val;
                 } else {
                     fprintf(stderr, "missing A-field: %s (%ld)\n",
@@ -217,18 +223,23 @@ rcgetinstr(char *str)
 
                     exit(1);
                 }
+#if 0
                 if (!ch) {
-
-                    return instr;
+                    instr.bflg = instr.aflg;
+                    instr.b = instr.a;
+                    instr.aflg = 0;
+                    instr.a = 0;
                 }
+#endif
                 while (isspace(ch) && ch != '\n') {
                     ch = *cp++;
                 }
-                if (!ch || ch == ';') {
-
-                    return instr;
-                }
-                if (ch == ',') {
+                if (!ch || ch == '\n' || ch == ';') {
+                    instr.bflg = instr.aflg;
+                    instr.b = instr.a;
+                    instr.aflg = 0;
+                    instr.a = 0;
+                } else if (ch == ',') {
                     ch = *cp++;
                     while (isspace(ch) && ch != '\n') {
                         ch = *cp++;
@@ -236,6 +247,8 @@ rcgetinstr(char *str)
                     if (ch == '\n') {
                         fprintf(stderr, "invalid B-field: %s\n",
                                 str);
+
+                        exit(1);
                     }
                     sign = 0;
                     instr.bflg = 0;
@@ -250,9 +263,11 @@ rcgetinstr(char *str)
                         ch = *cp++;
                     } else if (ch == '$') {
                         ch = *cp++;
-                        } else if (ch == ';') {
+                    } else if (ch == ';') {
                         fprintf(stderr, "invalid B-field: %s\n",
                                 str);
+
+                        exit(1);
                     }
                     if (ch) {
                         if (ch == '-') {
@@ -260,32 +275,43 @@ rcgetinstr(char *str)
                             ch = *cp++;
                         }
                         val = -1;
-                            if (isdigit(ch)) {
-                                val = 0;
-                                while (isdigit(ch)) {
-                                    val *= 10;
-                                    val += ch - '0';
-                                    ch = *cp++;
-                                }
+                        if (isdigit(ch)) {
+                            val = 0;
+                            while (isdigit(ch)) {
+                                val *= 10;
+                                val += ch - '0';
+                                ch = *cp++;
                             }
-                            if (val >= 0) {
-                                if (sign) {
-                                    val = -val;
-                                }
-                                instr.arg2 = 1;
-                                instr.b = val;
-                            } else {
-                                fprintf(stderr, "invalid B-field: %s\n",
-                                        str);
+                        }
+                        if (val >= 0) {
+                            if (sign) {
+                                val = -val;
                             }
+                            val = cwwrapval(val);
+                            instr.b = val;
+                        } else {
+                            fprintf(stderr, "invalid B-field: %s\n",
+                                    str);
+
+                            exit(1);
+                        }
                     } else {
                         fprintf(stderr, "junk at end of line: %s\n",
                                 str);
+
+                        exit(1);
                     }
+                } else {
+                    fprintf(stderr, "junk at end of line: %s\n",
+                            str);
+
+                    exit(1);
                 }
             } else {
                 fprintf(stderr, "invalid A-field: %s\n",
                         str);
+
+                exit(1);
             }
         } else {
             fprintf(stderr, "invalid A-field: %s\n",
@@ -337,9 +363,67 @@ rcgetline(FILE *fp)
     return buf;
 }
 
+long
+rcloadfile(const char *name, long base, long *sizeret)
+{
+    FILE               *fp;
+    long                pc;
+    long                adr;
+    long                lim;
+    long                size;
+    long                csize;
+
+    fp = fopen(name, "r");
+    if (!fp) {
+        fprintf(stderr, "failed to open file %s\n", name);
+
+        exit(1);
+    }
+    pc = rcxlatef(fp, 0, base, &lim);
+    size = lim - base;
+    adr = base;
+    if (g_cwmars.memmap) {
+        csize = CW_CORE_SIZE;
+        if (csize & (CHAR_BIT - 1)) {
+            csize /= CHAR_BIT;
+            csize++;
+        } else {
+            csize >>= 3;
+        }
+        g_cwmars.memmap = calloc(csize, sizeof(char));
+        if (!g_cwmars.memmap) {
+            fprintf(stderr, "failed to allocate memory bitmap\n");
+
+            exit(1);
+        }
+        while (adr < lim) {
+            setbit(&g_cwmars.memmap, adr);
+            adr++;
+        }
+    } else {
+        while (adr < lim) {
+            if (bitset(&g_cwmars.memmap, adr)) {
+                fprintf(stderr, "programs overlap at address %ld\n",
+                        adr);
+
+                exit(1);
+            }
+            adr++;
+        }
+        free(g_cwmars.memmap);
+        g_cwmars.memmap = NULL;
+    }
+    if (sizeret) {
+        *sizeret = size;
+    }
+    fclose(fp);
+
+    return pc;
+}
+
 /* translate source file to bytecode */
 long
-rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
+rcxlatef(FILE *fp, long pid, long base, long *limret)
 {
     struct cwinstr  op;
     char           *linebuf = NULL;
@@ -347,8 +431,7 @@ rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
     long            wrap = 0;
     long            entry = 0;
     char           *cp = NULL;
-    long            pc = CW_NO_OP;
-    long            n = 0;
+    long            pc = base;
 
     while (1) {
         linebuf = rcgetline(fp);
@@ -373,19 +456,17 @@ rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
                         pc = adr;
                         entry = 1;
                     }
-                    n++;
                     g_cwmars.core[adr] = op;
                     if (pid) {
                         setbit(g_cwmars.pidmap, adr);
                     }
                     adr++;
-                    adr = cwwrapval(adr);
+                    adr = cwwrapadr(adr);
                 } else {
                     fprintf(stderr, "invalid instruction: %s\n", linebuf);
 
                     exit(1);
                 }
-                cwprintinstr(op, -1, -1);
             } else if (wrap) {
                 free(linebuf);
                 linebuf = NULL;
@@ -403,7 +484,6 @@ rcxlatef(FILE *fp, long pid, long base, long *baseret, long *limret)
     if (linebuf) {
         free(linebuf);
     }
-    *baseret = base;
     *limret = adr;
 
     return pc;

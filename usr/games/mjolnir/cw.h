@@ -17,16 +17,15 @@
 #include <mjolnir/sdl.h>
 #endif
 
-#define cwpow2(x)           (!((x) & ((x) - 1)))
-#if (cwpow2(CW_CORE_SIZE))
-#define cwwrapval(a)        (((a) < 0)                                  \
-                             ? ((a) + CW_CORE_SIZE)                     \
-                             : ((a) & (CW_CORE_SIZE - 1)))
-#else
-#define cwwrapval(a)        (((a) < 0)                               \
-                             ? (((a) + CW_CORE_SIZE) % CW_CORE_SIZE) \
-                             : ((a) % CW_CORE_SIZE))
+#if 0
+#define cwwrapval(x)        (((x) <= -CW_CORE_SIZE)                     \
+                             ? ((x) + CW_CORE_SIZE)                     \
+                             : ((x) % CW_CORE_SIZE))
 #endif
+#define cwwrapval(x)        ((x) % CW_CORE_SIZE)
+#define cwwrapadr(x)        (((x) < 0)                                  \
+                             ? (CW_CORE_SIZE + (x))                     \
+                             : ((x) % CW_CORE_SIZE))
 
 #define CW_TURNS            80000
 #define CW_PROCS            8000
@@ -63,12 +62,13 @@ typedef int8_t              cwintop_t;
 
 struct cwinstr {
     unsigned                op      : 6;
-    unsigned                arg2    : 1;
+    //    unsigned                arg2    : 1;
     unsigned                brk     : 1;
+    unsigned                _pad    : 1;
     uint8_t                 aflg;
     uint8_t                 bflg;
-    signed                  a       : 20;
-    signed                  b       : 20;
+    unsigned                a       : 20;
+    unsigned                b       : 20;
 };
 
 #elif defined(CW_32BIT_INSTRUCTIONS)

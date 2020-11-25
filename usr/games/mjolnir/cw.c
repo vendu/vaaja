@@ -11,6 +11,7 @@
 #include <time.h>
 #include <zero/cdefs.h>
 #include <mach/param.h>
+#include <zero/trix.h>
 #include <prng/randmt32.h>
 #include <mjolnir/cw.h>
 #include <mjolnir/rc.h>
@@ -137,17 +138,15 @@ cwprintinstr(struct cwinstr op, long pid, long pc)
     } else {
         fprintf(stderr, "\t$%ld", val);
     }
-    if (op.arg2) {
-        val = op.b;
-        if (bflg & CW_ARG_IMM) {
-            fprintf(stderr, "\t#%ld", val);
-        } else if (bflg & CW_ARG_INDIR) {
-            fprintf(stderr, "\t@%ld", val);
-        } else if (bflg & CW_ARG_PREDEC) {
-            fprintf(stderr, "\t<%ld", val);
-        } else {
-            fprintf(stderr, "\t$%ld", val);
-        }
+    val = op.b;
+    if (bflg & CW_ARG_IMM) {
+        fprintf(stderr, "\t#%ld", val);
+    } else if (bflg & CW_ARG_INDIR) {
+        fprintf(stderr, "\t@%ld", val);
+    } else if (bflg & CW_ARG_PREDEC) {
+        fprintf(stderr, "\t<%ld", val);
+    } else {
+        fprintf(stderr, "\t$%ld", val);
     }
     fprintf(stderr, "\n");
 
@@ -205,40 +204,32 @@ cwgetargs(long pc, long *argp1, long *argp2)
                 instr->a = arg1;
             } else {
                 arg1 += pc;
-                arg1 = cwwrapval(arg1);
+                arg1 = cwwrapadr(arg1);
                 src = &g_cwmars.core[arg1];
-                if (src->arg2) {
-                    arg1 = src->b;
-                } else {
-                    arg1 = src->a;
-                }
+                arg1 = src->b;
             }
         }
     } else {
         arg1 += pc;
+        arg1 = cwwrapadr(arg1);
     }
     if (bflg) {
         if (bflg & (CW_ARG_INDIR | CW_ARG_PREDEC)) {
             if (bflg & CW_ARG_PREDEC) {
                 arg2--;
                 arg2 = cwwrapval(arg2);
-                instr->b = arg1;
+                instr->b = arg2;
             } else {
                 arg2 += pc;
-                arg2 = cwwrapval(arg2);
+                arg2 = cwwrapadr(arg2);
                 src = &g_cwmars.core[arg2];
-                if (src->arg2) {
-                    arg2 = src->b;
-                } else {
-                    arg2 = src->a;
-                }
+                arg2 = src->b;
             }
         }
     } else {
         arg2 += pc;
+        arg2 = cwwrapadr(arg2);
     }
-    arg1 = cwwrapval(arg1);
-    arg2 = cwwrapval(arg2);
     *argp1 = arg1;
     *argp2 = arg2;
 
@@ -285,24 +276,14 @@ cwmovop(C_UNUSED long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     pc++;
     if (aflg & CW_ARG_IMM) {
-        if (op.arg2) {
-            dest = &g_cwmars.core[arg2];
-            dest->b = arg1;
-        } else {
-            src = g_cwmars.core[pc];
-            dest = &g_cwmars.core[arg1];
-            *dest = src;
-        }
-    } else if (!op.arg2) {
-        /* single field MOV copies the MOV into address from the A-field */
-        dest = &g_cwmars.core[arg1];
-        *dest = op;
+        dest = &g_cwmars.core[arg2];
+        dest->b = arg1;
     } else {
         dest = &g_cwmars.core[arg2];
         src = g_cwmars.core[arg1];
         *dest = src;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -321,12 +302,7 @@ cwaddop(C_UNUSED long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     pc++;
     dest = &g_cwmars.core[arg2];
-    if (!dest->arg2) {
-        val = dest->a;
-        arg1 += val;
-        arg1 = cwwrapval(arg1);
-        dest->a = arg1;
-    } else if (aflg & CW_ARG_IMM) {
+    if (aflg & CW_ARG_IMM) {
         val = dest->b;
         val += arg1;
         val = cwwrapval(val);
@@ -341,7 +317,7 @@ cwaddop(C_UNUSED long pid, long pc)
         arg2 = cwwrapval(arg1);
         dest->b = arg2;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -360,12 +336,7 @@ cwsubop(C_UNUSED long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     pc++;
     dest = &g_cwmars.core[arg2];
-    if (!dest->arg2) {
-        val = dest->a;
-        val -= arg1;
-        val = cwwrapval(val);
-        dest->a = val;
-    } else if (aflg & CW_ARG_IMM) {
+    if (aflg & CW_ARG_IMM) {
         val = dest->b;
         val -= arg1;
         val = cwwrapval(val);
@@ -380,7 +351,7 @@ cwsubop(C_UNUSED long pid, long pc)
         arg2 = cwwrapval(arg1);
         dest->b = arg2;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -394,7 +365,7 @@ cwjmpop(C_UNUSED long pid, long pc)
 
     cwgetargs(pc, &arg1, &arg2);
     pc = arg1;
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -416,7 +387,7 @@ cwjmzop(C_UNUSED long pid, long pc)
     } else {
         pc++;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -438,7 +409,7 @@ cwjmnop(C_UNUSED long pid, long pc)
     } else {
         pc++;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -467,7 +438,7 @@ cwcmpop(C_UNUSED long pid, long pc)
         pc++;
     }
     pc++;
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -494,7 +465,7 @@ cwsltop(C_UNUSED long pid, long pc)
         pc++;
     }
     pc++;
-    pc = cwwrapval(pc);;
+    pc = cwwrapadr(pc);
 
     return pc;
 }
@@ -516,19 +487,13 @@ cwdjnop(C_UNUSED long pid, long pc)
     if (bflg & CW_ARG_IMM) {
         val = op.b;
         val--;
-        val = cwwrapval(val);
+        val = cwwrapadr(val);
         instr->b = val;
-    } else if (op.arg2) {
+    } else {
         val = dest->b;
         val--;
-        val = cwwrapval(val);
+        val = cwwrapadr(val);
         dest->b = val;
-    } else {
-        /* DAT, JMP, SPL are supported as single [A-field] only */
-        val = dest->a;
-        val--;
-        val = cwwrapval(val);
-        dest->a = val;
     }
     if (!val) {
         pc = arg1;
@@ -549,10 +514,10 @@ cwsplop(long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     cnt = g_cwmars.proccnt[pid];
     pc++;
-    pc = cwwrapval(pc);
+    pc = cwwrapadr(pc);
     if (cnt < CW_PROCS) {
         runq[cnt - 1] = pc;
-        arg1 = cwwrapval(arg1);
+        arg1 = cwwrapadr(arg1);
         cnt++;
         pc = arg1;
         g_cwmars.proccnt[pid] = cnt;
@@ -756,63 +721,6 @@ cwinitmars(struct cwmars *mars, long pc1, long pc2, long nturn)
     return;
 }
 
-long
-cwloadfile(const char *name, long base, long *sizeret)
-{
-    FILE               *fp;
-    long                pc;
-    long                adr;
-    long                lim;
-    long                size;
-    long                csize;
-
-    fp = fopen(name, "r");
-    if (!fp) {
-        fprintf(stderr, "failed to open file %s\n", name);
-
-        exit(1);
-    }
-    pc = rcxlatef(fp, 0, base, &adr, &lim);
-    size = lim - adr;
-    if (g_cwmars.memmap) {
-        csize = CW_CORE_SIZE;
-        if (csize & (CHAR_BIT - 1)) {
-            csize /= CHAR_BIT;
-            csize++;
-        } else {
-            csize >>= 3;
-        }
-        g_cwmars.memmap = calloc(csize, sizeof(char));
-        if (!g_cwmars.memmap) {
-            fprintf(stderr, "failed to allocate memory bitmap\n");
-
-            exit(1);
-        }
-        while (adr < lim) {
-            setbit(&g_cwmars.memmap, adr);
-            adr++;
-        }
-    } else {
-        while (adr < lim) {
-            if (bitset(&g_cwmars.memmap, adr)) {
-                fprintf(stderr, "programs overlap at address %ld\n",
-                        adr);
-
-                exit(1);
-            }
-            adr++;
-        }
-        free(g_cwmars.memmap);
-        g_cwmars.memmap = NULL;
-    }
-    if (sizeret) {
-        *sizeret = size;
-    }
-    fclose(fp);
-
-    return pc;
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -836,15 +744,15 @@ main(int argc, char *argv[])
     }
     cwinit();
     base = randmt32();
-    base = cwwrapval(base);
-    pc1 = cwloadfile(argv[1], base, &size);
+    base = cwwrapadr(base);
+    pc1 = rcloadfile(argv[1], base, &size);
     g_cwmars.progsz[0] = size;
     do {
         base = randmt32();
-        base = cwwrapval(base);
+        base = cwwrapadr(base);
         lim = base + size;
     } while (base >= pc1 && base < lim);
-    pc2 = cwloadfile(argv[2], base, &size);
+    pc2 = rcloadfile(argv[2], base, &size);
     g_cwmars.progsz[1] = size;
     cwinitmars(&g_cwmars, pc1, pc2, CW_TURNS);
     g_cwmars.progpaths[0] = argv[1];
