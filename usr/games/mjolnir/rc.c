@@ -104,6 +104,10 @@ rcfindop(char *str, long *lenret)
             cp++;
             /* 2nd level table */
             tab = ((void **)ptr)[ch];
+            if (!tab) {
+
+                return -1;
+            }
             ch = *cp;
             if (isalpha(ch)) {
                 if (tab) {
@@ -113,6 +117,9 @@ rcfindop(char *str, long *lenret)
                     ptr = ((void **)tab)[ch];
                     if (ptr) {
                         op = ((long *)ptr)[ch];
+                    } else {
+
+                        return -1;
                     }
                 }
             } else {
