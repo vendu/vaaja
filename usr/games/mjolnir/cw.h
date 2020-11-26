@@ -17,13 +17,7 @@
 #include <mjolnir/sdl.h>
 #endif
 
-#if 0
-#define cwwrapval(x)        (((x) <= -CW_CORE_SIZE)                     \
-                             ? ((x) + CW_CORE_SIZE)                     \
-                             : ((x) % CW_CORE_SIZE))
-#endif
-#define cwwrapval(x)        ((x) % CW_CORE_SIZE)
-#define cwwrapadr(x)        (((x) < 0)                                  \
+#define cwwrapval(x)        (((x) < 0)                                  \
                              ? (CW_CORE_SIZE + (x))                     \
                              : ((x) % CW_CORE_SIZE))
 

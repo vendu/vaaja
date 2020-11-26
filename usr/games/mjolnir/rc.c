@@ -461,7 +461,7 @@ rcxlatef(FILE *fp, long pid, long base, long *limret)
                         setbit(g_cwmars.pidmap, adr);
                     }
                     adr++;
-                    adr = cwwrapadr(adr);
+                    adr = cwwrapval(adr);
                 } else {
                     fprintf(stderr, "invalid instruction: %s\n", linebuf);
 
