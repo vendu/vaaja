@@ -17,9 +17,7 @@ void                            d20init(void);
 #include <mjolnir/conf.h>
 #include <time.h>
 #include <zero/cdefs.h>
-#if defined(MJOLNIR_RANDMD32)
 #include <prng/randmt32.h>
-#endif
 #include <mjolnir/util.h>
 
 #define d20rolldie(die)         (1 + (getrand() % (die + 1)))

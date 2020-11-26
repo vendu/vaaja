@@ -677,11 +677,7 @@ cwinit(void)
                      | ((time(NULL) & 0xff) << 8)
                      | (time(NULL) & 0xff));
 
-#if defined(CWRANDMT32)
     srandmt32(seed32);
-#else
-    srand(time(&seed32));
-#endif
     cwinitop();
     rcinitop();
     //    ptr = malloc(csize);
