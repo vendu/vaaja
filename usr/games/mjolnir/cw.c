@@ -577,6 +577,7 @@ cwexec(long pid)
 #endif
     cur = g_cwmars.curproc[pid];
     pc = g_cwmars.runqueue[pid][cur];
+    pc = cwwrapval(pc);
     op = g_cwmars.core[pc];
     if (cwisdat(op)) {
 #if defined(ZEUS) && defined(ZEUSSDL)
@@ -597,7 +598,9 @@ cwexec(long pid)
     }
     func = g_cwmars.functab[op.op];
     pc = func(pid, pc);
+    pc++;
     cnt = g_cwmars.proccnt[pid];
+    pc = cwwrapval(pc);
     if (op.op == CW_OP_DAT) {
         if (cnt > 1) {
             runq = &g_cwmars.runqueue[pid][0];
@@ -627,10 +630,14 @@ cwexec(long pid)
 
             exit(0);
         }
-    } else if (op.op != CW_OP_SPL) {
+    } else if (op.op == CW_OP_SPL) {
         cnt = g_cwmars.proccnt[pid];
         g_cwmars.runqueue[pid][cnt - 1] = pc;
         cur++;
+    } else {
+        g_cwmars.runqueue[pid][cur] = pc;
+        cur++;
+        cur %= CW_MAX_PROCS;
     }
     g_cwmars.curproc[pid] = cur;
 #if defined(ZEUS) && defined(ZEUSSDL)

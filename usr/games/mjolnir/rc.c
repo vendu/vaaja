@@ -6,6 +6,9 @@
 #include <zero/trix.h>
 #include <mjolnir/cw.h>
 
+#define cwset1field(id) (g_cw1fieldmap |= (1 << (id)))
+#define cwis1field(id)  (g_cw1fieldmap & (1 << (id)))
+
 static long             rcxlatef(FILE *fp,
                                  long pid,
                                  long base,
@@ -14,6 +17,8 @@ static long             rcxlatef(FILE *fp,
 extern struct cwmars    g_cwmars;
 
 static void            *g_rcparsetab[128];
+
+static uint32_t         g_cw1fieldmap;
 
 /* register supported operation */
 void
@@ -104,10 +109,6 @@ rcfindop(char *str, long *lenret)
             cp++;
             /* 2nd level table */
             tab = ((void **)ptr)[ch];
-            if (!tab) {
-
-                return -1;
-            }
             ch = *cp;
             if (isalpha(ch)) {
                 if (tab) {
@@ -117,9 +118,6 @@ rcfindop(char *str, long *lenret)
                     ptr = ((void **)tab)[ch];
                     if (ptr) {
                         op = ((long *)ptr)[ch];
-                    } else {
-
-                        return -1;
                     }
                 }
             } else {
@@ -154,6 +152,8 @@ rcinitop(void)
     rcaddop("SLT", CW_OP_SLT);
     rcaddop("DJN", CW_OP_DJN);
     rcaddop("SPL", CW_OP_SPL);
+    cwset1field(CW_OP_JMP);
+    cwset1field(CW_OP_SPL);
 
     return;
 }
@@ -245,10 +245,17 @@ rcgetinstr(char *str)
                     ch = *cp++;
                 }
                 if (!ch || ch == '\n' || ch == ';') {
-                    instr.btype = atype;
-                    instr.b = a;
-                    instr.atype = 0;
-                    instr.a = 0;
+                    if (cwis1field(instr.op)) {
+                        instr.atype = atype;
+                        instr.a = a;
+                        instr.btype = 0;
+                        instr.b = 0;
+                    } else {
+                        instr.btype = atype;
+                        instr.b = a;
+                        instr.atype = 0;
+                        instr.a = 0;
+                    }
                 } else if (ch == ',') {
                     ch = *cp++;
                     while (isspace(ch) && ch != '\n') {
