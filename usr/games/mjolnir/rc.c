@@ -25,7 +25,7 @@ rcaddop(const char *str, long id)
 
     if (ch) {
         ch = *str;
-        if (ch) {
+        if (isalpha(ch)) {
             str++;
             ch = toupper(ch);
             /* 1st level table */
@@ -40,7 +40,7 @@ rcaddop(const char *str, long id)
                 g_rcparsetab[ch] = ptr1;
             }
             ch = *str;
-            if (ch) {
+            if (isalpha(ch)) {
                 str++;
                 ch = toupper(ch);
                 /* 2nd level table */
@@ -56,7 +56,7 @@ rcaddop(const char *str, long id)
                     ((void **)ptr1)[ch] = ptr2;
                 }
                 ch = *str++;
-                if (ch) {
+                if (isalpha(ch)) {
                     ch = toupper(ch);
                     ptr1 = ((void **)ptr2)[ch];
                     if (!ptr1) {
@@ -95,6 +95,7 @@ rcfindop(char *str, long *lenret)
         /* 1st level table */
         ptr = g_rcparsetab[ch];
         if (!ptr) {
+
             return -1;
         }
         ch = *cp;
@@ -104,17 +105,25 @@ rcfindop(char *str, long *lenret)
             /* 2nd level table */
             tab = ((void **)ptr)[ch];
             ch = *cp;
-            if (tab) {
-                ch = toupper(ch);
-                cp++;
-                /* 3rd level table */
-                ptr = ((void **)tab)[ch];
-                if (ptr) {
-                    op = ((long *)ptr)[ch];
+            if (isalpha(ch)) {
+                if (tab) {
+                    ch = toupper(ch);
+                    cp++;
+                    /* 3rd level table */
+                    ptr = ((void **)tab)[ch];
+                    if (ptr) {
+                        op = ((long *)ptr)[ch];
+                    }
                 }
+            } else {
+
+                return -1;
             }
+            len = cp - str;
+        } else {
+
+            return -1;
         }
-        len = cp - str;
     }
     if (lenret) {
         *lenret = len;
@@ -149,6 +158,8 @@ rcgetinstr(char *str)
     char               *cp = str;
     long                op = CW_NO_OP;
     struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
+    long                atype;
+    long                a;
     long                sign;
     long                val = 0;
     long                ch;
@@ -170,9 +181,9 @@ rcgetinstr(char *str)
 
             exit(1);
         }
-        instr.aflg = 0;
-        instr.bflg = 0;
-        instr.a = 0;
+        atype = 0;
+        a = 0;
+        instr.btype = 0;
         instr.b = 0;
         ch = *cp++;
         if (ch) {
@@ -181,15 +192,15 @@ rcgetinstr(char *str)
             }
             if (ch) {
                 sign = 0;
-                instr.aflg = 0;
+                atype = 0;
                 if (ch == '#') {
-                    instr.aflg |= CW_ARG_IMM;
+                    atype = CW_ARG_IMM;
                     ch = *cp++;
                 } else if (ch == '@') {
-                    instr.aflg |= CW_ARG_INDIR;
+                    atype = CW_ARG_INDIR;
                     ch = *cp++;
                 } else if (ch == '<') {
-                    instr.aflg |= CW_ARG_PREDEC;
+                    atype = CW_ARG_PREDEC;
                     ch = *cp++;
                 } else if (ch == '$') {
                     ch = *cp++;
@@ -216,28 +227,20 @@ rcgetinstr(char *str)
                         val = -val;
                     }
                     val = cwwrapval(val);
-                    instr.a = val;
+                    a = val;
                 } else {
                     fprintf(stderr, "missing A-field: %s (%ld)\n",
                             str, val);
 
                     exit(1);
                 }
-#if 0
-                if (!ch) {
-                    instr.bflg = instr.aflg;
-                    instr.b = instr.a;
-                    instr.aflg = 0;
-                    instr.a = 0;
-                }
-#endif
                 while (isspace(ch) && ch != '\n') {
                     ch = *cp++;
                 }
                 if (!ch || ch == '\n' || ch == ';') {
-                    instr.bflg = instr.aflg;
-                    instr.b = instr.a;
-                    instr.aflg = 0;
+                    instr.btype = atype;
+                    instr.b = a;
+                    instr.atype = 0;
                     instr.a = 0;
                 } else if (ch == ',') {
                     ch = *cp++;
@@ -251,15 +254,15 @@ rcgetinstr(char *str)
                         exit(1);
                     }
                     sign = 0;
-                    instr.bflg = 0;
+                    instr.btype = 0;
                     if (ch == '#') {
-                        instr.bflg |= CW_ARG_IMM;
+                        instr.btype = CW_ARG_IMM;
                         ch = *cp++;
                     } else if (ch == '@') {
-                        instr.bflg |= CW_ARG_INDIR;
+                        instr.btype = CW_ARG_INDIR;
                         ch = *cp++;
                     } else if (ch == '<') {
-                        instr.bflg |= CW_ARG_PREDEC;
+                        instr.btype = CW_ARG_PREDEC;
                         ch = *cp++;
                     } else if (ch == '$') {
                         ch = *cp++;
@@ -368,10 +371,8 @@ rcloadfile(const char *name, long base, long *sizeret)
 {
     FILE               *fp;
     long                pc;
-    long                adr;
     long                lim;
     long                size;
-    long                csize;
 
     fp = fopen(name, "r");
     if (!fp) {
@@ -381,38 +382,6 @@ rcloadfile(const char *name, long base, long *sizeret)
     }
     pc = rcxlatef(fp, 0, base, &lim);
     size = lim - base;
-    adr = base;
-    if (g_cwmars.memmap) {
-        csize = CW_CORE_SIZE;
-        if (csize & (CHAR_BIT - 1)) {
-            csize /= CHAR_BIT;
-            csize++;
-        } else {
-            csize >>= 3;
-        }
-        g_cwmars.memmap = calloc(csize, sizeof(char));
-        if (!g_cwmars.memmap) {
-            fprintf(stderr, "failed to allocate memory bitmap\n");
-
-            exit(1);
-        }
-        while (adr < lim) {
-            setbit(&g_cwmars.memmap, adr);
-            adr++;
-        }
-    } else {
-        while (adr < lim) {
-            if (bitset(&g_cwmars.memmap, adr)) {
-                fprintf(stderr, "programs overlap at address %ld\n",
-                        adr);
-
-                exit(1);
-            }
-            adr++;
-        }
-        free(g_cwmars.memmap);
-        g_cwmars.memmap = NULL;
-    }
     if (sizeret) {
         *sizeret = size;
     }
@@ -444,6 +413,7 @@ rcxlatef(FILE *fp, long pid, long base, long *limret)
                 cp++;
             }
             if (*cp == ';') {
+                /* TODO: add "; assert" and such functionality here */
                 free(linebuf);
                 linebuf = NULL;
 
@@ -456,10 +426,9 @@ rcxlatef(FILE *fp, long pid, long base, long *limret)
                         pc = adr;
                         entry = 1;
                     }
+                    op.red = 1;
+                    op.pid = pid;
                     g_cwmars.core[adr] = op;
-                    if (pid) {
-                        setbit(g_cwmars.pidmap, adr);
-                    }
                     adr++;
                     adr = cwwrapval(adr);
                 } else {

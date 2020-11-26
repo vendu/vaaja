@@ -21,8 +21,10 @@
                              ? (CW_CORE_SIZE + (x))                     \
                              : ((x) % CW_CORE_SIZE))
 
-#define CW_TURNS            80000
-#define CW_PROCS            8000
+#define CW_MAX_TURNS        80000
+#define CW_MAX_PROCS        8000
+#define CW_MAX_SIZE         100
+#define CW_MIN_DIST         100
 #define CW_NO_OP            0x3f
 #define CW_INVAL            ((struct cwinstr){ 0 })
 
@@ -42,27 +44,25 @@
 
 /* flags */
 /* addressing modes, default is direct (relative) */
-#define CW_ARG_IMM          (1 << 0)        // immediate
-#define CW_ARG_INDIR        (1 << 1)        // indirect
-#define CW_ARG_PREDEC       (1 << 2)        // predecrement
+#define CW_ARG_REL          0           // direct (default)
+#define CW_ARG_IMM          1           // immediate
+#define CW_ARG_INDIR        2           // indirect
+#define CW_ARG_PREDEC       3           // predecrement
 
 #define cwisdat(ins)        ((ins).op == CW_OP_DAT)
 
 #if defined (CW_BIG_CORE)
 
-typedef int8_t              cwintop_t;
-
-#define CW_OPERAND_BITS     20
+#define CW_OPERAND_BITS     24
 
 struct cwinstr {
     unsigned                op      : 6;
-    //    unsigned                arg2    : 1;
-    unsigned                brk     : 1;
-    unsigned                _pad    : 1;
-    uint8_t                 aflg;
-    uint8_t                 bflg;
-    unsigned                a       : 20;
-    unsigned                b       : 20;
+    unsigned                red     : 1;
+    unsigned                pid     : 1;
+    unsigned                atype   : 4;
+    unsigned                btype   : 4;
+    unsigned                a       : 24;
+    unsigned                b       : 24;
 };
 
 #elif defined(CW_32BIT_INSTRUCTIONS)
@@ -74,8 +74,8 @@ typedef int32_t             cwintop_t;
 
 struct cwinstr {
     unsigned                op      : 4;    // maximum # of instructions is 16
-    unsigned                aflg    : 3;    // operand a flags
-    unsigned                bflg    : 3;    // operand b flags
+    unsigned                atype   : 3;    // operand a flags
+    unsigned                btype   : 3;    // operand b flags
     signed                  a       : 11;   // operand a; max 0x3ff (1023)
     signed                  b       : 11;   // operand b; max 0x3ff (1023)
 };
@@ -103,19 +103,19 @@ typedef long            cwinstrfunc(long, long);
 
 /* virtual machine structure */
 struct cwmars {
-    cwinstrfunc       **functab;                // instruction handler table
-    long                runqueue[2][CW_PROCS];  // process run queues
-    long                proccnt[2];             // numbers of processes
-    long                progsz[2];              // process sizes in instructions
-    long                curproc[2];             // current running process IDs
-    long                nturn[2];               // number of turns available
-    long                running;                // flag to indicate if running
-    long                curpid;                 // current program ID
-    char               *progpaths[2];           // paths to warrior files
-    char               *pidmap;                 // core owner bitmap
-    char               *memmap;                 // allocation bitmap
-    struct cwinstr     *core;                   // operation memory
-    const char        **opnames;                // operation mnemonic table
+    cwinstrfunc       **functab;                    // instruction handler table
+    long                runqueue[2][CW_MAX_PROCS];  // process run queues
+    long                proccnt[2];                 // numbers of processes
+    long                progsz[2];                  // process sizes
+    long                curproc[2];                 // running process IDs
+    long                nturn[2];                   // number of turns left
+    long                running;                    // running-state flag
+    long                curpid;                     // current program ID
+    char               *progpaths[2];               // paths to warrior files
+    char               *pidmap;                     // core owner bitmap
+    char               *memmap;                     // allocation bitmap
+    struct cwinstr     *core;                       // operation memory
+    const char        **opnames;                    // operation mnemonic table
 #if defined(ZEUS) && defined(ZEUSSDL)
     struct zeussdl      zeussdl;
 #endif

@@ -410,16 +410,12 @@ zeusdrawsimop(struct zeussdl *sdl, long pc, long sync)
 
     rect = &zeussdlrects[CW_SDL_HORIZ_RECTS * y + x];
     op = &g_cwmars.core[pc];
-    if (bitset(g_cwmars.pidmap, pc)) {
-        pid = 1;
-    } else {
-        pid = 0;
-    }
+    pid = op->pid;
     if ((g_zeussel.bmap) && bitset(g_zeussel.bmap, pc)) {
         SDL_FillRect(zeussdl.surface, rect,
                      SDL_MapRGB(zeussdl.surface->format, 255, 255, 255));
     } else if (op->op == CW_OP_DAT) {
-        if (!*((cwintop_t *)op)) {
+        if (!op->red) {
             SDL_FillRect(zeussdl.surface, rect,
                          SDL_MapRGB(zeussdl.surface->format, 255, 0, 255));
         } else if (pid) {
