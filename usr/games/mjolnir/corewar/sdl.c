@@ -1,4 +1,4 @@
-#include <mjolnir/conf.h>
+#include <corewar/conf.h>
 
 #if defined(ZEUS) && defined(ZEUSSDL)
 
@@ -8,8 +8,8 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_image.h>
 #include <zero/trix.h>
-#include <mjolnir/rc.h>
-#include <mjolnir/cw.h>
+#include <corewar/rc.h>
+#include <corewar/cw.h>
 
 void    zeusrun(C_UNUSED struct zeussdl *sdl, C_UNUSED SDL_Event *event);
 void    zeusstop(C_UNUSED struct zeussdl *sdl, C_UNUSED SDL_Event *event);

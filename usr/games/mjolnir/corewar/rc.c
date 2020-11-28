@@ -1,10 +1,10 @@
-//#include <mjolnir/conf.h>
+//#include <corewar/conf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <zero/trix.h>
-#include <mjolnir/cw.h>
+#include <corewar/cw.h>
 
 #define cwset1field(id) (g_cw1fieldmap |= (1 << (id)))
 #define cwis1field(id)  (g_cw1fieldmap & (1 << (id)))

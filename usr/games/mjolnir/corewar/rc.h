@@ -2,7 +2,7 @@
 #define __MJOLNIR_RC_H__
 
 #include <stdio.h>
-#include <mjolnir/cw.h>
+#include <corewar/cw.h>
 
 struct rcprog {
     FILE               *fp;

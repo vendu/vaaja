@@ -8,13 +8,15 @@
 #endif
 #define CW_CORE_ADR_BITS
 
-#include <mjolnir/conf.h>
+#include <corewar/conf.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <zero/cdefs.h>
 #include <mach/param.h>
 #if defined(ZEUS) && defined(ZEUSSDL)
-#include <mjolnir/sdl.h>
+#include <corewar/sdl.h>
+#elif defined(ZEUS) && defined(ZEUSX11)
+#include <corewar/x11.h>
 #endif
 
 #define cwwrapval(x)        (((x) < 0)                                  \
@@ -118,15 +120,10 @@ struct cwmars {
     const char        **opnames;                    // operation mnemonic table
 #if defined(ZEUS) && defined(ZEUSSDL)
     struct zeussdl      zeussdl;
+#elif defined(ZEUS) && defined(ZEUSX11)
+    struct zeusx11      zeusx11;
 #endif
 };
-
-#if defined(ZEUS)
-struct zeussel {
-    long                last;
-    uint8_t            *bmap[CW_CORE_SIZE >> 3];
-};
-#endif
 
 void                        cwinit(void);
 void                        cwexec(long pid);

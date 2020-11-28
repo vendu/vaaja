@@ -1,7 +1,7 @@
 /* REFERENCE:  http://corewar.co.uk/cwg.txt */
 /* REFERENCE: http://seblog.cs.uni-kassel.de/fileadmin/se/courses/SE1/WS0708/redcode-icws-88-2.pdf */
 
-#include <mjolnir/conf.h>
+#include <corewar/conf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,8 +13,8 @@
 #include <mach/param.h>
 #include <zero/trix.h>
 #include <prng/randmt32.h>
-#include <mjolnir/cw.h>
-#include <mjolnir/rc.h>
+#include <corewar/cw.h>
+#include <corewar/rc.h>
 #if defined(ZEUS)
 #include <unistd.h>
 #endif
@@ -570,9 +570,9 @@ cwexec(long pid)
     static long     ref = 0;
 #endif
 
-#if defined(ZEUS) && defined(ZEUSSDL) && 0
+#if defined(ZEUS) && defined(ZEUSX11)
     while (XPending(g_cwmars.zeusx11.disp)) {
-        zeusprocev(&g_cwmars.zeusx11.disp);
+        zeusprocev(&g_cwmars.zeusx11);
     }
 #endif
     cur = g_cwmars.curproc[pid];
@@ -741,12 +741,8 @@ main(int argc, char *argv[])
     long                pc1;
     long                pc2;
 
-#if defined(ZEUS)
-#if defined(ZEUSSDL)
+#if defined(ZEUS) && defined(ZEUSX11)
     zeusinitx11(&g_cwmars.zeusx11);
-#elif defined(ZEUSWINEFL)
-    zeusinitefl(&g_cwmars.zeusefl);
-#endif
 #endif
     if (argc != 3) {
         fprintf(stderr, "usage: %s prog1.red prog2.red\n", argv[0]);
@@ -784,10 +780,10 @@ main(int argc, char *argv[])
     cwinitmars(&g_cwmars, pc1, pc2, CW_MAX_TURNS);
     g_cwmars.progpaths[0] = argv[1];
     g_cwmars.progpaths[1] = argv[2];
-#if defined(ZEUS) && defined(ZEUSSDL)
+#if defined(ZEUS) && defined(ZEUSX11)
     while (1) {
-        zeusdrawsim(&g_cwmars.zeussdl);
-        zeusprocev(&g_cwmars.zeussdl);
+        zeusdrawsim(&g_cwmars.zeusx11);
+        zeusprocev(&g_cwmars.zeusx11);
     }
 #else
     cwrun(CW_MAX_TURNS);
