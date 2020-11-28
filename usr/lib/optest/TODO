@@ -1,0 +1,16 @@
+- add goptest for graphics operations:
+	- draw
+		- line
+		- rect
+		- tri
+		- poly
+	- fill
+	- map
+	- blend
+		- alpha
+		- add
+	- dither
+		- 555
+		- 565
+		- 888
+
