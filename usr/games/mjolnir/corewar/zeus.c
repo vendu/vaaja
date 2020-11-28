@@ -146,7 +146,6 @@ zeusdisasm(long pc, int *lenret)
     return ptr;
 }
 
-#if 0
 void
 zeusshowmem(void)
 {
@@ -170,7 +169,6 @@ zeusshowmem(void)
         }
     }
 }
-#endif /* 0 */
 
 #endif /* defined(ZEUS) */
 

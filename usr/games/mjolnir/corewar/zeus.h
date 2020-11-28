@@ -3,7 +3,9 @@
 
 #include <corewar/conf.h>
 
-#if defined(ZEUS) && defined(ZEUSX11)
+#if defined(ZEUS)
+
+void                        zeusshowmem(void);
 
 #define ZEUSBUTTONTEXTCOLOR "orange"
 //#define ZEUSDATCOLOR        "magenta"

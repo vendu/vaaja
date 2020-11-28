@@ -132,6 +132,7 @@ zeusaddsel(struct zeusx11 *x11, XEvent *event)
         }
         while (pc < lim) {
             setbit(g_zeussel.bmap, pc);
+            zeusdrawsimop(x11, pc);
             zeusdrawsim(x11);
             pc++;
         }
@@ -149,7 +150,7 @@ zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
         memset(g_zeussel.bmap, 0, CW_CORE_SIZE >> 3);
     }
     g_zeussel.last = -1;
-    //    zeusdrawsim(x11);
+    zeusdrawsim(x11);
     XSync(x11->disp, False);
 }
 
@@ -721,7 +722,7 @@ zeusloadx11buttonimgs(C_UNUSED struct zeusx11 *x11)
 /* TODO: event selection */
 void
 zeusaddx11button(struct zeusx11 *x11, int id, const char *str,
-                 zeusx11buttonfunc *func)
+                zeusx11buttonfunc *func)
 {
     Window               parent = x11->buttonwin;
     Window               win;
@@ -774,81 +775,91 @@ zeusaddx11button(struct zeusx11 *x11, int id, const char *str,
 void
 zeusinitx11buttons(struct zeusx11 *x11)
 {
+    int id;
+
     zeusloadx11buttonimgs(x11);
-}
+#if 0
+    for (id = 0 ; id < ZEUSNBUTTON ; id++) {
+        zeusaddx11button(x11, id, "---");
+    }
 #endif
 
-void
-zeusinitx11buf(struct zeusx11 *x11)
-{
-    Pixmap pmap = XCreatePixmap(x11->disp,
-                                x11->mainwin,
-                                x11->w,
-                                x11->h,
-                                x11->depth);
+     return;
+ }
+ #endif
 
-    if (!pmap) {
-        fprintf(stderr, "failed to create buffer pixmap\n");
+ void
+ zeusinitx11buf(struct zeusx11 *x11)
+ {
+     Pixmap pmap = XCreatePixmap(x11->disp,
+                                 x11->mainwin,
+                                 x11->w,
+                                 x11->h,
+                                 x11->depth);
 
-        exit(1);
-    }
-    XFillRectangle(x11->disp, pmap,
-                   x11->bggc,
-                   0, 0,
-                   x11->w, x11->h);
-    x11->pixbuf = pmap;
+     if (!pmap) {
+         fprintf(stderr, "failed to create buffer pixmap\n");
 
-    return;
-}
+         exit(1);
+     }
+     XFillRectangle(x11->disp, pmap,
+                    x11->bggc,
+                    0, 0,
+                    x11->w, x11->h);
+     x11->pixbuf = pmap;
 
-void
-zeusinitx11(struct zeusx11 *info)
-{
-    Display *disp;
+     return;
+ }
 
-    XInitThreads();
-    disp = XOpenDisplay(NULL);
-    if (!disp) {
-        fprintf(stderr, "failed to open display\n");
+ void
+ zeusinitx11(struct zeusx11 *info)
+ {
+     Display *disp;
 
-        exit(1);
-    }
-    info->disp = disp;
-    info->screen = DefaultScreen(disp);
-    info->colormap = DefaultColormap(disp, info->screen);
-    info->depth = DefaultDepth(disp, info->screen);
-    info->visual = DefaultVisual(disp, info->screen);
-    zeusinitx11font(info);
-    zeusinitx11win(info);
-    zeusinitx11title(info);
-    zeusinitx11gc(info);
-#if defined(ZEUSIMLIB2)
-    zeusinitimlib2(info);
-    zeusinitx11buttons(info);
-    XMapRaised(disp, info->mainwin);
-    XMapRaised(disp, info->buttonwin);
-    zeusinitx11buf(info);
-    XSelectInput(disp, info->simwin,
-                 KeyPressMask
-                 | ButtonPressMask
-                 | EnterWindowMask
-                 | LeaveWindowMask
-#if defined(ZEUSHOVERTOOLTIP)
-                 | PointerMotionMask
-#endif
-                 | ExposureMask);
-//        XMapRaised(disp, info->tipwin);
-    XMapRaised(disp, info->simwin);
-    XMapRaised(disp, info->db1win);
-    XMapRaised(disp, info->db2win);
-    zeusaddx11button(info, ZEUSRUNBUTTON, "run", zeusrun);
-    zeusaddx11button(info, ZEUSBRKBUTTON, "brk", zeusrun);
-    zeusaddx11button(info, ZEUSSTOPBUTTON, "stop", zeusstop);
-    zeusaddx11button(info, ZEUSSTEPBUTTON, "step", zeusstep);
+     XInitThreads();
+     disp = XOpenDisplay(NULL);
+     if (!disp) {
+         fprintf(stderr, "failed to open display\n");
+
+         exit(1);
+     }
+     info->disp = disp;
+     info->screen = DefaultScreen(disp);
+     info->colormap = DefaultColormap(disp, info->screen);
+     info->depth = DefaultDepth(disp, info->screen);
+     info->visual = DefaultVisual(disp, info->screen);
+     zeusinitx11font(info);
+     zeusinitx11win(info);
+     zeusinitx11title(info);
+     zeusinitx11gc(info);
+ #if defined(ZEUSIMLIB2)
+     zeusinitimlib2(info);
+     zeusinitx11buttons(info);
+     XMapRaised(disp, info->mainwin);
+     XMapRaised(disp, info->buttonwin);
+     zeusinitx11buf(info);
+     XSelectInput(disp, info->simwin,
+                  KeyPressMask
+                  | ButtonPressMask
+                  | EnterWindowMask
+                  | LeaveWindowMask
+ #if defined(ZEUSHOVERTOOLTIP)
+                  | PointerMotionMask
+ #endif
+                  | ExposureMask);
+ //        XMapRaised(disp, info->tipwin);
+     XMapRaised(disp, info->simwin);
+     XMapRaised(disp, info->db1win);
+     XMapRaised(disp, info->db2win);
+     zeusaddx11button(info, ZEUSRUNBUTTON, "run", zeusrun);
+     zeusaddx11button(info, ZEUSBRKBUTTON, "brk", zeusrun);
+     zeusaddx11button(info, ZEUSSTOPBUTTON, "stop", zeusstop);
+     zeusaddx11button(info, ZEUSSTEPBUTTON, "step", zeusstep);
+     XMapRaised(info->disp, info->buttonwin);
     //    zeusaddx11button(info, ZEUSSTEPIBUTTON, "stepi", zeusstep);
-    zeusaddx11button(info, ZEUSLOADBUTTON, "load", zeusstep);
-    zeusaddx11button(info, ZEUSEDITBUTTON, "edit", zeusstep);
-    zeusaddx11button(info, ZEUSSAVEBUTTON, "save", zeusstep);
+    //    zeusaddx11button(info, ZEUSLOADBUTTON, "load", zeusstep);
+    //    zeusaddx11button(info, ZEUSEDITBUTTON, "edit", zeusstep);
+    //    zeusaddx11button(info, ZEUSSAVEBUTTON, "save", zeusstep);
     g_zeussel.last = -1;
 #endif
     while (XPending(info->disp)) {
@@ -1145,7 +1156,7 @@ zeusdrawsimop(struct zeusx11 *x11, long pc)
               x, y,
               4, 4,
               x, y);
-    XSync(x11->disp, False);
+    //    XSync(x11->disp, False);
 
     return;
 }

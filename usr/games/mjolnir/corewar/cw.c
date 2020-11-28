@@ -566,7 +566,7 @@ cwexec(long pid)
     long            cnt;
     long            pc;
     long            ndx;
-#if defined(ZEUS) && 0
+#if defined(ZEUS)
     static long     ref = 0;
 #endif
 
@@ -580,7 +580,7 @@ cwexec(long pid)
     pc = cwwrapval(pc);
     op = g_cwmars.core[pc];
     if (cwisdat(op)) {
-#if defined(ZEUS) && defined(ZEUSSDL)
+#if defined(ZEUS) && defined(ZEUSX11)
         zeusdrawsim(&g_cwmars.zeusx11);
 #endif
         if (!pid) {
@@ -619,12 +619,12 @@ cwexec(long pid)
             }
             cnt--;
         } else {
-#if defined(ZEUS) && defined(ZEUSSDL)
+#if defined(ZEUS) && defined(ZEUSX11)
             zeusdrawsim(&g_cwmars.zeusx11);
 #endif
             fprintf(stderr, "program #%ld (%s) won (%ld)\n",
                     pid, g_cwmars.progpaths[pid], pc);
-#if defined(ZEUS) && defined(ZEUSSDL)
+#if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
             sleep(5);
 #endif
 
@@ -640,12 +640,15 @@ cwexec(long pid)
         cur %= CW_MAX_PROCS;
     }
     g_cwmars.curproc[pid] = cur;
-#if defined(ZEUS) && defined(ZEUSSDL)
-    //    ref++;
-    //    if (!g_cwmars.running || ref == 32) {
-    zeusdrawsim(&g_cwmars.zeusx11);
-    //        ref = 0;
-    //    }
+#if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
+    ref++;
+    if (!g_cwmars.running || ref == 32) {
+        zeusdrawsim(&g_cwmars.zeusx11);
+        ref = 0;
+    }
+#if defined(ZEUSX11)
+    XSync(g_cwmars.zeusx11.disp, False);
+#endif
 #endif
 
     return;

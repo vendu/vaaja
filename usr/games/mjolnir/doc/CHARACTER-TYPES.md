@@ -1,8 +1,9 @@
-# Mjolnir Character Classes
+# Mjolnir Character Types
 
 ## Programmer
 
-- highly skilled in defense against ice
+- highly skilled in defense against ice (high ICE-powers)
+- quick to learn improving existing ICE-software
 
 ## Cracker
 

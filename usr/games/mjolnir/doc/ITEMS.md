@@ -33,6 +33,15 @@ Stairs one level up.
 Vampires don't like daylight, so they sleep in closed coffins. These are located
 at graveyards, often inside tombs.
 
+## 0 - jack
+- an outlet used for connecting to the network; connection speed is dictated by
+  the deck's NET-module.
+
+## 1 - deck upgrades
+- network card
+- flash memory
+- processor module
+
 ### - - ATM-card
 
 ATM-cards may be used to withdraw money you have gotten or stolen from
@@ -168,6 +177,8 @@ return.
 |   >    | stairway down  | 1 per level         | stairs one level down
 |   <    | stairway up    | 1 per level         | stairs one level up
 |   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)
+|   0    | jack           | 1/64 in underworld  | connection with NET-module
+|   1    | deck upgrades  | NET, MEM, PROC      | upgrades for your deck
 |   -    | ATM-card       | 1/128               | bank account access; need PIN-code
 |   C    | ATM-machine    | 1/32                | cash withdrawals and deposits
 |   f    | food           | 1/16                | food ration
@@ -188,6 +199,7 @@ return.
 |   ]    | armor          | 1/32                | suit or armor
 |   [    | mirror         | 1/16                | mirror on a wall
 |   c    | chest          | 1/32                | chest; may find treasury in them
+|   D    | deck           |                     | punchcard and tape readers
 |   g    | sub-machine gun | 1/128              | close-range combat
 |   h    | hammer          | bee nests          |
 |   k    | knife          | 1/32                | knife, dagger, gurkha, ...
