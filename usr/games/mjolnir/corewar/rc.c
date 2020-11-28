@@ -88,8 +88,8 @@ rcfindop(char *str, long *lenret)
 {
     long                op = CW_NO_OP;
     char               *cp = str;
-    void               *ptr = NULL;
-    void               *tab = NULL;
+    void               *ptr1 = NULL;
+    void               *ptr2 = NULL;
     long                len = 0;
     long                ch;
 
@@ -98,8 +98,8 @@ rcfindop(char *str, long *lenret)
     if (isalpha(ch)) {
         cp++;
         /* 1st level table */
-        ptr = g_rcparsetab[ch];
-        if (!ptr) {
+        ptr1 = g_rcparsetab[ch];
+        if (!ptr1) {
 
             return -1;
         }
@@ -108,22 +108,18 @@ rcfindop(char *str, long *lenret)
             ch = toupper(ch);
             cp++;
             /* 2nd level table */
-            tab = ((void **)ptr)[ch];
-            ch = *cp;
-            if (isalpha(ch)) {
-                if (tab) {
-                    ch = toupper(ch);
-                    cp++;
-                    /* 3rd level table */
-                    ptr = ((void **)tab)[ch];
-                    if (ptr) {
-                        op = ((long *)ptr)[ch];
-                    }
-                }
-            } else {
+            ptr2 = ((void **)ptr1)[ch];
+        }
+        if (!ptr2) {
 
-                return -1;
-            }
+            return -1;
+        }
+        ch = *cp;
+        if (isalpha(ch)) {
+            ch = toupper(ch);
+            cp++;
+            /* 3rd level table */
+            op = ((long *)ptr2)[ch];
             len = cp - str;
         } else {
 
