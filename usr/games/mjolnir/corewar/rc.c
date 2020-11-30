@@ -119,7 +119,12 @@ rcfindop(char *str, long *lenret)
             ch = toupper(ch);
             cp++;
             /* 3rd level table */
-            op = ((long *)ptr2)[ch];
+            ptr1 = ((void **)ptr2)[ch];
+            if (!ptr1) {
+
+                return -1;
+            }
+            op = ((long *)ptr1)[ch];
             len = cp - str;
         } else {
 
@@ -160,7 +165,7 @@ rcgetinstr(char *str)
 {
     char               *cp = str;
     long                op = CW_NO_OP;
-    struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
+    struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0, 0 };
     long                atype;
     long                a;
     long                sign;

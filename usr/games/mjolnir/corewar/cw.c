@@ -121,7 +121,7 @@ cwprintinstr(struct cwinstr op, long pid, long pc)
 
     if (pc >= 0) {
         if (pid >= 0) {
-            fprintf(stderr, "%ld\%ld\t%s", pid, pc, name);
+            fprintf(stderr, "%ld\t%ld\t%s", pid, pc, name);
         } else {
             fprintf(stderr, "%ld\t%s", pc, name);
         }
@@ -238,7 +238,7 @@ cwgetargs(long pc, long *argp1, long *argp2)
 
 /* instruction handler for DAT */
 static long
-cwdatop(long pid, long pc)
+cwdatop(C_UNUSED long pid, long pc)
 {
     long                arg1;
     long                arg2;
@@ -247,19 +247,8 @@ cwdatop(long pid, long pc)
     zeusdrawsim(&g_cwmars.zeussdl);
 #endif
     cwgetargs(pc, &arg1, &arg2);
-    if (!pid) {
-        fprintf(stderr, "program #2 (%s) won (%ld)\n",
-                g_cwmars.progpaths[1], pc);
-    } else {
-        fprintf(stderr, "program #1 (%s) won (%ld)\n",
-                g_cwmars.progpaths[0], pc);
-    }
-#if defined(ZEUS)
-    sleep(5);
-#endif
 
-    /* NOTREACHED */
-    return pid;
+    return -1;
 }
 
 /* instruction handler for MOV */
@@ -313,7 +302,7 @@ cwaddop(C_UNUSED long pid, long pc)
         dest->a = arg1;
         val = dest->b;
         arg2 += val;
-        arg2 = cwwrapval(arg1);
+        arg2 = cwwrapval(arg2);
         dest->b = arg2;
     }
     pc = cwwrapval(pc);
@@ -347,7 +336,7 @@ cwsubop(C_UNUSED long pid, long pc)
         dest->a = arg1;
         val = dest->b;
         arg2 -= val;
-        arg2 = cwwrapval(arg1);
+        arg2 = cwwrapval(arg2);
         dest->b = arg2;
     }
     pc = cwwrapval(pc);
@@ -363,8 +352,7 @@ cwjmpop(C_UNUSED long pid, long pc)
     long            arg2;
 
     cwgetargs(pc, &arg1, &arg2);
-    pc = arg1;
-    pc = cwwrapval(pc);
+    pc = cwwrapval(arg1);
 
     return pc;
 }
@@ -385,8 +373,8 @@ cwjmzop(C_UNUSED long pid, long pc)
         pc = arg1;
     } else {
         pc++;
+        pc = cwwrapval(pc);
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -407,8 +395,8 @@ cwjmnop(C_UNUSED long pid, long pc)
         pc = arg1;
     } else {
         pc++;
+        pc = cwwrapval(pc);
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -429,6 +417,7 @@ cwcmpop(C_UNUSED long pid, long pc)
     dest = &g_cwmars.core[arg2];
     val1 = dest->a;
     val2 = dest->b;
+    pc++;
     if (atype == CW_ARG_IMM) {
         if (arg1 == val2) {
             pc++;
@@ -436,7 +425,6 @@ cwcmpop(C_UNUSED long pid, long pc)
     } else if (arg1 == val1 && arg2 == val2) {
         pc++;
     }
-    pc++;
     pc = cwwrapval(pc);
 
     return pc;
@@ -456,6 +444,7 @@ cwsltop(C_UNUSED long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     dest = &g_cwmars.core[arg2];
     val = dest->b;
+    pc++;
     if (atype == CW_ARG_IMM) {
         if (arg1 < val) {
             pc++;
@@ -463,7 +452,6 @@ cwsltop(C_UNUSED long pid, long pc)
     } else if (arg2 < val) {
         pc++;
     }
-    pc++;
     pc = cwwrapval(pc);
 
     return pc;
@@ -496,6 +484,9 @@ cwdjnop(C_UNUSED long pid, long pc)
     }
     if (!val) {
         pc = arg1;
+    } else {
+        pc++;
+        pc = cwwrapval(pc);
     }
 
     return pc;
@@ -513,14 +504,13 @@ cwsplop(long pid, long pc)
     cwgetargs(pc, &arg1, &arg2);
     cnt = g_cwmars.proccnt[pid];
     pc++;
-    pc = cwwrapval(pc);
     if (cnt < CW_MAX_PROCS) {
-        runq[cnt - 1] = pc;
         arg1 = cwwrapval(arg1);
+        runq[cnt] = arg1;
         cnt++;
-        pc = arg1;
         g_cwmars.proccnt[pid] = cnt;
     }
+    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -542,17 +532,8 @@ cwinitop(void)
     g_cwmars.functab[CW_OP_SLT] = cwsltop;
     g_cwmars.functab[CW_OP_DJN] = cwdjnop;
     g_cwmars.functab[CW_OP_SPL] = cwsplop;
-    rcaddop("DAT", CW_OP_DAT);
-    rcaddop("MOV", CW_OP_MOV);
-    rcaddop("ADD", CW_OP_ADD);
-    rcaddop("SUB", CW_OP_SUB);
-    rcaddop("JMP", CW_OP_JMP);
-    rcaddop("JMZ", CW_OP_JMZ);
-    rcaddop("JMN", CW_OP_JMN);
-    rcaddop("CMP", CW_OP_CMP);
-    rcaddop("SLT", CW_OP_SLT);
-    rcaddop("DJN", CW_OP_DJN);
-    rcaddop("SPL", CW_OP_SPL);
+
+    return;
 }
 
 /* execute program pid for one instruction */
@@ -579,45 +560,20 @@ cwexec(long pid)
     pc = g_cwmars.runqueue[pid][cur];
     pc = cwwrapval(pc);
     op = g_cwmars.core[pc];
-    if (cwisdat(op)) {
-#if defined(ZEUS) && defined(ZEUSX11)
-        zeusdrawsim(&g_cwmars.zeusx11);
-#endif
-        if (!pid) {
-            fprintf(stderr, "program #2 (%s) won (%ld)\n",
-                    g_cwmars.progpaths[1], pc);
-        } else {
-            fprintf(stderr, "program #1 (%s) won (%ld)\n",
-                    g_cwmars.progpaths[0], pc);
-        }
-#if defined(ZEUS)
-        sleep(5);
-#endif
-
-        exit(0);
-    }
     func = g_cwmars.functab[op.op];
+    cwprintmars(&g_cwmars, pid, pc);
     pc = func(pid, pc);
-    pc++;
+    fprintf(stderr, "PC = %ld\n", pc);
     cnt = g_cwmars.proccnt[pid];
-    pc = cwwrapval(pc);
-    if (op.op == CW_OP_DAT) {
+    if (pc < 0) {
         if (cnt > 1) {
             runq = &g_cwmars.runqueue[pid][0];
-            if (cur == cnt - 1) {
-                runq[cur] = 0;
-                cur = 0;
-            } else {
-                for (ndx = cur ; ndx < cnt - 1 ; ndx++) {
-                    runq[ndx] = runq[ndx + 1];
-                }
-                runq[ndx] = 0;
-                cur++;
-                if (cur == cnt) {
-                    cur = 0;
-                }
+            for (ndx = cur ; ndx < cnt - 2 ; ndx++) {
+                runq[ndx] = runq[ndx + 1];
             }
+            runq[ndx] = 0;
             cnt--;
+            g_cwmars.proccnt[pid] = cnt;
         } else {
 #if defined(ZEUS) && defined(ZEUSX11)
             zeusdrawsim(&g_cwmars.zeusx11);
@@ -630,15 +586,11 @@ cwexec(long pid)
 
             exit(0);
         }
-    } else if (op.op == CW_OP_SPL) {
-        cnt = g_cwmars.proccnt[pid];
-        g_cwmars.runqueue[pid][cnt - 1] = pc;
-        cur++;
     } else {
         g_cwmars.runqueue[pid][cur] = pc;
         cur++;
-        cur %= CW_MAX_PROCS;
     }
+    cur %= cnt;
     g_cwmars.curproc[pid] = cur;
 #if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
     ref++;
