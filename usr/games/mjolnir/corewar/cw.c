@@ -121,7 +121,7 @@ cwprintinstr(struct cwinstr op, long pid, long pc)
 
     if (pc >= 0) {
         if (pid >= 0) {
-            fprintf(stderr, "%ld\%ld\t%s", pid, pc, name);
+            fprintf(stderr, "%ld\t%ld\t%s", pid, pc, name);
         } else {
             fprintf(stderr, "%ld\t%s", pc, name);
         }
@@ -156,6 +156,7 @@ cwprintinstr(struct cwinstr op, long pid, long pc)
 void
 cwprintmars(struct cwmars *mars, long pid, long pc)
 {
+    long                adr;
     long                ndx;
     long                cnt;
 
@@ -163,14 +164,20 @@ cwprintmars(struct cwmars *mars, long pid, long pc)
     fprintf(stderr, "program #2 size: %ld\n", mars->progsz[1]);
     cnt = mars->proccnt[0];
     fprintf(stderr, "Q0 (%ld):", cnt);
+    fprintf(stderr, "--------\n");
     for (ndx = 0 ; ndx < cnt ; ndx++) {
-        fprintf(stderr, " %ld", mars->runqueue[0][ndx]);
+        adr = mars->runqueue[0][ndx];
+        fprintf(stderr, " %ld: ", mars->runqueue[0][ndx]);
+        cwprintinstr(g_cwmars.core[adr], 0, adr);
     }
     fprintf(stderr, "\n");
     cnt = mars->proccnt[1];
     fprintf(stderr, "Q1 (%ld):", cnt);
+    fprintf(stderr, "--------\n");
     for (ndx = 0 ; ndx < cnt ; ndx++) {
-        fprintf(stderr, " %ld", mars->runqueue[1][ndx]);
+        adr = mars->runqueue[1][ndx];
+        fprintf(stderr, " %ld: ", mars->runqueue[1][ndx]);
+        cwprintinstr(g_cwmars.core[adr], 1, adr);
     }
     fprintf(stderr, "\n");
     cnt = mars->nturn[0];
@@ -238,7 +245,7 @@ cwgetargs(long pc, long *argp1, long *argp2)
 
 /* instruction handler for DAT */
 static long
-cwdatop(long pid, long pc)
+cwdatop(C_UNUSED long pid, long pc)
 {
     long                arg1;
     long                arg2;
@@ -247,6 +254,7 @@ cwdatop(long pid, long pc)
     zeusdrawsim(&g_cwmars.zeussdl);
 #endif
     cwgetargs(pc, &arg1, &arg2);
+#if 0
     if (!pid) {
         fprintf(stderr, "program #2 (%s) won (%ld)\n",
                 g_cwmars.progpaths[1], pc);
@@ -257,9 +265,10 @@ cwdatop(long pid, long pc)
 #if defined(ZEUS)
     sleep(5);
 #endif
+#endif
 
     /* NOTREACHED */
-    return pid;
+    return -1;
 }
 
 /* instruction handler for MOV */
@@ -274,8 +283,8 @@ cwmovop(C_UNUSED long pid, long pc)
     long            arg2;
 
     cwgetargs(pc, &arg1, &arg2);
-    pc++;
     dest = &g_cwmars.core[arg2];
+    pc++;
     if (atype == CW_ARG_IMM) {
         dest->b = arg1;
     } else {
@@ -299,8 +308,8 @@ cwaddop(C_UNUSED long pid, long pc)
     long            val;
 
     cwgetargs(pc, &arg1, &arg2);
-    pc++;
     dest = &g_cwmars.core[arg2];
+    pc++;
     if (atype == CW_ARG_IMM) {
         val = dest->b;
         val += arg1;
@@ -333,8 +342,8 @@ cwsubop(C_UNUSED long pid, long pc)
     long            val;
 
     cwgetargs(pc, &arg1, &arg2);
-    pc++;
     dest = &g_cwmars.core[arg2];
+    pc++;
     if (atype == CW_ARG_IMM) {
         val = dest->b;
         val -= arg1;
@@ -427,6 +436,7 @@ cwcmpop(C_UNUSED long pid, long pc)
 
     cwgetargs(pc, &arg1, &arg2);
     dest = &g_cwmars.core[arg2];
+    pc++;
     val1 = dest->a;
     val2 = dest->b;
     if (atype == CW_ARG_IMM) {
@@ -436,7 +446,6 @@ cwcmpop(C_UNUSED long pid, long pc)
     } else if (arg1 == val1 && arg2 == val2) {
         pc++;
     }
-    pc++;
     pc = cwwrapval(pc);
 
     return pc;
@@ -455,6 +464,7 @@ cwsltop(C_UNUSED long pid, long pc)
 
     cwgetargs(pc, &arg1, &arg2);
     dest = &g_cwmars.core[arg2];
+    pc++;
     val = dest->b;
     if (atype == CW_ARG_IMM) {
         if (arg1 < val) {
@@ -463,7 +473,6 @@ cwsltop(C_UNUSED long pid, long pc)
     } else if (arg2 < val) {
         pc++;
     }
-    pc++;
     pc = cwwrapval(pc);
 
     return pc;
@@ -507,18 +516,20 @@ cwsplop(long pid, long pc)
 {
     long           *runq = &g_cwmars.runqueue[pid][0];
     long            cnt;
+    long            cur;
     long            arg1;
     long            arg2;
 
     cwgetargs(pc, &arg1, &arg2);
     cnt = g_cwmars.proccnt[pid];
     pc++;
+    cur = g_cwmars.curproc[pid];
     pc = cwwrapval(pc);
+    runq[cur] = pc;
     if (cnt < CW_MAX_PROCS) {
-        runq[cnt - 1] = pc;
-        arg1 = cwwrapval(arg1);
+        pc = cwwrapval(arg1);
+        g_cwmars.runqueue[pid][cnt - 1] = pc;
         cnt++;
-        pc = arg1;
         g_cwmars.proccnt[pid] = cnt;
     }
 
@@ -542,17 +553,8 @@ cwinitop(void)
     g_cwmars.functab[CW_OP_SLT] = cwsltop;
     g_cwmars.functab[CW_OP_DJN] = cwdjnop;
     g_cwmars.functab[CW_OP_SPL] = cwsplop;
-    rcaddop("DAT", CW_OP_DAT);
-    rcaddop("MOV", CW_OP_MOV);
-    rcaddop("ADD", CW_OP_ADD);
-    rcaddop("SUB", CW_OP_SUB);
-    rcaddop("JMP", CW_OP_JMP);
-    rcaddop("JMZ", CW_OP_JMZ);
-    rcaddop("JMN", CW_OP_JMN);
-    rcaddop("CMP", CW_OP_CMP);
-    rcaddop("SLT", CW_OP_SLT);
-    rcaddop("DJN", CW_OP_DJN);
-    rcaddop("SPL", CW_OP_SPL);
+
+    return;
 }
 
 /* execute program pid for one instruction */
@@ -579,45 +581,26 @@ cwexec(long pid)
     pc = g_cwmars.runqueue[pid][cur];
     pc = cwwrapval(pc);
     op = g_cwmars.core[pc];
-    if (cwisdat(op)) {
-#if defined(ZEUS) && defined(ZEUSX11)
-        zeusdrawsim(&g_cwmars.zeusx11);
-#endif
-        if (!pid) {
-            fprintf(stderr, "program #2 (%s) won (%ld)\n",
-                    g_cwmars.progpaths[1], pc);
-        } else {
-            fprintf(stderr, "program #1 (%s) won (%ld)\n",
-                    g_cwmars.progpaths[0], pc);
-        }
-#if defined(ZEUS)
-        sleep(5);
-#endif
-
-        exit(0);
-    }
     func = g_cwmars.functab[op.op];
+    cwprintinstr(op, pid, pc);
     pc = func(pid, pc);
-    pc++;
     cnt = g_cwmars.proccnt[pid];
-    pc = cwwrapval(pc);
     if (op.op == CW_OP_DAT) {
         if (cnt > 1) {
             runq = &g_cwmars.runqueue[pid][0];
-            if (cur == cnt - 1) {
-                runq[cur] = 0;
-                cur = 0;
-            } else {
-                for (ndx = cur ; ndx < cnt - 1 ; ndx++) {
-                    runq[ndx] = runq[ndx + 1];
-                }
-                runq[ndx] = 0;
-                cur++;
-                if (cur == cnt) {
-                    cur = 0;
-                }
+            for (ndx = cur ; ndx < cnt - 2 ; ndx++) {
+                runq[ndx] = runq[ndx + 1];
             }
             cnt--;
+            runq[cur] = 0;
+#if 0
+            runq[ndx] = 0;
+#endif
+            cur++;
+            if (cur == cnt) {
+                cur = 0;
+            }
+            g_cwmars.proccnt[pid] = cnt;
         } else {
 #if defined(ZEUS) && defined(ZEUSX11)
             zeusdrawsim(&g_cwmars.zeusx11);
@@ -630,15 +613,10 @@ cwexec(long pid)
 
             exit(0);
         }
-    } else if (op.op == CW_OP_SPL) {
-        cnt = g_cwmars.proccnt[pid];
-        g_cwmars.runqueue[pid][cnt - 1] = pc;
-        cur++;
-    } else {
-        g_cwmars.runqueue[pid][cur] = pc;
-        cur++;
-        cur %= CW_MAX_PROCS;
     }
+    cur++;
+    cur %= g_cwmars.proccnt[pid];
+    g_cwmars.runqueue[pid][cur] = pc;
     g_cwmars.curproc[pid] = cur;
 #if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
     ref++;
@@ -660,12 +638,17 @@ void
 cwrun(long nturn)
 {
     long                pid = g_cwmars.curpid;
+    long                nleft;
 
+    nturn *= 2;
     while (nturn--) {
+        nleft = g_cwmars.nturn[pid];
         cwexec(pid);
         pid++;
+        nleft--;
         pid &= 0x01;
         g_cwmars.curpid = pid;
+        g_cwmars.nturn[pid] = nleft;
     }
     fprintf(stderr, "DRAW\n");
 #if defined(ZEUS) && defined(ZEUSSDL)

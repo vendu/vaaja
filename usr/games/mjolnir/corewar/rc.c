@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <zero/trix.h>
 #include <corewar/cw.h>
+#include <assert.h>
 
 #define cwset1field(id) (g_cw1fieldmap |= (1 << (id)))
 #define cwis1field(id)  (g_cw1fieldmap & (1 << (id)))
@@ -28,53 +29,50 @@ rcaddop(const char *str, long id)
     void               *ptr1;
     void               *ptr2;
 
-    if (ch) {
+    if (isalpha(ch)) {
+        str++;
+        ch = toupper(ch);
+        /* 1st level table */
+        ptr1 = g_rcparsetab[ch];
+        if (!ptr1) {
+            ptr1 = calloc(128, sizeof(void *));
+            if (!ptr1) {
+                fprintf(stderr, "failed to allocate 1st level parse table\n");
+
+                exit(1);
+            }
+            g_rcparsetab[ch] = ptr1;
+        }
         ch = *str;
         if (isalpha(ch)) {
             str++;
             ch = toupper(ch);
-            /* 1st level table */
-            ptr1 = g_rcparsetab[ch];
-            if (!ptr1) {
-                ptr1 = calloc(128, sizeof(void *));
-                if (!ptr1) {
-                    fprintf(stderr, "failed to allocate 1st level parse table\n");
+            /* 2nd level table */
+            ptr2 = ((void **)ptr1)[ch];
+            if (!ptr2) {
+                ((void **)ptr1)[ch] = ptr2;
+                ptr2 = calloc(128, sizeof(void *));
+                if (!ptr2) {
+                    fprintf(stderr, "failed to allocate 2nd level parse table\n");
 
                     exit(1);
                 }
-                g_rcparsetab[ch] = ptr1;
+                ((void **)ptr1)[ch] = ptr2;
             }
-            ch = *str;
+            ch = *str++;
             if (isalpha(ch)) {
-                str++;
                 ch = toupper(ch);
-                /* 2nd level table */
-                ptr2 = ((void **)ptr1)[ch];
-                if (!ptr2) {
-                    ((void **)ptr1)[ch] = ptr2;
-                    ptr2 = calloc(128, sizeof(void *));
-                    if (!ptr2) {
-                        fprintf(stderr, "failed to allocate 2nd level parse table\n");
+                ptr1 = ((void **)ptr2)[ch];
+                if (!ptr1) {
+                    ptr1 = calloc(128, sizeof(long));
+                    if (!ptr1) {
+                        fprintf(stderr, "failed to allocate 3rd level parse table\n");
 
                         exit(1);
                     }
-                    ((void **)ptr1)[ch] = ptr2;
+                    ((void **)ptr2)[ch] = ptr1;
                 }
-                ch = *str++;
-                if (isalpha(ch)) {
-                    ch = toupper(ch);
-                    ptr1 = ((void **)ptr2)[ch];
-                    if (!ptr1) {
-                        ptr1 = calloc(128, sizeof(long));
-                        if (!ptr1) {
-                            fprintf(stderr, "failed to allocate 3rd level parse table\n");
-
-                            exit(1);
-                        }
-                        ((void **)ptr2)[ch] = ptr1;
-                        ((long *)ptr1)[ch] = id;
-                    }
-                }
+                ((long *)ptr1)[ch] = id;
             }
         }
     }
@@ -94,8 +92,8 @@ rcfindop(char *str, long *lenret)
     long                ch;
 
     ch = *cp;
-    ch = toupper(ch);
     if (isalpha(ch)) {
+        ch = toupper(ch);
         cp++;
         /* 1st level table */
         ptr1 = g_rcparsetab[ch];
@@ -119,7 +117,12 @@ rcfindop(char *str, long *lenret)
             ch = toupper(ch);
             cp++;
             /* 3rd level table */
-            op = ((long *)ptr2)[ch];
+            ptr1 = ((void **)ptr2)[ch];
+            if (!ptr1) {
+
+                return -1;
+            }
+            op = ((long *)ptr1)[ch];
             len = cp - str;
         } else {
 
@@ -160,7 +163,7 @@ rcgetinstr(char *str)
 {
     char               *cp = str;
     long                op = CW_NO_OP;
-    struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0 };
+    struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0, 0 };
     long                atype;
     long                a;
     long                sign;
@@ -175,6 +178,7 @@ rcgetinstr(char *str)
         }
         if (isalpha(ch)) {
             op = rcfindop(cp, &val);
+            assert(op >= 0 && op <= CW_OP_SPL);
             cp += val;
         }
         if (op != CW_NO_OP) {

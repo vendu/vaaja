@@ -6,9 +6,6 @@
 #else
 #define CW_CORE_SIZE        1024    // fits on a 80x24 terminal in 64 * 16
 #endif
-#if (CW_CORE_SIZE > (1 << CW_OPERAND_BITS))
-#error fix CW_CORE_SIZE or CW_OPERAND_BITS in <corewar/cw.h>
-#endif
 
 #include <corewar/conf.h>
 #include <stdio.h>
@@ -139,6 +136,10 @@ void                        cwprintmars(struct cwmars *mars,
 void                        cwprintinstr(struct cwinstr op,
                                          long pid,
                                          long pc);
+
+#if (CW_CORE_SIZE > (1 << CW_OPERAND_BITS))
+#error fix CW_CORE_SIZE or CW_OPERAND_BITS in <corewar/cw.h>
+#endif
 
 #endif /* __MJOLNIR_CW_H__ */
 
