@@ -2,11 +2,16 @@
 #define __COREWAR_ZEUS_H__
 
 #include <corewar/conf.h>
+#if defined(ZEUSWINX11)
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/keysymdef.h>
+#include <X11/Xutil.h>
 
-#if defined(ZEUS)
+#include <corewar/x11.h>
+#endif
 
-void                        zeusshowmem(void);
-
+#if defined(ZEUSWINX11)
 #define ZEUSBUTTONTEXTCOLOR "orange"
 //#define ZEUSDATCOLOR        "magenta"
 #define ZEUSDATCOLOR        "magenta"
@@ -21,6 +26,7 @@ void                        zeusshowmem(void);
 #define ZEUSPROG2COLOR      "orange"
 #define ZEUSPROG2DATCOLOR   "gold"
 #endif
+#endif /* ZEUSWINX11 */
 #define ZEUSTEXTNCOL        80
 #define ZEUSTEXTNROW        8
 #define ZEUSDBNCOL          40
@@ -36,8 +42,6 @@ struct zeussel {
 };
 
 char * zeusdisasm(long pc, int *lenret);
-
-#endif /* defined(ZEUS) && defined(ZEUSX11) */
 
 #endif /* __COREWAR_ZEUS_H__ */
 

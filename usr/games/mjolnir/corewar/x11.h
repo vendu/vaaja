@@ -3,7 +3,7 @@
 
 #include <corewar/conf.h>
 
-#if defined(ZEUS) && defined(ZEUSX11)
+#if defined(ZEUSWINX11)
 
 #if defined(ZEUSIMLIB2)
 #include <Imlib2.h>
@@ -115,7 +115,7 @@ void   zeusclickx11button(struct zeusx11 *x11, XEvent *event);
 void   zeusreleasex11button(struct zeusx11 *x11, XEvent *event);
 void   zeusexposex11button(struct zeusx11 *x11, XEvent *event);
 
-#endif /* defined(ZEUS) && defined(ZEUSX11) */
+#endif /* ZEUSWINX11 */
 
 #endif /* __COREWAR_X11_H__ */
 

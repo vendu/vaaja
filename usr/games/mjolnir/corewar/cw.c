@@ -1,56 +1,34 @@
 /* REFERENCE:  http://corewar.co.uk/cwg.txt */
 /* REFERENCE: http://seblog.cs.uni-kassel.de/fileadmin/se/courses/SE1/WS0708/redcode-icws-88-2.pdf */
 
-#include <corewar/conf.h>
+#define CW_ZEUS         1
+
+//#include <mjolnir/conf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include <ctype.h>
 #include <stdint.h>
 #include <time.h>
-#include <zero/cdefs.h>
-#include <mach/param.h>
-#include <zero/trix.h>
-#include <prng/randmt32.h>
-#include <corewar/cw.h>
-#include <corewar/rc.h>
-#if defined(ZEUS)
 #include <unistd.h>
+#include <mach/param.h>
+#include <zero/cdefs.h>
+#include <mjolnir/util.h>
+#include <mjolnir/cw.h>
+#include <mjolnir/rc.h>
+#if defined(ZEUS) && defined(ZEUSSDL)
+#include <mjolnir/sdl.h>
+#endif
+#if defined(CW_DEBUG)
+#include <assert.h>
 #endif
 
-static long         cwdatop(long pid, long pc);
-static long         cwmovop(long pid, long pc);
-static long         cwaddop(long pid, long pc);
-static long         cwsubop(long pid, long pc);
-static long         cwjmpop(long pid, long pc);
-static long         cwjmzop(long pid, long pc);
-static long         cwjmnop(long pid, long pc);
-static long         cwcmpop(long pid, long pc);
-static long         cwsltop(long pid, long pc);
-static long         cwdjnop(long pid, long pc);
-static long         cwsplop(long pid, long pc);
+extern long             g_rcnargtab[CW_MAX_OP + 1];
 
-/* virtual machine structure */
-struct cwmars       g_cwmars C_ALIGNED(MACH_PAGE_SIZE);
-/* instruction handlers */
-static cwinstrfunc *g_cwfunctab[CW_MAX_OP + 1]
+struct cwmars           g_cwmars C_ALIGNED(MACH_PAGE_SIZE); // virtual machine
+const char             *g_cwopnametab[CW_MAX_OP + 1]        // instruction names
 = {
-    cwdatop,
-    cwmovop,
-    cwaddop,
-    cwsubop,
-    cwjmpop,
-    cwjmzop,
-    cwjmnop,
-    cwcmpop,
-    cwsltop,
-    cwdjnop,
-    cwsplop
-};
-/* instruction names */
-const char     *g_cwopnametab[CW_MAX_OP + 1]
-= {
+    "---",
     "DAT",
     "MOV",
     "ADD",
@@ -63,129 +41,49 @@ const char     *g_cwopnametab[CW_MAX_OP + 1]
     "DJN",
     "SPL",
 };
+#if defined(ZEUS)
+struct zeussel          g_zeussel;
+#endif
 
 /* disassemble instruction */
 void
-cwdisasm(struct cwinstr op, FILE *fp)
+cwdisasm(struct cwinstr *op, long pc, FILE *fp)
 {
-    long                    atype = op.atype;
-    long                    btype = op.btype;
-    long                    ndx = op.op;
-    long                    ch;
+    char                ch;
 
-    fprintf(fp, "%s\t", g_cwopnametab[ndx]);
-    ch = 0;
-    if (atype == CW_ARG_IMM) {
-        ch = '#';
-    } else if (atype == CW_ARG_INDIR) {
-        ch = '@';
-    } else if (atype == CW_ARG_PREDEC) {
-        ch = '<';
-#if 0
-    } else {
-        ch = '$';
-#endif
-    }
-    if (ch) {
-        fprintf(fp, "%c", (char)ch);
-    }
-    fprintf(fp, "%d\t", op.a);
-    ch = 0;
-    if (btype == CW_ARG_IMM) {
-        ch = '#';
-    } else if (btype == CW_ARG_INDIR) {
-        ch = '@';
-    } else if (btype == CW_ARG_PREDEC) {
-        ch = '<';
-#if 0
-    } else {
-        ch = '$';
-#endif
-    }
-    if (ch) {
-        fprintf(fp, "%c", (char)ch);
-    }
-    fprintf(fp, "%d\n", op.b);
-
-    return;
-}
-
-/* print instruction to stderr */
-void
-cwprintinstr(struct cwinstr op, long pid, long pc)
-{
-    long                val = op.op;
-    const char         *name = g_cwmars.opnames[val];
-    long                atype = 0;
-    long                btype = 0;
-
-    if (pc >= 0) {
-        if (pid >= 0) {
-            fprintf(stderr, "%ld\t%ld\t%s", pid, pc, name);
-        } else {
-            fprintf(stderr, "%ld\t%s", pc, name);
+    fprintf(fp, "%ld: ", pc);
+    if (*(cwintop_t *)op) {
+        fprintf(fp, "\t%s\t", g_cwopnametab[op->op]);
+        ch = '\0';
+        if (op->aflg & CW_ARG_IMM) {
+            ch = '#';
+        } else if (op->aflg & CW_ARG_INDIR) {
+            ch = '@';
+        } else if (op->aflg & CW_ARG_PREDEC) {
+            ch = '<';
         }
-    } else {
-        fprintf(stderr, "%s", name);
-    }
-    val = op.a;
-    if (atype == CW_ARG_IMM) {
-        fprintf(stderr, "\t#%ld", val);
-    } else if (atype == CW_ARG_INDIR) {
-        fprintf(stderr, "\t@%ld", val);
-    } else if (atype == CW_ARG_PREDEC) {
-        fprintf(stderr, "\t<%ld", val);
-    } else {
-        fprintf(stderr, "\t$%ld", val);
-    }
-    val = op.b;
-    if (btype == CW_ARG_IMM) {
-        fprintf(stderr, "\t#%ld", val);
-    } else if (btype == CW_ARG_INDIR) {
-        fprintf(stderr, "\t@%ld", val);
-    } else if (btype == CW_ARG_PREDEC) {
-        fprintf(stderr, "\t<%ld", val);
-    } else {
-        fprintf(stderr, "\t$%ld", val);
-    }
-    fprintf(stderr, "\n");
-
-    return;
-}
-
-void
-cwprintmars(struct cwmars *mars, long pid, long pc)
-{
-    long                adr;
-    long                ndx;
-    long                cnt;
-
-    fprintf(stderr, "program #1 size: %ld\n", mars->progsz[0]);
-    fprintf(stderr, "program #2 size: %ld\n", mars->progsz[1]);
-    cnt = mars->proccnt[0];
-    fprintf(stderr, "Q0 (%ld):", cnt);
-    fprintf(stderr, "--------\n");
-    for (ndx = 0 ; ndx < cnt ; ndx++) {
-        adr = mars->runqueue[0][ndx];
-        fprintf(stderr, " %ld: ", mars->runqueue[0][ndx]);
-        cwprintinstr(g_cwmars.core[adr], 0, adr);
-    }
-    fprintf(stderr, "\n");
-    cnt = mars->proccnt[1];
-    fprintf(stderr, "Q1 (%ld):", cnt);
-    fprintf(stderr, "--------\n");
-    for (ndx = 0 ; ndx < cnt ; ndx++) {
-        adr = mars->runqueue[1][ndx];
-        fprintf(stderr, " %ld: ", mars->runqueue[1][ndx]);
-        cwprintinstr(g_cwmars.core[adr], 1, adr);
-    }
-    fprintf(stderr, "\n");
-    cnt = mars->nturn[0];
-    fprintf(stderr, "P0: %ld turns left\n", cnt);
-    cnt = mars->nturn[1];
-    fprintf(stderr, "P1: %ld turns left\n", cnt);
-    if (pid >= 0) {
-        cwprintinstr(g_cwmars.core[pc], pid, pc);
+        if (ch) {
+            fprintf(fp, "%c", ch);
+        }
+        fprintf(fp, "%d", op->a);
+        if  (g_rcnargtab[op->op] == 2) {
+            ch = '\0';
+            if (op->bflg & CW_ARG_IMM) {
+                ch = '#';
+            } else if (op->bflg & CW_ARG_INDIR) {
+                ch = '@';
+            } else if (op->aflg & CW_ARG_PREDEC) {
+                ch = '<';
+            }
+            if (ch) {
+                fprintf(fp, "\t%c", ch);
+            } else {
+                fprintf(fp, "\t");
+            }
+            fprintf(fp, "%d\n", op->b);
+        } else {
+            fprintf(fp, "\n");
+        }
     }
 
     return;
@@ -193,50 +91,59 @@ cwprintmars(struct cwmars *mars, long pid, long pc)
 
 /* read instruction operands */
 static void
-cwgetargs(long pc, long *argp1, long *argp2)
+cwgetargs(struct cwinstr op, long pc, long *argp1, long *argp2)
 {
-    struct cwinstr     *instr = &g_cwmars.core[pc];
-    struct cwinstr      op = *instr;
-    struct cwinstr     *src;
-    long                atype = op.atype;
-    long                btype = op.btype;
-    long                arg1 = op.a;
-    long                arg2 = op.b;
+    struct cwinstr     *ptr = &g_cwmars.core[pc];
+    long                narg = g_rcnargtab[op.op];
+    long                arg1 = 0;
+    long                arg2 = 0;
 
-    if (atype) {
-        if (atype == CW_ARG_INDIR || atype == CW_ARG_PREDEC) {
-            if (atype == CW_ARG_PREDEC) {
+    arg1 = op.a;
+    if (op.aflg) {
+        if (op.aflg & (CW_ARG_INDIR | CW_ARG_PREDEC)) {
+            arg1 = op.b;
+            if (op.aflg & CW_ARG_PREDEC) {
                 arg1--;
-                arg1 = cwwrapval(arg1);
-                instr->a = arg1;
-            } else {
-                arg1 += pc;
-                arg1 = cwwrapval(arg1);
-                src = &g_cwmars.core[arg1];
-                arg1 = src->b;
+                if (arg1 < 0) {
+                    arg1 = CW_CORE_SIZE + arg1;
+                }
+                arg1 = cwwrapcore(arg1);
+                ptr->b = arg1;
             }
+            arg1 += pc;
+            ptr->a = arg1;
+        } else {
+            arg1 += pc;
+            arg1 = cwwrapcore(arg1);
         }
     } else {
         arg1 += pc;
-        arg1 = cwwrapval(arg1);
     }
-    if (btype) {
-        if (btype == CW_ARG_INDIR || btype == CW_ARG_PREDEC) {
-            if (btype & CW_ARG_PREDEC) {
-                arg2--;
-                arg2 = cwwrapval(arg2);
-                instr->b = arg2;
+    arg1 = cwwrapcore(arg1);
+    if (narg == 2) {
+        arg2 = op.b;
+        if (op.bflg) {
+            if (op.bflg & (CW_ARG_INDIR | CW_ARG_PREDEC)) {
+                arg2 = op.b;
+                if (op.bflg & CW_ARG_PREDEC) {
+                    arg2--;
+                    if (arg2 < 0) {
+                        arg2 = CW_CORE_SIZE + arg2;
+                    }
+                    arg2 = cwwrapcore(arg2);
+                    ptr->b = arg2;
+                }
+                arg2 += pc;
+                ptr->a = arg2;
             } else {
                 arg2 += pc;
-                arg2 = cwwrapval(arg2);
-                src = &g_cwmars.core[arg2];
-                arg2 = src->b;
+                arg2 = cwwrapcore(arg2);
             }
+        } else {
+            arg2 += pc;
         }
-    } else {
-        arg2 += pc;
-        arg2 = cwwrapval(arg2);
     }
+    arg2 = cwwrapcore(arg2);
     *argp1 = arg1;
     *argp2 = arg2;
 
@@ -247,27 +154,12 @@ cwgetargs(long pc, long *argp1, long *argp2)
 static long
 cwdatop(C_UNUSED long pid, long pc)
 {
+    struct cwinstr      op = g_cwmars.core[pc];
     long                arg1;
     long                arg2;
 
-#if defined(ZEUS) && defined(ZEUSSDL)
-    zeusdrawsim(&g_cwmars.zeussdl);
-#endif
-    cwgetargs(pc, &arg1, &arg2);
-#if 0
-    if (!pid) {
-        fprintf(stderr, "program #2 (%s) won (%ld)\n",
-                g_cwmars.progpaths[1], pc);
-    } else {
-        fprintf(stderr, "program #1 (%s) won (%ld)\n",
-                g_cwmars.progpaths[0], pc);
-    }
-#if defined(ZEUS)
-    sleep(5);
-#endif
-#endif
+    cwgetargs(op, pc, &arg1, &arg2);
 
-    /* NOTREACHED */
     return -1;
 }
 
@@ -275,23 +167,20 @@ cwdatop(C_UNUSED long pid, long pc)
 static long
 cwmovop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr  op = g_cwmars.core[pc];
-    struct cwinstr  src;
-    struct cwinstr *dest;
-    long            atype = op.atype;
-    long            arg1;
-    long            arg2;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
     pc++;
-    if (atype == CW_ARG_IMM) {
-        dest->b = arg1;
+    if (op.aflg & CW_ARG_IMM) {
+        ptr->b = arg1;
     } else {
-        src = g_cwmars.core[arg1];
-        *dest = src;
+        g_cwmars.core[arg2] = g_cwmars.core[arg1];
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapcore(pc);
 
     return pc;
 }
@@ -300,32 +189,25 @@ cwmovop(C_UNUSED long pid, long pc)
 static long
 cwaddop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr  op = g_cwmars.core[pc];
-    struct cwinstr *dest;
-    long            atype = op.atype;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
+    long                a;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
+    a = op.a;
     pc++;
-    if (atype == CW_ARG_IMM) {
-        val = dest->b;
-        val += arg1;
-        val = cwwrapval(val);
-        dest->b = val;
+    if (op.aflg & CW_ARG_IMM) {
+        ptr->b += a;
     } else {
-        val = dest->a;
-        arg1 += val;
-        arg1 = cwwrapval(arg1);
-        dest->a = arg1;
-        val = dest->b;
-        arg2 += val;
-        arg2 = cwwrapval(arg1);
-        dest->b = arg2;
+        b = op.b;
+        ptr->a += a;
+        ptr->b += b;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapcore(pc);
 
     return pc;
 }
@@ -334,32 +216,25 @@ cwaddop(C_UNUSED long pid, long pc)
 static long
 cwsubop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr  op = g_cwmars.core[pc];
-    struct cwinstr *dest;
-    long            atype = op.atype;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
+    long                a;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
+    a = op.a;
     pc++;
-    if (atype == CW_ARG_IMM) {
-        val = dest->b;
-        val -= arg1;
-        val = cwwrapval(val);
-        dest->b = val;
+    if (op.aflg & CW_ARG_IMM) {
+        ptr->b -= a;
     } else {
-        val = dest->a;
-        arg1 -= val;
-        arg1 = cwwrapval(arg1);
-        dest->a = arg1;
-        val = dest->b;
-        arg2 -= val;
-        arg2 = cwwrapval(arg1);
-        dest->b = arg2;
+        b = op.b;
+        ptr->a -= a;
+        ptr->b -= b;
     }
-    pc = cwwrapval(pc);
+    pc = cwwrapcore(pc);
 
     return pc;
 }
@@ -368,34 +243,37 @@ cwsubop(C_UNUSED long pid, long pc)
 static long
 cwjmpop(C_UNUSED long pid, long pc)
 {
-    long            arg1;
-    long            arg2;
+    struct cwinstr      op = g_cwmars.core[pc];
+    long                arg1;
+    long                arg2;
 
-    cwgetargs(pc, &arg1, &arg2);
-    pc = arg1;
-    pc = cwwrapval(pc);
+    cwgetargs(op, pc, &arg1, &arg2);
+    if (op.aflg & CW_ARG_IMM) {
+        arg1 += pc;
+    }
 
-    return pc;
+    return arg1;
 }
 
 /* instruction handler for JMZ */
 static long
 cwjmzop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr *dest;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    long                arg1;
+    long                arg2;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
-    val = dest->b;
-    if (!val) {
+    cwgetargs(op, pc, &arg1, &arg2);
+    b = op.b;
+    if (!b) {
+        b = g_cwmars.core[arg1].b;
         pc = arg1;
+        pc = cwwrapcore(pc);
     } else {
         pc++;
+        pc = cwwrapcore(pc);
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -404,20 +282,20 @@ cwjmzop(C_UNUSED long pid, long pc)
 static long
 cwjmnop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr *dest;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    long                arg1;
+    long                arg2;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
-    val = dest->b;
-    if (val) {
+    cwgetargs(op, pc, &arg1, &arg2);
+    b = op.b;
+    if (b) {
         pc = arg1;
+        pc = cwwrapcore(pc);
     } else {
         pc++;
+        pc = cwwrapcore(pc);
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -426,27 +304,28 @@ cwjmnop(C_UNUSED long pid, long pc)
 static long
 cwcmpop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr  op = g_cwmars.core[pc];
-    struct cwinstr *dest;
-    long            atype = op.atype;
-    long            arg1;
-    long            arg2;
-    long            val1;
-    long            val2;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
+    long                a;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
     pc++;
-    val1 = dest->a;
-    val2 = dest->b;
-    if (atype == CW_ARG_IMM) {
-        if (arg1 == val2) {
+    a = ptr->a;
+    b = ptr->b;
+    pc = cwwrapcore(pc);
+    if (op.aflg & CW_ARG_IMM) {
+        if (arg1 == b) {
             pc++;
         }
-    } else if (arg1 == val1 && arg2 == val2) {
-        pc++;
+    } else {
+        if (op.a == a && op.b == b) {
+            pc++;
+        }
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -455,25 +334,25 @@ cwcmpop(C_UNUSED long pid, long pc)
 static long
 cwsltop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr  op = g_cwmars.core[pc];
-    struct cwinstr *dest;
-    long            atype = op.atype;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
+    long                a;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
     pc++;
-    val = dest->b;
-    if (atype == CW_ARG_IMM) {
-        if (arg1 < val) {
-            pc++;
-        }
-    } else if (arg2 < val) {
+    a = op.a;
+    b = ptr->b;
+    pc = cwwrapcore(pc);
+    if ((op.aflg & CW_ARG_IMM)
+        && arg1 < b) {
+        pc++;
+    } else if (a < b) {
         pc++;
     }
-    pc = cwwrapval(pc);
 
     return pc;
 }
@@ -482,29 +361,25 @@ cwsltop(C_UNUSED long pid, long pc)
 static long
 cwdjnop(C_UNUSED long pid, long pc)
 {
-    struct cwinstr *instr = &g_cwmars.core[pc];
-    struct cwinstr  op = *instr;
-    struct cwinstr *dest;
-    long            btype = op.btype;
-    long            arg1;
-    long            arg2;
-    long            val;
+    struct cwinstr      op = g_cwmars.core[pc];
+    struct cwinstr     *ptr;
+    long                arg1;
+    long                arg2;
+    long                b;
 
-    cwgetargs(pc, &arg1, &arg2);
-    dest = &g_cwmars.core[arg2];
-    if (btype == CW_ARG_IMM) {
-        val = op.b;
-        val--;
-        val = cwwrapval(val);
-        instr->b = val;
+    cwgetargs(op, pc, &arg1, &arg2);
+    ptr = &g_cwmars.core[arg2];
+    if (op.bflg & CW_ARG_IMM) {
+        b = op.b;
+        b--;
+        g_cwmars.core[pc].b = b;
     } else {
-        val = dest->b;
-        val--;
-        val = cwwrapval(val);
-        dest->b = val;
+        b = ptr->b;
+        b--;
+        ptr->b = b;
     }
-    if (!val) {
-        pc = arg1;
+    if (b) {
+        pc = cwwrapcore(arg1);
     }
 
     return pc;
@@ -514,24 +389,22 @@ cwdjnop(C_UNUSED long pid, long pc)
 static long
 cwsplop(long pid, long pc)
 {
-    long           *runq = &g_cwmars.runqueue[pid][0];
-    long            cnt;
-    long            cur;
-    long            arg1;
-    long            arg2;
+    struct cwinstr      op = g_cwmars.core[pc];
+    long               *runq;
+    long                cnt;
+    long                ndx;
+    long                arg1;
+    long                arg2;
 
-    cwgetargs(pc, &arg1, &arg2);
-    cnt = g_cwmars.proccnt[pid];
+    cwgetargs(op, pc, &arg1, &arg2);
     pc++;
-    cur = g_cwmars.curproc[pid];
-    pc = cwwrapval(pc);
-    runq[cur] = pc;
-    if (cnt < CW_MAX_PROCS) {
-        pc = cwwrapval(arg1);
-        g_cwmars.runqueue[pid][cnt - 1] = pc;
-        cnt++;
-        g_cwmars.proccnt[pid] = cnt;
+    cnt = g_cwmars.proccnt[pid];
+    runq = &g_cwmars.runqtab[pid][0];
+    pc = cwwrapcore(pc);
+    for (ndx = 0 ; ndx < cnt - 1 ; ndx++) {
+        runq[ndx] = runq[ndx + 1];
     }
+    runq[ndx] = arg1;
 
     return pc;
 }
@@ -540,8 +413,8 @@ cwsplop(long pid, long pc)
 static void
 cwinitop(void)
 {
-    g_cwmars.functab = g_cwfunctab;
     g_cwmars.opnames = g_cwopnametab;
+    g_cwmars.functab[0] = NULL;
     g_cwmars.functab[CW_OP_DAT] = cwdatop;
     g_cwmars.functab[CW_OP_MOV] = cwmovop;
     g_cwmars.functab[CW_OP_ADD] = cwaddop;
@@ -553,6 +426,7 @@ cwinitop(void)
     g_cwmars.functab[CW_OP_SLT] = cwsltop;
     g_cwmars.functab[CW_OP_DJN] = cwdjnop;
     g_cwmars.functab[CW_OP_SPL] = cwsplop;
+    rcinitop();
 
     return;
 }
@@ -561,221 +435,236 @@ cwinitop(void)
 void
 cwexec(long pid)
 {
-    struct cwinstr  op;
-    cwinstrfunc    *func;
-    long           *runq;
-    long            cur;
-    long            cnt;
-    long            pc;
-    long            ndx;
+    struct cwinstr      op;
+    cwinstrfunc        *func;
+    long                pc;
+    long                ret;
+    long               *runq;
+    long                cur;
+    long                cnt;
+    long                ndx;
 #if defined(ZEUS)
-    static long     ref = 0;
+    static long         nstep = 0;
 #endif
 
-#if defined(ZEUS) && defined(ZEUSX11)
-    while (XPending(g_cwmars.zeusx11.disp)) {
+#if defined(ZEUS) && defined(ZEUSSDL) && 0
+    while (XEventsQueued(g_cwmars.zeusx11.disp, QueuedAfterFlush)) {
         zeusprocev(&g_cwmars.zeusx11);
     }
 #endif
     cur = g_cwmars.curproc[pid];
-    pc = g_cwmars.runqueue[pid][cur];
-    pc = cwwrapval(pc);
-    op = g_cwmars.core[pc];
-    func = g_cwmars.functab[op.op];
-    cwprintinstr(op, pid, pc);
-    pc = func(pid, pc);
     cnt = g_cwmars.proccnt[pid];
-    if (op.op == CW_OP_DAT) {
-        if (cnt > 1) {
-            runq = &g_cwmars.runqueue[pid][0];
-            for (ndx = cur ; ndx < cnt - 2 ; ndx++) {
-                runq[ndx] = runq[ndx + 1];
-            }
-            cnt--;
-            runq[cur] = 0;
-#if 0
-            runq[ndx] = 0;
+    pc = g_cwmars.runqtab[pid][cur];
+    op = g_cwmars.core[pc];
+    assert(pc >= 0 && pc <= CW_CORE_SIZE);
+    if (cwisdat(op)) {
+#if defined(ZEUS) && defined(ZEUSWINX11)
+        zeusdrawsim(&g_cwmars.zeusx11);
 #endif
-            cur++;
-            if (cur == cnt) {
-                cur = 0;
-            }
-            g_cwmars.proccnt[pid] = cnt;
+        if (!pid) {
+            fprintf(stderr, "program #2 (%s) won (%ld)\n", g_cwmars.prog2name, pc);
         } else {
-#if defined(ZEUS) && defined(ZEUSX11)
+            fprintf(stderr, "program #1 (%s) won (%ld)\n", g_cwmars.prog1name, pc);
+        }
+#if defined(ZEUS)
+        sleep(5);
+#endif
+
+        exit(0);
+    }
+    func = g_cwmars.functab[op.op];
+    //    cwdisasm(&op, pc, stderr);
+    ret = func(pid, pc);
+    if (ret < 0) {
+        cnt--;
+        if (!cnt) {
+#if defined(ZEUS) && defined(ZEUSWINX11)
             zeusdrawsim(&g_cwmars.zeusx11);
 #endif
-            fprintf(stderr, "program #%ld (%s) won (%ld)\n",
-                    pid, g_cwmars.progpaths[pid], pc);
-#if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
+            if (!pid) {
+                fprintf(stderr, "program #2 (%s) won (%ld)\n", g_cwmars.prog2name, pc);
+            } else {
+                fprintf(stderr, "program #1 (%s) won (%ld)\n", g_cwmars.prog1name, pc);
+            }
+#if defined(ZEUS) && defined(ZEUSWINX11)
             sleep(5);
 #endif
 
             exit(0);
+            g_cwmars.proccnt[pid] = cnt;
         }
+    } else if (op.op != CW_OP_SPL) {
+        runq = &g_cwmars.runqtab[pid][0];
+        if (cnt > 1) {
+            for (ndx = 0 ; ndx < cnt - 1 ; ndx++) {
+                runq[ndx] = runq[ndx + 1];
+            }
+        }
+        runq[cnt - 1] = ret;
     }
-    cur++;
-    cur %= g_cwmars.proccnt[pid];
-    g_cwmars.runqueue[pid][cur] = pc;
-    g_cwmars.curproc[pid] = cur;
-#if defined(ZEUS) && (defined(ZEUSX11) || defined(ZEUSSDL))
-    ref++;
-    if (!g_cwmars.running || ref == 32) {
-        zeusdrawsim(&g_cwmars.zeusx11);
-        ref = 0;
+    cnt = g_cwmars.proccnt[pid];
+    if (cnt > 1) {
+        cur = g_cwmars.curproc[pid];;
+        cur++;
+        if (cur == cnt) {
+            cur = 0;
+        }
+        g_cwmars.curproc[pid] = cur;
     }
-#if defined(ZEUSX11)
-    XSync(g_cwmars.zeusx11.disp, False);
-#endif
+#if defined(ZEUS) && defined(ZEUSSDL)
+    nstep++;
+    if (!g_cwmars.running || nstep == 32) {
+        zeusdrawsim(&g_cwmars.zeussdl);
+        nstep = 0;
+    }
 #endif
 
     return;
 }
 
 /* virtual machine main loop */
-C_NORETURN
-void
-cwrun(long nturn)
+static void
+cwloop(void)
 {
     long                pid = g_cwmars.curpid;
-    long                nleft;
 
-    nturn *= 2;
-    while (nturn--) {
-        nleft = g_cwmars.nturn[pid];
+    while (g_cwmars.nturn[pid]--) {
+        fprintf(stderr, "%ld\n", g_cwmars.nturn[pid]);
         cwexec(pid);
         pid++;
-        nleft--;
         pid &= 0x01;
         g_cwmars.curpid = pid;
-        g_cwmars.nturn[pid] = nleft;
     }
-    fprintf(stderr, "DRAW\n");
-#if defined(ZEUS) && defined(ZEUSSDL)
+    fprintf(stderr, "TIE\n");
+#if defined(ZEUS)
     sleep(5);
 #endif
 
-    exit(0);
+    return;
 }
 
 /* initialise virtual machine */
-void
-cwinit(void)
+static void
+cwinitvm(void)
 {
-    void               *ptr;
+    time_t              seed32 = (((time(NULL) & 0xff) << 24)
+                                  | ((time(NULL) & 0xff) << 16)
+                                  | ((time(NULL) & 0xff) << 8)
+                                  | (time(NULL) & 0xff));
 
-    time_t seed32 = (((time(NULL) & 0xff) << 24)
-                     | ((time(NULL) & 0xff) << 16)
-                     | ((time(NULL) & 0xff) << 8)
-                     | (time(NULL) & 0xff));
-
-    srandmt32(seed32);
+    seedrand(seed32);
     cwinitop();
-    rcinitop();
-    //    ptr = malloc(csize);
-    ptr = calloc(CW_CORE_SIZE, sizeof(struct cwinstr));
-    if (!ptr) {
+    g_cwmars.pidmap = calloc(CW_CORE_SIZE / CHAR_BIT, sizeof(char));
+    g_cwmars.core = calloc(CW_CORE_SIZE, sizeof(struct cwinstr));
+    if (!g_cwmars.core) {
         fprintf(stderr, "failed to allocate core\n");
 
         exit(1);
     }
-    //    memset(ptr, -1, csize);
-    g_cwmars.core = ptr;
+
+    return;
+}
+
+static long
+cwinitprog(const char *filename, long pid, long *baseret, long *limret)
+{
+    FILE               *fp;
+    long                pc;
+    long                base;
+    long                lim;
+
+    base = getrand();
+    base = cwwrapcore(base);
+    fp = fopen(filename, "r");
+    if (!fp) {
+        fprintf(stderr, "failed to open %s\n", filename);
+
+        exit(1);
+    }
+    pc = rcxlate(fp, pid, base, &base, &lim);
+    fclose(fp);
+    *baseret = base;
+    *limret = lim;
+
+    return pc;
+}
+
+static void
+cwinitmars(struct cwmars *mars, char *prog1name, char *prog2name)
+{
+    long                base1;
+    long                lim1;
+    long                pc1;
+    long                base2;
+    long                lim2;
+    long                pc2;
+
+#if defined(ZEUS) && defined(ZEUSSDL)
+    if (sdlinit(&mars->zeussdl)) {
+        fprintf(stderr, "failed to initialize SDL\n");
+
+        exit(1);
+    }
+#endif
+    while (1) {
+        pc1 = cwinitprog(prog1name, 0, &base1, &lim1);
+        if (pc1 < 0) {
+            fprintf(stderr, "failed to translate %s\n", prog1name);
+
+            exit(1);
+        }
+        pc2 = cwinitprog(prog2name, 1, &base2, &lim2);
+        if (pc2 < 0) {
+            fprintf(stderr, "failed to translate %s\n", prog2name);
+
+            exit(1);
+        }
+        if ((base2 >= base1 && base2 < lim1)
+            || (lim2 >= base1 && lim2 < lim1)) {
+            fprintf(stderr, "programs overlap, retrying\n");
+
+            continue;
+        }
+
+        break;
+    }
+    mars->proccnt[0] = 1;
+    mars->proccnt[1] = 1;
+    mars->curproc[0] = 0;
+    mars->curproc[1] = 0;
+    mars->nturn[0] = CW_TURNS;
+    mars->nturn[1] = CW_TURNS;
+    mars->runqtab[0][0] = pc1;
+    mars->runqtab[1][0] = pc2;
+    mars->curpid = getrand() & 0x00000001;
+    mars->prog1name = prog1name;
+    mars->prog2name = prog2name;
 
     return;
 }
 
 void
-cwinitmars(struct cwmars *mars, long pc1, long pc2, long nturn)
+cwrun(int argc, char *argv[])
 {
-    size_t              csize;
-
-    mars->runqueue[0][0] = pc1;
-    mars->runqueue[1][0] = pc2;
-    mars->proccnt[0] = 1;
-    mars->proccnt[1] = 1;
-    mars->curproc[0] = 0;
-    mars->curproc[1] = 0;
-    mars->nturn[0] = nturn;
-    mars->nturn[1] = nturn;
-    mars->curpid = randmt32() & 0x01L;
-    csize = CW_CORE_SIZE;
-    if (csize & (CHAR_BIT - 1)) {
-        csize /= CHAR_BIT;
-        csize++;
-    } else {
-        csize >>= 3;
-    }
-    g_cwmars.memmap = calloc(csize, sizeof(char));
-    if (!g_cwmars.memmap) {
-        fprintf(stderr, "failed to allocate memory bitmap\n");
+    if (argc != 3) {
+        fprintf(stderr, "usage: %s prog1.rc prog2.rc\n", argv[0]);
 
         exit(1);
     }
+    cwinitvm();
+    cwinitmars(&g_cwmars, argv[1], argv[2]);
+    cwloop();
 
     return;
 }
 
+#if (TEST_CW)
 int
 main(int argc, char *argv[])
 {
-    long                place = 0;
-    long                base;
-    long                size;
-    long                adr;
-    long                lim;
-    long                pc1;
-    long                pc2;
+    cwrun(argc, argv);
 
-#if defined(ZEUS) && defined(ZEUSX11)
-    zeusinitx11(&g_cwmars.zeusx11);
-#endif
-    if (argc != 3) {
-        fprintf(stderr, "usage: %s prog1.red prog2.red\n", argv[0]);
-
-        exit(1);
-    }
-    cwinit();
-    base = randmt32();
-    base = cwwrapval(base);
-    pc1 = rcloadfile(argv[1], base, &size);
-    lim = base + size;
-    g_cwmars.progsz[0] = size;
-    adr = base;
-    while (adr < lim) {
-        setbit(&g_cwmars.memmap, adr);
-        adr++;
-    }
-    do {
-        adr = randmt32();
-        adr = cwwrapval(adr);
-        lim = adr + CW_MIN_DIST;
-        while (adr < lim) {
-            if (bitset(&g_cwmars.memmap, adr)) {
-
-                break;
-            }
-            adr++;
-        }
-        place = 0;
-    } while (place);
-    free(g_cwmars.memmap);
-    g_cwmars.memmap = NULL;
-    pc2 = rcloadfile(argv[2], adr, &size);
-    g_cwmars.progsz[1] = size;
-    cwinitmars(&g_cwmars, pc1, pc2, CW_MAX_TURNS);
-    g_cwmars.progpaths[0] = argv[1];
-    g_cwmars.progpaths[1] = argv[2];
-#if defined(ZEUS) && defined(ZEUSX11)
-    while (1) {
-        zeusdrawsim(&g_cwmars.zeusx11);
-        zeusprocev(&g_cwmars.zeusx11);
-    }
-#else
-    cwrun(CW_MAX_TURNS);
-#endif
-
-    /* NOTREACHED */
     exit(0);
 }
+#endif
 
