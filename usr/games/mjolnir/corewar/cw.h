@@ -6,7 +6,9 @@
 #else
 #define CW_CORE_SIZE        1024    // fits on a 80x24 terminal in 64 * 16
 #endif
-#define CW_CORE_ADR_BITS
+#if (CW_CORE_SIZE > (1 << CW_OPERAND_BITS))
+#error fix CW_CORE_SIZE or CW_OPERAND_BITS in <corewar/cw.h>
+#endif
 
 #include <corewar/conf.h>
 #include <stdio.h>
@@ -27,7 +29,7 @@
 #define CW_MAX_PROCS        8000
 #define CW_MAX_SIZE         100
 #define CW_MIN_DIST         100
-#define CW_NO_OP            0x3f
+#define CW_NO_OP            ((1 << CW_OP_BITS) - 1)
 #define CW_INVAL            ((struct cwinstr){ 0 })
 
 /* opcodes */
@@ -43,6 +45,7 @@
 #define CW_OP_DJN           9
 #define CW_OP_SPL           10
 #define CW_MAX_OP           10
+#define CW_OP_BITS          6
 
 /* flags */
 /* addressing modes, default is direct (relative) */
@@ -50,21 +53,23 @@
 #define CW_ARG_IMM          1           // immediate
 #define CW_ARG_INDIR        2           // indirect
 #define CW_ARG_PREDEC       3           // predecrement
+#define CW_TYPE_BITS        4
 
 #define cwisdat(ins)        ((ins).op == CW_OP_DAT)
 
 #if defined (CW_BIG_CORE)
 
-#define CW_OPERAND_BITS     24
+#define CW_OPERAND_BITS     16
 
 struct cwinstr {
-    unsigned                op      : 6;
+    unsigned                op      : CW_OP_BITS;
     unsigned                red     : 1;
     unsigned                pid     : 1;
-    unsigned                atype   : 4;
-    unsigned                btype   : 4;
-    unsigned                a       : 24;
-    unsigned                b       : 24;
+    unsigned                atype   : CW_TYPE_BITS;
+    unsigned                btype   : CW_TYPE_BITS;
+    uint16_t                info;           // reserved; debugger information?
+    unsigned                a       : CW_OPERAND_BITS;
+    unsigned                b       : CW_OPERAND_BITS;
 };
 
 #elif defined(CW_32BIT_INSTRUCTIONS)

@@ -19,6 +19,7 @@
 #define DECK_MSW_REG            0x0e        // machine status word
 #define DECK_MF_REG             0x0f        / machine feature-bits
 #define DECK_REG_BITS           4
+#define DECK_USER_REGS          16
 
 #define DECK_MSW_ZF_BIT         (1 << 0)    // zero-bit
 #define DECK_MSW_SF_BIT         (1 << 1)    // sign-bit

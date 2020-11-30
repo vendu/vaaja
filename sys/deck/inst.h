@@ -39,11 +39,11 @@
 #define DECK_UDIV_OP            DECK_DIV_OP // DECK_UNSIGNED_BIT set in parm
 #define DECK_REM_OP             0x12        // dest = src % arg;
 #define DECK_UREM_OP            DECK_REM_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_STR_OP             0x13
-#define DECK_LDR_OP             0x14
-#define DECK_CPY_OP             0x15
-#define DECK_PSH_OP             0x16
-#define DECK_POP_OP             0x17
+#define DECK_STR_OP             0x13        // *adr = src;
+#define DECK_LDR_OP             0x14        // dest = *adr;
+#define DECK_CPY_OP             0x15        // dest = arc;
+#define DECK_PSH_OP             0x16        // sp -= 4; *sp = src;
+#define DECK_POP_OP             0x17        // dest = *sp; sp += 4;
 #define DECK_STM_OP             0x18
 #define DECK_LDM_OP             0x19
 /*
@@ -77,7 +77,9 @@
 #define DECK_CLI_OP             0x2f        // disable interrupts; default all
 #define DECK_STI_OP             0x30        // enable interrupts; default all
 #define DECK_INT_OP             0x31        // processor ID in parm, -1 for self
+
 #if defined(DECK_MT_EXTENSION)
+
 #define DECK_BAR_OP             0x32        // parm: FDB=0, RDB=1, WRB=2
 /*
  * WFE and WFI wait for
@@ -91,7 +93,7 @@
  * - event signaled by another processor using SEV
  */
 #define DECK_WFE_OP             0x33        // wait for event; INTR, SEV
-#define DECK_WFI_OP             DECK_WFE_OP // SEV-bit set
+#define DECK_WFI_OP             DECK_WFE_OP // WFE-bit set
 #define DECK_AORR_OP            DECK_ORR_OP // ATOMIC, *adr |= src;
 #define DECK_AXOR_OP            DECK_XOR_OP // ATOMIC, *adr ^= src;
 #define DECK_AAND_OP            DECK_AND_OP // ATOMIC, *adr &= src;
@@ -106,9 +108,11 @@
 #define DECK_BTC_OP             0x36        // test-and-clear bit
 /* ATOMIC, dest = *adr & (1 << src), *adr ^= 1 << src; */
 #define DECK_BTF_OP             0x37        // test-and-flip bit
-#define DECK_MTR_OP             0x38        // memory type range register access
-#define DECK_FCL_OP             0x39        // flush cache up level (all)
-#define DECK_IPG_OP             0x3a        // invalidate TLB-entry for page
+#define DECK_CAS_OP             0x38
+#define DECK_MTR_OP             0x39        // memory type range register access
+#define DECK_FCL_OP             0x3a        // flush cache up level (all)
+#define DECK_IPG_OP             0x3b        // invalidate TLB-entry for page
+
 #endif /* defined(DECK_MT_EXTENSION)
 
 #define DECK_OP_BITS            6           // # of bits instruction ID
@@ -140,27 +144,37 @@
 #define DECK_FOLD_SAR           0x03        // fold arithmetic right shift
 #define DECK_FOLD_BITS          2           // # of bits for fold-instruction ID
 
-#define DECK_OFS_BITS           27          // # of bits in PC-relative jump-ofs
+#define DECK_OFS_BITS           26          // # of bits in PC-relative jump-ofs
 struct deckjmpop {
-    unsigned                    id  : DECK_OP_BITS;
-    unsigned                    ofs : DECK_OFS_BITS;
+    unsigned                    id      : DECK_OP_BITS;     // [5:0]
+    unsigned                    ofs     : DECK_OFS_BITS;    // [31:6]
 };
 
 /* parm-field flags */
-#define DECK_SEV_BIT            (1 << 0)
-#define DECK_ATOMIC_BIT         (1 << 1)
+#define DECK_SHIFT_BITS         5           // # of bits in shift counts
+#define DECK_SIZE_BITS          2           // 0 - 8-bit, 1 - 16, 2 - 32, 3 - 64
+#define DECK_FXP_BIT            (1 << 4)    // fixed-point operation
+#define DECK_ATOMIC_BIT         (1 << 5)    // atomic [memory] operation
+#define DECK_WFE_BIT            (1 << 5)    // WFE-instruction (WFI-modifier)
 #define DECK_UNSIGNED_BIT       (1 << 6)    // perform unsigned operation
 struct deckop {
-    unsigned                    id      : DECK_OP_BITS;
-    unsigned                    src     : DECK_REG_BITS;
-    unsigned                    arg     : DECK_REG_BITS;
-    unsigned                    dest    : DECK_REG_BITS;
-    unsigned                    adr     : DECK_ADR_BITS;
-    unsigned                    cond    : DECK_COND_BITS;
-    unsigned                    fold    : DECK_FOLD_BITS;
+    unsigned                    id      : DECK_OP_BITS;     // [5:0]    (6)
+    unsigned                    src     : DECK_REG_BITS;    // [9:6]    (4)
+    unsigned                    arg     : DECK_REG_BITS;    // [12:9]   (4)
+    unsigned                    dest    : DECK_REG_BITS;    // [16:13]  (4)
+    unsigned                    adr     : DECK_ADR_BITS;    // [18:17]  (2)
+    unsigned                    fold    : DECK_FOLD_BITS;   // [20:19]  (2)
+    unsigned                    cond    : DECK_COND_BITS;   // [23:21]  (3)
     unsigned                    parm    : 7;
     int32_t                     imm32[C_VLA];
 }
+
+struct deckmanyop {
+    unsigned                    id      : DECK_OP_BITS; // STM or LDM
+    unsigned                    map     : DECK_USER_REGS;
+    unsigned                    cond    : DECK_COND_BITS;
+    unsigned                    parm    : 7;
+};
 
 #endif /* DECK_INST_H */
 
