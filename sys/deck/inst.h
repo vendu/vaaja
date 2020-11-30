@@ -1,10 +1,17 @@
 #ifndef DECK_INST_H
 #define DECK_INST_H
 
+#define DECK_MP_EXTENSION       1
+
 /* NOP is a 32-bit parcel of all 1-bits */
 
 #define DECK_NOP                (~UINT32_C(0))
 
+/*
+ * NOTES
+ * -----
+ * - NOT, ORR, XOR, AND, INC, DEC, ADD, SUB may be used with the ATOMIC-bit set
+ */
 #define DECK_NOT_OP             0x00        // dest = ~src;
 #define DECK_ORR_OP             0x01        // dest = src | arg;
 #define DECK_XOR_OP             0x02        // dest = src ^ arg;
@@ -16,41 +23,95 @@
 #define DECK_SHL_OP             0x08        // dest = src << (parm|arg);
 #define DECK_SHR_OP             0x09        // dest = src >> (parm|arg);
 #define DECK_SAR_OP             0x0a        // dest = src >>> (parm|arg);
-#define DECK_ADD_OP             0x0b        // dest = src + arg;
+#define DECK_INC_OP             0x0b        // dest = src + 1;
+#define DECK_UINC_OP            DEC_INC_OP  // DECK_UNSIGNED_BIT set in parm
+#define DECK_DEC_OP             0x0c        // dest = src - 1;
+#define DECK_UDEC_OP            DECK_DEC_OP // DECK_UNSIGNED_BIT set in parm
+#define DECK_ADD_OP             0x0d        // dest = src + arg;
 #define DECK_UADD_OP            DECK_ADD_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_SUB_OP             0x0c        // dest = src - arg;
+#define DECK_SUB_OP             0x0e        // dest = src - arg;
 #define DECK_USUB_OP            DECK_SUB_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_MUL_OP             0x0d        // dest = src * arg;
+#define DECK_MUL_OP             0x0f        // dest = src * arg;
 #define DECK_UMUL_OP            DECK_MUL_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_MHI_OP             0x0e        // dest = (src * arg) >> 32;
+#define DECK_MHI_OP             0x10        // dest = (src * arg) >> 32;
 #define DECK_UMHI_OP            DECK_MHI_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_DIV_OP             0x0f        // dest = src / arg;
+#define DECK_DIV_OP             0x11        // dest = src / arg;
 #define DECK_UDIV_OP            DECK_DIV_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_REM_OP             0x10        // dest = src % arg;
+#define DECK_REM_OP             0x12        // dest = src % arg;
 #define DECK_UREM_OP            DECK_REM_OP // DECK_UNSIGNED_BIT set in parm
+#define DECK_STR_OP             0x13
+#define DECK_LDR_OP             0x14
+#define DECK_CPY_OP             0x15
+#define DECK_PSH_OP             0x16
+#define DECK_POP_OP             0x17
+#define DECK_STM_OP             0x18
+#define DECK_LDM_OP             0x19
 /*
  * IOP  src=(CLR|SET|CHK), arg=port, dest=perm
  * IOC  src=cmd, arg=port, dest=parm
  * IOR  src=port, arg=nb, dest=buf
  * IOW  src=buf, arg=nb, dest=port
  */
-#define DECK_IOC_OP             0x11        // I/O commands
-#define DECK_IOR_OP             0x12        // I/O-port reads
-#define DECK_IOW_OP             0x13        // I/O-port writes
-#define DECK_CMP_OP             0x14        // I/O-port writes
+#define DECK_IOC_OP             0x1a        // I/O commands
+#define DECK_IOR_OP             0x1b        // I/O-port reads
+#define DECK_IOW_OP             0x1c        // I/O-port writes
+#define DECK_CMP_OP             0x1d        // I/O-port writes
 #define DECK_UCMP_OP            DECK_CMP_OP // DECK_UNSIGNED_BIT set in parm
-#define DECK_JMP_OP             0x15        // jump unconditionally
-#define DECK_JCF_OP             0x16        // jump if CF-bit set in MSW
-#define DECK_JOF_OP             0x17        // jump if OF-bit set in MSW
-#define DECK_JNR_OP             0x18        // jump if RF-bit not set in MSW
-#define DECK_JEQ_OP             0x19        // jump if ZF-bit set in MSW
-#define DECK_JLT_OP             0x1a        // jump if LT-bit set in MSW
-#define DECK_JGT_OP             0x1b        // jump if GT-bit set in MSW
-#define DECK_SBR_OP             0x1c        // call subroutine
-#define DECK_RET_OP             0x1d        // return from subroutine
-#define DECK_CTZ_OP             0x1e        // count # of low 0-bits
-#define DECK_HAM_OP             0x1f        // count 1-bits (Hamming weight)
-#define DECK_OP_BITS            5           // # of bits instruction ID
+#define DECK_JMP_OP             0x1e        // jump unconditionally
+#define DECK_JCF_OP             0x1f        // jump if CF-bit set in MSW
+#define DECK_JOF_OP             0x20        // jump if OF-bit set in MSW
+#define DECK_JNR_OP             0x21        // jump if RF-bit not set in MSW
+#define DECK_JEQ_OP             0x22        // jump if ZF-bit set in MSW
+#define DECK_JLT_OP             0x23        // jump if LT-bit set in MSW
+#define DECK_JGT_OP             0x24        // jump if GT-bit set in MSW
+#define DECK_SBR_OP             0x25        // call subroutine
+#define DECK_REP_OP             0x26        // jump to label if CNT > 0; loop
+#define DECK_RET_OP             0x27        // return from subroutine
+#define DECK_CTZ_OP             0x28        // count # of low 0-bits
+#define DECK_CLZ_OP             0x29        // count # of high 0-bits
+#define DECK_HAM_OP             0x2a        // count 1-bits (Hamming weight)
+#define DECK_HSH_OP             0x2b        // compute hash value for key
+#define DECK_HUN_OP             0x2c        // reverse hash value to key
+#define DECK_SYS_OP             0x2d        // system-call interface
+#define DECK_HLT_OP             0x2e        // halt to wait for interrupts
+#define DECK_CLI_OP             0x2f        // disable interrupts; default all
+#define DECK_STI_OP             0x30        // enable interrupts; default all
+#define DECK_INT_OP             0x31        // processor ID in parm, -1 for self
+#if defined(DECK_MT_EXTENSION)
+#define DECK_BAR_OP             0x32        // parm: FDB=0, RDB=1, WRB=2
+/*
+ * WFE and WFI wait for
+ * --------------------
+ * - IRQ unless masked
+ * - FIQ unless masked
+ * - a debug request
+ *
+ * WFE also waits for
+ * ------------------
+ * - event signaled by another processor using SEV
+ */
+#define DECK_WFE_OP             0x33        // wait for event; INTR, SEV
+#define DECK_WFI_OP             DECK_WFE_OP // SEV-bit set
+#define DECK_AORR_OP            DECK_ORR_OP // ATOMIC, *adr |= src;
+#define DECK_AXOR_OP            DECK_XOR_OP // ATOMIC, *adr ^= src;
+#define DECK_AAND_OP            DECK_AND_OP // ATOMIC, *adr &= src;
+#define DECK_AINC_OP            DECK_INC_OP // ATOMIC, dest = *adr++;
+#define DECK_ADEC_OP            DECK_DEC_OP // ATOMIC, dest = *adr--;
+#define DECK_AADD_OP            DECK_ADD_OP // ATOMIC, ret = *adr, *adr += src;
+#define DECK_ASUB_OP            DECK_DEC_OP // ATOMIC, ret = *adr, *adr -= src;
+#define DECK_SEV_OP             0x34        // signal event (IRQ/TRAP, MEM)
+/* ATOMIC, dest = *adr & (1 << src), *adr |= 1 << src; */
+#define DECK_BTS_OP             0x35        // test-and-set bit
+/* ATOMIC, dest = *adr & (1 << src), *adr &= ~(1 << src); */
+#define DECK_BTC_OP             0x36        // test-and-clear bit
+/* ATOMIC, dest = *adr & (1 << src), *adr ^= 1 << src; */
+#define DECK_BTF_OP             0x37        // test-and-flip bit
+#define DECK_MTR_OP             0x38        // memory type range register access
+#define DECK_FCL_OP             0x39        // flush cache up level (all)
+#define DECK_IPG_OP             0x3a        // invalidate TLB-entry for page
+#endif /* defined(DECK_MT_EXTENSION)
+
+#define DECK_OP_BITS            6           // # of bits instruction ID
 
 /*
  * adr-field
@@ -86,8 +147,9 @@ struct deckjmpop {
 };
 
 /* parm-field flags */
-#define DECK_UNSIGNED_BIT       (1 << 7)    // perform unsigned operation
-#define DECK_MSW_BIT            (1 << 6)    // set relevant bits in MSW
+#define DECK_SEV_BIT            (1 << 0)
+#define DECK_ATOMIC_BIT         (1 << 1)
+#define DECK_UNSIGNED_BIT       (1 << 6)    // perform unsigned operation
 struct deckop {
     unsigned                    id      : DECK_OP_BITS;
     unsigned                    src     : DECK_REG_BITS;
@@ -96,7 +158,7 @@ struct deckop {
     unsigned                    adr     : DECK_ADR_BITS;
     unsigned                    cond    : DECK_COND_BITS;
     unsigned                    fold    : DECK_FOLD_BITS;
-    uint8_t                     parm;
+    unsigned                    parm    : 7;
     int32_t                     imm32[C_VLA];
 }
 

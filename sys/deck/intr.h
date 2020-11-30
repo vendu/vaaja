@@ -35,23 +35,22 @@
 
 /* system traps */
 #define DECK_TMR_TRAP           0x00    // timer tick
-#define DECK_SYS_TRAP           0x01    // system call request
+#define DECK_BRK_TRAP           0x01    // debugger breakpoint
 #define DECK_MACH_TRAP          0x02    // machine/hardware failure
 #define DECK_UNDEF_TRAP         0x03    // undefined instruction/opcode
 #define DECK_MATH_TRAP          0x04    // e.g. division by 0
-#define DECK_MEM_TRAP           0x05    // ALIGN, BUS, SEG, PAGE, ECC
+#define DECK_MEM_TRAP           0x05    // ALIGN, BUS, SEG, PAGE, ECC, BOUND
 #define DECK_PROT_TRAP          0x06    // no I/O, code, or memory permission
-#define DECK_STOP_TRAP          0x07    // breakpoint, sleep, reboot, ...
+#define DECK_NMI_TRAP           0x07    // breakpoint, sleep, reboot, ...
 /* device interrups */
 #define DECK_KBD_IRQ            0x08    // keyboard
 #define DECK_HID_IRQ            0x09    // human interface device such as mouse
 #define DECK_SND_IRQ            0x0a    // audio event (play, readbuf, ...)
 #define DECK_GFX_IRQ            0x0b    // video event (draw, syncbuf, copybuf)
-#define DECK_DRIVE_IRQ          0x0c    // disk or disc interrupt; fast I/O
+#define DECK_STOR_IRQ           0x0c    // disk/disc/tape/ssd; fast I/O
 #define DECK_CARD_IRQ           0x0d    // punchcard interface :)
 #define DECK_TAPE_IRQ           0x0e    // tape interface
 #define DECK_FAST_IRQ           0x0f    // fast-interrupt; handler inside vector
-#define DECK_T
 
 #endif /* DECK_INTR_H */
 

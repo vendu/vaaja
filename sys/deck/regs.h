@@ -11,14 +11,14 @@
 #define DECK_R6_REG             0x06
 #define DECK_R7_REG             0x07
 #define DECK_CNT_REG            0x08        // loop counter for REP
-#define DECK_NDX_REG            0x09
-#define DECK_PC_REG             0x0a
-#define DECK_FP_REG             0x0b
-#define DECK_SP_REG             0x0c
-#define DECK_LR_REG             0x0d
-#define DECK_MSW_REG            0x0e
-#define DECK_MF_REG             0x0f
-#define DECK_REG_BITS           5
+#define DECK_NDX_REG            0x09        // index register
+#define DECK_FP_REG             0x0a        // frame-pointer
+#define DECK_SP_REG             0x0b        // stack-pointer
+#define DECK_LR_REG             0x0c        // link-register
+#define DECK_PC_REG             0x0d        // program-counter
+#define DECK_MSW_REG            0x0e        // machine status word
+#define DECK_MF_REG             0x0f        / machine feature-bits
+#define DECK_REG_BITS           4
 
 #define DECK_MSW_ZF_BIT         (1 << 0)    // zero-bit
 #define DECK_MSW_SF_BIT         (1 << 1)    // sign-bit
