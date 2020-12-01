@@ -61,7 +61,7 @@
 #   define DECK_SEEK_USB        0x05
 #   define DECK_READ_USB        0x06
 #   define DECK_WRITE_USB       0x07
-#define DECK_CPU_BASE_PORT      0x0010
+#define DECK_CPU_BASE_PORT      0x000a
 #   define DECK_RESET_CPU       0x00
 #   define DECK_START_CPU       0x01
 #   define DECK_STOP_CPU        0x02
