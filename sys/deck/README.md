@@ -20,7 +20,7 @@ well as, of course, audio output.
 For a bit more information about these half-related projects, feel free to
 browse this repository at
 
-       (vaaja repository)[https://github.com/vendu/vaaja/]
+       [vaaja repository](https://github.com/vendu/vaaja/)
 
 Thanks for your interest. :)
 
