@@ -13,6 +13,9 @@
 struct deckvm {
     int8_t                     *mem;        // virtual machine memory
     uint32_t                    memsize;    // size of memory in bytes
+    uint32_t                    bramsize;   // size of BRAM in 2048-byte units
+    uint32_t                   *irqvec;
+    uint32_t                    iregs[DECK_INT_REGS];
     uint8_t                     state;      // RESET, RUN, STOP, HALT
 };
 
