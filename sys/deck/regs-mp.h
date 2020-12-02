@@ -1,5 +1,7 @@
-#ifndef DECK_REGS_MT_H
-#define DECK_REGS_MT_H
+#ifndef DECK_REGS_MP_H
+#define DECK_REGS_MP_H
+
+#if defined(DECK_MP_EXTENSION)
 
 /*
  * memory-type range registers
@@ -31,10 +33,12 @@
 #define DECK_MTR_TYPE_BITS      3
 
 struct deckmtr {
-    unsigned                    base    : 20;   // megabyte-aligned
-    unsigned                    nmeg    : 9;    // up to 512M in size (nmeg + 1)
+    unsigned                    base    : 20;   // page-aligned
+    unsigned                    npg     : 9;    // up to 512 pages (npg + 1)
     unsigned                    type    : DECK_MTR_TYPE_BITS; // cache policy
 };
 
-#endif /* DECK_REGS_MT_H */
+#endif /* defined(DECK_MP_EXTENSION) */
+
+#endif /* DECK_REGS_MP_H */
 

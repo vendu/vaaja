@@ -1,8 +1,8 @@
 #ifndef DECK_IO_H
 #define DECK_IO_H
 
-#define DECK_MAX_IO_PORTS       (1 << DECK_PORT_BITS)
-#define DECK_PORT_BITS          6
+#define DECK_MAX_IO_PORTS       4096
+#define DECK_PORT_BITS          12
 
 #define DECK_TMR_PORT           0x0000  // interrupt timer
 #   define DECK_RESET_TMR       0x00    // zero time-stamp
@@ -62,7 +62,7 @@
 #   define DECK_SEEK_BUS        0x05
 #   define DECK_READ_BUS        0x06
 #   define DECK_WRITE_BUS       0x07
-#define DECK_CPU_BASE_PORT      0x000a  // processor interface ports
+#define DECK_CPU_BASE_PORT      0x0c00  // processor interface ports (max 1024)
 #   define DECK_RESET_CPU       0x00    // reset processor to initial state
 #   define DECK_START_CPU       0x01    // start processor
 #   define DECK_STOP_CPU        0x02    // stop processor (energy-saving)

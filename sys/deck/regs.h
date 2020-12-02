@@ -12,18 +12,20 @@
 #define DECK_R5_REG             0x05        // generic register #5; scratch 2
 #define DECK_R6_REG             0x06        // generic register #6; scratch 3
 #define DECK_R7_REG             0x07        // generic register #7; scratch 4
+#define DECK_GEN_REG_BITS       3           // number of ID-bits
+#define DECK_GEN_REGS           8           // number of generic registers
 /*
  * special registers 8-15 */
-#define DECK_CNT_REG            0x08        // loop counter for REP
-#define DECK_NDX_REG            0x09        // index register
-#define DECK_FP_REG             0x0a        // frame-pointer
-#define DECK_SP_REG             0x0b        // stack-pointer
-#define DECK_LR_REG             0x0c        // link-register
-#define DECK_PC_REG             0x0d        // program-counter
-#define DECK_MSW_REG            0x0e        // machine status word
+#define DECK_MSW_REG            0x08        // machine status word
+#define DECK_NR_REG             0x09        // loop counter for REP
+#define DECK_NDX_REG            0x0a        // index register
+#define DECK_FP_REG             0x0b        // frame-pointer
+#define DECK_SP_REG             0x0c        // stack-pointer
+#define DECK_LR_REG             0x0d        // link-register
+#define DECK_PC_REG             0x0e        // program-counter
 #define DECK_MF_REG             0x0f        // machine feature-bits
 #define DECK_REG_BITS           4           // number of register-ID bits
-#define DECK_USER_REGS          16          // number of user-mode registers
+#define DECK_TOTAL_REGS         16          // number of user-mode registers
 
 /* register bits for STM, LDM */
 #define DECK_R0_BIT             (1 << DECK_R0_REG)
