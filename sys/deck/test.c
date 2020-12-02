@@ -5,6 +5,7 @@
 int
 main(int argc, char *argv[])
 {
+    DECK_PRINT_SANITY();
     printf("hello world\n");
 
     exit(0);

@@ -1,8 +1,8 @@
 #ifndef DECK_INST_H
 #define DECK_INST_H
 
-#include <deck/conf.h>
-#include <deck/regs.h>
+//#include <deck/conf.h>
+//#include <deck/regs.h>
 
 /*
  * NOTES
@@ -313,13 +313,8 @@ struct deckinst {
     unsigned                    adr     : DECK_ADR_BITS;        // [21:19]  (3)
     unsigned                    fold    : DECK_FOLD_BITS;       // [23:22]  (2)
     int8_t                      parm;                           // [31:24]
-    int32_t                     imm32[];
+    int32_t                     imm32[C_VLA];
 };
-
-#if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + DECK_REG_BITS \
-     + DECK_ADR_BITS + DECK_FOLD_BITS + 8 != DECK_INST_BITS)
-#   error sizeof(struct deckinst) != 32 bits in <deck/inst.h>
-#endif
 
 struct deckcmpinst {
     unsigned                    id      : DECK_OP_BITS;         // (6)
@@ -330,11 +325,6 @@ struct deckcmpinst {
     signed                      imm9    : 9; // [-UINT8_MAX, UINT8_MAX]
 };
 
-#if (DECK_OP_BITS + DECK_COND_BITS + DECK_GEN_REG_BITS + DECK_REG_BITS  \
-     + 7 + 9 != 32)
-#   error sizeof(struct deckcmpinst) != 32 bits in <deck/inst.h>
-#endif
-
 /*
  * NOTE: the jump offsets are in 32-bit words to save space and meet alignment
  */
@@ -344,20 +334,12 @@ struct deckjmpinst {
     unsigned                    ofs     : DECK_OFS_BITS;    // [31:6]
 };
 
-#if (DECK_OP_BITS + DECK_OFS_BITS != 32)
-#   error sizeof(struct deckjmpinst) != 32 bits in <deck/inst.h>
-#endif
-
-#define DECK_BRA_BITS           23
+#define DECK_BRA_BITS           23          // PC-relative word-offset bits
 struct deckbrainst {
     unsigned                    id      : DECK_OP_BITS;
     unsigned                    cond    : DECK_COND_BITS;   // [8:6]
     unsigned                    ofs     : DECK_BRA_BITS;    // [31:9]
 };
-
-#if (DECK_OP_BITS + DECK_COND_BITS + DECK_BRA_BITS != DECK_INST_BITS)
-#   error sizeof(struct deckbrainst) != 32 bits in <deck/inst.h>
-#endif
 
 /*
  * SIZE, SEX, STORE, IMM
@@ -369,10 +351,6 @@ struct deckstkinst {
     unsigned                    reg     : DECK_REG_BITS;    // any register
     unsigned                    imm12   : 12;               // 12-bit immediate
 };
-
-#if (DECK_OP_BITS + DECK_COND_BITS + 7 + DECK_REG_BITS + 12 != DECK_INST_BITS)
-#   error sizeof(struct deckstkhinst) != 32 bits in <deck/inst.h>
-#endif
 
 /*
  * - STM, LDM; struct deckmapinst
@@ -387,11 +365,6 @@ struct deckmapinst {
     unsigned                    bits    : DECK_INT_REGS;    // reg-bitmap
 };
 
-#if (DECK_OP_BITS + DECK_COND_BITS + 7 + DECK_INT_REGS != DECK_INST_BITS)
-#   error sizeof(struct deckmapinst) != 32 bits in <deck/inst.h>
-#endif
-
-/* this structure is designed to have room for 16-bit immediate data */
 struct deckioinst {
     unsigned                    id      : DECK_OP_BITS;      // IOC, IOR, IOW
     unsigned                    cond    : DECK_COND_BITS;    // condition
@@ -401,11 +374,6 @@ struct deckioinst {
     unsigned                    port    : DECK_PORT_BITS;    // [12-bit] port ID
     unsigned                    imm     : 4;
 };
-
-#if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + 1 + DECK_PORT_BITS \
-     + 4 != DECK_INST_BITS)
-#   error sizeof(struct deckioinst) != 32 bits in <deck/inst.h>
-#endif
 
 #endif /* DECK_INST_H */
 
