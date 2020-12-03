@@ -2,7 +2,7 @@
 #define DECK_IO_H
 
 #define DECK_MAX_IO_PORTS       4096
-#define DECK_IO_PORT_BITS       12
+#define DECK_PORT_BITS          12
 
 #define DECK_TMR_PORT           0x0000  // interrupt timer
 #   define DECK_RESET_TMR       0x00    // zero time-stamp

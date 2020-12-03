@@ -7,7 +7,7 @@
 #   define DECK_PRINT_SANITY()  fprintf(stderr, "SANITY CHECKS PASSED\n")
 #endif
 
-/* make sure the instruction-structs in <deck/inst.h> occupy DECK_INST_BITS */
+/* check structure sizes in <deck/inst.h> */
 
 #if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS              \
      + DECK_REG_BITS + DECK_ADR_BITS + DECK_FOLD_BITS + 8 != DECK_INST_BITS)
@@ -38,6 +38,23 @@
 #if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + 1 \
      + DECK_PORT_BITS + 4 != DECK_INST_BITS)
 #   error sizeof(struct deckioinst) != DECK_INST_BITS <deck/inst.h>
+#endif
+
+/* check structure sizes in <deck/mmu.h> */
+
+#if (DECK_PAGE_ADR_BITS + DECK_MTR_NPG_BITS + DECK_MTR_TYPE_BITS        \
+     != DECK_REG_SIZE)
+#   error sizeof(struct deckmtr) != DECK_REG_SIZE in <deck/mmu.h>
+#endif
+
+/* check structure sizes in <deck/fpu.h> */
+
+#if (DECK_FLOAT_MANT_BITS + DECK_FLOAT_EXP_BITS != DECK_FLOAT_BITS)
+#   errof sizeof(struct deckfloat) != DECK_FLOAT_BITS in <deck/fpu.h>
+#endif
+
+#if (DECK_DOUBLE_MANT_BITS + DECK_DOUBLE_EXP_BITS != DECK_DOUBLE_BITS)
+#   errof sizeof(struct deckdouble) != DECK_DOUBLE_BITS in <deck/fpu.h>
 #endif
 
 #endif /* DECK_SANITY_H */

@@ -3,6 +3,8 @@
 
 #if defined(DECK_FX_EXTENSION)
 
+#define DECK_FP_REG_BITS             64
+
 #define DECK_FXP_QUOT_BITS      32
 #define DECK_FXP_FRAC_BITS      32
 

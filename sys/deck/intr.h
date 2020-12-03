@@ -7,12 +7,13 @@
 #define DECK_IRQ_RESERVED       UINT32_C(0x00000002)
 #define DECK_IRQ_FUNC_MASK      UINT32_C(0xfffffffc)
 
-#define irqgetfunc(vm, i)                                                   \
-    ((void *)((uintptr_t)(vm).irqvec[(i)] & DECK_IRQ_FUNC_MASK))
-#define irqsetfunc(vm, i, func, ring)                                   \
-    ((vm).irqvec[(i)] |= (void *)((uintptr_t)(func) | (ring)))
+#define intrgetfunc(vm, i)                                              \
+    ((void *)((uintptr_t)(vm).intrvec[(i)] & DECK_IRQ_FUNC_MASK))
+#define intrsetfunc(vm, i, func, ring)                                  \
+    ((vm).intrvec[(i)] |= (void *)((uintptr_t)(func) | (ring)))
 
-typedef void                   *deckirqfunc_t;
+typedef void                   *deckintrfunc_t;
+typedef int8_t                  deckintr_t;
 
 /* system traps and device interrupt requests */
 

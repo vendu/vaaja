@@ -1,5 +1,18 @@
+`ifndef DECK_DECK32_VH
+`define DECK_DECK32_VH
+
+`include "conf.vh"
+`ifdef (DECK_PAPILIO_PRO)
+`include "bsp/papilio-pro.vh"
+`endif
+
+/* INSTRUCTION OPCODE LAYOUT */
+
 `define DECK_INST_WIDTH         32      // instruction parcel size in bits
 `define DECK_IMM_WIDTH          32      // size of immediate after instruction
+
+`define DECK_INST_BITS          31:0
+`define DECK_IMM_BITS           31:0
 
 // fields for 'standard' format instructions
 `define DECK_INST_OP            5:0     // instruction ID
@@ -31,4 +44,6 @@
 `define DECK_IO_INST_FLG        15      // 1 if command in IMM, 0 if in CMD
 `define DECK_IO_INST_PORT       27:16   // source or destination port (12 bits)
 `define DECK_IO_INST_IMM        31:28   // up to 4-bit command
+
+`endif /* DECK_DECK32_VH */
 

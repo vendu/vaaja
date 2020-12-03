@@ -1,6 +1,8 @@
 #ifndef DECK_REGS_H
 #define DECK_REGS_H
 
+#define DECK_REG_SIZE           32
+
 /*
  * general purpose registers R0-R7
  */
