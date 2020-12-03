@@ -33,6 +33,8 @@ struct deckmtr {
 #define DECK_PAGE_DIRTY         (UINT32_C(1) << 4)  // page has been written to
 #define DECK_PAGE_PHYS          (UINT32_C(1) << 5)  // page in physical memory
 
+typedef uint32_t                deckpagedesc_t;
+
 #endif /* defined(DECK_MM_EXTENSION) */
 
 #endif /* DECK_MMU_H */

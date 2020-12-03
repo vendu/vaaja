@@ -134,17 +134,18 @@
 #define DECK_JMP_OP             0x0f        // jump, cond=DECK_ANY_COND
 /* jump, cond=DECK_ANY_COND, (parm & DECK_LINK_BIT) */
 #define DECK_JAL_OP             DECK_JMP_OP
-#define DECK_JEQ_OP             DECK_JMP_OP // jump, cond=DECK_EQ_COND
-#define DECK_JLT_OP             DECK_JMP_OP // jump, cond=DECK_LT_COND
-#define DECK_JGT_OP             DECK_JMP_OP // jump, cond=DECK_GT_COND
-#define DECK_JCF_OP             DECK_JMP_OP // jump, cond=DECK_CF_COND
-#define DECK_JOF_OP             DECK_JMP_OP // jump, cond=DECK_OF_COND
-#define DECK_JNR_OP             DECK_JMP_OP // jump, cond=DECK_NR_COND
-#define DECK_REP_OP             DECK_JMP_OP // jump, cond=DECK_CR_COND (CNT > 1)
-#define DECK_SBR_OP             0x10        // call subroutine
-#define DECK_RET_OP             0x11        // return from subroutine
-#define DECK_SYS_OP             0x12        // start system call
-#define DECK_SRT_OP             0x13        // return from system call
+#define DECK_BRA_OP             0x10
+#define DECK_JEQ_OP             DECK_BRA_OP // jump, cond=DECK_EQ_COND
+#define DECK_JLT_OP             DECK_BRA_OP // jump, cond=DECK_LT_COND
+#define DECK_JGT_OP             DECK_BRA_OP // jump, cond=DECK_GT_COND
+#define DECK_JCF_OP             DECK_BRA_OP // jump, cond=DECK_CF_COND
+#define DECK_JOF_OP             DECK_BRA_OP // jump, cond=DECK_OF_COND
+#define DECK_JNR_OP             DECK_BRA_OP // jump, cond=DECK_NR_COND
+#define DECK_REP_OP             DECK_BRA_OP // jump, cond=DECK_CR_COND (CNT > 1)
+#define DECK_SBR_OP             0x11        // call subroutine
+#define DECK_RET_OP             0x12        // return from subroutine
+#define DECK_SYS_OP             0x13        // start system call
+#define DECK_SRT_OP             0x14        // return from system call
 
 /*
  * memory operations
@@ -155,23 +156,23 @@
  * - low bits in parm specify source operand size
  * - DECK_SEX_BIT dictates zero/sign-extension
  */
-#define DECK_LEA_OP             0x14        // dest = arg(src) + imm
-#define DECK_STR_OP             0x15        // *(arg(dest) + imm) = src;
-#define DECK_LDR_OP             0x16        // dest = *(arg(src) + imm);
-#define DECK_MOV_OP             0x17        // dest = src;
-#define DECK_STK_OP             0x18        // PSH, POP
+#define DECK_LEA_OP             0x15        // dest = arg(src) + imm
+#define DECK_STR_OP             0x16        // *(arg(dest) + imm) = src;
+#define DECK_LDR_OP             0x17        // dest = *(arg(src) + imm);
+#define DECK_MOV_OP             0x18        // dest = src;
+#define DECK_STK_OP             0x19        // PSH, POP
 #define DECK_PSH_OP             DECK_STK_OP // sp -= 4; *sp = src;
 #define DECK_POP_OP             DECK_STK_OP // dest = *sp; sp += 4;
-#define DECK_MAP_OP             0x19        // STM, LDM
+#define DECK_MAP_OP             0x1a        // STM, LDM
 #define DECK_STM_OP             DECK_MAP_OP // push multiple registers; write=1
 #define DECK_LDM_OP             DECK_MAP_OP // pop multiple registers; write=0
 
 /* I/O operations */
-#define DECK_IOP_OP             0x1a        // permission control
-#define DECK_IOC_OP             0x1b        // I/O commands
-#define DECK_IOR_OP             0x1c        // I/O-port reads
-#define DECK_IOW_OP             0x1d        // I/O-port writes
-/* 0x1e-0x1f are reserved */
+#define DECK_IOP_OP             0x1b        // permission control
+#define DECK_IOC_OP             0x1c        // I/O commands
+#define DECK_IOR_OP             0x1d        // I/O-port reads
+#define DECK_IOW_OP             0x1e        // I/O-port writes
+/* 0x1f is reserved */
 
 /* system operations */
 #define DECK_HLT_OP             0x20        // halt to wait for interrupts
@@ -267,6 +268,7 @@
  * LDR: adr=src, ndx=arg, ofs=imm
  * STR: adr=dest, ndx=arg, ofs=imm
  */
+#define DECK_REG_ADR            0x00        // all 0-bits
 #define DECK_IMM_ADR            (1 << 0)    // denotes argument in imm32
 #define DECK_BASE_ADR           (1 << 1)    // denotes base-address in src/dest
 #define DECK_NDX_ADR            (1 << 2)    // denotes address-index in arg
@@ -304,6 +306,18 @@
 #define DECK_LINK_BIT           (1 << 6)    // JAL
 #define DECK_UNSIGNED_BIT       (1 << 7)    // perform unsigned operation
 
+#define DECK_INST_INITIALIZER                                           \
+    {                                                                   \
+        DECK_NOP_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        DECK_R0_REG,                                                    \
+        DECK_R0_REG,                                                    \
+        DECK_R1_REG,                                                    \
+        DECK_REG_ADR,                                                   \
+        DECK_NO_FOLD,                                                   \
+        0                                                               \
+    }
+
 struct deckinst {
     unsigned                    id      : DECK_OP_BITS;         // [5:0]    (6)
     unsigned                    cond    : DECK_COND_BITS;       // [8:6]    (3)
@@ -316,6 +330,14 @@ struct deckinst {
     int32_t                     imm32[C_VLA];
 };
 
+#define DECK_CMP_INST_INITIALIZER                                       \
+    {                                                                   \
+        DECK_CMP_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        DECK_R0_REG,                                                    \
+        DECK_R0_REG,                                                    \
+        0                                                               \
+    }
 struct deckcmpinst {
     unsigned                    id      : DECK_OP_BITS;         // (6)
     unsigned                    cond    : DECK_COND_BITS;       // (3)
@@ -325,6 +347,11 @@ struct deckcmpinst {
     signed                      imm9    : 9; // [-UINT8_MAX, UINT8_MAX]
 };
 
+#define DECK_JMP_INST_INITIALIZER                                       \
+    {                                                                   \
+        DECK_JMP_OP,                                                    \
+        0                                                               \
+    }
 /*
  * NOTE: the jump offsets are in 32-bit words to save space and meet alignment
  */
@@ -334,6 +361,12 @@ struct deckjmpinst {
     unsigned                    ofs     : DECK_OFS_BITS;    // [31:6]
 };
 
+#define DECK_BRA_INST_INITIALIZER                                       \
+    {                                                                   \
+        DECK_BRA_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        0                                                               \
+    }
 #define DECK_BRA_BITS           23          // PC-relative word-offset bits
 struct deckbrainst {
     unsigned                    id      : DECK_OP_BITS;
@@ -341,6 +374,14 @@ struct deckbrainst {
     unsigned                    ofs     : DECK_BRA_BITS;    // [31:9]
 };
 
+#define DECK_STK_INST_INITIALIZER                                       \
+    {                                                                   \
+        DECK_NOP_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        2,                                                              \
+        0,                                                              \
+        0,                                                              \
+    }
 /*
  * SIZE, SEX, STORE, IMM
  */
@@ -352,6 +393,13 @@ struct deckstkinst {
     unsigned                    imm12   : 12;               // 12-bit immediate
 };
 
+#define DECK_MAP_INST_INITIALIZER                                       \
+    {                                                                   \
+        DECK_NOP_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        0,                                                              \
+        0,                                                              \
+    }
 /*
  * - STM, LDM; struct deckmapinst
  * - (parm & DECK_STORE_BIT) for STM
@@ -365,6 +413,16 @@ struct deckmapinst {
     unsigned                    bits    : DECK_INT_REGS;    // reg-bitmap
 };
 
+#define DECK_IO_INST_INITIALIZER                                        \
+    {                                                                   \
+        DECK_NOP_OP,                                                    \
+        DECK_ANY_COND,                                                  \
+        DECK_R0_REG,                                                    \
+        DECK_R1_REG,                                                    \
+        0,                                                              \
+        0,                                                              \
+        1,                                                              \
+    }
 struct deckioinst {
     unsigned                    id      : DECK_OP_BITS;      // IOC, IOR, IOW
     unsigned                    cond    : DECK_COND_BITS;    // condition
