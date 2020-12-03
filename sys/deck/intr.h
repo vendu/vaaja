@@ -3,13 +3,15 @@
 
 #include <stdint.h>
 
+#define DECK_IRQ_RING           UINT32_C(0x00000001)
+#define DECK_IRQ_RESERVED       UINT32_C(0x00000002)
+#define DECK_IRQ_FUNC_MASK      UINT32_C(0xfffffffc)
+
 #define irqgetfunc(vm, i)                                                   \
     ((void *)((uintptr_t)(vm).irqvec[(i)] & DECK_IRQ_FUNC_MASK))
 #define irqsetfunc(vm, i, func, ring)                                   \
     ((vm).irqvec[(i)] |= (void *)((uintptr_t)(func) | (ring)))
-#define DECK_IRQ_RING           UINT32_C(0x00000001)
-#define DECK_IRQ_RESERVED       UINT32_C(0x00000002)
-#define DECK_IRQ_FUNC_MASK      UINT32_C(0xfffffffc)
+
 typedef void                   *deckirqfunc_t;
 
 /* system traps and device interrupt requests */
@@ -24,8 +26,8 @@ typedef void                   *deckirqfunc_t;
  * event/exception/interrupt/fault/abort reason is stored in low 8-bit byte of
  * the interrupt reason-code
  */
-#define DECK_EVENT_MASK         UINT32_C(0x000000ff)    // 8-bit event code mask
-#define DECK_INFO_MASK          UINT32_C(0xffffff00)    // event info mask
+#define DECK_INTR_EVENT_MASK    UINT32_C(0x000000ff)    // 8-bit event code mask
+#define DECK_INTR_INFO_MASK     UINT32_C(0xffffff00)    // event info mask
 
 /* system interrupts */
 #define     DECK_TMR_TRAP       0x00    // timer tick

@@ -1,5 +1,5 @@
-#ifndef DECK_REGS_MP_H
-#define DECK_REGS_MP_H
+#ifndef DECK_REGS_H
+#define DECK_REGS_H
 
 #if defined(DECK_MP_EXTENSION)
 
@@ -24,21 +24,7 @@
 #define DECK_MT14_REG           0x0e
 #define DECK_MT15_REG           0x0f
 
-/* flg-field */
-#define DECK_MTR_WP             0x00
-#define DECK_MTR_NT             0x01
-#define DECK_MTR_WT             0x02
-#define DECK_MTR_WC             0x03
-#define DECK_MTR_WB             0x04
-#define DECK_MTR_TYPE_BITS      3
-
-struct deckmtr {
-    unsigned                    base    : 20;   // page-aligned
-    unsigned                    npg     : 9;    // up to 512 pages (npg + 1)
-    unsigned                    type    : DECK_MTR_TYPE_BITS; // cache policy
-};
-
 #endif /* defined(DECK_MP_EXTENSION) */
 
-#endif /* DECK_REGS_MP_H */
+#endif /* DECK_REGS_H */
 

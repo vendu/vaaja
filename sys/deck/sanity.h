@@ -1,7 +1,14 @@
 #ifndef DECK_SANITY_H
 #define DECK_SANITY_H
 
+#include <stdio.h>
+
+#if defined(DECK_SANITY_CHECK)
+#   define DECK_PRINT_SANITY()  fprintf(stderr, "SANITY CHECKS PASSED\n")
+#endif
+
 /* make sure the instruction-structs in <deck/inst.h> occupy DECK_INST_BITS */
+
 #if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS              \
      + DECK_REG_BITS + DECK_ADR_BITS + DECK_FOLD_BITS + 8 != DECK_INST_BITS)
 #   error sizeof(struct deckinst) != DECK_INST_BITS <deck/inst.h>

@@ -179,13 +179,13 @@
 #define DECK_STI_OP             0x22        // enable interrupts; default all
 #define DECK_INT_OP             0x23        // processor ID in parm, -1 for self
 #define DECK_IRT_OP             0x24        // return from interrupt handler
-#define DECK_MTR_OP             0x25        // memory type range register access
-#define DECK_CPF_OP             0x26        // cacheline-prefetch
-#define DECK_CSP_OP             0x27        // set [default/global] cache-policy
 
 #if defined(DECK_MM_EXTENSION)
 
 /* memory management operations */
+#define DECK_MTR_OP             0x25        // memory type range register access
+#define DECK_CPF_OP             0x26        // cacheline-prefetch
+#define DECK_CSP_OP             0x27        // set [default/global] cache-policy
 #define DECK_FCL_OP             0x28        // flush cache up level (all)
 #define DECK_IPG_OP             0x29        // invalidate TLB-entry for page
 
