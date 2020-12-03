@@ -1,32 +1,49 @@
-#ifndef __ZERO_CDEFS_H__
-#define __ZERO_CDEFS_H__
+#ifndef DECK_CDEFS_H
+#define DECK_CDEFS_H
 
-#if defined(__STDC_VERSION__)
+/* support header to mask differences between different flavors of c language */
+
+/* TODO: actually document this stuff :) */
+
+/*
+ * C_INLINE                             - always inline
+ * C_FASTCALL                           - favor register arguments to stack
+ * C_ASMLINK                            - linkage with assembly code
+ */
+
+#if defined(__STDC_VERSION__)               /* ISO C */
 #if (__STDC_VERSION__ >= 199901L)
+/* C99 */
 #define C_PRAGMA(x)                     _Pragma(#x)
 #define C_IEEE_FP                       __attribute__ (__ieee_fp__)
 #define C_FP_STRICT_IEEE                _Pragma(FP_CONTRACT OFF)
 #define C_FP_CONTRACT                   _Pragma(FP_CONTRACT ON)
 #define C_VLA
 #define C_RESTRICT                      restrict
-#else
-#define C_VLA                           0
+#else /* !C99 */
+#define C_VLA                           0   /* older GCC-way */
 #endif /* (__STDC_VERSION__ >= 199901L) */
 #endif /* defined(__STDC_VERSION__) */
 
 #if (__STDC_VERSION__ >= 201112L)
+/* C11 */
 #include <stdalign.h>
 #define C_STATIC_ASSERT                 _Static_assert
 #endif /* __STDC_VERSION__ >= 201112L */
 #if !defined(__STDC_NO_THREADS__)
+/* include our custom, somewhat-hazardous verions of C11 threads using POSIX */
 //#include <threads.h>
+/* thread-local data, C11 declaration */
 #define C_THREADLOCAL                   _Thread_local
 #elif defined(__GNUC__) || defined(__clang__)
+/* GCC/clang way to declare thread-local storage */
 #define C_THREADLOCAL                   __thread
 #endif /* !defined(__STDC_NO_THREADS) */
 
 #if defined(__STDC_VERSION__)
 #define C_REGISTER                      register
+#else
+#define C_REGISTER                      /* empty for non-ISO C */
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -82,15 +99,15 @@
 #if !defined(C_ALIGNED)
 #define C_ALIGNED(a)                    __attribute__ ((__aligned__(a)))
 #endif
-#define C_CONST        	                __attribute__ ((__const__))
+#define C_CONST                         __attribute__ ((__const__))
 #define C_IMMEDIATE(x)                  __builtin_constant_p(x)
-#define C_INLINE       	                __inline__ __attribute__ ((__always_inline__))
-#define C_NOINLINE     	                __attribute__ ((__noinline__))
+#define C_INLINE                        __inline__ __attribute__ ((__always_inline__))
+#define C_NOINLINE                      __attribute__ ((__noinline__))
 #define C_LOCAL_LABEL(lbl)              __label__   lbl
 #define C_LABEL_ADDRESS(lbl)            &&lbl
-#define C_NOCLONE     	                __attribute__ ((__noclone__))
-#define C_NORETURN     	                __attribute__ ((__noreturn__))
-#define C_RETURNSTWICE     	            __attribute__ ((__returns_twice__))
+#define C_NOCLONE                       __attribute__ ((__noclone__))
+#define C_NORETURN                      __attribute__ ((__noreturn__))
+#define C_RETURNSTWICE                  __attribute__ ((__returns_twice__))
 #define C_INDIRECT_BRANCH(type)         __attribute__ ((__indirect_branch__ (#type)))
 #define C_FUNCTION_RETURN(type)         __attribute__ ((__function_return__ (#type)))
 #define C_INDIRECT_RETURN               __attribute__ ((__indirect_return__))
@@ -234,5 +251,5 @@ static C_INLINE C_PREFETCH(void *adr)
 #define C_ALLOC_ALIGN(n)                __attribute__ ((__alloc_align__ (n)))
 #endif
 
-#endif /* __ZERO_CDEFS_H__ */
+#endif /* DECK_CDEFS_H */
 
