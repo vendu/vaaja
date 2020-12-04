@@ -54,10 +54,10 @@
 #define DECK_IEEE_754_DOUBLE_EXP_BITS   11
 #define DECK_IEEE_754_LD80_RES_BITS     16
 #define DECK_IEEE_754_LD80_EXP_BITS     52
-#define DECK_IEEE_754_LD80_MANT0_BITS   20
-#define DECK_IEEE_754_LD80_MANT1_BITS   32
-#define DECK_IEEE_754_LD128_MANT0_BITS  48
-#define DECK_IEEE_754_LD128_MANT1_BITS  64
+#define DECK_IEEE_754_LD80_MANT_BITS   20
+//#define DECK_IEEE_754_LD80_MANT1_BITS   32
+#define DECK_IEEE_754_LD128_MANT_BITS  48
+//#define DECK_IEEE_754_LD128_MANT1_BITS  64
 #define DECK_IEEE_754_LD_EXP_BITS       15
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
@@ -65,108 +65,17 @@
 union __ieee754f {
     float f;
     struct {
-        unsigned                        mant    : DECK_IEEE_754_FLOAT_MANT_BITS;
-        unsigned                        exp     : DECK_IEEE_754_FLOAT_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
+        unsigned                        mant     : DECK_IEEE_754_FLOAT_MANT_BITS;
+        unsigned                        exp      : DECK_IEEE_754_FLOAT_EXP_BITS;
+        unsigned                        sign     : DECK_IEEE_754_SIGN_BITS;
     } val;
     struct {
-        unsigned                        mant    : DECK_IEEE_754_FLOAT_MANT_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                        quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                        exp     : DECK_IEEE_754_FLOAT_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
+        unsigned                        mant     : DECK_IEEE_754_FLOAT_MANT_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
+        unsigned                        quiet    : DECK_IEEE_754_NAN_QUIET_BITS;
+        unsigned                        exp      : DECK_IEEE_754_FLOAT_EXP_BITS;
+        unsigned                        sign     : DECK_IEEE_754_SIGN_BITS;
     } nan;
 };
-
-#if 0
-union __ieee754ld128 {
-    long double ld;
-    struct {
-        unsigned                        mant1   : DECK_IEEE_754_LD128_MANT1_BITS;
-        unsigned                        mant0   : DECK_IEEE_754_LD128_MANT0_BITS;
-        unsigned                        exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-    } val;
-};
-#endif
-
-#if (__FLOAT_WORD_ORDER == __LITTLE_ENDIAN)
-
-union __ieee754d {
-    double d;
-    struct {
-        //        unsigned                        mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
-        unsigned                        mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS;
-        unsigned                        exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-    } val;
-    struct {
-        //        unsigned                        mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
-        unsigned                        mant1   : DECK_IEEE_754_DOUBLE_MANT0_BITS;
-        unsigned                        mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                        quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                        exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-    } nan;
-};
-
-union __ieee754ld80 {
-    long double ld;
-    struct {
-        //        unsigned                        mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
-        unsigned                        mant0   : DECK_IEEE_754_LD80_MANT0_BITS;
-        unsigned                        exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                        _res    : DECK_IEEE_754_LD80_RES_BITS;
-    } val;
-    struct {
-        //        unsigned                        mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
-        unsigned                        mant0   : DECK_IEEE_754_LD80_MANT0_BITS;
-        unsigned                        exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                        _res    : DECK_IEEE_754_LD80_RES_BITS;
-    } nan;
-};
-
-#elif (__FLOAT_WORD_ORDER == __BIG_ENDIAN)
-
-union __ieee754d {
-    double d;
-    struct {
-        unsigned                        mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS;
-        unsigned                        exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
-        unsigned                        sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                        mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
-    } val;
-    struct {
-        unsigned                        mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                        quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
-        unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
-    } nan;
-};
-
-union __ieee754ld80 {
-    long double ld;
-    struct {
-        unsigned                         exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                         _res    : DECK_IEEE_754_LD80_RES_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_LD80_MANT0_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
-    } val;
-    struct {
-        unsigned                         exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                         _res    : DECK_IEEE_754_LD80_RES_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_LD80_MANT0_BITS - DECK_IEEE_NAN_QUIET_BITS;
-        unsigned                         quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                         one     : DECK_IEEE_754_LD80_ONE_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
-    } nan;
-};
-
-#endif /* __FLOAT_WORD_ORDER */
 
 #elif (__BYTE_ORDER == __BIG_ENDIAN)
 
@@ -190,15 +99,13 @@ union __ieee754d {
     struct {
         unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
         unsigned                         exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
+        unsigned                         mant    : DECK_IEEE_754_DOUBLE_MANT_BITS;
     } val;
     struct {
         unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
         unsigned                         exp     : DECK_IEEE_754_DOUBLE_EXP_BITS;
         unsigned                         quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_DOUBLE_MANT0_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_DOUBLE_MANT1_BITS;
+        unsigned                         mant    : DECK_IEEE_754_DOUBLE_MANT_BITS - DECK_IEEE_754_NAN_QUIET_BITS;
     } nan;
 };
 
@@ -208,8 +115,7 @@ union __ieee754ld80 {
         unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
         unsigned                         exp     : DECK_IEEE_754_LD_EXP_BITS;
         unsigned                         _res    : DECK_IEEE_754_LD80_RES_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_LD80_MANT0_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
+        unsigned                         mant    : DECK_IEEE_754_LD80_MANT_BITS;
     } val;
     struct {
         unsigned                         sign    : DECK_IEEE_754_SIGN_BITS;
@@ -217,22 +123,9 @@ union __ieee754ld80 {
         unsigned                         _res    : DECK_IEEE_754_LD80_RES_BITS;
         unsigned                         one     : DECK_IEEE_754_LD80_ONE_BITS;
         unsigned                         quiet   : DECK_IEEE_754_NAN_QUIET_BITS;
-        unsigned                         mant0   : DECK_IEEE_754_LD80_MANT0_BITS - DECK_IEEE_754_LD80_ONE_BITS - DECK_IEEE_NAN_QUIET_BITS;
-        unsigned                         mant1   : DECK_IEEE_754_LD80_MANT1_BITS;
+        unsigned                         mant    : DECK_IEEE_754_LD80_MANT_BITS - DECK_IEEE_754_LD80_ONE_BITS - DECK_IEEE_NAN_QUIET_BITS;
     } nan;
 };
-
-#if 0
-union __ieee754ld128 {
-    long double ld;
-    struct {
-        unsigned                              sign    : DECK_IEEE_754_SIGN_BITS;
-        unsigned                              exp     : DECK_IEEE_754_LD_EXP_BITS;
-        unsigned                              mant0   : DECK_IEEE_754_LD128_MANT0_BITS;
-        unsigned                              mant1   : DECK_IEEE_754_LD128_MANT1_BITS;
-    } val;
-};
-#endif
 
 #endif /* __BYTE_ORDER */
 
