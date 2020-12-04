@@ -3,8 +3,6 @@
 
 #if defined(DECK_FP_EXTENSION)
 
-#include <deck/ieee754.h>
-
 #define DECK_FPU_REG_BITS       64
 
 typedef int64_t                 deckfpureg_t;
