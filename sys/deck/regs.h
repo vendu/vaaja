@@ -1,7 +1,13 @@
 #ifndef DECK_REGS_H
 #define DECK_REGS_H
 
+#include <stdint.h>
+
 #define DECK_REG_SIZE           32
+
+/* register types */
+typedef int32_t                 deckreg_t;
+typedef uint32_t                deckureg_t;
 
 /*
  * general purpose registers R0-R7
