@@ -6,21 +6,29 @@ In this directory tree I'm attempting to design a small and simple processor
 for playing around with FPGA gear; I'd hope this would be helpful for the
 purposes of education and fun.
 
+## Mjolnir & Other Games
+
 The project is early, but it's based on a few different pseudo-designs I've come
 up with in past. It was actually inspired by the game project Mjolnir; I thought
 a cyberpunk-style Roguelike game could use small computers called decks, one
 thought lead to another and I realized why not mess around a bit with something
-like this. I still have an FPGA-kit waiting to be put in real use.
+like this. I still have an FPGA-kit waiting to be put in real use. Some other
+ideas include a programming game where you could implement algorithms and
+compete in execution speed, memory consumption, and perhaps other
+characteristics of programs written by others.
 
-One of my visions is to implement a retro-style game console with a custom
-32-bit microprocessor, VGA-graphics (my current FPGA-kit does 4,096-colors),
-connectors for keyboards and mice, and a couple of digital joystick ports as
-well as, of course, audio output.
+## Voima Console
 
-For a bit more information about these half-related projects, feel free to
-browse this repository at
+I plan to implemement the first versions of Voima on a Papilio Pro FPGA Kit.
 
-       [vaaja repository](https://github.com/vendu/vaaja/)
+One of my visions is to implement a retro-style game console;
+- a custom 32-bit microprocessor
+- 4,096-color VGA-graphics
+- keyboard and mouse input
+- 2 x digital joystick inputs
+- 44.1 KHz 16-bit audio output
+
+       https://github.com/vendu/vaaja/
 
 Thanks for your interest. :)
 
