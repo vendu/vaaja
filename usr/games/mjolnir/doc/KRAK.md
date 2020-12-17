@@ -23,6 +23,26 @@
 - MELT          - weaken or destroy ICE
 - ICE           - defend against attack
 - HEAL          - raise a characters mental and/or physical health
-- SWARM         - attack several opponent cards at once
 - PROBE         - identify [hidden] card on the board
+- SWARM         - attack several opponent cards
+- RAY           - attack a row or column of cards at once
+- EMP           - weaken or destroy opponent deck or mainframe (deactivating
+                  connected cards)
+
+### Future Additions
+
+- WORM
+- TROJAN
+- VIRUS
+
+## Gameplay
+
+At start, each player places the top 6 cards from their [shuffled] deck and
+places them on the board's homebase slots in left to right order.
+
+The users start rolling a D6-die and moving their characters in left-to-right
+order. In case two cards hit each other, they're turned visible and the actions
+of the cards are taken. NOTE: in a tabletop/human-only game, the order to move
+the characters is arbitrary. The computer game has been simplified slightly not
+to require too much AI-like behavior. :)
 
