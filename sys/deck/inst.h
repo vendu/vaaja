@@ -1,9 +1,6 @@
 #ifndef DECK_INST_H
 #define DECK_INST_H
 
-//#include <deck/conf.h>
-//#include <deck/regs.h>
-
 /*
  * NOTES
  * -----
@@ -181,81 +178,6 @@
 #define DECK_INT_OP             0x23        // processor ID in parm, -1 for self
 #define DECK_IRT_OP             0x24        // return from interrupt handler
 
-#if defined(DECK_MM_EXTENSION)
-
-/* memory management operations */
-#define DECK_MTR_OP             0x25        // memory type range register access
-#define DECK_CPF_OP             0x26        // cacheline-prefetch
-#define DECK_CSP_OP             0x27        // set [default/global] cache-policy
-#define DECK_FCL_OP             0x28        // flush cache up level (all)
-#define DECK_IPG_OP             0x29        // invalidate TLB-entry for page
-
-#endif
-
-#if defined(DECK_MP_EXTENSION)
-/* multiprocessor support operations */
-
-/* atomic arithmetic-logical operations */
-/* ATOMIC, *adr |= src; */
-#define DECK_AORR_OP            DECK_ORR_OP
-/* ATOMIC, *adr ^= src; */
-#define DECK_AXOR_OP            DECK_XOR_OP
-/* ATOMIC, *adr &= src; */
-#define DECK_AAND_OP            DECK_AND_OP
-/* ATOMIC, dest = *adr++; */
-#define DECK_AINC_OP            DECK_INC_OP
-/* ATOMIC, dest = *adr--; */
-#define DECK_ADEC_OP            DECK_DEC_OP
-/* ATOMIC, ret = *adr, *adr += src; */
-#define DECK_AADD_OP            DECK_ADD_OP
-/* ATOMIC, ret = *adr, *adr -= src; */
-#define DECK_ASUB_OP            DECK_DEC_OP
-
-/* memory barriers */
-#define DECK_BAR_OP             0x2a
-/* parm-field values for DECK_BAR_OP */
-#define DECK_BAR_DATA           0x00
-#define DECK_BAR_READ           0x01
-#define DECK_BAR_WRITE          0x02
-#define DECK_BDT_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_DATA
-#define DECK_BRD_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_READ
-#define DECK_BWR_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_WRITE
-
-/*
- * - DECK_BTS_OP:   parm=DECK_SET|DECK_ATOMIC_BIT
- * - DECK_BTC_OP:   parm=DECK_CLR|DECK_ATOMIC_BIT
- * - DECK_BTF_OP:   parm=DECK_FLP|DECK_ATOMIC_BIT
- */
-/* ATOMIC, dest = *adr & (1 << src); *adr |= 1 << src; */
-#define DECK_BTS_OP             DECK_BIT_OP // test-and-set bit
-/* ATOMIC, dest = *adr & (1 << src); *adr &= ~(1 << src); */
-#define DECK_BTC_OP             DECK_BIT_OP // test-and-clear bit
-/* ATOMIC, dest = *adr & (1 << src); *adr ^= 1 << src; */
-#define DECK_BTF_OP             DECK_BIT_OP // test-and-flip bit
-/* ATOMIC, ret = *adr; if (ret == arg) *adr = src; dest = ret - arg; */
-#define DECK_CAS_OP             0x2b        // compare-and-swap
-/*
- * WFE and WFI wait for
- * --------------------
- * - IRQ unless masked
- * - FIQ unless masked
- * - a debug request
- *
- * WFE also waits for
- * ------------------
- * - event signaled by another processor using SEV
- */
-#define DECK_SIG_OP             0x2c
-/* parm-field values for DECK_SIG_OP */
-#define DECK_SIG_SEV            0x00
-#define DECK_SIG_WFI            0x01
-#define DECK_SIG_WFE            0x02
-#define DECK_SEV_OP             DECK_SIG_OP // parm & 0x03 == DECK_SIG_SEV
-#define DECK_WFI_OP             DECK_SIG_OP // parm & 0x03 == DECK_SIG_WFI
-#define DECK_WFE_OP             DECK_SIG_OP // parm & 0x03 == DECK_SIG_WFE
-
-#endif /* defined(DECK_MP_EXTENSION) */
-
 /* instruction IDs 0x2c..0x3d are currently reserved */
 
 #define DECK_COPROC_OP          0x3e        // coprocessor-defined instructions
@@ -271,7 +193,7 @@
 #define DECK_REG_ADR            0x00        // all 0-bits
 #define DECK_IMM_ADR            (1 << 0)    // denotes argument in imm32
 #define DECK_BASE_ADR           (1 << 1)    // denotes base-address in src/dest
-#define DECK_NDX_ADR            (1 << 2)    // denotes address-index in arg
+#define DECK_OFS_ADR            (1 << 2)    // denotes address-offset in arg
 #define DECK_ADR_BITS           3           // number of address-mode bits
 
 /*
@@ -295,18 +217,27 @@
 #define DECK_FOLD_BITS          2           // # of fold-instruction ID-bits
 
 /* parm-field flags */
-#define DECK_WFE_BIT            (1 << 1)    // WFE-instruction (WFI-modifier)
+#define DECK_WFE_BIT            (1 << 0)    // WFE-instruction (WFI-modifier)
 #define DECK_SIZE_BITS          2           // 0 - 8-bit, 1 - 16, 2 - 32, 3 - 64
 #define DECK_SEX_BIT            (1 << 2)    // 0: zero-extend, 1: sign-extend
 #define DECK_STORE_BIT          (1 << 3)    // PSH, STM
-#define DECK_IMM_BIT            (1 << 4)    //
 #define DECK_SHIFT_BITS         5           // # of bits in shift counts
 #define DECK_ATOMIC_BIT         (1 << 6)    // atomic [memory] operation
 #define DECK_REV_BIT            (1 << 6)    // reverse bits; HUN
 #define DECK_LINK_BIT           (1 << 6)    // JAL
 #define DECK_UNSIGNED_BIT       (1 << 7)    // perform unsigned operation
 
-#define DECK_INST_INITIALIZER                                           \
+#define DECK_STD_INST           0
+#define DECK_CMP_INST           1
+#define DECK_JMP_INST           2
+#define DECK_BRA_INST           3
+#define DECK_STK_INST           4
+#define DECK_MAP_INST           5
+#define DECK_IO_INST            6
+#define DECK_NOP_INST           7
+#define DECK_INST_TYPES         8
+
+#define DECK_STD_INST_INITIALIZER                                       \
     {                                                                   \
         DECK_NOP_OP,                                                    \
         DECK_ANY_COND,                                                  \
@@ -318,8 +249,8 @@
         0                                                               \
     }
 
-struct deckinst {
-    unsigned                    id      : DECK_OP_BITS;         // [5:0]    (6)
+struct deckstdinst {
+    unsigned                    op      : DECK_OP_BITS;         // [5:0]    (6)
     unsigned                    cond    : DECK_COND_BITS;       // [8:6]    (3)
     unsigned                    src     : DECK_GEN_REG_BITS;    // [11:9]   (3)
     unsigned                    dest    : DECK_REG_BITS;        // [15:12]  (4)
@@ -339,12 +270,12 @@ struct deckinst {
         0                                                               \
     }
 struct deckcmpinst {
-    unsigned                    id      : DECK_OP_BITS;         // (6)
+    unsigned                    op      : DECK_OP_BITS;         // (6)
     unsigned                    cond    : DECK_COND_BITS;       // (3)
     unsigned                    src     : DECK_GEN_REG_BITS;    // (3)
     unsigned                    dest    : DECK_REG_BITS;        // (4)
-    unsigned                    parm    : 7;                    // SIZE, SEX
-    signed                      imm9    : 9; // [-UINT8_MAX, UINT8_MAX]
+    unsigned                    parm    : 3;                    // SIZE, SEX
+    signed                      imm13   : 13; // [-8192, 8191]
 };
 
 #define DECK_JMP_INST_INITIALIZER                                       \
@@ -357,7 +288,7 @@ struct deckcmpinst {
  */
 #define DECK_OFS_BITS           26          // PC-relative word-offset bits
 struct deckjmpinst {
-    unsigned                    id      : DECK_OP_BITS;     // [5:0]
+    unsigned                    op      : DECK_OP_BITS;     // [5:0]
     unsigned                    ofs     : DECK_OFS_BITS;    // [31:6]
 };
 
@@ -369,7 +300,7 @@ struct deckjmpinst {
     }
 #define DECK_BRA_BITS           23          // PC-relative word-offset bits
 struct deckbrainst {
-    unsigned                    id      : DECK_OP_BITS;
+    unsigned                    op      : DECK_OP_BITS;
     unsigned                    cond    : DECK_COND_BITS;   // [8:6]
     unsigned                    ofs     : DECK_BRA_BITS;    // [31:9]
 };
@@ -383,14 +314,14 @@ struct deckbrainst {
         0,                                                              \
     }
 /*
- * SIZE, SEX, STORE, IMM
+ * parm: SIZE[14:13], RING[15]
  */
 struct deckstkinst {
-    unsigned                    id      : DECK_OP_BITS;     // PSH or POP
+    unsigned                    op      : DECK_OP_BITS;     // PSH or POP
     unsigned                    cond    : DECK_COND_BITS;   // condition
-    unsigned                    parm    : 7;                // see above
     unsigned                    reg     : DECK_REG_BITS;    // any register
-    unsigned                    imm12   : 12;               // 12-bit immediate
+    unsigned                    parm    : 3;                // see above
+    int16_t                     imm;
 };
 
 #define DECK_MAP_INST_INITIALIZER                                       \
@@ -407,10 +338,11 @@ struct deckstkinst {
  *   the lowest bit is R0, the highest (#15) is MF which is static (POP invalid)
  */
 struct deckmapinst {
-    unsigned                    id      : DECK_OP_BITS;     // STM or LDM
+    unsigned                    op      : DECK_OP_BITS;     // STM or LDM
     unsigned                    cond    : DECK_COND_BITS;   // condition
     unsigned                    parm    : 7;                // reserved
-    unsigned                    bits    : DECK_INT_REGS;    // reg-bitmap
+    unsigned                    bits    : DECK_INT_REGS - 1; // reg-bitmap
+    unsigned                    stm     : 1;                 // 0=ldm, 1=stm
 };
 
 #define DECK_IO_INST_INITIALIZER                                        \
@@ -424,13 +356,12 @@ struct deckmapinst {
         1,                                                              \
     }
 struct deckioinst {
-    unsigned                    id      : DECK_OP_BITS;      // IOC, IOR, IOW
-    unsigned                    cond    : DECK_COND_BITS;    // condition
+    unsigned                    op      : DECK_OP_BITS;     // IOC, IOR, IOW
+    unsigned                    cond    : DECK_COND_BITS;   // condition
     unsigned                    reg     : DECK_GEN_REG_BITS; // in/out register
-    unsigned                    cmd     : DECK_GEN_REG_BITS; // command register
-    unsigned                    flg     : 1;                 // 1: imm has cmd
-    unsigned                    port    : DECK_PORT_BITS;    // [12-bit] port ID
-    unsigned                    imm     : 4;
+    unsigned                    port    : DECK_GEN_REG_BITS; // port register
+    unsigned                    ring    : 1;                // 1=system-ring
+    uint16_t                    cmd;                        // 16-bit command
 };
 
 #endif /* DECK_INST_H */

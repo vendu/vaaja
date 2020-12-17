@@ -12,7 +12,7 @@ typedef uint32_t                deckureg_t;
 /*
  * general purpose registers R0-R7
  */
-#define DECK_R0_REG             0x00        // generic register #0; argument 1
+#define DECK_R0_REG             0x00        // 0-register
 #define DECK_R1_REG             0x01        // generic register #1; argument 2
 #define DECK_R2_REG             0x02        // generic register #2; argument 3
 #define DECK_R3_REG             0x03        // generic register #3; argument 4

@@ -1,4 +1,8 @@
 #! /bin/sh
 
-gcc -O -I.. -o test test.c
+. ./build.sh
+
+CFLAGS+=" -m32"
+
+gcc $CFLAGS $CCOPTFLAGS $CCWARNFLAGS $GNUWARNFLAGS $INCLUDES -O -o test test.c lib/hash.c lib/ht.c
 

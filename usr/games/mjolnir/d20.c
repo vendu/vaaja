@@ -5,13 +5,7 @@
  * - vendu
  */
 
-#include <mjolnir/conf.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <prng/randmt32.h>
-#include <mjolnir/d20.h>
+#include <mjolnir/mjolnir.h>
 
 void
 d20parsecmd(struct d20dice *buf, int argc, char *argv[])
@@ -97,27 +91,27 @@ d20rolldice(struct d20dice *dicebuf)
 
     n = dicebuf->nd4;
     if (n) {
-        retval += d20rolln(n, D20_DIE4);
+        retval += d20rollndie(n, D20_DIE4);
     }
     n = dicebuf->nd6;
     if (n) {
-        retval += d20rolln(n, D20_DIE6);
+        retval += d20rollndie(n, D20_DIE6);
     }
     n = dicebuf->nd8;
     if (n) {
-        retval += d20rolln(n, D20_DIE8);
+        retval += d20rollndie(n, D20_DIE8);
     }
     n = dicebuf->nd10;
     if (n) {
-        retval += d20rolln(n, D20_DIE10);
+        retval += d20rollndie(n, D20_DIE10);
     }
     n = dicebuf->nd12;
     if (n) {
-        retval += d20rolln(n, D20_DIE12);
+        retval += d20rollndie(n, D20_DIE12);
     }
     n = dicebuf->nd20;
     if (n) {
-        retval += d20rolln(n, D20_DIE20);
+        retval += d20rollndie(n, D20_DIE20);
     }
 
     return retval;

@@ -31,7 +31,7 @@ Soldier ants are the strongest type of ants.
 Bees are relatively easy opponents, for they can only sting once after which
 they die. Bees will do anything to protect their queen.
 
-## q - bee queen
+## B - bee queen
 
 Bee queens may not be a good idea to attack, especially with lots of other bees
 in vicinity.

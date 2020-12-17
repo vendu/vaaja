@@ -1,9 +1,9 @@
 #ifndef __COREWAR_CONF_H__
 #define __COREWAR_CONF_H__
 
-//#define ZEUS                        1
-//#define ZEUSX11                     1
-//#define ZEUSIMLIB2                  1
+#define ZEUS                        1
+#define ZEUSX11                     1
+#define ZEUSIMLIB2                  1
 //#define ZEUSSDL                     1
 
 #define COREWAR_TTY                 1

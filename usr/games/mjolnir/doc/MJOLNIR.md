@@ -26,58 +26,6 @@ to meet characters from different mythologies such as Norse ones.
 Fenris the wolf has stolen Mjolnir from Thor. Your main mission is to return his
 hammer back to Thor and optionally bring Fenris back as well.
 
-- quests
-  - digital bank robbery; iron bar or lock-pick, camo operation, c4, switch room,
-    black box, network sniffing, packet deciphering, packet forging to access the
-    account database
-  - y2k38; 32-bit timestamp cannat encode times after 03<.14:07 UTC on Jan 19,
-    2038. a malicious hacker gets hired to fix bank data systems, but plants a
-    trojan to do a few huge transfars from big company accounts to anonymous
-    accounts in Europe, then shuts the system down (hopefully wiping the
-    transfer logs), then brings the system back up as if nothing happened
-    - bank tapes, bank database documentation
-- mainframes
-  - direct access to mainframe let's you clone and steal the tape of the core
-    war warriors that have ruled the machine
-  - beating the warrior running on the mainframe at least 5 out of 9 times shall
-    gain you masterhood of the mainframe; you shall also acquire the source code
-    of the old master warrior
-  - if you get physical access to a mainframe, you can inspect the tapes, dump
-    their contents on punchcards, or steal the tapes.
-  - other software
-    - RCDB      - redcode/warrior debugger
-    - RCED      - redcode editor
-    - TED       - editor (ASCII/ISO 8859-1 and hexadecimal)
-    - SYS       - mainframe operating system
-    - IO        - [file-based] I/O utilities
-                - mkfs, list, run, copy, move, wipe, read, write
-    - TAP       - network sniffer (port, address, log)
-    - NET       - network access interface (login, list, copy, wipe)
-    - DUMP      - copy program to punchcard
-    - ROT13     - 'decipher' file; redcode and certain other files are ciphered
-                - the default encryption is ROT13; this is done for fun and to
-                  allow relatively easy modifications to the game with some
-                  background work
-    - HASH      - hash and unhash functions
-                - tmhash32(), tmunhash32()
-                - better privacy than simple ROT13
-    - CRAK      - different malware tools
-                - root, single, log(on|off), unlog, crack
-    - MEM       - memory logger and editor
-                - save(adr, fd, ofs, nrec), load(adr, fd, ofs, nrec)
-                - poke(adr, val), peek(adr)
-    - MMIND     - mastermind game
-    - BSHIP     - battleship game
-                - 10x10 grid
-                - 1 4-block ship
-                - 2 3-block ships
-                - 3 2-block ships
-                - 4 1-block ships
-    - Y38K      - Trojan for bank systems
-- terminals
-  - equipped with punchcard readers to play core war and run other software
-    on in-dungeon mainframes
-
 ## magic and spells
 
 Mjolnir spells are typically written on scrolls. These spells include
@@ -131,60 +79,60 @@ Good luck, adventurer, and beware of Fenris!
 
 keybard command | description
 |----------------|------------
-| ESC		| boss key
-| m		| open command menu
-| /		| identify object
-| h		| left
-| j		| down
-| k		| up
-| l		| right
-| y		| up & left
-| u		| up & right
-| b		| down & left
-| n		| down & right
-| <SHIFT><dir>	| run
-| <CTRL><dir>	| run till adjacent
-| f<dir>	| fight till death or near death
-| t<dir>	| throw
-| m<dir>	| move on top but don't pick upz<
-| z<dir>	| zap a wand
-| ^<dir>	| identify trap type
-| s		| search for trap/secret door
-| >		| go down
-| <		| go up
-| .		| rest for a turn
-| ,		| pick up
-| i		| inventory
-| I		| inventory single item
-| q		| quaff potion
-| r		| read scroll
+| ESC           | boss key
+| m             | open command menu
+| /             | identify object
+| h             | left
+| j             | down
+| k             | up
+| l             | right
+| y             | up & left
+| u             | up & right
+| b             | down & left
+| n             | down & right
+| <SHIFT><dir>  | run
+| <CTRL><dir>   | run till adjacent
+| f<dir>        | fight till death or near death
+| t<dir>        | throw
+| m<dir>        | move on top but don't pick upz<
+| z<dir>        | zap a wand
+| ^<dir>        | identify trap type
+| s             | search for trap/secret door
+| >             | go down
+| <             | go up
+| .             | rest for a turn
+| ,             | pick up
+| i             | inventory
+| I             | inventory single item
+| q             | quaff potion
+| r             | read scroll
 | s             | shout
-| e		| eat food
-| w		| wield a weapon
-| W		| wear armor
-| T		| take armor off
-| P		| put on ring
-| R		| remove ring
-| d		| drop object
-| c		| call object
-| a		| repeat last command
-| )		| print current weapon
-| ]		| print current armor
-| =		| print current rings
-| @		| print current stats
-| D		| recall what's been discovered
-| o		| examine/set options
-| ^R		| redraw screen
-| ^P		| repeat last message
-| ^[		| cancel command
-| S		| save game
-Q		| quit
+| e             | eat food
+| w             | wield a weapon
+| W             | wear armor
+| T             | take armor off
+| P             | put on ring
+| R             | remove ring
+| d             | drop object
+| c             | call object
+| a             | repeat last command
+| )             | print current weapon
+| ]             | print current armor
+| =             | print current rings
+| @             | print current stats
+| D             | recall what's been discovered
+| o             | examine/set options
+| ^R            | redraw screen
+| ^P            | repeat last message
+| ^[            | cancel command
+| S             | save game
+Q               | quit
 
 mjolnir actions | description
 |---------------|------------
-| u		| use an object with another one
-| 0		| turn off
-| 1		| turn on
+| u             | use an object with another one
+| 0             | turn off
+| 1             | turn on
 
 ## gameplay
 - console commands (invoke console with M-x)
@@ -233,11 +181,11 @@ mjolnir actions | description
     - debug and develop warriors with graphical tools
     - simulate battles
       - simulator console mode for keyboard commands
-      	- peek	- inspect memory contents
-	- poke	- change memory contents
-	- brk	- set execution or memory breakpoint
-	- step	- execute a single instruction
-	- stepi - execute n instructions
+        - peek  - inspect memory contents
+        - poke  - change memory contents
+        - brk   - set execution or memory breakpoint
+        - step  - execute a single instruction
+        - stepi - execute n instructions
   - mastermind(chr);
   - battleship(chr);
   - bank robbery

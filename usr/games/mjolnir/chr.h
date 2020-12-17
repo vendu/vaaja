@@ -1,27 +1,18 @@
 #ifndef __MJOLNIR_CHR_H__
 #define __MJOLNIR_CHR_H__
 
-struct objchr;
-
+struct                          objchr;
 void                            chrinit(struct objchr *chr,
-                                        const char *name,
-                                        long type,
-                                        long cat);
-
-/* character categories */
-#define CHR_PROGRAMMER_CATEGORY 1
-#define CHR_CRACKER_CATEGORY    2
-#define CHR_CYBORG_CATEGORY     3
-#define CHR_THIEF_CATEGORY      4
-#define CHR_ENGINEER_CATEGORY   5
-#define CHR_MAX_CATEGORY        5
+                                        long cat,
+                                        const char *name);
 
 /* characters */
 #define CHR_PLAYER              '@'
 #define CHR_ANT                 'a'
 #define CHR_SOLDIER_ANT         'A'
 #define CHR_BEE                 'b'
-#define CHR_BEE_QUEEN           'q'
+#define CHR_BEE_QUEEN           'B'
+#define CHR_CYBORG              'c'
 #define CHR_DOG                 'd'
 #define CHR_ALIEN               'e'
 #define CHR_GHOUL               'g'

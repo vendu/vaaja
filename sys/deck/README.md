@@ -19,10 +19,12 @@ characteristics of programs written by others.
 
 ## Voima Console
 
-I plan to implemement the first versions of Voima on a Papilio Pro FPGA Kit.
+I plan to implement the first versions of Voima on a Papilio Pro FPGA Kit.
 
-One of my visions is to implement a retro-style game console;
-- a custom 32-bit microprocessor
+- a retro-style game console
+- a custom 32-bit Deck-microprocessor
+  - ARM-like features such as conditional execution and folding shifts for/with
+    almost any instruction
 - 4,096-color VGA-graphics
 - keyboard and mouse input
 - 2 x digital joystick inputs

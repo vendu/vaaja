@@ -4,6 +4,7 @@
 #if defined(DECK_FP_EXTENSION)
 
 #define DECK_FPU_REG_BITS       64
+#define DECK_FP0_REG
 
 typedef int64_t                 deckfpureg_t;
 

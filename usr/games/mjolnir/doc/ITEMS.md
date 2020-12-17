@@ -47,7 +47,7 @@ at graveyards, often inside tombs.
 ATM-cards may be used to withdraw money you have gotten or stolen from
 somewhere. They can also be used to pay for items in shops.
 
-### B - bee hive
+### h - bee hive
 - you may acquire honey from these; one queen per hive.
 
 ### c - carving
@@ -131,7 +131,8 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### h - honey
 
-### k - knife
+### k - katana
+- a Japanese-style sword
 
 ### ¿ - crowbar
 
@@ -226,19 +227,17 @@ The crystal ball shows things happening right now and/or in the future.
 ### | - Rod of Buddha
 
 The holder of Buddha rod may stop time for a short period to flee from or do
-preparations for fights.
+preparations for fights by yelling TOPAR - it is not allowed to kill or attack
+anyone during those turns.
 
-### y - demon whip
-
-The holder of the demon whip may stop time for 5 turns by shouting Topar - it is
-not allowed to kill or attack anyone during those turns.
+### Y - demon whip
 
 ### J - Jatimatic
 
 Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
 very nice firearm against vampires and other demons.
 
-### ( - golden sword
+### K - golden sword
 - the golden sword of the princess of Atlantis, Kara, is a strong weapon against
   demons and may be used to travel through dimensions
 

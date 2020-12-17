@@ -5,6 +5,23 @@
 
 #include <stdint.h>
 
+/* memory management operations */
+#define DECK_MTR_OP             0x25        // memory type range register access
+#define DECK_CPF_OP             0x26        // cacheline-prefetch
+#define DECK_CSP_OP             0x27        // set [default/global] cache-policy
+#define DECK_FCL_OP             0x28        // flush cache up level (all)
+#define DECK_IPG_OP             0x29        // invalidate TLB-entry for page
+
+/* memory barriers */
+#define DECK_BAR_OP             0x2a
+/* parm-field values for DECK_BAR_OP */
+#define DECK_BAR_DATA           0x00
+#define DECK_BAR_READ           0x01
+#define DECK_BAR_WRITE          0x02
+#define DECK_BDT_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_DATA
+#define DECK_BRD_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_READ
+#define DECK_BWR_OP             DECK_BAR_OP // parm & 0x03 == DECK_BAR_WRITE
+
 #define DECK_PAGE_SIZE          1024
 #define DECK_PAGE_ADR_BITS      22
 #define DECK_PAGE_OFS_BITS      10

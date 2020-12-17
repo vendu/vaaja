@@ -8,9 +8,18 @@
 #include <deck/regs.h>
 #include <deck/io.h>
 #include <deck/inst.h>
+#if defined(DECK_MM_EXTENSION) || defined(DECK_MP_EXTENSION)
+#include <deck/inst-ext.h>
+#endif
+#if defined(DECK_MM_EXTENSION)
 #include <deck/mmu.h>
+#endif
+#if defined(DECK_FP_EXTENSION)
 #include <deck/fpu.h>
+#endif
+#if defined(DECK_FP_EXTENSION)
 #include <deck/fxp.h>
+#endif
 #if defined(DECK_SANITY_CHECK)
 #include <deck/sanity.h>
 #endif

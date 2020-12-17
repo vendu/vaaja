@@ -561,9 +561,9 @@ cwexec(long pid)
     pc = cwwrapval(pc);
     op = g_cwmars.core[pc];
     func = g_cwmars.functab[op.op];
-    cwprintmars(&g_cwmars, pid, pc);
+    //    cwprintmars(&g_cwmars, pid, pc);
     pc = func(pid, pc);
-    fprintf(stderr, "PC = %ld\n", pc);
+    //    fprintf(stderr, "PC = %ld\n", pc);
     cnt = g_cwmars.proccnt[pid];
     if (pc < 0) {
         if (cnt > 1) {
@@ -609,11 +609,13 @@ cwexec(long pid)
 /* virtual machine main loop */
 C_NORETURN
 void
-cwrun(long nturn)
+cwrun(void)
 {
     long                pid = g_cwmars.curpid;
+    long                nturn = g_cwmars.nturn[pid];
 
     while (nturn--) {
+        g_cwmars.nturn[pid] = nturn;
         cwexec(pid);
         pid++;
         pid &= 0x01;
@@ -741,7 +743,7 @@ main(int argc, char *argv[])
         zeusprocev(&g_cwmars.zeusx11);
     }
 #else
-    cwrun(CW_MAX_TURNS);
+    cwrun();
 #endif
 
     /* NOTREACHED */

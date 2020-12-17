@@ -3,8 +3,7 @@
 
 void                            d20init(void);
 
-#define D20_RAND_SHIFT          16
-#define D20_RAND_MAX            (0xffffffff >> D20_RAND_SHIFT)
+#define D20_RAND_MAX            0xffff
 
 /* standard D20 dice set */
 #define D20_DIE4                4
@@ -14,16 +13,10 @@ void                            d20init(void);
 #define D20_DIE12               12
 #define D20_DIE20               20
 
-#include <mjolnir/conf.h>
-#include <time.h>
-#include <zero/cdefs.h>
-#include <prng/randmt32.h>
-#include <mjolnir/util.h>
-
 #define d20rolldie(die)         (1 + (getrand() % (die + 1)))
 
 static C_INLINE long
-d20rolln(long n, long die)
+d20rollndie(long n, long die)
 {
     long                        score = 0;
 

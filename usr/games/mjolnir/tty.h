@@ -1,13 +1,9 @@
 #ifndef __MJOLNIR_TTY_H__
 #define __MJOLNIR_TTY_H__
 
-#include <mjolnir/conf.h>
-
 #if defined(MJOLNIR_TTY)
 
-#if defined(MJOLNIR_VT)
-#include <stdio.h>
-#elif defined(MJOLNIR_CURSES)
+#if defined(MJOLNIR_CURSES)
 #include <curses.h>
 #endif
 

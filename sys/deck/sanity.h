@@ -36,16 +36,18 @@
 #   error sizeof(struct deckstkhinst) != DECK_INST_BITS in <deck/inst.h>
 #endif
 
-#if (DECK_OP_BITS + DECK_COND_BITS + 7 + DECK_INT_REGS                  \
+#if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + 1 + 16     \
      != DECK_INST_BITS)
 #   error sizeof(struct deckmapinst) != DECK_INST_BITS in <deck/inst.h>
 #endif
 
-#if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + 1 \
-     + DECK_PORT_BITS + 4                                      \
+#if (DECK_OP_BITS + DECK_COND_BITS + 2 * DECK_GEN_REG_BITS + 1          \
+     + DECK_PORT_BITS                                                   \
      != DECK_INST_BITS)
 #   error sizeof(struct deckioinst) != DECK_INST_BITS in <deck/inst.h>
 #endif
+
+#if defined(DECK_MM_EXTENSION)
 
 /* check structure sizes in <deck/mmu.h> */
 
@@ -63,6 +65,12 @@
 #   error sizeof(struct deckmtr) != DECK_REG_SIZE in in <deck/mmu.h>
 #endif
 
+#endif /* defined(DECK_MM_EXTENSION) */
+
+#if defined(DECK_FP_EXTENSIONS)
+
+#include <deck/fpu.h>
+
 /* check structure sizes in <deck/fpu.h> */
 
 #if (DECK_FLOAT_MANT_BITS + DECK_FLOAT_EXP_BITS                         \
@@ -74,6 +82,8 @@
      != DECK_DOUBLE_BITS)
 #   errof sizeof(struct deckdouble) != DECK_DOUBLE_BITS in <deck/fpu.h>
 #endif
+
+#endif /* defined(DECK_FP_EXTENSIONS) */
 
 #endif /* DECK_SANITY_H */
 

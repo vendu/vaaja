@@ -51,6 +51,7 @@ typedef int8_t                  deckintr_t;
 #   define DECK_MEM_FAIL        0x06    // memory (ECC or parity) failed
 #   define DECK_MEM_CACHE       0x07    // cache-memory [ECC or parity] failed
 #define DECK_IO_TRAP            0x05    // I/O
+#if 0
 #   define DECK_IO_SEEK         0x00    // I/O-seek failed or not supported
 #   define DECK_IO_WRITE        0x01    // I/O-write failed
 #   define DECK_IO_READ         0x02    // I/O-read failed
@@ -60,6 +61,7 @@ typedef int8_t                  deckintr_t;
 #   define DECK_IO_SYNC         0x07    // I/O-synchronization in progress
 #   define DECK_IO_URGENT       0x10    // I/O-data pending (e.g. NIC)
 #   define DECK_IO_DONE         0x11    // I/O-operation finished
+#endif
 #define DECK_SYS_TRAP           0x06    // breakpoint, sleep, reboot, ...
 #   define DECK_SYS_PROC        0x00    // processor online
 #   define DECK_SYS_BUS         0x01    // system bus online

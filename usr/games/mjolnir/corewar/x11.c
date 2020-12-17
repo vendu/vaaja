@@ -767,6 +767,7 @@ zeusaddx11button(struct zeusx11 *x11, int id, const char *str,
                  | ButtonPressMask
                  | ButtonReleaseMask);
     XMapRaised(x11->disp, win);
+    XSync(x11->disp, False);
 
     return;
 }
@@ -778,14 +779,12 @@ zeusinitx11buttons(struct zeusx11 *x11)
     int id;
 
     zeusloadx11buttonimgs(x11);
-#if 0
     for (id = 0 ; id < ZEUSNBUTTON ; id++) {
-        zeusaddx11button(x11, id, "---");
+        zeusaddx11button(x11, id, "---", NULL);
     }
-#endif
 
-     return;
- }
+    return;
+}
  #endif
 
  void
@@ -823,6 +822,7 @@ zeusinitx11buttons(struct zeusx11 *x11)
 
          exit(1);
      }
+     //     XSynchronize(disp, 1);
      info->disp = disp;
      info->screen = DefaultScreen(disp);
      info->colormap = DefaultColormap(disp, info->screen);
@@ -989,7 +989,7 @@ zeusprocev(struct zeusx11 *x11)
     id = zeusfindbutton(win);
 #endif
 #if defined(ZEUSDEBUG)
-    if (win == x11->buttonwin) {
+    if (id == x11->buttonwin) {
         switch (ev.type) {
             case Expose:
                 zeusexposex11button(x11, &ev);

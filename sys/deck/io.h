@@ -1,8 +1,15 @@
 #ifndef DECK_IO_H
 #define DECK_IO_H
 
-#define DECK_MAX_IO_PORTS       4096
-#define DECK_PORT_BITS          12
+#define DECK_IO_PERM_MAP        (1 << 0)    // system may map I/O-object
+#define DECK_IO_PERM_WRITE      (1 << 1)    // system may write
+#define DECK_IO_PERM_READ       (1 << 2)    // system may read
+#define DECK_IO_PERM_UMAP       (1 << 3)    // user may I/O-object
+#define DECK_IO_PERM_UWRITE     (1 << 4)    // user may write
+#define DECK_IO_PERM_UREAD      (1 << 5)    // user may read
+
+#define DECK_MAX_IO_PORTS       65536
+#define DECK_PORT_BITS          16
 
 #define DECK_TMR_PORT           0x0000  // interrupt timer
 #   define DECK_RESET_TMR       0x00    // zero time-stamp
@@ -73,6 +80,55 @@
 #define IOC_CHK_PERM            0x00    // check permission bit for I/O port
 #define IOC_SET_PERM            0x01    // allow I/O on port
 #define IOC_CLR_PERM            0x02    // deny I/O on port
+
+#define DECK_IO_INVAL           0x00    // invalid/uninitialized object or op
+#define DECK_IO_PROBE           0x01    // probe I/O-device
+#define DECK_IO_INIT            0x02    // initialize I/O-node
+#define DECK_IO_MOUNT           0x03    // mount I/O-node
+#define DECK_IO_UNMOUNT         0x04    // unmount I/O-node
+#define DECK_IO_OPEN            0x05    // open I/O-node
+#define DECK_IO_CLOSE           0x06    // close I/O-node
+#define DECK_IO_SEEK            0x07    // seek I/O-node
+#define DECK_IO_READ            0x08    // read from I/O-node
+#define DECK_IO_WRITE           0x09    // write to I/O-node
+#define DECK_IO_MAP             0x0a    // map regions of I/O-nodes
+#define DECK_IO_UNMAP           0x0b    // map regions of I/O-nodes
+#define DECK_IO_SYNC            0x0c    // synchronize I/O-node
+#define DECK_IO_RDBUF           0x0d    // read data from node to buffer
+#define DECK_IO_WRBUF           0x0e    // write data from buffer to node
+#define DECK_IO_LINK            0x0f
+#define DECK_IO_UNLINK          0x10
+#define DECK_IO_MKDIR           0x11
+#define DECK_IO_RMDIR           0x12
+#define DECK_IO_READDIR         0x13
+#define DECK_IO_POLL            0x14
+#define DECK_IO_FLUSH           0x15
+#define DECK_IO_RELEASE         0x16
+#define DECK_IO_FSYNC           0x17
+#define DECK_IO_FLOCK           0x18
+#define DECK_IO_FUNLOCK         0x19
+#define DECK_IO_FALLOC          0x1a
+#define DECK_IO_AREAD           0x1b
+#define DECK_IO_AWRITE          0x1c
+#define DECK_IO_AFSYNC          0x1d
+#define DECK_IO_SETLEASE        0x1e
+#define DECK_IO_IOCTL           0x1f
+
+struct deckiodev {
+    const char                 *path;
+    uint32_t                    state;
+    uint32_t                    major;
+    uint32_t                    minor;
+};
+
+struct deckiobuf {
+    struct iodev               *dev;
+    void                       *buf;
+    uint32_t                    bufsize;
+    uint32_t                    bufpos;
+    uint32_t                    fsize;
+    uint32_t                    id;
+};
 
 #endif /* DECK_IO_H */
 

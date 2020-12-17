@@ -1,28 +1,134 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <mjolnir/util.h>
-#include <mjolnir/obj.h>
-#include <mjolnir/d20.h>
-#include <mjolnir/ice.h>
+#include <mjolnir/mjolnir.h>
 
-extern const char              *chrcatnames[CHR_MAX_CATEGORY + 1];
+extern struct chrcatname        chrcatnames[CHR_MAX_CATEGORY + 1];
 
 #if defined(TEST_ICE)
-static struct objchr            icechrs[2];
-static struct ice              *ices[2]
+static struct objchr            icechrtab[2];
+static struct ice              *icetab[2]
 = {
-    &icechrs[0].ice,
-    &icechrs[1].ice
+    &icechrtab[0].ice,
+    &icechrtab[1].ice
 };
 #endif
+
+/* per-category ice skill initialization */
+void
+iceinitchr(struct objchr *chr, const char *name, long cat)
+{
+    struct ice                 *ice = &chr->ice;
+
+    if (name) {
+        chr->name = strdup(name);
+    }
+    chr->cat = cat;
+    switch (cat) {
+        case CHR_PROGRAMMER_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 128;
+            ice->maxhp = 128;
+            ice->nhp = 128;
+            ice->ndef = 1;
+            ice->defdie = 12;
+            ice->nhit = 1;
+            ice->hitdie = 12;
+
+            break;
+        case CHR_CRACKER_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 64;
+            ice->maxhp = 64;
+            ice->nhp = 64;
+            ice->ndef = 1;
+            ice->defdie = 10;
+            ice->nhit = 1;
+            ice->hitdie = 10;
+
+            break;
+        case CHR_SOLDIER_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 32;
+            ice->maxhp = 32;
+            ice->nhp = 32;
+            ice->ndef = 1;
+            ice->defdie = 6;
+            ice->nhit = 1;
+            ice->hitdie = 10;
+
+            break;
+        case CHR_CYBORG_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 64;
+            ice->maxhp = 64;
+            ice->nhp = 64;
+            ice->ndef = 1;
+            ice->defdie = 20;
+            ice->nhit = 1;
+            ice->hitdie = 12;
+
+            break;
+        case CHR_THIEF_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 16;
+            ice->maxhp = 16;
+            ice->nhp = 16;
+            ice->ndef = 1;
+            ice->defdie = 6;
+            ice->nhit = 1;
+            ice->hitdie = 4;
+
+            break;
+        case CHR_ENGINEER_CATEGORY:
+            chr->nluck = 1;
+            chr->luckdie = 6;
+            ice->xp = 0;
+            ice->lvl = 1;
+            ice->basehp = 96;
+            ice->maxhp = 96;
+            ice->nhp = 96;
+            ice->ndef = 1;
+            ice->defdie = 10;
+            ice->ndef = 1;
+            ice->hitdie = 12;
+
+            break;
+        default:
+            fprintf(stderr, "invalid character category %ld\n", chr->cat);
+
+            break;
+    }
+}
+
+static long
+icerollluck(struct objchr *chr)
+{
+    long                        n = chr->nluck;
+    long                        die = chr->luckdie;
+    long                        nlp = d20rollndie(n, die);
+
+    return nlp;
+}
 
 static long
 icerolldef(struct ice *ice)
 {
-    long                        nd = ice->ndefdice;
+    long                        n = ice->ndef;
     long                        die = ice->defdie;
-    long                        nhp = d20rolln(nd, die);
+    long                        nhp = d20rollndie(n, die);
 
     return nhp;
 }
@@ -30,9 +136,9 @@ icerolldef(struct ice *ice)
 static long
 icerollhit(struct ice *ice)
 {
-    long                        nd = ice->nhitdice;
+    long                        n = ice->nhit;
     long                        die = ice->hitdie;
-    long                        nhp = d20rolln(nd, die);
+    long                        nhp = d20rollndie(n, die);
 
     return nhp;
 }
@@ -60,7 +166,7 @@ icehit(struct ice *ice,
         return INT32_MIN;
     }
     ice->xp = xp;
-    lvl = xp >> 5;
+    lvl = xp >> 4;
     if (lvl > ice->lvl) {
         maxhp = ice->maxhp;
         hp = ice->basehp;
@@ -68,8 +174,8 @@ icehit(struct ice *ice,
         ice->lvl = lvl;
         maxhp += hp;
         nhp += hp;
-        ice->ndefdice += nd;
-        ice->nhitdice += nd;
+        ice->ndef += nd;
+        ice->nhit += nd;
         ice->basehp = hp;
         ice->maxhp = maxhp;
     }
@@ -86,15 +192,19 @@ iceinit(void)
 }
 
 static long
-icerun(struct ice *ice1, struct ice *ice2)
+icerun(struct objchr *chr1, struct objchr *chr2)
 {
     long                        nturn;
     long                        hit1;
     long                        hit2;
+    struct ice                 *ice1 = &chr1->ice;
+    struct ice                 *ice2 = &chr2->ice;
 
     for (nturn = 0 ; nturn < ICE_MAX_TURNS ; nturn++) {
         hit1 = icerollhit(ice1);
+        hit1 -= min2(icerollluck(chr2), hit1 >> 2);
         hit2 = icerollhit(ice2);
+        hit2 -= min2(icerollluck(chr1), hit2 >> 2);
         if (icehit(ice2, hit1) == INT32_MIN) {
 
             return 1;
@@ -133,12 +243,26 @@ main(C_UNUSED int argc, C_UNUSED char *argv[])
     long                        winner;
 
     iceinit();
-    chrinit(&icechrs[0], "john", CHR_PLAYER, CHR_PROGRAMMER_CATEGORY);
-    chrinit(&icechrs[1], "doe", CHR_PLAYER, CHR_CRACKER_CATEGORY);
-    winner = icerun(ices[0], ices[1]);
-    fprintf(stderr, "player %ld won\n", winner);
-    iceprintstats("player #1", ices[0]);
-    iceprintstats("player #2", ices[1]);
+    iceinitchr(&icechrtab[0], "john", CHR_PROGRAMMER_CATEGORY);
+    iceinitchr(&icechrtab[1], "doe", CHR_CRACKER_CATEGORY);
+    winner = icerun(&icechrtab[0], &icechrtab[1]);
+    if (winner == 1) {
+        fprintf(stderr, "player %ld (%s/%s) won player 2 (%s/%s)\n",
+                winner,
+                icechrtab[0].name,
+                chrcatnames[icechrtab[0].cat].def,
+                icechrtab[1].name,
+                chrcatnames[icechrtab[1].cat].def);
+    } else {
+        fprintf(stderr, "player %ld (%s/%s) won player 1 (%s/%s)\n",
+                winner,
+                icechrtab[1].name,
+                chrcatnames[icechrtab[1].cat].def,
+                icechrtab[0].name,
+                chrcatnames[icechrtab[0].cat].def);
+    }
+    iceprintstats("player #1", icetab[0]);
+    iceprintstats("player #2", icetab[1]);
 
     exit(0);
 }
