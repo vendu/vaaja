@@ -18,6 +18,21 @@ extern struct cwmars    g_cwmars;
 
 static void            *g_rcparsetab[128];
 
+char                    g_rcargtab[CW_MAX_OP + 1][32]
+= {
+    CW_OP_DAT_ATVEC,  // DAT
+    CW_OP_MOV_ATVEC,  // MOV
+    CW_OP_ADD_ATVEC,  // ADD
+    CW_OP_SUB_ATVEC,  // SUB
+    CW_OP_CMP_ATVEC,  // CMP
+    CW_OP_JMP_ATVEC,  // JMP
+    CW_OP_JMZ_ATVEC,  // JMZ
+    CW_OP_JMN_ATVEC,  // JMN
+    CW_OP_SLT_ATVEC,  // SLT
+    CW_OP_DJN_ATVEC,  // DJN
+    CW_OP_SPL_ATVEC   // SPL
+};
+
 static uint32_t         g_cw1fieldmap;
 
 /* register supported operation */
@@ -377,6 +392,7 @@ rcgetline(FILE *fp)
             buf[ndx] = '\0';
         }
     }
+    fprintf(stderr, "BUF: %s\n", buf);
 
     return buf;
 }

@@ -35,22 +35,42 @@
 #define CW_OP_MOV           1
 #define CW_OP_ADD           2
 #define CW_OP_SUB           3
-#define CW_OP_JMP           4
-#define CW_OP_JMZ           5
-#define CW_OP_JMN           6
-#define CW_OP_CMP           7
+#define CW_OP_CMP           4
+#define CW_OP_JMP           5
+#define CW_OP_JMZ           6
+#define CW_OP_JMN           7
 #define CW_OP_SLT           8
 #define CW_OP_DJN           9
 #define CW_OP_SPL           10
-#define CW_MAX_OP           10
+#define CW_MAX_OP           11
 #define CW_OP_BITS          6
 
+#define CW_OP_ATVEC_0       "###<<#<<"
+#define CW_OP_ATVEC_1       "# #@#<   @ <@ @@@<< <@<<"
+#define CW_OP_ATVEC_2       " #   @ <@#@ @@@<<#< <@<<"
+#define CW_OP_ATVEC_3       "# #@ #<   @ <@ @@@<< <@<<"
+#define CW_OP_DAT_ATVEC     CW_OP_ATVEC_0
+#define CW_OP_MOV_ATVEC     CW_OP_ATVEC_1
+#define CW_OP_ADD_ATVEC     CW_OP_ATVEC_1
+#define CW_OP_SUB_ATVEC     CW_OP_ATVEC_1
+#define CW_OP_CMP_ATVEC     CW_OP_ATVEC_1
+#define CW_OP_JMP_ATVEC     CW_OP_ATVEC_2
+#define CW_OP_JMZ_ATVEC     CW_OP_ATVEC_2
+#define CW_OP_JMN_ATVEC     CW_OP_ATVEC_2
+#define CW_OP_SLT_ATVEC     CW_OP_ATVEC_3
+#define CW_OP_DJN_ATVEC     CW_OP_ATVEC_2
+#define CW_OP_SPL_ATVEC     CW_OP_ATVEC_2
 /* flags */
+#define CW_ARG_REL          0           // direct (default)     // '$' or ''
+#define CW_ARG_IMM          1           // immediate            // '#'
+#define CW_ARG_PREDEC       2           // predecrement         // '<'
+#define CW_ARG_INDIR        3           // indirect             // '@'
+#define CW_ARG_TYPE_BITS    4
 /* addressing modes, default is direct (relative) */
-#define CW_ARG_REL          0           // direct (default)
-#define CW_ARG_IMM          1           // immediate
-#define CW_ARG_INDIR        2           // indirect
-#define CW_ARG_PREDEC       3           // predecrement
+#define CW_REL_ARG          ' '         // direct (default)     // '$' or ''
+#define CW_IMM_ARG          '#'         // immediate            // '#'
+#define CW_PREDEC_ARG       '<'         // predecrement         // '<'
+#define CW_INDIR_ARG        '@'         // indirect             // '@'
 #define CW_ARG_TYPE_BITS    4
 
 #define cwisdat(ins)        ((ins).op == CW_OP_DAT)
@@ -116,6 +136,7 @@ struct cwmars {
     long                nturn[2];                   // number of turns left
     long                running;                    // running-state flag
     long                curpid;                     // current program ID
+    long                nprog;                      // may be 1 for debugging
     char               *progpaths[2];               // paths to warrior files
     char               *pidmap;                     // core owner bitmap
     char               *memmap;                     // allocation bitmap
@@ -133,6 +154,7 @@ void                        cwexec(long pid);
 void                        cwdisasm(struct cwinstr op, FILE *fp);
 void                        cwprintmars(struct cwmars *mars,
                                         long pid,
+                                        long pidbits,
                                         long pc);
 void                        cwprintinstr(struct cwinstr op,
                                          long pid,

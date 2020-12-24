@@ -34,16 +34,18 @@ zeusrun(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
     g_cwmars.running = 1;
     while ((g_cwmars.running) && (g_cwmars.nturn[pid])) {
         cwexec(pid);
-        pid++;
-        pid &= 0x01;
-        g_cwmars.curpid = pid;
-        g_cwmars.nturn[pid]--;
-    }
-    if (!g_cwmars.nturn[pid]) {
-        fprintf(stderr, "TIE\n");
-        sleep(5);
+        if (g_cwmars.npid > 1) {
+            pid++;
+            pid &= 0x01;
+            g_cwmars.curpid = pid;
+            g_cwmars.nturn[pid]--;
+            if (!g_cwmars.nturn[pid]) {
+                fprintf(stderr, "TIE\n");
+                sleep(5);
 
-        exit(0);
+                exit(0);
+            }
+        }
     }
 
     return;
@@ -77,70 +79,6 @@ zeusstep(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
 }
 
 void
-zeustogglesel(struct zeusx11 *x11, XEvent *event)
-{
-    int  x = event->xbutton.x;
-    int  y = event->xbutton.y;
-    long pc;
-
-    x /= 5;
-    y /= 5;
-//    pc = y * (x11->w / 5) + x;
-    pc = y * (x11->simw / 5) + x;
-    if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
-    }
-    if (!g_zeussel.bmap) {
-        fprintf(stderr, "memory allocation failure\n");
-    } else if (bitset(g_zeussel.bmap, pc)) {
-        clrbit(g_zeussel.bmap, pc);
-    } else {
-        setbit(g_zeussel.bmap, pc);
-    }
-    g_zeussel.last = pc;
-    zeusdrawsimop(x11, pc);
-    XSync(x11->disp, False);
-
-    return;
-}
-
-void
-zeusaddsel(struct zeusx11 *x11, XEvent *event)
-{
-    int  x = event->xbutton.x;
-    int  y = event->xbutton.y;
-    long lim;
-    long pc;
-
-    x /= 5;
-    y /= 5;
-//    pc = y * (x11->w / 5) + x;
-    pc = y * (x11->simw / 5) + x;
-    if (!g_zeussel.bmap) {
-        g_zeussel.bmap = calloc(CW_CORE_SIZE >> 3, sizeof(uint8_t));
-    }
-    if (!g_zeussel.bmap) {
-        fprintf(stderr, "memory allocation failure\n");
-    } else if (g_zeussel.last >= 0) {
-        if (pc < g_zeussel.last) {
-            lim = g_zeussel.last + 1;
-        } else {
-            lim = pc;
-            pc = g_zeussel.last + 1;
-        }
-        while (pc < lim) {
-            setbit(g_zeussel.bmap, pc);
-            zeusdrawsim(x11);
-            pc++;
-        }
-        g_zeussel.last = pc;
-    }
-    XSync(x11->disp, False);
-
-    return;
-}
-
-void
 zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
 {
     if (g_zeussel.bmap) {
@@ -149,22 +87,6 @@ zeusclear(struct zeusx11 *x11, C_UNUSED XEvent *event)
     g_zeussel.last = -1;
     //    zeusdrawsim(x11);
     XSync(x11->disp, False);
-}
-
-C_PURE
-int
-zeusfindbutton(Window win)
-{
-    int    id;
-
-    for (id = 0 ; id < ZEUSNBUTTON ; id++) {
-        if (g_x11buttons.wins[id] == win) {
-
-            break;
-        }
-    }
-
-    return id;
 }
 
 char *
@@ -345,8 +267,8 @@ zeusinitx11win(struct zeusx11 *x11)
     Window               parent = (x11->parentwin != None
                                    ? x11->parentwin
                                    : RootWindow(x11->disp, x11->screen));
-    int                  winw = ZEUSSIMNCOL * 5 + ZEUSBUTTONW;
-    int                  winh = ZEUSSIMNROW * 5 + ZEUSDBNROW * x11->fonth;
+    int                  winw = ZEUSSIMNCOL * 8 + ZEUSBUTTONW;
+    int                  winh = ZEUSSIMNROW * 8 + ZEUSDBNROW * x11->fonth;
     int                  x = x11->x;
     int                  y = x11->y;
 
@@ -371,8 +293,8 @@ zeusinitx11win(struct zeusx11 *x11)
     x11->h = winh;
     parent = win;
 
-    x11->simw = ZEUSSIMNCOL * 5;
-    x11->simh = ZEUSSIMNROW * 5;
+    x11->simw = ZEUSSIMNCOL * 8;
+    x11->simh = ZEUSSIMNROW * 8;
 
 #if defined(ZEUSIMLIB2)
     win = XCreateWindow(x11->disp,
@@ -397,8 +319,8 @@ zeusinitx11win(struct zeusx11 *x11)
 #endif
 #endif
 
-    winw = ZEUSSIMNCOL * 5;
-    winh = ZEUSSIMNROW * 5;
+    winw = ZEUSSIMNCOL * 8;
+    winh = ZEUSSIMNROW * 8;
     win = XCreateWindow(x11->disp,
                         x11->mainwin,
                         x, y,
@@ -835,7 +757,7 @@ zeusinitx11(struct zeusx11 *info)
                  | PointerMotionMask
 #endif
                  | ExposureMask);
-//        XMapRaised(disp, info->tipwin);
+    XMapRaised(disp, info->tipwin);
     XMapRaised(disp, info->simwin);
     XMapRaised(disp, info->db1win);
     XMapRaised(disp, info->db2win);
@@ -856,6 +778,7 @@ zeusinitx11(struct zeusx11 *info)
     return;
 }
 
+#if 0
 int
 zeusprintop(struct zeusx11 *x11, long pc, int x, int y)
 {
@@ -899,23 +822,23 @@ zeusprintop(struct zeusx11 *x11, long pc, int x, int y)
 
     return len;
 }
+#endif
 
 void
-zeusprintdb(struct zeusx11 *x11, int simx, int simy)
+zeusprintdb(struct zeusx11 *x11, long pc, int simx, int simy)
 {
     struct cwinstr *op;
     const char     *str = " <";
     int             slen = strlen(str);
     long            pid;
     Window          win;
-    long            pc;
     int             len;
     int             i;
 
-    simx /= 5;
-    simy /= 5;
-//    pc = simy * (x11->w / 5) + simx;
-    pc = simy * (x11->simw / 5) + simx;
+    simx /= 8;
+    simy /= 8;
+//    pc = simy * (x11->w / 8) + simx;
+    pc = simy * (x11->simw / 8) + simx;
     pid = bitset(g_cwmars.pidmap, pc);
     if (pid) {
         win = x11->db2win;
@@ -964,183 +887,48 @@ zeusprintdb(struct zeusx11 *x11, int simx, int simy)
 }
 
 void
-zeusprocev(struct zeusx11 *x11)
-{
-    XEvent ev;
-    Window win;
-    int    id;
-
-    XNextEvent(x11->disp, &ev);
-    win = ev.xany.window;
-#if defined(ZEUSIMLIB2)
-    id = zeusfindbutton(win);
-#endif
-#if defined(ZEUSDEBUG)
-    if (win == x11->buttonwin) {
-        switch (ev.type) {
-            case Expose:
-                zeusexposex11button(x11, &ev);
-
-                break;
-            default:
-
-                break;
-        }
-    } else
-#endif
-    if (win == x11->mainwin) {
-        switch (ev.type) {
-            case Expose:
-                /* IGNORE */
-
-                break;
-            default:
-
-                break;
-            }
-    } else if (win == x11->simwin) {
-        switch (ev.type) {
-#if defined(ZEUSHOVERTOOLTIP)
-            case MotionNotify:
-                zeusprintdb(x11, ev.xmotion.x, ev.xmotion.y);
-
-                break;
-            case EnterNotify:
-                zeusprintdb(x11, ev.xcrossing.x, ev.xcrossing.y);
-
-                break;
-            case LeaveNotify:
-                XUnmapWindow(x11->disp, x11->tipwin);
-
-                break;
-#endif
-            case ButtonPress:
-                if (ev.xbutton.button == Button1) {
-                    if (ev.xbutton.state & ControlMask) {
-                        zeustogglesel(x11, &ev);
-                    } else if (ev.xbutton.state & ShiftMask) {
-                        zeusaddsel(x11, &ev);
-                    }
-                    zeusprintdb(x11, ev.xbutton.x, ev.xbutton.y);
-                }
-
-                break;
-            case Expose:
-                if (!ev.xexpose.count) {
-                    XCopyArea(x11->disp, x11->pixbuf, x11->simwin,
-                              x11->bggc,
-                              0, 0,
-                              x11->simw, x11->simh,
-                              0, 0);
-                }
-
-                break;
-            case KeyPress:
-
-                break;
-            default:
-
-                break;
-        }
-#if defined(ZEUSHOVERTOOLTIP)
-    } else if (win == x11->tipwin) {
-        switch (ev.type) {
-            case Expose:
-                if (!ev.xexpose.count) {
-                    XDrawString(x11->disp, x11->tipwin, x11->textgc,
-                                0, x11->fontasc,
-                                x11->tipstr, x11->tiplen);
-                }
-
-                break;
-            default:
-
-                break;
-        }
-#endif
-    } else if (win == x11->db1win || win == x11->db2win) {
-        ;
-#if defined(ZEUSIMLIB2)
-    } else if (id < ZEUSNBUTTON) {
-        switch (ev.type) {
-            case Expose:
-                g_x11buttons.funcs.expose(x11, &ev);
-
-                break;
-            case EnterNotify:
-                g_x11buttons.funcs.enter(x11, &ev);
-
-                break;
-            case LeaveNotify:
-                g_x11buttons.funcs.leave(x11, &ev);
-
-                break;
-            case ButtonPress:
-                g_x11buttons.funcs.click(x11, &ev);
-
-                break;
-            case ButtonRelease:
-                g_x11buttons.funcs.release(x11, &ev);
-
-                break;
-            default:
-
-                break;
-        }
-#endif
-    }
-
-    return;
-}
-
-void
 zeusdrawsimop(struct zeusx11 *x11, long pc)
 {
     struct cwinstr *op;
     int             row = pc / ZEUSSIMNCOL;
     int             col = pc - row * ZEUSSIMNCOL;
-    int             x = col * 5;
-    int             y = row * 5;
+    int             x = col * 8;
+    int             y = row * 8;
 
     op = &g_cwmars.optab[pc];
     if ((g_zeussel.bmap) && bitset(g_zeussel.bmap, pc)) {
         XFillRectangle(x11->disp, x11->pixbuf,
                        x11->selgc,
                        x, y,
-                       4, 4);
+                       7, 7);
     } else if (op->op == CW_DAT_OP) {
-        if (!*((uint64_t *)op)) {
-            XFillRectangle(x11->disp, x11->pixbuf,
-                           x11->datgc,
-                           x, y,
-                           4, 4);
-        } else if (op->pid) {
+        if (op->pid) {
             XFillRectangle(x11->disp, x11->pixbuf,
                            x11->prog2datgc,
                            x, y,
-                           4, 4);
+                           7, 7);
         } else {
             XFillRectangle(x11->disp, x11->pixbuf,
                            x11->prog1datgc,
                            x, y,
-                           4, 4);
+                           7, 7);
         }
     } else if (op->pid) {
         XFillRectangle(x11->disp, x11->pixbuf,
                        x11->prog2gc,
                        x, y,
-                       4, 4);
+                       7, 7);
 
     } else {
         XFillRectangle(x11->disp, x11->pixbuf,
                        x11->prog1gc,
                        x, y,
-                       4, 4);
+                       7, 7);
     }
     XCopyArea(x11->disp, x11->pixbuf, x11->simwin,
               x11->bggc,
               x, y,
-              4, 4,
+              7, 7,
               x, y);
     XSync(x11->disp, False);
 

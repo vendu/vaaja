@@ -25,8 +25,8 @@ void                        zeusshowmem(void);
 #define ZEUSTEXTNROW        8
 #define ZEUSDBNCOL          40
 #define ZEUSDBNROW          16
-#define ZEUSSIMNCOL         50
-#define ZEUSSIMNROW         160
+#define ZEUSSIMNCOL         80
+#define ZEUSSIMNROW         100
 #define ZEUSBUTTONW         48
 #define ZEUSBUTTONH         24
 

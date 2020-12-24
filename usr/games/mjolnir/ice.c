@@ -11,20 +11,20 @@ static struct ice              *icetab[2]
 };
 #endif
 
+void
+chrini
+
 /* per-category ice skill initialization */
 void
-iceinitchr(struct objchr *chr, const char *name, long cat)
+iceinitchr(struct objchr *chr)
 {
+    long                        cat = chr->cat;
     struct ice                 *ice = &chr->ice;
 
-    if (name) {
-        chr->name = strdup(name);
-    }
-    chr->cat = cat;
     switch (cat) {
         case CHR_PROGRAMMER_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 128;
@@ -37,8 +37,8 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 
             break;
         case CHR_CRACKER_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 64;
@@ -51,8 +51,8 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 
             break;
         case CHR_SOLDIER_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 32;
@@ -65,8 +65,8 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 
             break;
         case CHR_CYBORG_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 64;
@@ -79,8 +79,8 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 
             break;
         case CHR_THIEF_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 16;
@@ -93,8 +93,8 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 
             break;
         case CHR_ENGINEER_CATEGORY:
-            chr->nluck = 1;
-            chr->luckdie = 6;
+            chr->nkarma = 1;
+            chr->karmadie = 6;
             ice->xp = 0;
             ice->lvl = 1;
             ice->basehp = 96;
@@ -114,10 +114,10 @@ iceinitchr(struct objchr *chr, const char *name, long cat)
 }
 
 static long
-icerollluck(struct objchr *chr)
+icerollkarma(struct objchr *chr)
 {
-    long                        n = chr->nluck;
-    long                        die = chr->luckdie;
+    long                        n = chr->nkarma;
+    long                        die = chr->karmadie;
     long                        nlp = d20rollndie(n, die);
 
     return nlp;
@@ -202,9 +202,9 @@ icerun(struct objchr *chr1, struct objchr *chr2)
 
     for (nturn = 0 ; nturn < ICE_MAX_TURNS ; nturn++) {
         hit1 = icerollhit(ice1);
-        hit1 -= min2(icerollluck(chr2), hit1 >> 2);
+        hit1 -= min2(icerollkarma(chr2), hit1 >> 2);
         hit2 = icerollhit(ice2);
-        hit2 -= min2(icerollluck(chr1), hit2 >> 2);
+        hit2 -= min2(icerollkarma(chr1), hit2 >> 2);
         if (icehit(ice2, hit1) == INT32_MIN) {
 
             return 1;
