@@ -45,6 +45,7 @@
 #define CW_MAX_OP           11
 #define CW_OP_BITS          6
 
+#if 0
 #define CW_OP_ATVEC_0       "###<<#<<"
 #define CW_OP_ATVEC_1       "# #@#<   @ <@ @@@<< <@<<"
 #define CW_OP_ATVEC_2       " #   @ <@#@ @@@<<#< <@<<"
@@ -60,6 +61,7 @@
 #define CW_OP_SLT_ATVEC     CW_OP_ATVEC_3
 #define CW_OP_DJN_ATVEC     CW_OP_ATVEC_2
 #define CW_OP_SPL_ATVEC     CW_OP_ATVEC_2
+#endif
 /* flags */
 #define CW_ARG_REL          0           // direct (default)     // '$' or ''
 #define CW_ARG_IMM          1           // immediate            // '#'
@@ -149,6 +151,17 @@ struct cwmars {
 #endif
 };
 
+struct cwsym {
+    char               *name;
+    long                adr;
+};
+
+struct cwsymtab {
+    long                nsym;
+    struct cwsymtab    *next;
+    struct cwsym        tab[7];
+};
+
 void                        cwinit(void);
 void                        cwexec(long pid);
 void                        cwdisasm(struct cwinstr op, FILE *fp);
@@ -159,6 +172,9 @@ void                        cwprintmars(struct cwmars *mars,
 void                        cwprintinstr(struct cwinstr op,
                                          long pid,
                                          long pc);
+void                        cwaddsym(char *name,
+                                     long adr);
+long                        cwfindsym(char *name);
 
 #if (CW_CORE_SIZE > (1 << CW_OPERAND_BITS))
 #error fix CW_CORE_SIZE or CW_OPERAND_BITS in <corewar/cw.h>

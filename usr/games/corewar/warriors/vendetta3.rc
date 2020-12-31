@@ -1,8 +1,0 @@
-; vendetta3
-; Tuomo 'vendu' Venäläinen
-; a slightly bigger, silly multitasking version of vendetta :)
-dat		#-1	; copy offset
-sub	#2,	-1	; adjust offset
-mov	-2	@-2	; copy DAT
-spl		-2	; spawn a new process at the SUB
-jmp		-3	; jump back to the SUB

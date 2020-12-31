@@ -193,7 +193,6 @@ cwprintmars(struct cwmars *mars, long pid, long pidbits, long pc)
 static void
 cwsetatvec(long op, long at, long bt)
 {
-    long                val = 0;
     uint8_t            *vec = g_cwatvec[op];
     uint8_t             a8c = 0;
     uint8_t             b8c = 0;
@@ -261,7 +260,7 @@ cwchkatvec(long op, long at, long bt)
     return val;
 }
 
-static long
+static void
 cwinitatvec(void)
 {
     /* DAT */
@@ -399,6 +398,8 @@ cwinitatvec(void)
     cwsetatvec(CW_OP_SPL, '<', ' ');
     cwsetatvec(CW_OP_SPL, '<', '@');
     cwsetatvec(CW_OP_SPL, '<', '<');
+
+    return;
 }
 
 /* read instruction operands */
@@ -412,8 +413,8 @@ cwgetargs(long pc, long *argp1, long *argp2)
     long                btype = op.btype;
     long                arg1 = op.a;
     long                arg2 = op.b;
-    uint8_t             at;
-    uint8_t             bt;
+    uint8_t             at = atype;
+    uint8_t             bt = btype;
 
     if (cwchkatvec(op.op, at, bt)) {
         fprintf(stderr, "invalid operands: ");
@@ -865,17 +866,26 @@ C_NORETURN
 void
 cwrun(void)
 {
-    long                pid = g_cwmars.curpid;
-    long                nturn = g_cwmars.nturn[pid];
+    long pid = g_cwmars.curpid;
 
-    if (nturn--) {
-        g_cwmars.nturn[pid] = nturn;
+    g_cwmars.running = 1;
+    while ((g_cwmars.running) && (g_cwmars.nturn[pid]--)) {
         cwexec(pid);
-        pid++;
-        pid &= 0x01;
-        g_cwmars.curpid = pid;
+        if (g_cwmars.nprog == 2) {
+            pid++;
+            pid &= 0x01;
+            g_cwmars.curpid = pid;
+        }
     }
-    fprintf(stderr, "DRAW\n");
+    if (g_cwmars.nprog == 2) {
+        if (!g_cwmars.nturn[pid]) {
+            fprintf(stderr, "TIE\n");
+            sleep(5);
+
+            exit(0);
+        }
+    }
+
 #if defined(ZEUS) && defined(ZEUSSDL)
     sleep(5);
 #endif
@@ -907,6 +917,8 @@ cwinit(void)
     }
     //    memset(ptr, -1, csize);
     g_cwmars.core = ptr;
+    g_cwmars.runqueue[0][0] = -1;
+    g_cwmars.runqueue[1][0] = -1;
 
     return;
 }
@@ -916,12 +928,16 @@ cwinitmars(struct cwmars *mars, long pc1, long pc2, long nturn)
 {
     size_t              csize;
 
-    mars->runqueue[0][0] = pc1;
+    if (mars->runqueue[0][0] < 0) {
+        mars->runqueue[0][0] = pc1;
+    }
     mars->proccnt[0] = 1;
     mars->curproc[0] = 0;
     mars->nturn[0] = nturn;
-    if (mars->nprog > 1) {
-        mars->runqueue[1][0] = pc2;
+    if (mars->nprog == 2) {
+        if (mars->runqueue[1][0] < 0) {
+            mars->runqueue[1][0] = pc2;
+        }
         mars->proccnt[1] = 1;
         mars->curproc[1] = 0;
         mars->nturn[1] = nturn;
@@ -996,6 +1012,7 @@ main(int argc, char *argv[])
 #endif
         pc2 = rcloadfile(argv[2], adr, &size);
         g_cwmars.progsz[1] = size;
+        g_cwmars.nprog = 2;
         cwinitmars(&g_cwmars, pc1, pc2, CW_MAX_TURNS);
         g_cwmars.progpaths[1] = argv[2];
     } else {

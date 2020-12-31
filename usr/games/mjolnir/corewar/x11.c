@@ -34,16 +34,15 @@ zeusrun(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
     long pid = g_cwmars.curpid;
 
     g_cwmars.running = 1;
-    while ((g_cwmars.running) && (g_cwmars.nturn[pid])) {
+    while ((g_cwmars.running) && (g_cwmars.nturn[pid]--)) {
         cwexec(pid);
-        if (g_cwmars.nprog > 1) {
+        if (g_cwmars.nprog == 2) {
             pid++;
             pid &= 0x01;
             g_cwmars.curpid = pid;
-            g_cwmars.nturn[pid]--;
         }
     }
-    if (g_cwmars.nprog > 1) {
+    if (g_cwmars.nprog == 2) {
         if (!g_cwmars.nturn[pid]) {
             fprintf(stderr, "TIE\n");
             sleep(5);
@@ -71,12 +70,12 @@ zeusstep(C_UNUSED struct zeusx11 *x11, C_UNUSED XEvent *event)
     g_cwmars.running = 0;
     if (g_cwmars.nturn[pid]--) {
         cwexec(pid);
-        if (g_cwmars.nprog > 1) {
+        if (g_cwmars.nprog == 2) {
             pid++;
             pid &= 0x01;
             g_cwmars.curpid = pid;
         }
-    } else if (g_cwmars.nprog > 1) {
+    } else if (g_cwmars.nprog == 2) {
         fprintf(stderr, "TIE\n");
         sleep(5);
     }
@@ -410,6 +409,9 @@ zeusprocev(struct zeusx11 *x11)
         }
 #endif
     }
+    while (XPending(x11->disp)) {
+        zeusprocev(x11);
+    }
     XSync(x11->disp, False);
 
     return;
@@ -735,12 +737,10 @@ zeusinitx11win(struct zeusx11 *x11)
         exit(1);
     }
     x11->db2win = win;
-#if 0
     XMapRaised(x11->disp, x11->mainwin);
     XMapRaised(x11->disp, x11->simwin);
-    XMapRaised(x11->disp, x11->dbwin);
+    XMapRaised(x11->disp, x11->db1win);
     XMapRaised(x11->disp, x11->db2win);
-#endif
 
     return;
 }
@@ -1118,7 +1118,7 @@ zeusinitx11(struct zeusx11 *x11)
 #if defined(ZEUSIMLIB2)
     zeusinitimlib2(x11);
     zeusinitx11buttons(x11);
-    XMapRaised(disp, x11->mainwin);
+    //    XMapRaised(disp, x11->mainwin);
     XMapRaised(disp, x11->buttonwin);
     zeusinitx11buf(x11);
     XSelectInput(disp, x11->simwin,
@@ -1140,7 +1140,7 @@ zeusinitx11(struct zeusx11 *x11)
     zeusaddx11button(x11, ZEUSBRKBUTTON, "brk", zeusrun);
     zeusaddx11button(x11, ZEUSSTOPBUTTON, "stop", zeusstop);
     zeusaddx11button(x11, ZEUSSTEPBUTTON, "step", zeusstep);
-    XMapRaised(x11->disp, x11->buttonwin);
+    //XMapRaised(x11->disp, x11->buttonwin);
     //    zeusaddx11button(x11, ZEUSSTEPIBUTTON, "stepi", zeusstep);
     //    zeusaddx11button(x11, ZEUSLOADBUTTON, "load", zeusstep);
     //    zeusaddx11button(x11, ZEUSEDITBUTTON, "edit", zeusstep);

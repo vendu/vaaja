@@ -39,18 +39,21 @@ zeusrun(C_UNUSED struct zeussdl *sdl, C_UNUSED SDL_Event *event)
     long pid = g_cwmars.curpid;
 
     g_cwmars.running = 1;
-    while ((g_cwmars.running) && (g_cwmars.nturn[pid])) {
+    while ((g_cwmars.running) && (g_cwmars.nturn[pid]--)) {
         cwexec(pid);
-        pid++;
-        pid &= 0x01;
-        g_cwmars.curpid = pid;
-        g_cwmars.nturn[pid]--;
+        if (g_cwmars.nprog == 2) {
+            pid++;
+            pid &= 0x01;
+            g_cwmars.curpid = pid;
+        }
     }
-    if (!g_cwmars.nturn[pid]) {
-        fprintf(stderr, "TIE\n");
-        sleep(5);
+    if (g_cwmars.nprog == 2) {
+        if (!g_cwmars.nturn[pid]) {
+            fprintf(stderr, "TIE\n");
+            sleep(5);
 
-        exit(0);
+            exit(0);
+        }
     }
 
     return;

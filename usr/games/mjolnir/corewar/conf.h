@@ -4,7 +4,7 @@
 #define ZEUS                        1
 #define ZEUSX11                     1
 #define ZEUSIMLIB2                  1
-#define ZEUSHOVERTOOLTIP            1
+//#define ZEUSHOVERTOOLTIP            1
 //#define ZEUSSDL                     1
 
 #define COREWAR_TTY                 1

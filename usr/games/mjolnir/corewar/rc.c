@@ -18,6 +18,7 @@ extern struct cwmars    g_cwmars;
 
 static void            *g_rcparsetab[128];
 
+#if 0
 char                    g_rcargtab[CW_MAX_OP + 1][32]
 = {
     CW_OP_DAT_ATVEC,  // DAT
@@ -32,6 +33,7 @@ char                    g_rcargtab[CW_MAX_OP + 1][32]
     CW_OP_DJN_ATVEC,  // DJN
     CW_OP_SPL_ATVEC   // SPL
 };
+#endif
 
 static uint32_t         g_cw1fieldmap;
 
@@ -174,10 +176,77 @@ rcinitop(void)
     return;
 }
 
+static char *
+rcgetlabel(long pid, char *str, char **retstr)
+{
+    char               *lbl = calloc(16, sizeof(char));
+    char               *cp = str;
+    long                len = 0;
+    long                entry;
+
+    if (!lbl) {
+        fprintf(stderr, "failed to allocate symbol name\n");
+
+        exit(1);
+    }
+    while (isspace(*cp)) {
+        cp++;
+    }
+    str = cp;
+    fprintf(stderr, "GETLBL: %s\n", cp);
+    if (toupper(cp[0]) == 'E'
+        && toupper(cp[1]) == 'N'
+        && toupper(cp[2]) == 'D'
+        && isspace(cp[3])) {
+        cp += 4;
+        while (isspace(*cp)) {
+            cp++;
+        }
+        while (isalnum(*cp) && len < 16) {
+            lbl[len] = *cp++;
+            len++;
+        }
+        if (len > 15) {
+            lbl[15] = '\0';
+            len = 15;
+        }
+        entry = cwfindsym(lbl);
+        if (entry >= 0) {
+            fprintf(stderr, "ENTRY: %s (%ld)\n", lbl, entry);
+            g_cwmars.runqueue[pid][0] = entry;
+        } else {
+            fprintf(stderr, "ENTRY: %s NOT FOUND\n", lbl);
+
+            exit(1);
+        }
+        while (isspace(*cp)) {
+            cp++;
+        }
+        free(lbl);
+        str = cp;
+        lbl = NULL;
+    } else if (isalnum(*cp)) {
+        while (isalnum(*cp) && len < 16) {
+            lbl[len] = *cp++;
+            len++;
+        }
+        if (len >= 16) {
+            lbl[15] = '\0';
+            len = 15;
+        }
+        fprintf(stderr, "LABEL: %s\n", lbl);
+        str = cp;
+    }
+    *retstr = str;
+
+    return lbl;
+}
+
 /* read instruction from source string */
 static struct cwinstr
-rcgetinstr(char *str)
+rcgetinstr(long pid, long adr, char *str)
 {
+    char               *lbl;
     char               *cp = str;
     long                op = CW_NO_OP;
     struct cwinstr      instr = { CW_NO_OP, 0, 0, 0, 0, 0, 0, 0 };
@@ -195,7 +264,25 @@ rcgetinstr(char *str)
         }
         if (isalpha(ch)) {
             op = rcfindop(cp, &val);
-            cp += val;
+            if (op < 0) {
+                lbl = rcgetlabel(pid, cp, &cp);
+                if (lbl) {
+                    cwaddsym(lbl, adr);
+                } else {
+
+                    return instr;
+                }
+                while (isspace(*cp)) {
+                    cp++;
+                }
+                op = rcfindop(cp, &val);
+            }
+            if (op >= 0) {
+                cp += val;
+            }
+        }
+        while (isspace(*cp)) {
+            cp++;
         }
         if (op != CW_NO_OP) {
             instr.op = op;
@@ -210,145 +297,122 @@ rcgetinstr(char *str)
         instr.b = 0;
         ch = *cp++;
         if (ch) {
-            while (isspace(ch)) {
+            sign = 0;
+            atype = 0;
+            if (ch == '#') {
+                atype = CW_ARG_IMM;
+                ch = *cp++;
+            } else if (ch == '@') {
+                atype = CW_ARG_INDIR;
+                ch = *cp++;
+            } else if (ch == '<') {
+                atype = CW_ARG_PREDEC;
+                ch = *cp++;
+            } else if (ch == '$') {
+                ch = *cp++;
+            } else if (ch == ';') {
+                fprintf(stderr, "missing A-field: %s (%c)\n", str, (int)ch);
+
+                exit(1);
+            }
+            if (ch == '-') {
+                sign = 1;
                 ch = *cp++;
             }
-            if (ch) {
-                sign = 0;
-                atype = 0;
-                if (ch == '#') {
-                    atype = CW_ARG_IMM;
+            val = -1;
+            if (isdigit(ch)) {
+                val = 0;
+                while (isdigit(ch)) {
+                    val *= 10;
+                    val += ch - '0';
                     ch = *cp++;
-                } else if (ch == '@') {
-                    atype = CW_ARG_INDIR;
-                    ch = *cp++;
-                } else if (ch == '<') {
-                    atype = CW_ARG_PREDEC;
-                    ch = *cp++;
-                } else if (ch == '$') {
-                    ch = *cp++;
-                } else if (ch == ';') {
-                    fprintf(stderr, "missing A-field: %s (%c)\n", str, (int)ch);
+                }
+            }
+            if (val >= 0) {
+                if (sign) {
+                    val = -val;
+                }
+                val = cwwrapval(val);
+                a = val;
+            } else {
+                fprintf(stderr, "missing A-field: %s (%ld)\n",
+                        str, val);
 
-                    exit(1);
-                }
-                if (ch == '-') {
-                    sign = 1;
-                    ch = *cp++;
-                }
-                val = -1;
-                if (isdigit(ch)) {
-                    val = 0;
-                    while (isdigit(ch)) {
-                        val *= 10;
-                        val += ch - '0';
-                        ch = *cp++;
-                    }
-                }
-                if (val >= 0) {
-                    if (sign) {
-                        val = -val;
-                    }
-                    val = cwwrapval(val);
-                    a = val;
+                exit(1);
+            }
+            while (isspace(ch) && ch != '\n') {
+                ch = *cp++;
+            }
+            if (!ch || ch == '\n' || ch == ';') {
+                if (cwis1field(instr.op)) {
+                    instr.atype = atype;
+                    instr.a = a;
+                    instr.btype = 0;
+                    instr.b = 0;
                 } else {
-                    fprintf(stderr, "missing A-field: %s (%ld)\n",
-                            str, val);
-
-                    exit(1);
+                    instr.btype = atype;
+                    instr.b = a;
+                    instr.atype = 0;
+                    instr.a = 0;
                 }
+            } else if (ch == ',') {
+                ch = *cp++;
                 while (isspace(ch) && ch != '\n') {
                     ch = *cp++;
                 }
-                if (!ch || ch == '\n' || ch == ';') {
-                    if (cwis1field(instr.op)) {
-                        instr.atype = atype;
-                        instr.a = a;
-                        instr.btype = 0;
-                        instr.b = 0;
-                    } else {
-                        instr.btype = atype;
-                        instr.b = a;
-                        instr.atype = 0;
-                        instr.a = 0;
-                    }
-                } else if (ch == ',') {
-                    ch = *cp++;
-                    while (isspace(ch) && ch != '\n') {
-                        ch = *cp++;
-                    }
-                    if (ch == '\n') {
-                        fprintf(stderr, "invalid B-field: %s\n",
-                                str);
-
-                        exit(1);
-                    }
-                    sign = 0;
-                    instr.btype = 0;
-                    if (ch == '#') {
-                        instr.btype = CW_ARG_IMM;
-                        ch = *cp++;
-                    } else if (ch == '@') {
-                        instr.btype = CW_ARG_INDIR;
-                        ch = *cp++;
-                    } else if (ch == '<') {
-                        instr.btype = CW_ARG_PREDEC;
-                        ch = *cp++;
-                    } else if (ch == '$') {
-                        ch = *cp++;
-                    } else if (ch == ';') {
-                        fprintf(stderr, "invalid B-field: %s\n",
-                                str);
-
-                        exit(1);
-                    }
-                    if (ch) {
-                        if (ch == '-') {
-                            sign = 1;
-                            ch = *cp++;
-                        }
-                        val = -1;
-                        if (isdigit(ch)) {
-                            val = 0;
-                            while (isdigit(ch)) {
-                                val *= 10;
-                                val += ch - '0';
-                                ch = *cp++;
-                            }
-                        }
-                        if (val >= 0) {
-                            if (sign) {
-                                val = -val;
-                            }
-                            val = cwwrapval(val);
-                            instr.b = val;
-                        } else {
-                            fprintf(stderr, "invalid B-field: %s\n",
-                                    str);
-
-                            exit(1);
-                        }
-                    } else {
-                        fprintf(stderr, "junk at end of line: %s\n",
-                                str);
-
-                        exit(1);
-                    }
-                } else {
-                    fprintf(stderr, "junk at end of line: %s\n",
+                if (ch == '\n') {
+                    fprintf(stderr, "invalid B-field: %s\n",
                             str);
 
                     exit(1);
                 }
-            } else {
-                fprintf(stderr, "invalid A-field: %s\n",
-                        str);
+                sign = 0;
+                instr.btype = 0;
+                if (ch == '#') {
+                    instr.btype = CW_ARG_IMM;
+                    ch = *cp++;
+                } else if (ch == '@') {
+                    instr.btype = CW_ARG_INDIR;
+                    ch = *cp++;
+                } else if (ch == '<') {
+                    instr.btype = CW_ARG_PREDEC;
+                    ch = *cp++;
+                } else if (ch == '$') {
+                    ch = *cp++;
+                } else if (ch == ';') {
+                    fprintf(stderr, "invalid B-field: %s\n",
+                            str);
 
-                exit(1);
+                    exit(1);
+                }
+                if (ch) {
+                    if (ch == '-') {
+                        sign = 1;
+                        ch = *cp++;
+                    }
+                    val = -1;
+                    if (isdigit(ch)) {
+                        val = 0;
+                        while (isdigit(ch)) {
+                            val *= 10;
+                            val += ch - '0';
+                            ch = *cp++;
+                        }
+                    }
+                    if (val >= 0) {
+                        if (sign) {
+                            val = -val;
+                        }
+                        val = cwwrapval(val);
+                        instr.b = val;
+                    } else {
+                        fprintf(stderr, "invalid B-field: %s\n",
+                                str);
+
+                        exit(1);
+                    }
+                }
             }
-        } else {
-            fprintf(stderr, "invalid A-field: %s\n",
-                    str);
         }
     }
 
@@ -451,7 +515,7 @@ rcxlatef(FILE *fp, long pid, long base, long *limret)
                 continue;
             }
             if (isalpha(*cp)) {
-                op = rcgetinstr(cp);
+                op = rcgetinstr(pid, adr, cp);
                 if (op.op != CW_NO_OP) {
                     if (!entry && op.op != CW_OP_DAT) {
                         pc = adr;
@@ -463,9 +527,13 @@ rcxlatef(FILE *fp, long pid, long base, long *limret)
                     adr++;
                     adr = cwwrapval(adr);
                 } else {
+                    pc = adr;
+                    *limret = adr;
+#if 0
                     fprintf(stderr, "invalid instruction: %s\n", linebuf);
 
                     exit(1);
+#endif
                 }
             } else if (wrap) {
                 free(linebuf);
