@@ -37,16 +37,15 @@ each player gets the following items (first listed for 2-player sessions)
 
 The game board looks like this
 
-1P      - player 1 protection
-1S      - player 1 spells
-2P      - player 2 protection
-2S      - player 2 spells
-3P      - player 3 protection
-3S      - player 3 spells
-4P      - player 4 protection
-4S      - player 4 spells
+- 1P    - player 1 protection
+- 1S    - player 1 spells
+- 2P    - player 2 protection
+- 2S    - player 2 spells
+- 3P    - player 3 protection
+- 3S    - player 3 spells
+- 4P    - player 4 protection
+- 4S    - player 4 spells
 
-|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 |    | S3 | P3 | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | P4 | S4 |
 -----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 | S1 |    |    |1S1 |1S2 |1S3 |1S4 |1S5 |1S6 |1S7 |1S8 |1S9 |1S10|    |    |
