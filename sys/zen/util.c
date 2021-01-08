@@ -57,7 +57,7 @@ kbzero(void *adr, m_size_t len)
     m_word_t   val = 0;
     m_word_t   incr = 8;
     m_size_t   nleft = 0;
-    
+
     if (len > (1UL << (MACH_WORD_SIZE_LOG2 + 3))) {
         /* zero non-cacheline-aligned head long-word by long-word */
         nleft = ((uintptr_t)adr) & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
@@ -94,7 +94,7 @@ kbzero(void *adr, m_size_t len)
         /* zero tail long-words */
         *ptr++ = val;
     }
-    
+
     return;
 }
 
@@ -107,7 +107,7 @@ kmemset(void *adr, int byte, m_size_t len)
     m_word_t    val = 0;
     m_word_t    incr = 8;
     m_size_t    nleft = 0;
-    
+
     val = byte;
     val |= (val << 8);
     val |= (val << 16);
@@ -150,7 +150,7 @@ kmemset(void *adr, int byte, m_size_t len)
         /* zero tail long-words */
         *ptr++ = val;
     }
-    
+
     return;
 }
 
@@ -351,7 +351,7 @@ _ltodn(long val, char *buf, m_size_t len)
         val /= 10;
         buf[l] = _ltoxtab[u8];
         if (++n == len) {
-            
+
             break;
         }
         l--;
@@ -420,19 +420,19 @@ kprintf(const char *fmt, ...)
                         isch = 1;
                         val = (char)va_arg(al, int);
                         arg++;
-                        
+
                         break;
                     case 'h':
                         isdec = 1;
                         val = (short)va_arg(al, int);
                         arg++;
-                        
+
                         break;
                     case 'd':
                         isdec = 1;
                         val = va_arg(al, int);
                         arg++;
-                        
+
                         break;
                     case 'p':
                     case 'l':
@@ -452,13 +452,13 @@ kprintf(const char *fmt, ...)
                                 ishex = 1;
                             }
                         }
-                            
+
                         break;
                     case 'x':
                         val = va_arg(al, int);
                         arg++;
                         ishex = 1;
-                            
+
                         break;
                     case 'u':
                         arg++;
@@ -467,37 +467,37 @@ kprintf(const char *fmt, ...)
                                 case 'c':
                                     isch = 1;
                                     val = (char)va_arg(al, unsigned int);
-                                        
+
                                     break;
                                 case 'h':
                                     isdec = 1;
                                     val = (short)va_arg(al, unsigned int);
-                                        
+
                                     break;
                                 case 'd':
                                     isdec = 1;
                                     val = va_arg(al, unsigned int);
-                                        
+
                                     break;
                                 case 'l':
                                     isdec = 1;
                                     val = va_arg(al, m_size_t);
-                                        
+
                                     break;
                                 default:
-                                        
+
                                     break;
                             }
                             arg++;
                         } else {
                             va_end(al);
-                                
+
                             return;
                         }
-                            
+
                         break;
                     default:
-                            
+
                         break;
                 }
                 if (ishex) {
@@ -513,7 +513,7 @@ kprintf(const char *fmt, ...)
                 }
             } else {
                 va_end(al);
-                    
+
                 return;
             }
         } else {
@@ -521,13 +521,13 @@ kprintf(const char *fmt, ...)
                 conputs(sptr);
             }
             va_end(al);
-                
+
             return;
         }
         sptr = arg;
     }
     va_end(al);
-    
+
     return;
 }
 
@@ -542,7 +542,7 @@ kbfindzerol(m_uword_t *bmap, long ofs, long nbit)
     m_size_t    cnt = ofs & ((1UL << (MACH_WORD_SIZE_LOG2 + 3)) - 1);
     m_size_t    ndx = ofs >> (MACH_WORD_SIZE_LOG2 + 3);
     m_size_t    val;
-    
+
     nbit -= ofs;
     if (nbit > 0) {
         val = bmap[ndx];
@@ -560,7 +560,7 @@ kbfindzerol(m_uword_t *bmap, long ofs, long nbit)
                 while (nbit) {
                     val = bmap[ndx];
                     if (!val) {
-                        
+
                         break;
                     } else if (~val) {
                         while (val & 0x01) {
@@ -584,12 +584,12 @@ kbfindzerol(m_uword_t *bmap, long ofs, long nbit)
     } else {
         ofs = -1;
     }
-    
+
     return ofs;
 }
 #endif
 
-C_NORETURN void
+void
 kpanic(const char *msg, int sig)
 {
     kprintf("PANIC - signal %d: %s\n", sig, msg);
@@ -598,6 +598,7 @@ kpanic(const char *msg, int sig)
         ;
     } while (1);
 #else
-    //    kreboot(ZEN_PANIC_REBOOT);
+    kreboot(ZEN_PANIC_REBOOT);
+#endif
 }
 

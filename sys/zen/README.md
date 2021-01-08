@@ -1,10 +1,10 @@
 # Zen Kernel
 
 The goal of Zen is to create a fast, modern kernel for systems from smartphones
-to high-performance audio-visual workstations.
+to high-performance audio-visual workstations and possibly beyond.
 
 The very first version's goal is to implement an efficient 32-bit game console
-on inexpensive FPGA-kits.
+for inexpensive FPGA-kits.
 
 ## Source Code Modules and Layout
 
@@ -16,7 +16,7 @@ interest would be the following, i
 #### System Parameters
 
 | macro                 | brief
-|:----------------------|:-----
+|-----------------------|------
 | ZEN_CL_SIZE           | memory subsystem cacheline size
 | ZEN_STRIDE_SIZE       | memory cache stride (access) size
 | ZEN_PAGE_SIZE         | virtual memory page size

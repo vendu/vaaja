@@ -1,10 +1,6 @@
-#include <sys/zen/conf.h>
-#include <stdint.h>
-#include <mach/param.h>
-#include <zero/cdefs.h>
-#include <sys/zen/var.h>
-
 /* set and query system configuration parameters (both static and dynamic) */
+
+#include <sys/zen/zen.h>
 
 struct zenvars  k_zenvars C_ALIGNED(MACH_PAGE_SIZE);
 
@@ -53,7 +49,7 @@ ksetvar(int id, int val)
 }
 
 void
-kgetvar(int16_t ofs, int16_ size)
+kgetvar(int16_t ofs, int16_t size)
 {
     struct zenproc *proc = k_getcurproc();
 

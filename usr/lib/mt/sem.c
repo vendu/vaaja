@@ -1,12 +1,4 @@
-#include <errno.h>
-#include <mach/asm.h>
-#if defined(PTHREAD) && !defined(MTPTHREAD)
-#include <pthread.h>
-#else
-#include <mt/mtx.h>
-#endif
-#include <mt/sem.h>
-#include <mt/thr.h>
+#include <mt/mt.h>
 
 long
 mtwaitsem(mtsem *sem)
@@ -100,7 +92,7 @@ sempost(mtsem *sem)
             mtunlkfmtx(&sem->lk);
 #endif
             mtyieldthr();
-        } else if (sem->val != MTSEM_MAXVAL) {
+        } else if (sem->val != MTSEM_INITVAL) {
             sem->val++;
 #if defined(PTHREAD)
             pthread_mutex_unlock(&sem->lk);

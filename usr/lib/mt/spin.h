@@ -1,29 +1,29 @@
 #ifndef __MT_SPIN_H__
 #define __MT_SPIN_H__
 
-/* velho spinlocks */
+/* zen spinlocks */
 
-#include <mach/asm.h>
+#include <mt/mt.h>
 
 #if !defined(MTNEWSPIN)
-#define MTNEWSPIN 1
+#define MTNEWSPIN               1
 #endif
 
-typedef volatile m_atomic_t mtspin;
+typedef volatile m_atomic_t     mtspin;
 
-#define MTSPININITVAL 0L
-#define MTSPINLKVAL   1L
+#define MTSPININITVAL           0
+#define MTSPINLKVAL             1
 
-#define spininit(sp) (*(sp) = MTSPININITVAL)
+#define spininit(sp)            (*(sp) = MTSPININITVAL)
 
 /*
  * try to lock spin-lock
  * - return non-zero on success, zero if already locked
  */
 static __inline__ void
-spintrylk(volatile m_atomic_t *sp)
+mttryspin(volatile m_atomic_t *sp)
 {
-    m_atomic_t res = 0;
+    m_atomic_t                  res = 0;
 
     if (*sp == MTSPININITVAL) {
         res = m_cmpswap(sp, MTSPININITVAL, MTSPINLKVAL);
@@ -36,9 +36,9 @@ spintrylk(volatile m_atomic_t *sp)
  * acquire spin-lock
  */
 static __inline__ long
-spinlk(volatile m_atomic_t *sp)
+mtlkspin(volatile m_atomic_t *sp)
 {
-    m_atomic_t res = *sp;
+    m_atomic_t                  res = *sp;
 
     do {
         while (*sp == MTSPINLKVAL) {
@@ -54,7 +54,7 @@ spinlk(volatile m_atomic_t *sp)
  * release spin-lock
  */
 static __inline__ void
-spinunlk(volatile m_atomic_t *sp)
+mtunlkspin(volatile m_atomic_t *sp)
 {
     m_membar();
     *sp = MTSPININITVAL;

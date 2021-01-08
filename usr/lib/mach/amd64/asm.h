@@ -16,7 +16,7 @@
 #define m_cmpswapu(p, want, val)     (m_cmpxchgu64(p, want, val) == want)
 #define m_cmpswapu64(p, want, val)   (m_cmpxchgu64(p, want, val) == want)
 #define m_cmpswapptr(p, want, val)   (m_cmpxchg64ptr(p, want, val) == want)
-#define m_cmpswapdbl(p, want, val)   m_cmpxchg128(p, want, val)
+#define m_cmpswapdbl(p, want, val)   m_cmpxchg16b(p, want, val)
 #define m_setbit(p, ndx)             m_setbit64(p, ndx)
 #define m_clrbit(p, ndx)             m_clrbit64(p, ndx)
 #define m_flipbit(p, ndx)            m_flipbit64(p, ndx)
@@ -221,7 +221,7 @@ m_cmpxchg64ptr(volatile m_atomicptr_t *p,
  * - return original nonzero on success, zero on failure
  */
 static __inline__ long
-m_cmpxchg128(volatile m_atomic_t *p64,
+m_cmpxchg16b(volatile m_atomic_t *p64,
              long *want,
              long *val)
 {
@@ -231,7 +231,7 @@ m_cmpxchg128(volatile m_atomic_t *p64,
 #elif defined(_MSC_VER)
 
 static __inline__ long
-m_cmpxchg128(volatile m_atomic_t long *p64,
+m_cmpxchg16b(volatile m_atomic_t long *p64,
              long long *want,
              long long *val)
 {
@@ -252,23 +252,27 @@ m_cmpxchg128(volatile m_atomic_t long *p64,
  * - return original nonzero on success, zero on failure
  */
 static __inline__ long
-m_cmpxchg128(volatile m_atomic_t *p64,
-             long *want,
-             long *val)
+m_cmpxchg16b(volatile m_atomic_t *p64,
+             int64_t *want,
+             int64_t *val)
 {
-    uint64_t rax = want[0];
-    uint64_t rdx = want[1];
-    uint64_t rbx = val[0];
-    uint64_t rcx = val[1];
-    long     res = 0;
+    register int64_t rax __asm__ "rax" = want[0];
+    register int64_t rdx __asm__ "rdx" = want[1];
+    register int64_t rbx __asm__ "rbx" = val[0];
+    register int64_t rcx __asm__ "rcx" = val[1];
 
-    __asm__ __volatile__ ("lock cmpxchg16b %1\n"
-                          "setz %b0\n"
-                          : "=q" (res), "+m" (*p64), "+a" (rax), "+d" (rdx)
-                          : "b" (rbx), "c" (rcx)
-                          : "cc");
+    __asm__ __volatile__ ("lock cmpxchg16b %0\n"
+                          "setzq %b1\n"
+                          : "+S" (*p64)
+                          : "=a" (rax)
+                          : "0" (ptr),
+                            "d" ((uint32_t)(want >> 32)),
+                            "a" ((uint32_t)(want & 0xffffffff)),
+                            "c" ((uint32_t)(val >> 32)),
+                            "D" ((uint32_t)(val & 0xffffffff))
+                          : "rax", "rbx", "rcx", "rdx", "flags", "memory");
 
-    return res;
+    return rax;
 }
 
 #endif
@@ -321,7 +325,7 @@ m_cmpsetbit64(volatile m_atomic_t *p, long ndx)
     long val = 0;
 
     if (C_IMMEDIATE(ndx)) {
-        __asm__ __volatile__ ("lock btsq %2, %0\n"
+        __asm__ __volatile__ ("lock btsq %0, %2\n"
                               "jnc 1f\n"
                               "incq %1\n"
                               "1:\n"
@@ -331,7 +335,7 @@ m_cmpsetbit64(volatile m_atomic_t *p, long ndx)
     } else {
         __asm__ __volatile__ ("lock btsq %2, %0\n"
                               "jnc 1f\n"
-                              "incq %1\n"
+                              "inqq %1\n"
                               "1:\n"
                               : "+m" (*(p)), "=r" (val)
                               : "r" (ndx)

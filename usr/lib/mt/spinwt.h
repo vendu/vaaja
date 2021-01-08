@@ -1,7 +1,9 @@
-#ifndef __MT_SPINWT_H__
-#define __MT_SPINWT_H__
+#ifndef MT_SPINWT_H
+#define MT_SPINWT_H
 
 /* velho spin-wait locks */
+
+#include <mt/mt.h>
 
 /*
  * NOTES
@@ -9,16 +11,12 @@
  * - initialise spin-wait locks with spininit() from <mt/spin.h>
  */
 
-#include <mach/atomice.h>
-#include <mach/asm.h>
-#include <mt/spin.h>
-
 /*
  * try to acquire spin-wait lock
  * - return non-zero on success, zero otherwise
  */
 static __inline__ long
-spinwttrylk(volatile m_atomic_t *sp, m_atomic_t val, long niter)
+mttryspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
 {
     volatile m_atomic_t res = 0;
 
@@ -36,7 +34,7 @@ spinwttrylk(volatile m_atomic_t *sp, m_atomic_t val, long niter)
  * lock spin-wait lock
  */
 static __inline__ void
-spinwtlk(volatile m_atomic_t *sp, m_atomic_t val, long niter)
+mtlkspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
 {
     volatile m_atomic_t res = 0;
 
@@ -57,7 +55,7 @@ spinwtlk(volatile m_atomic_t *sp, m_atomic_t val, long niter)
  * release spin-wait lock
  */
 static __inline__ void
-spinwtunlk(volatile m_atomic_t *sp)
+mtunlkspinwt(volatile m_atomic_t *sp)
 {
     m_membar();
     *sp = MTSPININITVAL;
@@ -66,5 +64,5 @@ spinwtunlk(volatile m_atomic_t *sp)
     return;
 }
 
-#endif /* __MT_SPINWT_H__ */
+#endif /* MT_SPINWT_H */
 

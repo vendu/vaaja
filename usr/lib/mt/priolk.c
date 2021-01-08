@@ -2,15 +2,12 @@
 #include <stdio.h>
 #include <zero/cdefs.h>
 #include <mach/asm.h>
-#include <mt/priolk.h>
 
-/* <vendu> eliminated the giant mutex */
-
-THREADLOCAL struct priolkdata  *t_priolk;
-volatile struct priolkdata     *g_priolkq;
+THREADLOCAL struct mtpriolkdata    *t_priolk;
+volatile struct mtpriolkdata       *g_priolkq;
 
 void
-priolkset(unsigned long prio)
+mtsetpriolk(unsigned long prio)
 {
     t_priolk->val = 1UL << prio;
 
@@ -19,22 +16,22 @@ priolkset(unsigned long prio)
 
 /* initiase priority lock data for a thread */
 void
-priolkinit(struct priolkdata *data, unsigned long val)
+mtinitpriolk(struct mtpriolkdata *data, unsigned long val)
 {
-    struct priolkdata *ptr = data;
-    unsigned long      prio = 1UL << val;
-    m_atomic_t         res = 0;
-    struct priolkdata *head;
-    struct priolkdata *next;
+    struct mtpriolkdata            *ptr = data;
+    unsigned long                   prio = 1UL << val;
+    m_atomic_t                      res = 0;
+    struct mtpriolkdata            *head;
+    struct mtpriolkdata            *next;
 
     if (!ptr) {
         /* structure not supplied */
         if (g_priolkq) {
             /* try to grab from free list */
             do {
-                head = (struct priolkdata *)g_priolkq;
+                head = (struct mtpriolkdata *)g_priolkq;
                 if (head) {
-                    next = (struct priolkdata *)head->next;
+                    next = (struct mtpriolkdata *)head->next;
                     res = m_cmpswapptr((m_atomicptr_t *)&g_priolkq,
                                        (long *)head,
                                        (long *)next);
@@ -47,7 +44,7 @@ priolkinit(struct priolkdata *data, unsigned long val)
         }
         if (!res) {
             /* try to allocate */
-            ptr = PRIOLKALLOC(sizeof(struct priolkdata));
+            ptr = PRIOLKALLOC(sizeof(struct mtpriolkdata));
 #if defined(PRIOLKUSEMMAP)
             if (ptr == PRIOLKALLOCFAILED) {
                 ptr = NULL;
@@ -68,12 +65,12 @@ priolkinit(struct priolkdata *data, unsigned long val)
 }
 
 void
-priolkget(struct priolk *priolk)
+mtgetpriolk(struct mtpriolk *priolk)
 {
-    unsigned long      prio = t_priolk->val;
-    struct priolkdata *owner;
-    unsigned long      mask;
-    long               res;
+    unsigned long                   prio = t_priolk->val;
+    struct mtpriolkdata            *owner;
+    unsigned long                   mask;
+    long                            res;
 
     /* read priority atomically */
     m_membar();
@@ -129,7 +126,7 @@ priolkget(struct priolk *priolk)
 }
 
 void
-priolkrel(struct priolk *priolk)
+mtrelpriolk(struct mtpriolk *priolk)
 {
     m_membar();
     priolk->owner = NULL;
@@ -141,13 +138,13 @@ priolkrel(struct priolk *priolk)
 }
 
 void
-priolkfin(void)
+mtfinpriolk(void)
 {
-    struct priolkdata *ptr = t_priolk;
-    struct priolkdata *head;
+    struct mtpriolkdata            *ptr = t_priolk;
+    struct mtpriolkdata            *head;
 
     do {
-        head = (struct priolkdata *)g_priolkq;
+        head = (struct mtpriolkdata *)g_priolkq;
         ptr->next = head;
         if (m_cmpswapptr((m_atomicptr_t *)&g_priolkq,
                          (long *)head,

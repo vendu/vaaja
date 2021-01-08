@@ -1,5 +1,5 @@
-#ifndef __MT_LFSET_H__
-#define __MT_LFSET_H__
+#ifndef MT_LFSET_H
+#define MT_LFSET_H
 
 #define MT_LFSET_MAPS           1
 
@@ -47,5 +47,5 @@ struct mtlfset {
 #endif
 };
 
-#endif /* __MT_LFSET_H__ */
+#endif /* MT_LFSET_H */
 

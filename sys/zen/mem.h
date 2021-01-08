@@ -1,26 +1,10 @@
-#ifndef __SYS_ZEN_MEM_H__
-#define __SYS_ZEN_MEM_H__
+#ifndef ZEN_MEM_H
+#define ZEN_MEM_H
 
-#include <limits.h>
-#include <stddef.h>
-#include <zero/cdefs.h>
-//#include <mach/types.h>
-//#include <mach/atomic.h>
-#include <sys/zen/util.h>
-
-#define ZEN_ADR_LK_BIT_POS  0
-
-#define ZEN_MEM_BLK         0
-#define ZEN_MEM_RUN         1
-#define ZEN_MEM_BIG         2
-
-static C_INLINE void *
-kmalloc(m_size_t size)
-{
-    kpanic("kmalloc() not implemented yet", SIGSYS);
-
-    return NULL;
-}
+#define ZEN_ADR_LK_BIT_POS      0
+#define ZEN_MEM_BLK             0
+#define ZEN_MEM_RUN             1
+#define ZEN_MEM_BIG             2
 
 struct zenmemconf {
     m_word_t                    pagesize;
@@ -33,19 +17,19 @@ struct zenmemconf {
 #define ZEN_MEM_ZONE_BUF        1
 #define ZEN_MEM_ZONE_HEAP       2
 #define ZEN_MEM_ZONE_BITS       2
-#define ZEN_MEM_POOL_ZONE_MASK  0x03
-#define zeninitmempool(mp)      ((mp)->head = &(mp)->flg,               \
-                                 (mp)->tail = &(mp)->flg)
+#define ZEN_MEM_ZONE_MASK       0x03
+#define zeninitmempool(mp)      ((mp)->head = (mp)->bmap,               \
+                                 (mp)->tail = (mp)->bmap)
 struct zenmempool {
     void                      (*free)(void *);
     void                       *head;
     void                       *tail;
-    m_word_t                    dummy;
     m_word_t                    type;
     m_word_t                    flg;
     m_word_t                    slot;
     m_word_t                    nitem;
     m_word_t                    nfree;
+    m_word_t                    bmap[ZEN_MAX_POOL_ITEMS / CHAR_BIT];
 };
 
 /*
@@ -67,7 +51,7 @@ struct zenmempool {
 #elif (MACH_WORD_SIZE == 8)
 #define ZEN_MEM_RUN_SLOTS       3
 #define ZEN_MEM_RUN_SLAB_SIZE   (4 * ZEN_MEM_MAX_RUN)
-#define zenmemblkpool(sz)       (fastudiv16(
+//#define zenmemblkpool(sz)       (fastudiv16(
 struct zenmemslab {
     struct zenmemqueue         *queue;
     struct zenmemslab          *prev;
@@ -87,5 +71,5 @@ struct zenmembuf {
     m_word_t                    flg;
 };
 
-#endif /* __SYS_ZEN_MEM_H__ */
+#endif /* ZEN_MEM_H */
 

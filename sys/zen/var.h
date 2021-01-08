@@ -20,7 +20,7 @@
 
 struct zenvars {
     m_time_t                   *hirestmr;
-    time_t                     *rtctime;
+    zentime_t                  *rtctime;
     int16_t                     tmrhz;
     int16_t                     openmax;
     int16_t                     streammax;

@@ -1,12 +1,6 @@
 #ifndef __SYS_ZEN_VFS_H__
 #define __SYS_ZEN_VFS_H__
 
-#include <stddef.h>
-#include <stdint.h>
-#include <zero/cdefs.h>
-//#include <mach/types.h>
-#include <sys/zen/types.h>
-
 /* filesystem types */
 #define ZEN_VFS_UNKNOWN_FS      0
 #define ZEN_VFS_ZEN_FS0         1
@@ -27,15 +21,15 @@
 #define ZEN_VFS_SOCK_NODE       6
 #define ZEN_VFS_SYMLINK_NODE    7
 
-typedef intptr_t        vfsword_t;
-typedef uintptr_t       vfsuword_t;
-typedef uintptr_t       vfssize_t;
-typedef intptr_t        vfsoff_t;
-typedef intptr_t        vfsdev_t;
-typedef uintptr_t       vfsino_t;
-typedef uintptr_t       vfspid_t;
-typedef uintptr_t       vfsuid_t;
-typedef uintptr_t       vfsgid_t;
+typedef intptr_t                vfsword_t;
+typedef uintptr_t               vfsuword_t;
+typedef uintptr_t               vfssize_t;
+typedef intptr_t                vfsoff_t;
+typedef intptr_t                vfsdev_t;
+typedef uintptr_t               vfsino_t;
+typedef uintptr_t               vfspid_t;
+typedef uintptr_t               vfsuid_t;
+typedef uintptr_t               vfsgid_t;
 
 struct zenvfsnode {
     void                       *funcs;

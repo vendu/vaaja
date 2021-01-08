@@ -1,28 +1,25 @@
 #ifndef __MT_THR_H__
 #define __MT_THR_H__
 
-/* velho thread abstraction */
+/* zen thread abstraction */
 
-#include <mt/conf.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <mt/mtx.h>
+#include <mt/mt.h>
 
-#if defined(PTHREAD) && !defined(__KERNEL__)
-#define mtthrself()         ((uintptr_t)pthread_self())
+#if defined(PTHREAD) && !defined(__zen__)
+#define mtthrself()             ((uintptr_t)pthread_self())
 #endif
 
-#if defined(VELHO)
-#include <sched.h>
-#define mtyieldthr()    sched_yield()
+#if defined(__zen__)
+#define mtyieldthr()            schedyield()
 #elif defined(MTTHREAD) || (POSIX_THREAD)
-#define mtyieldthr()    pthread_yield()
+#define mtyieldthr()            pthread_yield()
 #elif defined(_WIN64) || defined(_WIN32)
-#define mtyieldthr()    kYieldProcessor()
+#define mtyieldthr()            kYieldProcessor()
 #elif defined(__linux__) && !defined(__KERNEL__)
-#define mtyieldthr()    sched_yield()
-#elif defined(__KERNEL__)
-#define mtyieldthr()    schedyield()
+#define mtyieldthr()            sched_yield()
+#else
+#include <sched.h>
+#define mtyieldthr()            sched_yield()
 #endif
 
 #if defined(MTTHREAD)
@@ -31,7 +28,7 @@
 #include <sched.h>
 #endif
 
-typedef uintptr_t mtthrid;
+typedef uintptr_t mtthr;
 
 #define MT_THRATR_INIT          (1 << 0)       // attributes initialised
 #define MT_THRATR_DETACHED      (1 << 1)       // detach thread
@@ -44,41 +41,42 @@ typedef uintptr_t mtthrid;
 #define MT_THRATR_GUARDSIZE     (1 << 8)       // stack guard size
 #define MT_THRATR_AFFINITY      (1 << 9)       // affinity configuration
 typedef struct __mtthratr {
-    long                  flg;
-    void                 *stkadr;
-    size_t                stksize;
-    size_t                guardsize;
+    long                        flg;
+    void                       *stkadr;
+    size_t                      stksize;
+    size_t                      guardsize;
 #if defined(_GNU_SOURCE)
-    size_t                ncpu;
-    void                *cpuset;
+    size_t                      ncpu;
+    void                       *cpuset;
 #endif
 #if defined(MTSCHED)
-    struct sched_param   schedparm;
+    struct sched_param          schedparm;
 #endif
 } mtthratr;
 
-#define MT_THR_NOID     (~(mtthrid)0)
-#define MT_THR_ASLEEP   1
-#define MT_THR_AWAKE    0
-typedef struct __mtthr {
-    mtthrid             id;
-    long                sleep;
-    mtthratr           *atr;
-    struct __mtthr     *prev;
-    struct __mtthr     *next;
+#define MT_THR_NOID             (~(mtthr)0)
+#define MT_THR_ASLEEP           1
+#define MT_THR_AWAKE            0
+typedef struct __mtthr          {
+    mtthr                       id;
+    long                        sleep;
+    mtthratr                   *atr;
+    struct __mtthr             *prev;
+    struct __mtthr             *next;
 } mtthr;
 
 #define MT_THRQUEUE_INITIALIZER { MTXINITVAL, NULL, NULL }
 typedef struct __mtthrqueue {
-    mtfmtx      mtx;
-    mtthr      *head;
-    mtthr      *tail;
+    mtfmtx                      mtx;
+    mtthr                      *head;
+    mtthr                      *tail;
 } mtthrqueue;
 
-extern void     mtwaitthr1(mtthrqueue *queue);
-extern long     mtsleepthr2(mtthrqueue *queue, const struct timespec *absts);
-extern mtthr  * mtwakethr1(mtthrqueue *queue);
-extern void     mtwakethrall(mtthrqueue *queue);
+extern void                     mtwaitthr1(mtthrqueue *queue);
+extern long                     mtsleepthr2(mtthrqueue *queue,
+                                            const struct timespec *absts);
+extern mtthr                   *mtwakethr1(mtthrqueue *queue);
+extern void                     mtwakethrall(mtthrqueue *queue);
 
 #define         mtwaitthr()     thrwait1(NULL)
 

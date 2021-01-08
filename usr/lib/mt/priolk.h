@@ -1,39 +1,39 @@
-#ifndef __MT_PRIOLK_H__
-#define __MT_PRIOLK_H__
+#ifndef MT_PRIOLK_H
+#define MT_PRIOLK_H
 
 /* velaho priority locks */
 
 #include <stdint.h>
 #include <mach/param.h>
 #if defined(PRIOLKUSEMMAP)
-#define PRIOLKALLOCFAILED MAP_FAILED
-#define PRIOLKALLOC(sz)   mapanon(0, sz)
+#define MTPRIOLKALLOCFAILED         MAP_FAILED
+#define MTPRIOLKALLOC(sz)           mapanon(0, sz)
 #include <vnd/unix.h>
 #else
-#define PRIOLKALLOCFAILED NULL
-#define PRIOLKALLOC(sz)   malloc(sz)
+#define MTPRIOLKALLOCFAILED NULL
+#define MTPRIOLKALLOC(sz)           malloc(sz)
 #endif
 
 /*
  * REFERENCE: http://locklessinc.com/articles/priority_locks/
  */
 
-struct priolkdata {
-    unsigned long               val;
-    unsigned long               orig;
-    volatile struct priolkdata *next;
+struct mtpriolkdata {
+    unsigned long                   val;
+    unsigned long                   orig;
+    volatile struct mtpriolkdata   *next;
 };
 
-struct priolk {
-    volatile struct priolkdata *owner;
-    volatile unsigned long      waitbits;
+struct mtpriolk {
+    volatile struct mtpriolkdata   *owner;
+    volatile unsigned long          waitbits;
 };
 
-void priolkinit(struct priolkdata *data,
-                unsigned long val);
-void priolkfin(void);
-void priolkget(struct priolk *priolk);
-void priolkrel(struct priolk *priolk);
+void                                mtinitpriolk(struct priolkdata *data,
+                                                 unsigned long val);
+void                                mtfinpriolk(void);
+void                                priolkget(struct priolk *priolk);
+void                                priolkrel(struct priolk *priolk);
 
-#endif /* __MT_PRIOLK_H__ */
+#endif /* MT_PRIOLK_H */
 

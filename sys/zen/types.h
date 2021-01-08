@@ -1,46 +1,24 @@
-#ifndef __SYS_ZEN_TYPES_H__
-#define __SYS_ZEN_TYPES_H__
+#ifndef ZEN_TYPES_H
+#define ZEN_TYPES_H
 
-#include <stdint.h>
-//#include <mach/types.h>
-#include <mt/tktlk.h>
-#include <sys/zen/bsp/v0.h>
+typedef uint32_t                zenintrdesc_t;
+typedef uint32_t                zenpagedesc_t;
 
-/* sized types */
-typedef int32_t         kid_t;          // generic object ID
-typedef uint32_t        kdev_t;         // device type
-typedef uint32_t        kblk_t;         // block ID
-typedef uint16_t        kbus_t;         // bus ID
-typedef uint16_t        kdevid_t;       // device ID
-typedef int32_t         kpid_t;         // process ID
-typedef int32_t         kuid_t;         // user ID
-typedef int32_t         kgid_t;         // group ID
-typedef int32_t         kmode_t;        // file access mode
-typedef uint32_t        kperm_t;        // I/O permission flags
-typedef int32_t         ktime_t;        // FIXME: wraps around in 2038 :)
-/* system types */
-typedef m_size_t        ksize_t;        // size for memory regions
-typedef m_ssize_t       kssize_t;       // signed size for I/O
-typedef m_off_t         koff_t;         // file-system offset
-/* hardware types */
-typedef m_intr_t        kintrdesc_t;
-typedef m_page_t        kpagedesc_t;    // page-table/directory entry
-
-struct kcred {
-    kuid_t            uid;
-    kgid_t            gid;
+struct zencred {
+    zenuid_t                    uid;
+    zengid_t                    gid;
 };
 
-struct kdev {
-    kptr_t            vfsfuncs;
-    kdev_t            dev;              // 16-bit major + 16-bit minor IDs
-    kbus_t            bus;
-    kdevid_t          id;;
-    uint32_t            flg;
+struct zendev {
+    void                       *vfsfuncs;
+    zendev_t                    dev;       // 16-bit major and minor IDs
+    zenbus_t                    bus;
+    zendevid_t                  id;
+    uint32_t                    flg;
 };
 
-struct kcpu {
-    ktime_t           ntick;
+struct zencpu {
+    zentime_t                   ntick;
 };
 
 #define MEM_NULL_FLAGS          0
@@ -65,15 +43,15 @@ struct kcpu {
 #define ZEN_MEM_DYNAMIC         ZEN_MEM_FLAG
 #define ZEN_MEM_ZERO            (ZEN_MEM_FLAG << 1)
 struct zenseg {
-    zenptr_t            base;
-    zenptr_t            lim;
+    m_ptr_t             base;
+    m_ptr_t             lim;
     zensize_t           size;
     uint32_t            flags;
 };
 
 struct zenmap {
     struct zencred      cred;
-    zenptr_t            adr;
+    m_ptr_t             adr;
     zensize_t           size;
     uint32_t            flags;
 };
@@ -90,7 +68,7 @@ struct zenpage {
 };
 
 struct zendesc {
-    zenptr_t            buf;    // buffer [page] address
+    m_ptr_t             buf;    // buffer [page] address
     zensize_t           ofs;    // buffer offset
     uint32_t            flg;    // object/descriptor flags
 };
@@ -107,5 +85,5 @@ struct zennice {
     int_fast8_t         slice;
 };
 
-#endif /* __SYS_ZEN_TYPES_H__ */
+#endif /* ZEN_TYPES_H */
 

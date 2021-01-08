@@ -1,96 +1,35 @@
-#ifndef __MACH_V0_TYPES_H__
-#define __MACH_V0_TYPES_H__
+#ifndef V0_TYPES_H
+#define V0_TYPES_H
 
-#include <stdint.h>
-#if defined(__v0__)
-#include <mach/v0/regs.h>
-#include <mach/v0/regs-ext.h>
-#endif
-
-/* machine types */
-typedef int64_t                 m_reg_t;
-typedef uint64_t                m_ureg_t;
-#if defined(V0_HAVE_LONG64)
-typedef int64_t                 m_long_t;
-typedef uint64_t                m_ulong_t;
-typedef uint64_t                m_size_t;
-#else
-typedef uint32_t                m_size_t;
-#endif
+//typedef int32_t                 m_reg_t;
+//typedef uint32_t                m_ureg_t;
 typedef int32_t                 m_word_t;
 typedef uint32_t                m_uword_t;
-typedef int16_t                 m_half_t;
-typedef uint16_t                m_uhalf_t;
-typedef int8_t                  m_byte_t;
-typedef uint8_t                 m_ubyte_t;
-typedef uint32_t                m_adr_t;
-typedef void                   *m_ptr_t;
-typedef int64_t                 m_long_t;
-typedef uint64_t                m_ulong_t;
 
-/* coprocessor types */
-typedef float                   m_fpsingle_t;
-typedef double                  m_fpdouble_t;
-typedef int64_t                 m_fxp_t;
-typedef uint64_t                m_ufxp_t;
+/* sized types */
+typedef int32_t                 m_id_t;
+typedef int32_t                 m_dev_t;    // device type
+typedef int32_t                 m_blk_t;     // block ID
+typedef int32_t                 m_bus_t;     // bus ID
+typedef int32_t                 m_devid_t;   // device ID
+typedef int32_t                 m_pid_t;     // process ID
+typedef int32_t                 m_uid_t;     // user ID
+typedef int32_t                 m_gid_t;     // group ID
+typedef int32_t                 m_mode_t;    // file access mode
+typedef int32_t                 m_perm_t;    // I/O permission flags
+typedef int32_t                 m_time_t;    // FIXME: wraps around in 2038 :)
+/* system types */
+typedef uint32_t                m_size_t;    // size for memory regions
+typedef int32_t                 m_ssize_t;   // signed size for I/O
+typedef int32_t                 m_off_t;     // file-system offset, constrained
 
-struct v0romparm {
-    void                       *buf;
-    m_size_t                    bufsize;
-};
+typedef m_dev_t                 zendev_t;
+typedef m_dev_t                 zenbus_t;
+typedef m_devid_t               zendevid_t;
+typedef m_uid_t                 zenuid_t;
+typedef m_gid_t                 zengid_t;
+typedef m_mode_t                zenmode_t;
+typedef m_time_t                zentime_t;
 
-/*
- * trap stack-frame
- * - LR holds the return address back to interrupted function
- */
-/*
- * top-to-bottom
- * -------------
- * - ufp        - user mode frame pointer
- * - usp        - user mode stack pointer
- * - msw        - user mode MSW
- * - code       - trap-defined status/error code
- */
-struct v0trapframe {
-    int32_t                     code;   // error code
-    int32_t                     msw;    // machine status-word
-    int32_t                     usp;    // user-mode stack-pointer
-    int32_t                     ufp;    // user-mode frame-pointer
-    //    int32_t                     ret;    // return address
-};
-
-struct v0retframe {
-    int32_t                     oldfp;
-    int32_t                     retadr;
-    int32_t                     r5_r11[V0_CALLEE_SAVE_REGISTERS];
-};
-
-struct v0callframe {
-    int32_t                     sp;
-    int32_t                     r1_4[V0_CALLER_SAVE_REGISTERS];
-    int32_t                     sr0_sr15[V0_SYSTEM_REGISTERS];
-    int32_t                     r14_r15[2];     // LR, PC
-};
-
-struct v0seg {
-    uint32_t                info;   // page-address + flags
-    uint32_t                lim;
-};
-
-struct v0thr {
-    int32_t                 id;
-    volatile int32_t        jointhr;
-    volatile int32_t        sigpend;
-    volatile int32_t        sigmask;
-    volatile int32_t       *statptr;
-    volatile int32_t        waitchan;
-    volatile int32_t        genregs[V0_INTEGER_REGISTERS];
-    volatile int32_t        sysregs[V0_SYSTEM_REGISTERS];
-    volatile struct v0seg   segtab[V0_SEGMENT_ENTRIES];
-    volatile m_fxp_t        fxp64regs[V0_FXP_REGISTERS];
-    volatile double         fpu64regs[V0_FPU_REGISTERS];
-    volatile float          dsp32regs[V0_DSP_REGISTERS];
-};
-
-#endif /* __MACH_V0_TYPES_H__ */
+#endif /* V0_TYPES_H */
 

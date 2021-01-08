@@ -1,8 +1,6 @@
 #ifndef DECK_REGS_H
 #define DECK_REGS_H
 
-#include <stdint.h>
-
 #define DECK_REG_SIZE           32
 
 /* register types */

@@ -1,5 +1,7 @@
-#ifndef __MACH_MACH_H__
-#define __MACH_MACH_H__
+#ifndef MACH_MACH_H
+#define MACH_MACH_H
+
+#include <stdint.h>
 
 /*
  * NOTES
@@ -31,5 +33,11 @@
  * m_scanhi1bit(l)              - find highest position with 1-bit
  */
 
-#endif __MACH_MACH_H__
+#if defined(__STDC__)
+typedef void                   *m_ptr_t;
+#else
+typedef char                   *m_ptr_t;
+#endif
+
+#endif /* MACH_MACH_H */
 

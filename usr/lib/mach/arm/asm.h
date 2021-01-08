@@ -1,7 +1,7 @@
 #ifndef __MACH_ARM_ASM_H__
 #define __MACH_ARM_ASM_H__
 
-#include <mach/types.h>
+//#include <mach/types.h>
 
 /* API declarations */
 #define m_membar()   __asm__ __volatile__ ("" : : : "memory")

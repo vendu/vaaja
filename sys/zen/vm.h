@@ -1,24 +1,18 @@
-#ifndef __SYS_ZEN_VM_H__
-#define __SYS_ZEN_VM_H__
+#ifndef ZEN_VM_H
+#define ZEN_VM_H
 
-/* zen kernel virtual memory interface */
-#if defined(__v0__)
-//#include <zen/bsp/v0.h>
-#endif
-#include <zero/trix.h>
-#include <mach/param.h>
-#include <mt/tktlk.h>
-#include <sys/zen/types.h>
+#include <zen/zen.h>
 
 #if (MACH_WORD_SIZE == 4)
-#define zenvmcalcqid            lzero32
+#define zenvmqueueid            m_clz32
 #define ZEN_VM_QUEUES           32
 #elif (MACH_WORD_SIZE == 8)
-#define zenvmcalcqid            lzero64
+#define zenvmqueueid            m_clz64
 #define ZEN_VM_QUEUES           64
 #endif
 
-#define _zencalcvmqueue(page)   ceilpow2l(page->qcnt)
+/* FIXME: these should probably not use underscore-prefixes */
+#define _zencalcvmqueue(page)   ceilpow2_32(page->qcnt)
 #define _zenvmlkqueue(queue)    mtlktkt(&queue->lk)
 #define _zenvmunlkqueue(queue)  mtunlktkt(&queue->lk)
 
@@ -43,10 +37,10 @@ struct zenvmseg {
     m_adr_t                     ptr;
     m_size_t                    size;
     m_word_t                    flag;
-#if defined(__v0__)
+#if defined(__voima__)
     m_word_t                    pad;
 #endif
 };
 
-#endif /* __SYS_ZEN_VM_H__ */
+#endif /* ZEN_VM_H */
 

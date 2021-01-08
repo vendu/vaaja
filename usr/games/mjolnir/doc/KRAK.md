@@ -14,43 +14,6 @@ arbitrary. The computer game has been simplified slightly not to require to
 much AI-like behavior. :) The damage hitpoints are subtracted from the current
 number of hitpoints.
 
-## Character Movement
-
-- different character classes have different base skills and talent (efficiency
-  to develop the skill) for Krak
-- a turn starts by a throw of D6 or revealing an action card to determine
-  what happens next
-  - D6 lets you move any card on the board left-to-right, bottom-to-top. If your
-    final location is shared by an opponent card, the opponent card is revealed
-    and it is determined which card loses the match in favor of the new owner of
-    the location.
-  - when an opponent character is met, the forward-moving player reveals the
-    topmost card of their upside-down deck;
-- in case of a HIT, attack strength is determined by the following formula;
-
-  HIT = XP / 4 + POWER + LUCK + SKILL;
-
-  where XP is the character's experience level in krak, PWR is hit power (D6 by
-  default), LUCK is luck factor (D4 by default), and finally SKILL is a per-
-  character-type SKILL for krak;
-  - HIT         - attack strength in hitpoints
-  - POWER is a per-character die (according to XP)
-  - LUCK is determined as a function of KARMA in a predefined way (given die for
-    the karma value)
-  - SKILL is the per-character krak-skill value (evolves depending on TALENT)
-    - order of karate belts; white, orange, blue, yellow, green, brown, black,
-      1st dan black, 2nd dan black, 3rd dan black
-      - #1 WHITE        0
-      - #2 ORANGE       1
-      - #3 BLUE         2-3
-      - #4 YELLOW       4-8
-      - #5 GREEN        8-15
-      - #6 BROWN        16-31
-      - #7 BLACK        32-39
-      - #8 BLACK 1ST    40-47
-      - #9 BLACK 2ND    48-55
-      - #10 BLACK 3RD   56-63
-
 ## Cards
 
 - SWAP          - swap positions of the two cards (leave both visible)

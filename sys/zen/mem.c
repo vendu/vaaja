@@ -16,15 +16,49 @@
 static struct tabhashtab               *TABHASH_TAB[TABHASH_SLOTS];
 static volatile struct tabhashtab      *TABHASH_BUF;
 
+static C_INLINE void *
+kmalloc(m_size_t size)
+{
+    return NULL;
+}
+
+static C_INLINE void
+kfree(void *ptr)
+{
+    return NULL;
+}
+
+static C_INLINE void *
+kmemalign(size_t align, size_t size)
+{
+    void                       *ptr;
+
+    ptr = kgetmem(align, size);
+}
+
+static C_INLINE void *
+krealloc(void *ptr, size_t size)
+{
+    void                       *ret;
+
+    ret = kmalloc(nitem * isize);
+    if ((ret) && (ptr)) {
+        kmemcpy(ret, ptr, size);
+        ptr = NULL;
+    }
+
+    return ret;
+}
+
 #if 0
 static void
-zenfreememblk(void *ptr)
+zenfreeblk(void *ptr)
 {
     return;
 }
 
 static void
-zenfreememrun(void *ptr)
+zenfreerun(void *ptr)
 {
     return;
 }
@@ -113,13 +147,6 @@ zeninitmempool(struct zenmempool *pool, m_word_t type, m_word_t slot)
     pool->nref = 0;
     //    pool->head = (m_adr_t)&pool->mark;
     //    pool->tail = (m_adr_t)&pool->mark;
-#if 0
-    if (type == ZEN_MEM_BLK) {
-        pool->free = zenfreememblk;
-    } else {
-        pool->free = zenfreememrun;
-    }
-#endif
     pool->free = zenfreememslab;
 
     return;

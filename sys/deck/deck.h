@@ -2,6 +2,9 @@
 #define DECK_DECK_H
 
 #include <deck/conf.h>
+#include <stdio.h>
+#include <stdint.h>
+
 #include <deck/endian.h>
 #include <deck/cdefs.h>
 #include <deck/intr.h>

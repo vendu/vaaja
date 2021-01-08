@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_SYS_H__
-#define __SYS_ZEN_SYS_H__
+#ifndef ZEN_SYS_H
+#define ZEN_SYS_H
 
 #include <sys/zen/zen.h>
 #include <sys/zen/sched/task.h>
@@ -14,13 +14,13 @@ struct zensys {
     m_page_t            pagedir[MACH_PAGE_DIR_ITEMS];
     m_uword_t           ndesc;
     m_word_t           *desctab;
-#if defined(__v0__)
+#if defined(__voima__)
     m_word_t            pad1;
 #endif
     m_uword_t           nnodehash;
     struct zenvfsnode  *nodehash;
     m_uword_t           nmembuf;
-#if defined(__v0__)
+#if defined(__voima__)
     m_word_t            pad2;
 #endif
     struct zenmembuf   *membuftab;
@@ -41,5 +41,5 @@ kreboot(int flg)
     kpanic("kreboot() not implemented yet", SIGSYS);
 }
 
-#endif /* __SYS_ZEN_SYS_H__ */
+#endif /* ZEN_SYS_H */
 

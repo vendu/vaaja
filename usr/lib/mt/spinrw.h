@@ -11,22 +11,15 @@
  * - initialise spinrw-locks with spininit() from <mt/spin.h>
  */
 
-#include <assert.h>
-#include <stdint.h>
-#include <mach/param.h>
-#include <mach/asm.h>
-#include <mt/thr.h>
-#include <mt/spin.h>
-
 #if (LONGSIZE == 8)
-#define SPINRWWRBIT   (UINT64_C(1) << 63)
+#define SPINRWWRBIT             (UINT64_C(1) << 63)
 #elif (LONGSIZE == 4)
-#define SPINRWWRBIT   (UINT32_C(1) << 31)
+#define SPINRWWRBIT             (UINT32_C(1) << 31)
 #endif
-#define SPINRWCNTMASK (~SPINWRWRBIT)
+#define SPINRWCNTMASK           (~SPINWRWRBIT)
 
-#define MTSPINRW_FREE      (-1L)
-#define MTSPINRWREC_DEFVAL { MTSPININITVAL, MTSPINRW_FREE, 0 }
+#define MTSPINRW_FREE           (-1L)
+#define MTSPINRWREC_DEFVAL      { MTSPININITVAL, MTSPINRW_FREE, 0 }
 /* structure for recursive locks */
 typedef struct spinrw {
     volatile long lk;   // lock value
@@ -35,10 +28,10 @@ typedef struct spinrw {
 } mtspinrwrec;
 
 static __inline__ void
-spinrwlkrd(volatile long *sp)
+mttryspinrd(volatile long *sp)
 {
-    volatile long old;
-    volatile long val;
+    volatile long               old;
+    volatile long               val;
 
     do {
         while (*sp & SPINRWWRBIT) {
@@ -56,7 +49,7 @@ spinrwlkrd(volatile long *sp)
 }
 
 static __inline__ void
-spinrwunlkrd(volatile long *sp)
+mtspinunlkrd(volatile long *sp)
 {
     m_atominc(*sp);
 
@@ -64,10 +57,10 @@ spinrwunlkrd(volatile long *sp)
 }
 
 static __inline__ void
-spinrwlkwr(volatile long *sp)
+mtlkspinwr(volatile long *sp)
 {
-    volatile long old;
-    volatile long val;
+    volatile long               old;
+    volatile long               val;
 
     do {
         while (*sp & SPINRWWRBIT) {
@@ -87,7 +80,7 @@ spinrwlkwr(volatile long *sp)
 }
 
 static __inline__ void
-spinrwunlkwr(volatile long *sp)
+mtunlkspinwr(volatile long *sp)
 {
     assert(*sp == SPINRWWRBIT);
     *sp = MTSPININITVAL;
@@ -99,10 +92,10 @@ spinrwunlkwr(volatile long *sp)
 static __inline__ void
 mtlkspinrwrecwr(mtspinrwrec *spin)
 {
-    long thr = thrid();
+    long                        thr = thrid();
 
     if (spin->thr == thr) {
-        spinrwlkwr(&spin->lk);
+        mtlkspinwr(&spin->lk);
         assert(!spin->rec);
         spin->thr = thr;
     }
@@ -112,13 +105,13 @@ mtlkspinrwrecwr(mtspinrwrec *spin)
 static __inline__ void
 mtunlkspinrwrecwr(mtspinrwrec *spin)
 {
-    long thr = thrid();
+    long                        thr = thrid();
 
     assert(thr == spin->thr);
     spin->rec--;
     if (!spin->rec) {
         spin->thr = MTSPINRW_FREE;
-        spinrwunlkwr(&spin->lk);
+        mtunlkspinwr(&spin->lk);
     }
 }
 

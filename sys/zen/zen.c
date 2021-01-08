@@ -1,3 +1,5 @@
+#if 0
+
 #include <sys/zen/conf.h>
 #include <sys/zen/zen.h>
 #include <sys/zen/sys.h>
@@ -21,3 +23,4 @@ k_jmptask(struct m_thr *thr)
     ;
 }
 
+#endif

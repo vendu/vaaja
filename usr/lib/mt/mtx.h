@@ -3,27 +3,12 @@
 
 /* velho mutex locks */
 
-#include <mach/atomic.h>
-
-#if !defined(__zen__) && 0
-#define MTPTHREAD       1
-#endif
-#define pthread_self()  0
+#include <mt/mt.h>
 
 #define MTMTX           1
 #if !defined(MTFMTX)
 #define MTFMTX          1
 #endif
-
-//#include <mt/conf.h>
-#include <stddef.h>
-#include <stdint.h>
-#if defined(MTPTHREAD)
-#include <pthread.h>
-#endif
-#include <zero/cdefs.h>
-#include <mach/param.h>
-#include <mach/asm.h>
 
 typedef volatile m_atomic_t mtmtx;
 typedef volatile m_atomic_t mtfmtx;
@@ -56,7 +41,7 @@ mtinitfmtx(volatile m_atomic_t *lp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttryfmtx(volatile m_atomic_t *lp)
+mttrylkfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
 
@@ -107,10 +92,10 @@ mtunlkfmtx(volatile m_atomic_t *lp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttryrecfmtx(volatile m_atomic_t *lp)
+mttrylkrecfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
-    m_atomic_t  id = (m_atomic_t)pthread_self();
+    m_atomic_t  id = (m_atomic_t)mtthrself();
 
     if (*lp == MTMTXINITVAL) {
         res = m_cmpswap(lp, MTMTXINITVAL, id);
@@ -130,7 +115,7 @@ static C_INLINE void
 mtlkrecfmtx(volatile m_atomic_t *lp)
 {
     m_atomic_t  res = 0;
-    m_atomic_t  id = (m_atomic_t)pthread_self();
+    m_atomic_t  id = (m_atomic_t)mtthrself();
 
     do {
         while (*lp != MTMTXINITVAL) {

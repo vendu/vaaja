@@ -1,11 +1,8 @@
-#ifndef __SYS_ZEN_CONF_H__
-#define __SYS_ZEN_CONF_H__
+#ifndef ZEN_CONF_H
+#define ZEN_CONF_H
 
-#include <zero/cdefs.h>
-#include <sys/zen/ev.h>
-#if defined(__v0__)
-#include <sys/zen/bsp/v0.h>
-#endif
+#define ZEN_RUN_ON_ZERO         1   // execute on top of a Unix-like
+#define ZEN_USE_PTHREAD         1   // virtual kernel with POSIX Threads
 
 /* compile-time options */
 #define ZEN_HANG_ON_PANIC       1
@@ -13,7 +10,7 @@
 #define ZEN_ULE_TASK_SCHED      1
 #define ZEN_BVT_TASK_SCHED      2
 #define ZEN_IP4_NET             1
-#if !defined(__v0__)
+#if !defined(__voima__)
 #define ZEN_SMP                 1
 #endif
 #define ZEN_MAX_CPUS            32
@@ -32,5 +29,5 @@
 #define ZEN_USR_STK_MAX         (32 * MACH_PAGE_SIZE)
 #define ZEN_SYS_STK_SIZE        (MACH_PAGE_SIZE)
 
-#endif /* __SYS_ZEN_CONF_H__ */
+#endif /* ZEN_CONF_H */
 

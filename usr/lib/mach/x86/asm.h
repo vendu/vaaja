@@ -27,15 +27,16 @@
 #endif
 
 /* atomic fetch and add, 16-bit version; return earlier value */
-#define m_fetchadd16(p, val)       m_xadd16(p, val)
-#define m_fetchaddu16(p, val)      m_xaddu16(p, val)
+#define m_fetchadd16(p, val)        m_xadd16(p, val)
+#define m_fetchaddu16(p, val)       m_xaddu16(p, val)
 /* atomic fetch and add, 32-bit version; return earlier value */
-#define m_fetchadd32(p, val)       m_xadd32(p, val)
-#define m_fetchaddu32(p, val)      m_xaddu32(p, val)
+#define m_fetchadd32(p, val)        m_xadd32(p, val)
+#define m_fetchaddu32(p, val)       m_xaddu32(p, val)
 /* atomic compare and swap byte *lp with val iff *lp == want */
-#define m_cmpswapb(p, want, val)   (m_cmpxchg8(p, want, val) == want)
-#define m_cmpswap32(p, want, val)  (m_cmpxchg32(p, want, val) == want)
-#define m_cmpswapu32(p, want, val) (m_cmpxchgu32(p, want, val) == want)
+#define m_cmpswapb(p, want, val)    (m_cmpxchg8(p, want, val) == want)
+#define m_cmpswap32(p, want, val)   (m_cmpxchg32(p, want, val) == want)
+#define m_cmpswapu32(p, want, val)  (m_cmpxchgu32(p, want, val) == want)
+#define m_cmpswapdbl(p, want, val)  (m_cmpxchg128(p, want, val) != 0)
 
 /* atomic increment operation */
 static __inline__ void
@@ -293,24 +294,25 @@ m_flipbit32(volatile m_atomic32_t *lp, int32_t ndx)
     return;
 }
 
-/* atomic set and test bit operation; returns the old value */
+/* atomic set and test bit operation; returns the old bit-value */
 static __inline__ int32_t
 m_cmpsetbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
-    int32_t val = 0;
+    int32_t mask = ~(1 << ndx);
+    int32_t val = 1;
 
     if (C_IMMEDIATE(ndx)) {
-        __asm__ __volatile__ ("lock btsl %2, %0\n"
-                              "jnc 1f\n"
-                              "incl %1\n"
+        __asm__ __volatile__ ("lock btsl %0, %2\n"
+                              "jc 1f\n"
+                              "decl %1\n"
                               "1:\n"
                               : "+m" (*(lp)), "=r" (val)
                               : "i" (ndx)
                               : "cc", "memory");
     } else {
-        __asm__ __volatile__ ("lock btsl %2, %0\n"
-                              "jnc 1f\n"
-                              "incl %1\n"
+        __asm__ __volatile__ ("lock btsl %0, %2\n"
+                              "jc 1f\n"
+                              "decl %1\n"
                               "1:\n"
                               : "+m" (*(lp)), "=r" (val)
                               : "r" (ndx)
@@ -395,7 +397,7 @@ m_cmpxchg32ptr(m_atomic32_t **lp,
  * - return original nonzero on success, zero on failure
  */
 static __inline__ long
-m_cmpxchg64(int64_t *lp64,
+m_cmpxchg(int64_t *lp64,
             int64_t *want,
             int64_t *val)
 {
@@ -405,7 +407,7 @@ m_cmpxchg64(int64_t *lp64,
 #elif defined(_MSC_VER)
 
 static __inline__ long
-m_cmpxchg64(int64_t *lp64,
+m_cmpxchg(int64_t *lp64,
             int64_t *want,
             int64_t *val)
 {
@@ -420,6 +422,26 @@ m_cmpxchg64(int64_t *lp64,
 
 #else
 
+static __inline__ long
+m_cmpxchg8b(volatile m_atomic_t *p64,
+            int32_t *want,
+            int32_t *val)
+{
+    register int64_t rax __asm__ "eax" = want[0];
+    register int64_t rdx __asm__ "edx" = want[1];
+    register int64_t rbx __asm__ "rbx" = val[0];
+    register int64_t rcx __asm__ "rcx" = val[1];
+    long     res = 0;
+
+    __asm__ __volatile__ ("lock cmpxchg8b %0\n"
+                          "setzl %b1\n"
+                          : "+S" (*p64)
+                          : "=a" (rax)
+                          : "eax", "ebx", "ecx", "edx", "cc", "memory");
+
+    return rax;
+}
+
 /*
  * atomic 64-bit compare and swap
  * - if *lp == want, let *lp = val + set ZF
@@ -428,32 +450,33 @@ m_cmpxchg64(int64_t *lp64,
 
  */
 static __inline__ long
-m_cmpxchg64(int64_t *ptr,
+m_cmpxchg8b(int64_t *ptr,
             int64_t want,
             int64_t val)
 {
-    long     res = 0;
-    register int32_t ebx __asm__ ("ebx") = want & 0xffffffff;
+    register int32_t            res __asm__ ("eax") = 0;
+    register int32_t            ebx __asm__ ("ebx") = want & 0xffffffff;
+    register int32_t            ecx __asm__ ("ecx") = (want & 0xffffffff) >> 32;
 
     __asm__ __volatile (
-        "movl %%edi, %%ebx\n" // load EBX
-        "lock cmpxchg8b (%%esi)\n"
-        "setz %%al\n" // EAX may change
-        "movzx %%al, %1\n" // res = ZF
-        : "+S" (ptr), "=a" (res)
-        : "0" (ptr),
-          "d" ((uint32_t)(want >> 32)),
-          "a" ((uint32_t)(want & 0xffffffff)),
-          "c" ((uint32_t)(val >> 32)),
-          "D" ((uint32_t)(val & 0xffffffff))
-        : "flags", "memory", "eax", "edx");
+                        "movl %%edi, %%ebx\n" // load EBX
+                        "lock cmpxchg8b (%%esi)\n"
+                        "setz %%al\n"
+                            : "+S" (ptr)
+                            : "=a" (res)
+                            : "0" (ptr),
+                              "d" ((uint32_t)(want >> 32)),
+                              "a" ((uint32_t)(want & 0xffffffff)),
+                              "c" ((uint32_t)(val >> 32)),
+                              "D" ((uint32_t)(val & 0xffffffff))
+                            : "eax", "ebx", "ecx", "edx", "flags", "memory");
 
     return res;
 }
 
 #endif
 
-#endif /* !64-bit */
+#endif /* !defined(__amd64__) && !defined(x86_64) */
 
 #endif /* __MACH_X86_ASM_H__ */
 

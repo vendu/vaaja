@@ -1,18 +1,15 @@
-#ifndef __MT_SEM_H__
-#define __MT_SEM_H__
+#ifndef MT_SEM_H
+#define MT_SEM_H
 
-/* velho semaphores */
+/* zen semaphores */
 
-#include <limits.h>
-#include <mt/mtx.h>
-
-#define MTSEM_MAXVAL ULONG_MAX
+#define MTSEM_INITVAL           ULONG_MAX
 typedef struct sem {
-#if (MTFMTX)
-    mtfmtx      lk;
+#if defined(MTFMTX)
+    mtfmtx                      lk;
 #endif
-    unsigned long val;
+    unsigned long               val;
 } mtsem;
 
-#endif /* __MT_SEM_H__ */
+#endif /* MT_SEM_H */
 
