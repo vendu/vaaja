@@ -46,7 +46,6 @@ The game board looks like this
 - 4P    - player 4 protection
 - 4S    - player 4 spells
 
-|--------------------------------------------------------------------------|
 |    | S3 | P3 | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | P4 | S4 |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
 | S1 |    |    |1S1 |1S2 |1S3 |1S4 |1S5 |1S6 |1S7 |1S8 |1S9 |1S10|    |    |
@@ -63,7 +62,6 @@ The game board looks like this
 | J  |3S10|3P10|    |    |    |    |    |    |    |    |    |    |4P10|4S10|
 | P2 |    |    |2P1 |2P2 |2P3 |2P4 |2P5 |2P6 |2P7 |2P8 |2P9 |2P10|    |    |
 | S2 |    |    |2S1 |2S2 |2S3 |2S4 |2S5 |2S6 |2S7 |2S8 |2S9 |2S10|    |    |
-|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 
 After the initial steps for the player, they populate the S1-S10 cells with
 spell cards face down.
@@ -111,8 +109,7 @@ KRAKSYS Gameplay is based on D20 set of dice with dices of 4, 6, 8, 10, 12, and
 
 Here, I list some default actions for the different dice.
 
-|-----------------------------------------------|--------
-|  DIE  | use                                   | NAME
+|: DIE  |:use                                   |:NAME
 ------------------------------------------------|--------
 |  D4   | healing base die                      | HEAL
 ------------------------------------------------|--------
@@ -125,7 +122,6 @@ Here, I list some default actions for the different dice.
 |  D10  | check action; 1 point is 10 %         | ACTION
 ------------------------------------------------|--------
 |  D20  | check success; 1 point is 5 %         | SUCCESS
-------------------------------------------------|--------
 
 ## Cards
 
