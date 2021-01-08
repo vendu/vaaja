@@ -109,8 +109,8 @@ KRAKSYS Gameplay is based on D20 set of dice with dices of 4, 6, 8, 10, 12, and
 
 Here, I list some default actions for the different dice.
 
-|: DIE  |:use                                   |:NAME
-------------------------------------------------|--------
+| DIE   | use                                   | NAME
+|:------|:--------------------------------------|:-------
 |  D4   | healing base die                      | HEAL
 ------------------------------------------------|--------
 |  D6   | defanse base die                      | ATTACK
