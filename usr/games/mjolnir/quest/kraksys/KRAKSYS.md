@@ -112,15 +112,10 @@ Here, I list some default actions for the different dice.
 | DIE   | use                                   | NAME
 |:------|:--------------------------------------|:-------
 |  D4   | healing base die                      | HEAL
-------------------------------------------------|--------
 |  D6   | defanse base die                      | ATTACK
-------------------------------------------------|--------
 |  D8   | attack base die                       | ATTACK
----------------------------------------------------------
 |  D10  | spell base die                        | SPELL
-------------------------------------------------|--------
 |  D10  | check action; 1 point is 10 %         | ACTION
-------------------------------------------------|--------
 |  D20  | check success; 1 point is 5 %         | SUCCESS
 
 ## Cards
