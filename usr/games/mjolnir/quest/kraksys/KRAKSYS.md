@@ -199,8 +199,29 @@ cell (right below or after the protection cell just attacked).
 ### Action Cards
 
 #### Thief
+
+When a player moves on a thief card, the thief owner may pick a random card
+from the player's deck.
+
 #### Swap
+
+When a player moves on a swap card, the player picks the card and lets its owner
+pick one from their deck at random.
+
 #### Probe
+
+Probe cards can be at any time; the probe takes the whole turn and lets you
+turn an opponent card face up to recognize it.
+
 #### Trojan
+
+When a trojan card is met, it's placed into the owner's stack of used cards and
+the trojan's owner picks up the attacking card.
+
 #### EMP
+
+An electro-magnetic pulse, EMP, card may be played against any protection card;
+if the attack succeeds and the cell protected is connected ('jacked') to a
+mainframe, the plug is attacked. If the plug gets killed, the player may add a
+plug to their own mainframe in the cell.
 
