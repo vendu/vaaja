@@ -3,7 +3,7 @@
 
 #include <features.h>
 #include <stdint.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 
 /* types (hopefully) not declared yet... :) */
 #if (defined(_BSD_SOURCE) || defined(_XOPEN_SOURCE)) && !defined(__socklen_t_defined)

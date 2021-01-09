@@ -20,7 +20,7 @@ typedef volatile m_atomic_t     mtspin;
  * try to lock spin-lock
  * - return non-zero on success, zero if already locked
  */
-static __inline__ void
+static __inline__ long
 mttryspin(volatile m_atomic_t *sp)
 {
     m_atomic_t                  res = 0;

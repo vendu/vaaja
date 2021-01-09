@@ -29,7 +29,7 @@ struct zenmempool {
     m_word_t                    slot;
     m_word_t                    nitem;
     m_word_t                    nfree;
-    m_word_t                    bmap[ZEN_MAX_POOL_ITEMS / CHAR_BIT];
+    //    m_word_t                    bmap[ZEN_MAX_POOL_ITEMS / CHAR_BIT];
 };
 
 /*
@@ -51,7 +51,8 @@ struct zenmempool {
 #elif (MACH_WORD_SIZE == 8)
 #define ZEN_MEM_RUN_SLOTS       3
 #define ZEN_MEM_RUN_SLAB_SIZE   (4 * ZEN_MEM_MAX_RUN)
-//#define zenmemblkpool(sz)       (fastudiv16(
+#endif
+
 struct zenmemslab {
     struct zenmemqueue         *queue;
     struct zenmemslab          *prev;
@@ -61,7 +62,7 @@ struct zenmemslab {
     m_size_t                    size;
     m_word_t                    type;
     m_word_t                    flg;
-    m_byte_t                    bmap[ZEN_MAX_SLAB_ITEMS / CHAR_BIT];
+    //    m_byte_t                    bmap[ZEN_MAX_SLAB_ITEMS / CHAR_BIT];
 };
 
 struct zenmembuf {

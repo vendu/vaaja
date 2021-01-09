@@ -19,7 +19,7 @@
 #define m_waitint()  __asm__ __volatile__ ("hlt\n"  : : : "memory")
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #if defined(__x86_64__) || defined(__amd64__)
 #include <mach/amd64/asm.h>
 #elif defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__)
@@ -36,7 +36,7 @@
 #define m_cmpswapb(p, want, val)    (m_cmpxchg8(p, want, val) == want)
 #define m_cmpswap32(p, want, val)   (m_cmpxchg32(p, want, val) == want)
 #define m_cmpswapu32(p, want, val)  (m_cmpxchgu32(p, want, val) == want)
-#define m_cmpswapdbl(p, want, val)  (m_cmpxchg128(p, want, val) != 0)
+#define m_cmpswap64(p, want, val)   (m_cmpxchg8b(p, want, val) != 0)
 
 /* atomic increment operation */
 static __inline__ void
@@ -298,7 +298,6 @@ m_flipbit32(volatile m_atomic32_t *lp, int32_t ndx)
 static __inline__ int32_t
 m_cmpsetbit32(volatile m_atomic32_t *lp, int32_t ndx)
 {
-    int32_t mask = ~(1 << ndx);
     int32_t val = 1;
 
     if (C_IMMEDIATE(ndx)) {
@@ -422,54 +421,28 @@ m_cmpxchg(int64_t *lp64,
 
 #else
 
-static __inline__ long
-m_cmpxchg8b(volatile m_atomic_t *p64,
-            int32_t *want,
-            int32_t *val)
-{
-    register int64_t rax __asm__ "eax" = want[0];
-    register int64_t rdx __asm__ "edx" = want[1];
-    register int64_t rbx __asm__ "rbx" = val[0];
-    register int64_t rcx __asm__ "rcx" = val[1];
-    long     res = 0;
-
-    __asm__ __volatile__ ("lock cmpxchg8b %0\n"
-                          "setzl %b1\n"
-                          : "+S" (*p64)
-                          : "=a" (rax)
-                          : "eax", "ebx", "ecx", "edx", "cc", "memory");
-
-    return rax;
-}
-
 /*
  * atomic 64-bit compare and swap
  * - if *lp == want, let *lp = val + set ZF
  *   - else let EDX:EAX = *lp + clear ZF
  * - return 0 on failur, 1 on success
-
  */
 static __inline__ long
-m_cmpxchg8b(int64_t *ptr,
-            int64_t want,
-            int64_t val)
+m_cmpxchg8b(volatile uint32_t *p32,
+            int32_t *want,
+            int32_t *val)
 {
-    register int32_t            res __asm__ ("eax") = 0;
-    register int32_t            ebx __asm__ ("ebx") = want & 0xffffffff;
-    register int32_t            ecx __asm__ ("ecx") = (want & 0xffffffff) >> 32;
+    int32_t  res = 0;
 
-    __asm__ __volatile (
-                        "movl %%edi, %%ebx\n" // load EBX
-                        "lock cmpxchg8b (%%esi)\n"
-                        "setz %%al\n"
-                            : "+S" (ptr)
-                            : "=a" (res)
-                            : "0" (ptr),
-                              "d" ((uint32_t)(want >> 32)),
-                              "a" ((uint32_t)(want & 0xffffffff)),
-                              "c" ((uint32_t)(val >> 32)),
-                              "D" ((uint32_t)(val & 0xffffffff))
-                            : "eax", "ebx", "ecx", "edx", "flags", "memory");
+    __asm__ __volatile__ ("lock cmpxchg16b %0\n"
+                          "setzl %q4\n"
+                          : "+m" ((p32)[0]),
+                            "+m" ((p32)[1]),
+                            "+a" ((want)[0]),
+                            "+d" ((want)[1]),
+                            "=r" (res)
+                          : "b" ((val)[0]), "c" ((val)[1])
+                          : "cc", "memory");
 
     return res;
 }

@@ -3,12 +3,18 @@
 
 #define ZEN_RUN_ON_ZERO         1   // execute on top of a Unix-like
 #define ZEN_USE_PTHREAD         1   // virtual kernel with POSIX Threads
+#define ZEN_USE_STDIO           1   // do standard C library I/O (simulation)
 
 /* compile-time options */
 #define ZEN_HANG_ON_PANIC       1
+#if defined(__voima__)          // fixed-priority scheduler for the consoles
+#define ZEN_TASK_SCHED          ZEN_SPT_TASK_SCHED
+#else                           // slightly-revamped FreeBSD ULE for the desktop
 #define ZEN_TASK_SCHED          ZEN_ULE_TASK_SCHED
+#endif
 #define ZEN_ULE_TASK_SCHED      1
 #define ZEN_BVT_TASK_SCHED      2
+#define ZEN_SPT_TASK_SCHED      3
 #define ZEN_IP4_NET             1
 #if !defined(__voima__)
 #define ZEN_SMP                 1

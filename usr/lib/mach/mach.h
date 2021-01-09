@@ -33,11 +33,5 @@
  * m_scanhi1bit(l)              - find highest position with 1-bit
  */
 
-#if defined(__STDC__)
-typedef void                   *m_ptr_t;
-#else
-typedef char                   *m_ptr_t;
-#endif
-
 #endif /* MACH_MACH_H */
 

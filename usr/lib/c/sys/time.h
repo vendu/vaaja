@@ -9,10 +9,10 @@
 #endif
 
 #if !defined(__time_types_defined)
-#include <share/time.h>
+#include <bits/time.h>
 #endif
 #if !defined(__struct_timeval_defined)
-#include <sys/share/time.h>
+#include <sys/bits/time.h>
 #endif
 
 #include <sys/types.h>
@@ -41,60 +41,22 @@ struct itimerval {
     } while (0)
 #endif
 
-#if defined(FAVORBSD)
+#if defined(_FAVOR_BSD)
 /* obsolete structure that should never be used */
 struct timezone {
     int tz_minuteswest;         // minutes west of GMT
-    int tz_dsttime;		// nonzero if DST is ever in effect
+    int tz_dsttime;     // nonzero if DST is ever in effect
 };
 typedef struct timezone *__restrict timezone_ptr_t;
 #else
 typedef void            *__restrict timezone_ptr_t;
 #endif
 
-#if !defined(FD_SETSIZE)
-
-#if (USEZERO)
-#include <kern/conf.h>
-#endif
-#if defined(PROCDESCS) && !defined(FD_SETSIZE)
-#define FD_SETSIZE PROCDESCS
-#elif (defined(USEPOSIX))
-#define FD_SETSIZE _POSIX_FD_SETSIZE
-#elif (USEBSD) && !defined(NFDBITS)
-#include <sys/sysmacros.h>
-#define FD_SETSIZE NFDBITS
-#endif
-
-#if !defined(CHAR_BIT)
-#include <share/limits.h>
-#endif
-typedef long       fd_mask;
-#define NFDBITS    (sizeof(fd_mask) * CHAR_BIT)
-struct fd_set {
-#if (USEXOPEN)
-    fd_mask fds_bits[FD_SETSIZE / NFDBITS];
-#else
-    fd_mask __fds_bits[FD_SETSIZE / NFDBITS];
-#endif
-};
-typedef struct fd_set fd_set;
-
-#define FD_SET(fd, set)    setbit(set->fd_bits, fd)
-#define FD_CLR(fd, set)    clrbit(set->fd_bits, fd)
-#define FD_ISSET(fd, set)  bitset(set->fd_bits, fd)
-#define FD_ZERO(set)       memset(set->fd_bits, 0, FD_SETSIZE / CHAR_BIT)
-#if (USEBSD)
-#define FD_COPY(src, dest) memcpy(dest, src, sizeof(fd_set))
-#endif
-
-#endif /* !defined(FD_SETSIZE) */
-
 #if !defined(__zen__)
 
 extern int gettimeofday(struct timeval *__restrict tv,
                         timezone_ptr_t tz);
-#if (USEBSD) && defined(FAVORBSD)
+#if defined(_BSD_SOURCE) && defined(_FAVOR_BSD)
 extern int settimeofday(const struct timeval *tv, const struct timezone *tz);
 extern int adjtime(const struct timeval *delta, struct timeval *olddelta);
 #endif
@@ -107,7 +69,7 @@ extern int setitimer(itimer_which_t, const struct itimerval *__restrict newval,
 extern int utimes(const char *file, const struct timeval tv[2]);
 extern int utimensat(int fd, const char *file, const struct timespec times[2],
                      int flg);
-#if (USEBSD)
+#if defined(_BSD_SOURCE)
 extern int lutimes(const char *file, const struct timeval tv[2]);
 extern int futimes(int fd, const struct timeval tv[2]);
 #endif
@@ -117,7 +79,7 @@ extern int futimesat(int fd, const char *file, const struct timeval tv[2]);
 
 #endif /* !defined(__KERNEL__) */
 
-#if (USEBSD)
+#if defined(_BSD_SOURCE)
 #define    timerisset(tv) ((tv)->tv_sec || (tv)->tv_usec)
 #define    timerclear(tv) (!(tv)->tv_sec && !(tv)->tv_usec);
 #define    timercmp(tv1, tv2, _cmp)       \

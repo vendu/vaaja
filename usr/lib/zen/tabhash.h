@@ -8,8 +8,8 @@
  */
 
 #include <string.h>
-#include <zero/trix.h>
-#include <zero/unix.h>
+#include <env/trix.h>
+#include <env/unix.h>
 #include <zen/hash.h>
 #include <mach/atomic.h>
 #include <mach/param.h>
@@ -55,21 +55,21 @@ struct tabhashtab {
 };
 
 static __inline__ void
-tabhashputtab(struct tabhashtab *tab)
+tabhashputtab(struct tabhashtab *buf, struct tabhashtab *tab)
 {
     struct tabhashtab  *head;
 
-    mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_ADR_LK_BIT_OFS);
-    head = (void *)((uintptr_t)TABHASH_BUF & ~MT_ADR_LK_BIT);
+    mtlkbit((m_atomic_t *)&buf, MT_ADR_LK_BIT_OFS);
+    head = (void *)((uintptr_t)&buf & ~MT_ADR_LK_BIT);
     tab->next = head;
-    m_atomwrite((m_atomic_t *)&TABHASH_BUF, (m_atomic_t *)tab);
+    m_atomwrite((m_atomic_t *)&buf, (m_atomic_t *)tab);
 
     return;
 }
 
 /* get hash subtable */
 static __inline__ struct tabhashtab *
-tabhashgettab(void)
+tabhashgettab(struct tabhashtab *buf)
 {
     struct tabhashtab  *tab;
     struct tabhashtab  *head;
@@ -79,11 +79,11 @@ tabhashgettab(void)
     int8_t             *ptr;
 
     /* lock buffer */
-    mtlkbit((m_atomic_t *)&TABHASH_BUF, MT_ADR_LK_BIT_OFS);
-    tab = (void *)((uintptr_t)TABHASH_BUF & ~MT_ADR_LK_BIT);
+    mtlkbit((m_atomic_t *)&buf, MT_ADR_LK_BIT_OFS);
+    tab = (void *)((uintptr_t)buf & ~MT_ADR_LK_BIT);
     if (!tab) {
     /* allocate more subtables */
-        ptr = mapanon(-1, TABHASH_BUF_SIZE, 0);
+        ptr = mapanon(-1, buf_SIZE, 0);
         if (ptr == MAP_FAILED) {
             tab = NULL;
         } else {
@@ -107,13 +107,14 @@ tabhashgettab(void)
         /* remove head from stack/queue */
         head = tab->next;
     }
-    m_atomwrite((m_atomic_t *)&TABHASH_BUF, (m_atomic_t *)head);
+    m_atomwrite((m_atomic_t *)&buf, (m_atomic_t *)head);
 
     return tab;
 }
 
 static __inline__ m_word_t
-tabhashadd(const uintptr_t key,
+tabhashadd(struct tabhashtab **hash,
+           const uintptr_t key,
            const uintptr_t val)
 {
     struct tabhashtab  *tab;
@@ -122,15 +123,15 @@ tabhashadd(const uintptr_t key,
     struct tabhashitem  item = { key, val };
 
     ndx = TABHASH_HASH(key);
-    mtlkbit((m_atomic_t *)&TABHASH_TAB[ndx], MT_ADR_LK_BIT_OFS);
-    head = TABHASH_TAB[ndx];
+    mtlkbit((m_atomic_t *)&hash[ndx], MT_ADR_LK_BIT_OFS);
+    head = hash[ndx];
     tab = (void *)((uintptr_t)head & ~MT_ADR_LK_BIT);
     head = tab;
     if (!tab || tab->ncur == tab->nmax) {
         /* allocate new subtable */
         tab = tabhashgettab();
         if (!tab) {
-            
+
             return 0;
         }
         tab->ncur = 1;
@@ -143,7 +144,7 @@ tabhashadd(const uintptr_t key,
         ndx++;
         tab->ncur = ndx;
     }
-    m_atomwrite((m_atomic_t *)&TABHASH_TAB[ndx], (m_atomic_t *)head);
+    m_atomwrite((m_atomic_t *)&hash[ndx], (m_atomic_t *)head);
 
     return 1;
 }
@@ -151,7 +152,9 @@ tabhashadd(const uintptr_t key,
 #define TABHASH_REMOVE          (-1L)
 #define TABHASH_FIND            0
 static __inline__ struct tabhashitem
-tabhashop(uintptr_t val, m_word_t cmd)
+tabhashop(struct tabhash **hash,
+          uintptr_t val,
+          m_word_t cmd)
 
 {
     struct tabhashitem  ret = TABHASH_INVALID;
@@ -168,8 +171,8 @@ tabhashop(uintptr_t val, m_word_t cmd)
 
     ndx = TABHASH_HASH(val);
     prev = NULL;
-    mtlkbit((m_atomic_t *)TABHASH_TAB[ndx], MT_ADR_LK_BIT_OFS);
-    head = TABHASH_TAB[ndx];
+    mtlkbit((m_atomic_t *)hash[ndx], MT_ADR_LK_BIT_OFS);
+    head = hash[ndx];
     tab = (void *)((uintptr_t)head & ~MT_ADR_LK_BIT);
     head = tab;
     prev = NULL;
@@ -258,7 +261,7 @@ tabhashop(uintptr_t val, m_word_t cmd)
             tab = tab->next;
         }
     }
-    m_atomwrite((m_atomic_t *)&TABHASH_TAB[ndx], (m_atomic_t *)head);
+    m_atomwrite((m_atomic_t *)&hash[ndx], (m_atomic_t *)head);
 
     return ret;
 }

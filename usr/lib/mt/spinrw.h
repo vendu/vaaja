@@ -11,33 +11,33 @@
  * - initialise spinrw-locks with spininit() from <mt/spin.h>
  */
 
-#if (LONGSIZE == 8)
-#define SPINRWWRBIT             (UINT64_C(1) << 63)
-#elif (LONGSIZE == 4)
-#define SPINRWWRBIT             (UINT32_C(1) << 31)
+#if (MACH_LONG_SIZE == 8)
+#define SPINWRITEBIT            (INT64_C(1) << 63)
+#elif (MACH_LONG_SIZE == 4)
+#define SPINWRITEBIT            (INT32_C(1) << 31)
 #endif
-#define SPINRWCNTMASK           (~SPINWRWRBIT)
+#define SPINCNTMASK             (~SPINWRITEBIT)
 
-#define MTSPINRW_FREE           (-1L)
-#define MTSPINRWREC_DEFVAL      { MTSPININITVAL, MTSPINRW_FREE, 0 }
+#define MTSPINRWFREE            (-1L)
+#define MTSPINRWRECDEFVAL       { MTSPININITVAL, MTSPINRWFREE, 0 }
 /* structure for recursive locks */
-typedef struct spinrw {
+typedef struct __zenspinrwrec {
     volatile long lk;   // lock value
     long          thr;  // writer thread ID
     long          rec;  // recursion depth
-} mtspinrwrec;
+} zenspinrwrec;
 
 static __inline__ void
-mttryspinrd(volatile long *sp)
+zentryspinrd(volatile long *sp)
 {
     volatile long               old;
     volatile long               val;
 
     do {
-        while (*sp & SPINRWWRBIT) {
+        while (*sp & SPINWRITEBIT) {
             m_waitspin();
         }
-        old = *sp & SPINRWCNTMASK;
+        old = *sp & SPINCNTMASK;
         val = old + 1;
         if (m_cmpswap(sp, old, val)) {
 
@@ -49,28 +49,28 @@ mttryspinrd(volatile long *sp)
 }
 
 static __inline__ void
-mtspinunlkrd(volatile long *sp)
+zenspinunlkrd(volatile long *sp)
 {
-    m_atominc(*sp);
+    m_atominc(sp);
 
     return;
 }
 
 static __inline__ void
-mtlkspinwr(volatile long *sp)
+zenlkspinwr(volatile long *sp)
 {
     volatile long               old;
     volatile long               val;
 
     do {
-        while (*sp & SPINRWWRBIT) {
-            thryield();
+        while (*sp & SPINWRITEBIT) {
+            zenyieldthr();
         }
-        old = *sp & SPINRWCNTMASK;
-        val = old | SPINRWWRBIT;
+        old = *sp & SPINCNTMASK;
+        val = old | SPINWRITEBIT;
 
         if (m_cmpswap(sp, old, val) == old) {
-            while (*sp & SPINRWCNTMASK) {
+            while (*sp & SPINCNTMASK) {
                 m_waitspin();
             }
         }
@@ -80,9 +80,10 @@ mtlkspinwr(volatile long *sp)
 }
 
 static __inline__ void
-mtunlkspinwr(volatile long *sp)
+zenunlkspinwr(volatile long *sp)
 {
-    assert(*sp == SPINRWWRBIT);
+    assert(*sp == SPINWRITEBIT);
+
     *sp = MTSPININITVAL;
     m_endspin();
 
@@ -90,12 +91,12 @@ mtunlkspinwr(volatile long *sp)
 }
 
 static __inline__ void
-mtlkspinrwrecwr(mtspinrwrec *spin)
+zenlkspinrwrecwr(zenspinrwrec *spin)
 {
-    long                        thr = thrid();
+    long                        thr = thrself();
 
     if (spin->thr == thr) {
-        mtlkspinwr(&spin->lk);
+        zenlkspinwr(&spin->lk);
         assert(!spin->rec);
         spin->thr = thr;
     }
@@ -103,15 +104,15 @@ mtlkspinrwrecwr(mtspinrwrec *spin)
 }
 
 static __inline__ void
-mtunlkspinrwrecwr(mtspinrwrec *spin)
+zenunlkspinrwrecwr(zenspinrwrec *spin)
 {
-    long                        thr = thrid();
+    long                        thr = thrself();
 
     assert(thr == spin->thr);
     spin->rec--;
     if (!spin->rec) {
-        spin->thr = MTSPINRW_FREE;
-        mtunlkspinwr(&spin->lk);
+        spin->thr = MTSPINRWFREE;
+        zenunlkspinwr(&spin->lk);
     }
 }
 

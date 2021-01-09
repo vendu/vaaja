@@ -9,12 +9,12 @@ typedef uintptr_t pte_t;
 #endif
 
 /* far pointer structure */
-#include <zero/pack.h>
+#include <env/pack.h>
 struct m_farptr {
     uint16_t lim;
     uint32_t adr;
 } PACKED();
-#include <zero/nopack.h>
+#include <env/nopack.h>
 
 /* FPU registers */
 

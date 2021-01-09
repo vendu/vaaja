@@ -1,23 +1,23 @@
-#ifndef __SYS_ZEN_SCHED_SPS_H__
-#define __SYS_ZEN_SCHED_SPS_H__
+#ifndef __SYS_ZEN_SCHED_SPT_H__
+#define __SYS_ZEN_SCHED_SPT_H__
 
 /* static priority thread scheduler for the voima game console-wannabe */
 
-#define SPS_EV_PRIO             0
-#define SPS_KBD_PRIO            1
-#define SPS_MOUSE_PRIO          2
-#define SPS_AUDIO_PRIO          3
-#define SPS_VIDEO_PRIO          4
-#define SPS_NET_PRIO            5
-#define SPS_DISK_PRIO           6
-#define SPS_OPT_PRIO            7
-#define SPS_TAPE_PRIO           8
-#define SPS_TTY_PRIO            9
-#define SPS_LPR_PRIO            10
-#define SPS_PRIOS               32
+#define SCHED_SPT_EV_PRIO       0
+#define SCHED_SPT_KBD_PRIO      1
+#define SCHED_SPT_MOUSE_PRIO    2
+#define SCHED_SPT_AUDIO_PRIO    3
+#define SCHED_SPT_VIDEO_PRIO    4
+#define SCHED_SPT_NET_PRIO      5
+#define SCHED_SPT_DISK_PRIO     6
+#define SCHED_SPT_OPT_PRIO      7
+#define SCHED_SPT_TAPE_PRIO     8
+#define SCHED_SPT_TTY_PRIO      9
+#define SCHED_SPT_LPR_PRIO      10
+#define SCHED_SPT_PRIO_RANGE    64
 
-#define spsinittaskq(qp)        ((qp)->head = (qp)->tail = (qp)->dummy)
-struct spstaskqueue {
+#define sptinittaskq(qp)        ((qp)->head = (qp)->tail = (qp)->dummy)
+struct spttaskqueue {
     m_atomic_t  dummy;      // in empty queue, both head and tail point here
     m_atomic_t  nref;       // reference count for queue manipulation
     void       *head;       // head pointer (or dummy for empty queue)
@@ -31,10 +31,10 @@ struct spstaskqueue {
  *     .tail = &list.dummy;
  * };
  */
-static struct spstaskqueue      spstaskq[SPS_PRIOS];
+static struct spttaskqueue      spttaskq[SCHED_SPT_PRIOS];
 
 static void
-spsqueuetask(struct spstaskqueue *queue, struct task *task)
+sptqueuetask(struct spttaskqueue *queue, struct task *task)
 {
     m_atomic_t      n;
     m_atomic_t     *ptr = &queue->dummy;
@@ -101,7 +101,7 @@ spsqueuetask(struct spstaskqueue *queue, struct task *task)
 }
 
 static struct task *
-spsdequetask(struct spstaskqueue *queue, struct task *task)
+sptdequetask(struct spttaskqueue *queue, struct task *task)
 {
     struct task    *qtask;
     m_atomic_t      n;
@@ -152,9 +152,9 @@ spsdequetask(struct spstaskqueue *queue, struct task *task)
     return qtask;
 }
 
-struct sps {
-    struct task    *taskqueue[SPS_PRIOS];
+struct spt {
+    struct task    *taskqueue[SPT_PRIOS];
 };
 
-#endif /* __SYS_ZEN_SCHED_SPS_H__ */
+#endif /* __SYS_ZEN_SCHED_SPT_H__ */
 

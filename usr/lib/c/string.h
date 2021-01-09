@@ -2,7 +2,7 @@
 #define __STRING_H__
 
 #include <stddef.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 
 void                   *memcpy(void *dest, const void *src, size_t len);
 void                   *memmove(void * C_RESTRICT dest,

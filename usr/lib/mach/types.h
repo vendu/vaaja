@@ -2,15 +2,15 @@
 #define  __MACH_TYPES_H__
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
 
 #if defined(__v0__)
 #include <mach/v0/types.h>
 #elif defined(_WIN64)
-#include <zero/msc/win64.h>
+#include <env/msc/win64.h>
 #elif defined(_WIN32)
-#include <zero/msc/win32.h>
+#include <env/msc/win32.h>
 #elif defined(_x86_64__) || defined(__amd64__)
 #include <mach/x86/types.h>
 #include <mach/amd64/types.h>

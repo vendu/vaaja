@@ -10,17 +10,17 @@
 #endif
 #define BARSERIALTHR (-1L)
 
-#define BAR_LK_T                mtfmtx
+typedef mtfmtx                  zenbarlk;
 
 typedef struct __mtbar {
-    BAR_LK_T                    lk;
+    zenbarlk                    lk;
     unsigned long               num;
     unsigned long               cnt;
-    mtcond                      cond;
+    zencond                     cond;
 } mtbar;
 
 typedef struct __mtbarpool {
-    BAR_LK_T                    lk;
+    zenbarlk                    lk;
     m_atomic_t                  nref;
     long                        num;
     union {

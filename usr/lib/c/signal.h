@@ -45,19 +45,20 @@ extern __sighandler_t   __sysv_signal(int sig, __sighandler_t func);
 #if defined(_SVID_SOURCE)
 extern sighandler_t     ssignal(int sig, sighandler_t action);
 extern int              gsignal(int sig);
+#endif
 #if defined(_GNU_SOURCE)
 extern __sighandler_t   sysv_signal(int sig, __sighandler_t func);
 #endif
-#if (_XOPEN_SOURCE)
+#if defined(_XOPEN_SOURCE)
 extern __sighandler_t   bsd_signal(int sig, __sighandler_t func);
 #endif
 
-#if (_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
+#if defined(_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
 extern void             psiginfo(const siginfo_t *info, const char *msg);
 void                    psignal(int sig, const char *message);
 #endif
 
-#if (_POSIX_SOURCE)
+#if defined(_POSIX_SOURCE)
 /*
  * send signal sig to process or group described by pid
  * - if pid is zero, send sig to all processes in the current one's process
@@ -66,7 +67,7 @@ void                    psignal(int sig, const char *message);
  */
 extern int              kill(pid_t pid, int sig);
 
-#if (_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500)
+#if defined(POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500)
 //int pthread_kill(pthread_t thr, int sig);
 //int pthread_sigmask(int how, const sigset_t *set, sigset_t *oldset);
 #endif
@@ -99,7 +100,7 @@ extern int              sigpause(int sig) __asm__ ("__xpg_sigpause\n");
 #endif
 #endif
 
-#if (_BSD_SOURCE)
+#if defined(_BSD_SOURCE)
 
 /* none of these functions should be used any longer */
 #define sigmask(sig)    (1L << ((sig) - 1))
@@ -110,14 +111,14 @@ extern int              sigsetmask(int mask);
 /* return current signal mask */
 extern int              siggetmask(void);
 
-#if (defined(_BSD_SOURCE)) && !defined(_POSIX_SOURCE)
+#if !defined(_POSIX_SOURCE)
 int                     sigvec(int sig, const struct sigvec *vec,
                                struct sigvec *oldvec);
 #endif
 
 // extern int sigreturn(struct sigcontext *scp);
 
-#endif /* _BSD_SOURCE */
+#endif /* defined(_BSD_SOURCE) */
 
 #if defined(_POSIX_SOURCE)
 
@@ -125,26 +126,26 @@ int                     sigvec(int sig, const struct sigvec *vec,
 extern int              sigprocmask(int how, const sigset_t *restrict set,
                                     sigset_t *restrict oldset);
 /* change blocked signals to set, wait for a signal, restore the set */
-extern int 		sigsuspend(const sigset_t *set);
+extern int      sigsuspend(const sigset_t *set);
 /* set or examine signal behavior */
-extern int 		sigaction(int sig, const struct sigaction *restrict act,
+extern int      sigaction(int sig, const struct sigaction *restrict act,
                                   struct sigaction *restrict oldact);
 /* fetch pending blocked signals */
-extern int 		sigpending(sigset_t *set);
+extern int      sigpending(sigset_t *set);
 /* wait for a signal in set */
-extern int 		sigwait(const sigset_t *set, int *restrict sig);
+extern int      sigwait(const sigset_t *set, int *restrict sig);
 #if (_POSIX_C_SOURCE >= 199309L)
-extern int 		sigwaitinfo(const sigset_t *restrict set,
+extern int      sigwaitinfo(const sigset_t *restrict set,
                                     siginfo_t *restrict info);
-extern int 		sigtimedwait(const sigset_t *restrict set,
+extern int      sigtimedwait(const sigset_t *restrict set,
                                      siginfo_t *restrict info,
                                      const struct timespec *restrict timeout);
-extern int 		sigqueue(pid_t pid, int sig, const union sigval val);
+extern int      sigqueue(pid_t pid, int sig, const union sigval val);
 #endif /* USEPOSIX199309 */
 
 #endif /* USEPOSIX */
 
-#if (_BSD_SOURCE)
+#if defined(_BSD_SOURCE)
 extern const char *const        _sys_siglist[_NSIG];
 extern const char *const        sys_siglist[_NSIG];
 #endif
@@ -165,7 +166,7 @@ extern int              sigaltstack(const struct sigaltstack *stk,
                                     struct sigaltstack *oldstk);
 #endif
 
-#if (_XOPEN_SOURCE)
+#if (_XOPEN_SOURCE) && 0
 #include <ucontext.h>
 #endif
 

@@ -73,8 +73,11 @@ typedef int64_t                         time_t;
 #define __time_t_defined                1
 #endif
 #if !defined(__useconds_t_defined)
-typedef int32_t                         useconds_t;
+typedef uint32_t                        useconds_t;
 #define __useconds_t_defined            1
+#endif
+#if !defined(__suseconds_t_defined)
+typedef int32_t                         suseconds_t;
 #endif
 
 #endif /* __SYS_TYPES_H__ */

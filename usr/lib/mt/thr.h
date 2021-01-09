@@ -1,86 +1,87 @@
-#ifndef __MT_THR_H__
-#define __MT_THR_H__
+#ifndef MT_THR_H
+#define MT_THR_H
 
 /* zen thread abstraction */
 
-#include <mt/mt.h>
-
-#if defined(PTHREAD) && !defined(__zen__)
-#define mtthrself()             ((uintptr_t)pthread_self())
+#if defined(POSIX_THREAD) && !defined(MT_ZEN_THREAD)
+#define thrself()                   ((uintptr_t)pthread_self())
 #endif
 
 #if defined(__zen__)
-#define mtyieldthr()            schedyield()
-#elif defined(MTTHREAD) || (POSIX_THREAD)
-#define mtyieldthr()            pthread_yield()
+#define zenyieldthr()               schedyield()
+#elif defined(POSIX_THREAD)
+#define zenyieldthr()               pthread_yield()
 #elif defined(_WIN64) || defined(_WIN32)
-#define mtyieldthr()            kYieldProcessor()
+#define zenyieldthr()               kYieldProcessor()
 #elif defined(__linux__) && !defined(__KERNEL__)
-#define mtyieldthr()            sched_yield()
-#else
-#include <sched.h>
-#define mtyieldthr()            sched_yield()
+#define zenyieldthr()               sched_yield()
 #endif
 
-#if defined(MTTHREAD)
+#if defined(ZEN_THREAD)
 
-#if defined(MTSCHED)
-#include <sched.h>
-#endif
+typedef uintptr_t zenthr;
 
-typedef uintptr_t mtthr;
-
-#define MT_THRATR_INIT          (1 << 0)       // attributes initialised
-#define MT_THRATR_DETACHED      (1 << 1)       // detach thread
-#define MT_THRATR_INHERITSCHED  (1 << 2)       // inherit scheduler parameters
-#define MT_THRATR_EXPLICITSCHED (1 << 3)       // specify scheduler parameters
-#define MT_THRATR_SCHED_PARAM   (1 << 4)       // scheduler parameters
-#define MT_THRATR_SCHEDPOLICY   (1 << 5)       // scheduler policy
-#define MT_THRATR_SCOPE         (1 << 6)       // scheduling scope
-#define MT_THRATR_STKATR        (1 << 7)       // stack address and size
-#define MT_THRATR_GUARDSIZE     (1 << 8)       // stack guard size
-#define MT_THRATR_AFFINITY      (1 << 9)       // affinity configuration
-typedef struct __mtthratr {
-    long                        flg;
-    void                       *stkadr;
-    size_t                      stksize;
-    size_t                      guardsize;
+#define ZEN_THRATR_INIT             (1 << 0)    // attributes initialised
+#define ZEN_THRATR_DETACHED         (1 << 1)    // detach thread
+#define ZEN_THRATR_INHERITSCHED     (1 << 2)    // inherit scheduler parameters
+#define ZEN_THRATR_EXPLICITSCHED    (1 << 3)    // specify scheduler parameters
+#define ZEN_THRATR_SCHED_PARAM      (1 << 4)    // scheduler parameters
+#define ZEN_THRATR_SCHEDPOLICY      (1 << 5)    // scheduler policy
+#define ZEN_THRATR_SCOPE            (1 << 6)    // scheduling scope
+#define ZEN_THRATR_STKATR           (1 << 7)    // stack address and size
+#define ZEN_THRATR_GUARDSIZE        (1 << 8)    // stack guard size
+#define ZEN_THRATR_AFFINITY         (1 << 9)    // affinity configuration
+typedef struct __zenthratr {
+    long                            flg;
+    void                           *stkadr;
+    size_t                          stksize;
+    size_t                          guardsize;
 #if defined(_GNU_SOURCE)
-    size_t                      ncpu;
-    void                       *cpuset;
+    size_t                          ncpu;
+    void                           *cpuset;
 #endif
-#if defined(MTSCHED)
-    struct sched_param          schedparm;
+#if defined(ZEN_SCHED_PARAM)
+    struct sched_param              schedparm;
 #endif
-} mtthratr;
+} zenthratr;
 
-#define MT_THR_NOID             (~(mtthr)0)
-#define MT_THR_ASLEEP           1
-#define MT_THR_AWAKE            0
-typedef struct __mtthr          {
-    mtthr                       id;
-    long                        sleep;
-    mtthratr                   *atr;
-    struct __mtthr             *prev;
-    struct __mtthr             *next;
-} mtthr;
+#define ZEN_THR_NOID                (~(zenthr)0)
+#define ZEN_THR_ASLEEP              1
+#define ZEN_THR_AWAKE               0
+typedef struct __zenthr             {
+    zenthr                          id;
+    long                            sleep;
+    zenthratr                      *atr;
+    struct __zenthr                *prev;
+    struct __zenthr                *next;
+} zenthr;
 
-#define MT_THRQUEUE_INITIALIZER { MTXINITVAL, NULL, NULL }
-typedef struct __mtthrqueue {
-    mtfmtx                      mtx;
-    mtthr                      *head;
-    mtthr                      *tail;
-} mtthrqueue;
+#define ZEN_THRQUEUE_INITIALIZER    { MTXINITVAL, NULL, NULL }
+typedef struct __zenthrqueue {
+    mtfmtx                          mtx;
+    zenthr                         *head;
+    zenthr                         *tail;
+    uint8_t                         _pad[MACH_CL_SIZE
+                                         - MACH_WORD_SIZE
+                                         - 2 * MACH_PTR_SIZE];
+} zenthrqueue;
+#define ZEN_THRQUEUE_SIZE           (MACH_CL_SIZE                      \
+                                     + MACH_WORD_SIZE                  \
+                                     + 2 * MACH_PTR_SIZE               \
+                                     + MACH_CL_SIZE                    \
+                                     + MACH_CL_SIZE                    \
+                                     - MACH_WORD_SIZE                  \
+                                     - 2 * MACH_PTR_SIZE)
 
-extern void                     mtwaitthr1(mtthrqueue *queue);
-extern long                     mtsleepthr2(mtthrqueue *queue,
-                                            const struct timespec *absts);
-extern mtthr                   *mtwakethr1(mtthrqueue *queue);
-extern void                     mtwakethrall(mtthrqueue *queue);
+extern void                         zenwaitthr(zenthrqueue *queue);
+extern long                         zensleepthr(zenthrqueue *queue,
+                                                const struct timespec *absts);
+extern zenthr                       *zenwakethr(zenthrqueue *queue);
+extern void                         zenwakethrall(zenthrqueue *queue);
 
-#define         mtwaitthr()     thrwait1(NULL)
+#define zenwaitthr()                zenthrwait1(NULL)
 
-#endif /* defined(MTTHREAD) */
+#endif /* defined(ZEN_THREAD) */
 
-#endif /* __MT_THR_H__ */
+#endif /* MT_THR_H */
 

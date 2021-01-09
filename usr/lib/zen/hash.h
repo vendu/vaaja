@@ -4,7 +4,7 @@
 // #define ZEN_INLINE_HASH 1
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
 
 #if (MACH_PTR_SIZE == 8)

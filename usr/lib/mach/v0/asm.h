@@ -2,7 +2,7 @@
 #define V0_ASM_H
 
 #include <stdint.h>
-#include <zen/cdefs.h>
+#include <env/cdefs.h>
 
 /* DUMMY NON-ATOMIC ROUTINES - FIXME */
 
@@ -18,6 +18,7 @@
 /* wait for an interrupt */
 #define m_waitint()  __asm__ __volatile__ ("" : : : "memory")
 
+#if 0
 static C_INLINE int32_t
 m_atomread(const m_atomic32_t *ap32)
 {
@@ -39,7 +40,7 @@ m_atomadd(const m_atomic32_t *ap32, int32_t i32)
 {
     __asm__ __volatile__ ("xadd %1, %0\n"
                           : "m+" (*(ap32))
-                            "ri" (i));
+                          : "ri" (i));
 
     return;
 }
@@ -49,7 +50,7 @@ m_atomsub(const m_atomic32_t *ap32, int32_t i32)
 {
     __asm__ __volatile__ ("xsub %1, %0\n"
                           : "m+" (*(ap32))
-                            "ri" (i));
+                          : "ri" (i));
 
     return;
 }
@@ -149,6 +150,11 @@ m_atomchkdec(const m_atomic32_t *ap32, int32_t i)
 
     return !0;
 }
+
+#endif
+
+#define m_atominc(p32)  (*(p32)++)
+#define m_atomdec(p32)  (*(p32)--)
 
 /* compare-and-swap */
 #define m_cmpswap(a32p, want, need)                                     \

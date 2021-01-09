@@ -1,7 +1,7 @@
 #ifndef __SYS_ZEN_ERRNO_H__
 #define __SYS_ZEN_ERRNO_H__
 
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <sys/zen/errno.h>
 
 C_CONST int            *__errnoloc(void);

@@ -18,8 +18,8 @@ typedef volatile m_atomic_t mtfmtx;
  * Gregan for help with the mutex code.:)
  */
 
-#define fmtxinit(lp)    (*(lp) = MTMTXINITVAL)
-#define fmtxfree(lp) /* no-op */
+#define fmtxinit(mp)    (*(mp) = MTMTXINITVAL)
+#define fmtxfree(mp) /* no-op */
 
 #define MTMTXINITVAL    0
 #define MTMTXLKVAL      1
@@ -28,10 +28,10 @@ typedef volatile m_atomic_t mtfmtx;
 #define MTFMTXLKVAL     1
 
 static C_INLINE void
-mtinitfmtx(volatile m_atomic_t *lp)
+mtinitfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *lp = MTMTXINITVAL;  // lazy-write
+    *mp = MTMTXINITVAL;  // lazy-write
 
     return;
 }
@@ -41,12 +41,12 @@ mtinitfmtx(volatile m_atomic_t *lp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttrylkfmtx(volatile m_atomic_t *lp)
+mttrylkfmtx(mtfmtx *mp)
 {
     m_atomic_t  res = 0;
 
-    if (*lp == MTMTXINITVAL) {
-        res = m_cmpswap(lp, MTMTXINITVAL, MTMTXLKVAL);
+    if (*mp == MTMTXINITVAL) {
+        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
     }
 
     return res;
@@ -57,15 +57,15 @@ mttrylkfmtx(volatile m_atomic_t *lp)
  * - spin on volatile lock to avoid excess lock-operations
  */
 static C_INLINE void
-mtlkfmtx(volatile m_atomic_t *lp)
+mtlkfmtx(mtfmtx *mp)
 {
     m_atomic_t  res = 0;
 
     do {
-        while (*lp != MTMTXINITVAL) {
+        while (*mp != MTMTXINITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(lp, MTMTXINITVAL, MTMTXLKVAL);
+        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
     } while (!res);
 
     return;
@@ -76,10 +76,10 @@ mtlkfmtx(volatile m_atomic_t *lp)
  * - must use full memory barrier to guarantee proper write-ordering
  */
 static C_INLINE void
-mtunlkfmtx(volatile m_atomic_t *lp)
+mtunlkfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *lp = MTMTXINITVAL;  // lazy-write
+    *mp = MTMTXINITVAL;  // lazy-write
     m_endspin();        // signal wakeup-event
 
     return;
@@ -92,16 +92,16 @@ mtunlkfmtx(volatile m_atomic_t *lp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttrylkrecfmtx(volatile m_atomic_t *lp)
+mttrylkrecfmtx(mtfmtx *mp)
 {
     m_atomic_t  res = 0;
     m_atomic_t  id = (m_atomic_t)mtthrself();
 
-    if (*lp == MTMTXINITVAL) {
-        res = m_cmpswap(lp, MTMTXINITVAL, id);
+    if (*mp == MTMTXINITVAL) {
+        res = m_cmpswap(mp, MTMTXINITVAL, id);
     }
     if (!res) {
-        res = (*lp == id);
+        res = (*mp == id);
     }
 
     return res;
@@ -112,18 +112,18 @@ mttrylkrecfmtx(volatile m_atomic_t *lp)
  * - spin on volatile lock to avoid excess lock-operations
  */
 static C_INLINE void
-mtlkrecfmtx(volatile m_atomic_t *lp)
+mtlkrecfmtx(mtfmtx *mp)
 {
     m_atomic_t  res = 0;
     m_atomic_t  id = (m_atomic_t)mtthrself();
 
     do {
-        while (*lp != MTMTXINITVAL) {
+        while (*mp != MTMTXINITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(lp, MTMTXINITVAL, MTMTXLKVAL);
+        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
         if (!res) {
-            res = (*lp == id);
+            res = (*mp == id);
         }
     } while (!res);
 
@@ -135,10 +135,10 @@ mtlkrecfmtx(volatile m_atomic_t *lp)
  * - must use full memory barrier to guarantee proper write-ordering
  */
 static C_INLINE void
-mtunlkrecfmtx(volatile m_atomic_t *lp)
+mtunlkrecfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *lp = MTMTXINITVAL;  // lazy-write
+    *mp = MTMTXINITVAL;  // lazy-write
     m_endspin();        // signal wakeup-event
 
     return;

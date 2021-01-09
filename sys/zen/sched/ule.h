@@ -6,9 +6,9 @@
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
 
 #include <limits.h>
-#include <zero/cdefs.h>
-#include <zero/trix.h>
-#include <mt/tktlk.h>
+#include <env/cdefs.h>
+#include <env/trix.h>
+#include <mt/tkt.h>
 #include <mach/types.h>
 #include <zen/fastudiv.h>
 #include <sys/zen/util.h>
@@ -143,8 +143,8 @@
 /* nice limits */
 #define SCHED_ULE_NICE_MIN          (-(SCHED_ULE_CLASS_QUEUES << 1))
 #define SCHED_ULE_NICE_MAX          ((SCHED_ULE_CLASS_QUEUES << 1) - 1)
-#define SCHED_ULE_NICE_RANGE        (SCHED_ULE_NICE_MAX - SCHED_ULE_NICE_MIN + 1)
-#define SCHED_ULE_NICE_HALF         (SCHED_ULE_NICE_RANGE >> 1)
+#define SCHED_ULE_NICE_RANGE        (SCHED_ULE_CLASS_QUEUES)
+#define SCHED_ULE_NICE_HALF         (SCHED_ULE_CLASS_QUEUES >> 1)
 /* idle priority limits */
 #define SCHED_ULE_IDLE_PRIO_MIN     (SCHED_ULE_IDLE * SCHED_ULE_CLASS_PRIOS)
 #define SCHED_ULE_IDLE_PRIO_MAX     (SCHED_ULE_IDLE_PRIO_MIN + SCHED_ULE_IDLE_QUEUES - 1)
@@ -200,16 +200,16 @@
 #define SCHED_ULE_IDLECORE_WORDS                                        \
     max(ZEN_MAX_CPUS / (CHAR_BIT * sizeof(long)), MACH_CL_SIZE / sizeof(long))
 
-extern struct divu16        k_fastu16divu16tab[SCHED_ULE_DIVU16TAB_SIZE];
-extern m_word_t             k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
-extern struct zennice       k_schednicetab[SCHED_ULE_NICE_RANGE];
-extern struct zennice      *k_schedniceptr;
-extern struct zenschedset   k_schedreadyset;
+extern struct divu16            k_fastu16divu16tab[SCHED_ULE_DIVU16TAB_SIZE];
+extern m_word_t                 k_schedidlecoremap[SCHED_ULE_IDLECORE_WORDS];
+extern struct zennice           k_schednicetab[SCHED_ULE_NICE_RANGE];
+extern struct zennice          *k_schedniceptr;
+extern struct zenschedset       k_schedreadyset;
 
-#define schedclassminprio(c)        ((c) * SCHED_ULE_CLASS_PRIOS)
-#define schedclassmaxprio(c)        (schedclassminprio(c)               \
-                                     + SCHED_ULE_CLASS_PRIOS            \
-                                     - 1)
+#define schedclassminprio(c)    ((c) * SCHED_ULE_CLASS_PRIOS)
+#define schedclassmaxprio(c)    (schedclassminprio(c)               \
+                                 + SCHED_ULE_CLASS_PRIOS            \
+                                 - 1)
 
 /* based on sched_pctcpu_update from ULE */
 static C_INLINE void

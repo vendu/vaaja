@@ -2,7 +2,7 @@
 #define __MACH_ASM_H__
 
 #include <mach/atomic.h>
-#include <mach/mem.h>
+//#include <mach/mem.h>
 #if defined(__v0__)
 #include <mach/v0/asm.h>
 #elif defined(_WIN64)

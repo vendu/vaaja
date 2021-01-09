@@ -2,7 +2,7 @@
 #define __MACH_AMD64_ASM_H__
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 
 #define m_atominc(p)                 m_atominc64(p)
 #define m_atomdec(p)                 m_atomdec64(p)
@@ -16,7 +16,7 @@
 #define m_cmpswapu(p, want, val)     (m_cmpxchgu64(p, want, val) == want)
 #define m_cmpswapu64(p, want, val)   (m_cmpxchgu64(p, want, val) == want)
 #define m_cmpswapptr(p, want, val)   (m_cmpxchg64ptr(p, want, val) == want)
-#define m_cmpswapdbl(p, want, val)   m_cmpxchg16b(p, want, val)
+#define m_cmpswap128(p, want, val)   m_cmpxchg16b(p, want, val)
 #define m_setbit(p, ndx)             m_setbit64(p, ndx)
 #define m_clrbit(p, ndx)             m_clrbit64(p, ndx)
 #define m_flipbit(p, ndx)            m_flipbit64(p, ndx)
@@ -252,27 +252,23 @@ m_cmpxchg16b(volatile m_atomic_t long *p64,
  * - return original nonzero on success, zero on failure
  */
 static __inline__ long
-m_cmpxchg16b(volatile m_atomic_t *p64,
-             int64_t *want,
-             int64_t *val)
+m_cmpxchg16b(volatile uint64_t *p64,
+             uint64_t *want,
+             uint64_t *val)
 {
-    register int64_t rax __asm__ "rax" = want[0];
-    register int64_t rdx __asm__ "rdx" = want[1];
-    register int64_t rbx __asm__ "rbx" = val[0];
-    register int64_t rcx __asm__ "rcx" = val[1];
+    int64_t  res = 0;
 
     __asm__ __volatile__ ("lock cmpxchg16b %0\n"
-                          "setzq %b1\n"
-                          : "+S" (*p64)
-                          : "=a" (rax)
-                          : "0" (ptr),
-                            "d" ((uint32_t)(want >> 32)),
-                            "a" ((uint32_t)(want & 0xffffffff)),
-                            "c" ((uint32_t)(val >> 32)),
-                            "D" ((uint32_t)(val & 0xffffffff))
-                          : "rax", "rbx", "rcx", "rdx", "flags", "memory");
+                          "setzq %q4\n"
+                          : "+m" ((p64)[0]),
+                            "+m" ((p64)[1]),
+                            "+a" ((want)[0]),
+                            "+d" ((want)[1]),
+                            "=q" (res)
+                          : "b" ((val)[0]), "c" ((val)[1])
+                          : "cc", "memory");
 
-    return rax;
+    return res;
 }
 
 #endif

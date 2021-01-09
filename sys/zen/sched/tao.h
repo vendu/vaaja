@@ -32,8 +32,10 @@ extern void schedyield(void);
 
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
 #include <sys/zen/sched/ule.h>
-#elif (ZEN_TASK_SCHED == ZEN_ULE_BVT_SCHED_SCHED)
+#elif (ZEN_TASK_SCHED == ZEN_BVT_TASK_SCHED)
 #include <sys/zen/sched/bvt.h>
+#elif (ZEN_TASK_SCHED == ZEN_SPT_TASK_SCHED)
+#include <sys/zen/sched/spt.h>
 #endif
 
 #endif /* __SYS_ZEN_SCHED_TAO_H__ */

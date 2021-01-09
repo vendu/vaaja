@@ -4,6 +4,7 @@
 #if !defined(NULL)
 #define NULL                    ((void *)0)
 #endif
+#include <sys/types.h>
 #if !defined(__time_t_defined)
 typedef uint64_t                time_t;
 #define __time_t_defined        1

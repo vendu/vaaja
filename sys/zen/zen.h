@@ -5,11 +5,13 @@
 #include <stddef.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <mach/param.h>
-#include <zero/cdefs.h>
-#include <zero/trix.h>
-#include <mt/tktlk.h>
+#include <env/cdefs.h>
+#include <env/trix.h>
+#include <mach/types.h>
+#include <mt/tkt.h>
 #if defined(__voima__)
 #include <sys/zen/bsp/voima.h>
 #endif

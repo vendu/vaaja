@@ -33,23 +33,23 @@
 #define SCHAR_MIN               (-0x7f - 1)
 #define UCHAR_MAX               0xffU
 #define SHRT_MIN                (-0x7fff - 1)
-#define SHRT_MAX      		    0x7fff
-#define USHRT_MAX     		    0xffffU
-#define INT_MAX       		    0xffffffff
+#define SHRT_MAX                0x7fff
+#define USHRT_MAX               0xffffU
+#define INT_MAX                 0xffffffff
 #define INT_MIN                 (-0x7fffffff - 1)
 #define UINT_MAX                (0xffffffffU)
 #if (MACH_WORD_SIZE == 4) || defined(_MSC_VER)
-#define LONG_MAX   		        0xffffffffL
+#define LONG_MAX                0xffffffffL
 #define LONG_MIN                (-0x7fffffff - 1L)
-#define ULONG_MAX  		        0xffffffffUL
+#define ULONG_MAX               0xffffffffUL
 #elif (MACH_WORD_SIZE == 8)
-#define LONG_MAX   		        0x7fffffffffffffffL
+#define LONG_MAX                0x7fffffffffffffffL
 #define LONG_MIN                (-0x7fffffffffffffffL - 1L)
-#define ULONG_MAX  		        0xffffffffffffffffUL
+#define ULONG_MAX               0xffffffffffffffffUL
 #endif
-#define LLONG_MAX     	        0x7fffffffffffffffLL
+#define LLONG_MAX               0x7fffffffffffffffLL
 #define LLONG_MIN               (-0x7fffffffffffffffLL - 1LL)
-#define ULLONG_MAX    		    0xffffffffffffffffULL
+#define ULLONG_MAX              0xffffffffffffffffULL
 #define MB_LEN_MAX              1
 
 /* TODO: feature-macro these out etc... */
@@ -76,7 +76,7 @@
 #define _POSIX_MAX_CANON        255
 #define _POSIX_MAX_INPUT        255
 #define _POSIX_NAME_MAX         14
-#define _POSIX_NGROUPS_MAX      16	// number of supplementary group IDs if available
+#define _POSIX_NGROUPS_MAX      16  // number of supplementary group IDs if available
 #define _POSIX_OPEN_MAX         16
 #define _POSIX_PATH_MAX         255
 #define _POSIX_PIPE_BUF         512
@@ -93,7 +93,7 @@
 /*
  * POSIX values.
  */
-#define ARG_MAX                 65535 	// arg and env bytes to exec functions
+#define ARG_MAX                 65535   // arg and env bytes to exec functions
 #define ATEXIT_MAX              32
 #define CHILD_MAX               256     // # of processes per real user ID
 #define HOST_NAME_MAX           255

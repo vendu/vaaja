@@ -114,7 +114,7 @@ char         * get_current_dir_name(void);
 int            dup(int fd);
 int            dup2(int fd, int newfd);
 int            execve(const char *path, char *const argv[],
-                             char *const envp);
+                             char *const *envp);
 #if defined(_GNU_SOURCE)
 int            fexecve(int fd, char *const argv, char *const envp[]);
 #endif

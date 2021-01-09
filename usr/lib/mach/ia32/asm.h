@@ -2,7 +2,7 @@
 #define __MACH_IA32_ASM_H__
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 
 #define __EIPFRAMEOFS                4
 

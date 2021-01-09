@@ -48,7 +48,7 @@ struct zennice k_schednicetab[SCHED_ULE_NICE_RANGE]
     {   0,   0 }, {   0,   0 }, {   0,   0 }, {   0,   0 },
     {   0,   0 }, {   0,   0 }, {   0,   0 }, {   0,   0 },
     {   0,   0 }, {   0,   0 }, {   0,   0 }, {   0,   0 }
-   
+
 };
 
 /* 32-bit time_t values */
@@ -145,7 +145,7 @@ schedsetdeadline(struct zentask *task)
     }
     if (!ptr) {
         kdebug("cannot allocata deadline L0-table", ptab[0]);
-    }        
+    }
     ptr = ((struct zentasktab *)vptr)[key1].tab;
     if (!ptr) {
         ptr = kmalloc(SCHED_ULE_LVL1_DLS * sizeof(struct zentasktab));
@@ -158,7 +158,7 @@ schedsetdeadline(struct zentask *task)
     }
     if (!ptr) {
         kdebug("cannot allocata deadline L0-table", ptab[0]);
-    }        
+    }
     ptr = ((struct zentasktab *)vptr)[key2].tab;
     if (!ptr) {
         ptr = kmalloc(SCHED_ULE_LVL2_DLS * sizeof(struct zentasktab));
@@ -170,7 +170,7 @@ schedsetdeadline(struct zentask *task)
     }
     if (!ptr) {
         kdebug("cannot allocata deadline L0-table", ptab[0]);
-    }        
+    }
     deqappend(task, ptr);
     mtunlktkt(&k_scheddeadlinetab[key0].tkt);
 
@@ -334,23 +334,23 @@ schedswitchtask(struct zentask *curtask)
                 case ZEN_TASK_NEW:
                 case ZEN_TASK_READY:
                     schedsetready(curtask);
-                    
+
                     break;
                 case ZEN_TASK_SLEEP:
                     schedsetsleep(curtask);
-                    
+
                     break;
                 case ZEN_TASK_STOPPED:
                     schedsetstopped(curtask);
-                    
+
                     break;
                 case ZEN_TASK_ZOMBIE:
                     schedsetzombie(curtask->proc);
-                    
+
                     break;
                 default:
                     kdebug("invalid task state", curtask); /* FIXME: error # */
-                    
+
                     break;
             }
             do {
@@ -375,7 +375,7 @@ schedswitchtask(struct zentask *curtask)
                                     m_clrbit((m_atomic_t *)map, ofs);
                                 }
                                 mtunlktkt(&set->lk);
-                                
+
                                 k_jmptask(task->m_tcb);
                             }
                         }
@@ -403,7 +403,7 @@ schedswitchtask(struct zentask *curtask)
                                 m_clrbit((m_atomic_t *)map, ofs);
                             }
                             mtunlktkt(&set->lk);
-                            
+
                             k_jmptask(task->m_tcb);
                         }
                     }

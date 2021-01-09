@@ -2,6 +2,7 @@
 #define __STDIO_H__
 
 #include <features.h>
+#include <limits.h>
 #include <mach/param.h>
 
 #if !defined(__off_t_defined)
@@ -35,6 +36,7 @@ struct __valist {
 };
 typedef struct __valist                *va_list;
 #define __va_list_defined               1
+#endif
 
 struct FILE {
     char                        name[PATH_MAX];
@@ -48,7 +50,7 @@ extern FILE                    *stderr;
 
 struct fpos {
     off_t                       __pos;
-    mbstate_t                   __state;
+    //    mbstate_t                   __state;
 };
 typedef struct fpos             fpos_t;
 
@@ -64,7 +66,7 @@ typedef struct fpos             fpos_t;
 #define _IOLBF                  1
 #define _IOFBF                  2
 #define SEEK_CUR                0
-s#define SEEK_SET               1
+#define SEEK_SET               1
 #define SEEK_END                2
 #define EOF                     (-1)
 #define L_ctermid               PATH_MAX

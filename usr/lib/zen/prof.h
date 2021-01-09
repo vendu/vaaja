@@ -8,8 +8,8 @@ extern "C" {
 #include <stdint.h>
 //#include <time.h>
 #include <sys/time.h>
-#include <zero/cdefs.h>
-#include <zero/trix.h>
+#include <env/cdefs.h>
+#include <env/trix.h>
 
 #if defined(_MSC_VER) || defined(__x86_64__) || defined(__amd64__) || defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__)
 #include <mach/x86/prof.h>

@@ -41,7 +41,9 @@ struct zenschedparm {
     m_adr_t     waitchan;       // wait channel
     m_time_t    timelim;        // wakeup time or deadline
 };
+
 #elif (ZEN_TASK_SCHED == ZEN_ULE_BVT_SCHED_SCHED)
+
 /* per-thread scheduler parameters */
 struct zenschedparm {
     m_uword_t   runtime;
@@ -49,6 +51,9 @@ struct zenschedparm {
     m_word_t    warpofs;
     m_word_t    lastwarp;
 };
+
+#elif (ZEN_TASK_SCHED == ZEN_
+
 #endif
 
 //#define _zenproclkpageq(proc)   mtlkbit(&proc->pageq, MT_MEM_LK_BIT_OFS)

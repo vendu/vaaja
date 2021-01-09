@@ -1,17 +1,23 @@
-#include <stdint.h>
+//#include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
-#include <zero/cdefs.h>
-#include <zero/trix.h>
+#include <env/cdefs.h>
+#include <env/trix.h>
 #include <mach/param.h>
+#include <mach/types.h>
+//#include <zen/zen.h>
+
 //#include <kern/dev/chr/con.h>
 //#include <kern/io/drv/chr/con.h>
 //#include <kern/io/drv/pc/vga.h>
 
 #define MAXPRINTFSTR 2048
 
+#if defined(ZEN_USE_STDIO)
 #define conputs(s)      puts(s)
 #define conputchar(c)   putchar(c)
+#endif
+#define iscntrl(c)      ((c) & 0x80)
 #define isprint(c)      ((c) >= 0x20 && (c) < 0x7f)
 
 #define CACHEPREWARM 0
@@ -292,7 +298,7 @@ kstrcmp(const char *str1,
 }
 
 m_size_t
-kstrncpy(char *dest, char *src, m_size_t len)
+kstrncpy(char *dest, const char *src, m_size_t len)
 {
     m_size_t nb = 0;
 
