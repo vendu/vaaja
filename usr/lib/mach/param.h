@@ -22,6 +22,8 @@
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))
 #include <mach/ia32/param.h>
+#elif defined(__aarch64__)
+#include <mach/arm64/param.h>
 #elif defined(__arm__)
 #include <mach/arm/param.h>
 #elif defined(__ppc__)
