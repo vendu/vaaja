@@ -18,6 +18,8 @@
        || defined(__i586__) || defined(__i686__))
 #include <mach/x86/types.h>
 #include <mach/ia32/types.h>
+#elif defined(__aarch64__)
+#include <mach/arm/types.h>
 #elif defined(__arm__)
 #include <mach/arm/types.h>
 #elif defined(__ppc__)

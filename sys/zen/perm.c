@@ -21,11 +21,11 @@
            : (((perm)->flags) && ((f) & flg)))))
 
 int
-zenchkperm(struct zenperm *perm, struct zencred *cred, int flg)
+zenchkperm(struct zenperm *perm, struct zencred *cred)
 {
     zenuid_t    usr = cred->uid;
     zenuid_t    grp = cred->gid;
-    int         ret;
+    long        flg = grep->flags;
 
     ret = _zenchkperm(perm, usr, grp, flg);
 

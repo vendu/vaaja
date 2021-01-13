@@ -1,6 +1,9 @@
 #ifndef ZEN_MEM_H
 #define ZEN_MEM_H
 
+#include <mach/param.h>
+#include <mach/types.h>
+
 #define ZEN_ADR_LK_BIT_POS      0
 #define ZEN_MEM_BLK             0
 #define ZEN_MEM_RUN             1

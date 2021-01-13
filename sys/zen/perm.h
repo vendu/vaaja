@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_PERM_H__
-#define __SYS_ZEN_PERM_H__
+#ifndef SYS_ZEN_PERM_H
+#define SYS_ZEN_PERM_H
 
 #include <sys/zen/types.h>
 
@@ -13,7 +13,13 @@
 struct zenperm {
     zenuid_t            uid;
     zenuid_t            gid;
-    long                perm;
+    long                flags;
+};
+
+struct zencred {
+    zenuid_t            uid;
+    zenuid_t            gid;
+    long                flags;
 };
 
 /* I/O permission-bits */
@@ -29,5 +35,5 @@ struct zenperm {
 
 extern int  zenchkperm(struct zenperm *perm, struct zencred *cred, int mask);
 
-#endif /* __SYS_ZEN_PERM_H__ */
+#endif /* SYS_ZEN_PERM_H */
 
