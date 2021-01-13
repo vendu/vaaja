@@ -4,13 +4,8 @@
 
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
 
-#if 0
-#include <zen/fastudiv.h>
-#include <mach/param.h>
-#include <zero/trix.h>
-#endif
 #include <limits.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/asm.h>
 #include <mt/tktlk.h>
 #include <zen/fastudiv.h>

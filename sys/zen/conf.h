@@ -1,9 +1,13 @@
 #ifndef ZEN_CONF_H
 #define ZEN_CONF_H
 
+#define ZEN_SIMULATION
+/* in simulation mode, th kernel runs on top of a system instead of being standalone */
+#if defined(ZEN_SIMULATION)
 #define ZEN_RUN_ON_ZERO         1   // execute on top of a Unix-like
 #define ZEN_USE_PTHREAD         1   // virtual kernel with POSIX Threads
-#define ZEN_USE_STDIO           1   // do standard C library I/O (simulation)
+#define ZEN_USE_STDIO           1   // use standard C library I/O (simulation)
+#endif /* defined(ZEN_SIMULATION) */
 
 /* compile-time options */
 #define ZEN_HANG_ON_PANIC       1

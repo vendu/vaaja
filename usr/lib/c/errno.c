@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/zen/errno.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 
 #if (((!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)       \
        || defined(__STDC_NO_THREADS__))                                 \

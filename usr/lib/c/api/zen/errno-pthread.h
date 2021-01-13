@@ -1,16 +1,16 @@
-#ifndef __SYS_ZEN_ERRNO_H__
-#define __SYS_ZEN_ERRNO_H__
+#ifndef API_ZEN_ERRNO_PTHREAD_H
+#define API_ZEN_ERRNO_PTHREAD_H
 
 #include <env/cdefs.h>
 #include <sys/zen/errno.h>
 
 C_CONST int            *__errnoloc(void);
 
-extern int              __zenerrno;
+extern int             __zenerrno;
 #define errno         (*__errnoloc())
 
 #define kseterrno(e)  (*__errnoloc() = (e))
 #define kclrerrno(e)  (*__errnoloc() = 0)
 
-#endif /* __SYS_ZEN_ERRNO_H__ */
+#endif /* API_ZEN_ERRNO_PTHREAD_H */
 

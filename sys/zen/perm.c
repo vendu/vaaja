@@ -1,4 +1,3 @@
-#include <sys/zen/types.h>
 #include <sys/zen/perm.h>
 
 /* NOTE: flg MUST be one of ZEN_EXEC_PERM, ZEN_WRITE_PERM, ZEN_READ_PERM */

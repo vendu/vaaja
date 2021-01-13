@@ -1,6 +1,8 @@
 #ifndef ZEN_TYPES_H
 #define ZEN_TYPES_H
 
+#include <stdint.h>
+
 typedef uint32_t                zenintrdesc_t;
 typedef uint32_t                zenpagedesc_t;
 

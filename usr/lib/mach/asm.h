@@ -1,5 +1,5 @@
-#ifndef __MACH_ASM_H__
-#define __MACH_ASM_H__
+#ifndef MACH_ASM_H
+#define MACH_ASM_H
 
 #include <mach/atomic.h>
 //#include <mach/mem.h>
@@ -37,5 +37,5 @@
         } while (_res);                                                 \
     } while (0)
 
-#endif /* __MACH_ASM_H__ */
+#endif /* MACH_ASM_H */
 

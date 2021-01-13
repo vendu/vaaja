@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_TMR_H__
-#define __SYS_ZEN_TMR_H__
+#ifndef SYS_ZEN_TMR
+#define SYS_ZEN_TMR
 
 #include <sys/zen/conf.h>
 #include <time.h>
@@ -30,5 +30,5 @@ struct zentmr {
     } val;
 };
 
-#endif /* __SYS_ZEN_TMR_H__ */
+#endif /* SYS_ZEN_TMR */
 

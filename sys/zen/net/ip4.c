@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 //#include <zero/param.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #include <sys/zen/net/ip4.h>
 #if !defined(NET_IP4_TEST)
-#define NET_IP4_TEST    0
+#define NET_IaP4_TEST    0
 #else
 #define NET_IP4_NPKT    4096
 #endif

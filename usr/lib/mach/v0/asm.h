@@ -79,7 +79,7 @@ m_atomchkaddneg(const m_atomic32_t *ap32, int32_t i)
     int32_t val;
 
     __asm__ __volatile__ ("xadd %1, %0, %2\n"
-                          : "m+" (*(ap32))
+                          : "m+" *(ap32))
                           : "ri" (i)
                           : "r" (val));
 

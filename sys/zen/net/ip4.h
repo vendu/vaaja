@@ -1,12 +1,12 @@
-#ifndef __ZEN_NET_IP4_H__
-#define __ZEN_NET_IP4_H__
+#ifndef NET_IP4_H
+#define NET_IP4_H
 
 #include <stdint.h>
 #include <zero/cdefs.h>
 
 #define NET_IP4_PKT_MAX 65536
 
-struct zennetudp4dgram {
+struct netip4udp4dgram {
     unsigned            version : 4;
     unsigned            hdrlen  : 4;
     uint8_t             tos;
@@ -23,7 +23,7 @@ struct zennetudp4dgram {
     uint8_t             data[C_VLA];
 };
 
-struct zennettcp4pkt {
+struct netip4tcp4pkt {
     uint16_t            srcport;
     uint16_t            destport;
     uint32_t            seqnum;
@@ -37,5 +37,5 @@ struct zennettcp4pkt {
     uint8_t             data[C_VLA];
 };
 
-#endif /* __ZEN_NET_IP4_H__ */
+#endif /* NET_IP4_H */
 
