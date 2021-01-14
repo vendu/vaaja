@@ -1,7 +1,7 @@
 #ifndef ZEN_VM_H
 #define ZEN_VM_H
 
-#include <zen/zen.h>
+#include <mach/param.h>
 
 #if (MACH_WORD_SIZE == 4)
 #define zenvmqueueid            m_ctz32

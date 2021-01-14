@@ -5,6 +5,7 @@
 
 #if defined(MT_TICKET_LOCK)
 
+#include <endian.h>
 #include <mach/param.h>
 #include <env/cdefs.h>
 
