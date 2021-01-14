@@ -1,12 +1,11 @@
+#include <api/zen/conf.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <sys/zen/errno.h>
 #include <env/cdefs.h>
+#include <sys/zen/errno.h>
 
-#if (((!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)       \
-       || defined(__STDC_NO_THREADS__))                                 \
-      && !defined(__GNUC__))                                            \
-     && (PTHREAD))
+#if ((!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)        \
+      || defined(__STDC_NO_THREADS__))                                  \
+     && defined(ZEN_POSIX_THREAD))
 
 #include <pthread.h>
 
@@ -52,3 +51,9 @@ __errnoloc(void)
 
 #endif
 
+#if defined(__zen__)
+#define kseterrno(e)  (*__errnoloc() = (e))
+#define kclrerrno(e)  (*__errnoloc() = 0)
+#else
+#define errno         (*__errnoloc())
+#endif

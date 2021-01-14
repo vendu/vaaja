@@ -4,10 +4,10 @@
 #include <zen/zen.h>
 
 #if (MACH_WORD_SIZE == 4)
-#define zenvmqueueid            m_clz32
+#define zenvmqueueid            m_ctz32
 #define ZEN_VM_QUEUES           32
 #elif (MACH_WORD_SIZE == 8)
-#define zenvmqueueid            m_clz64
+#define zenvmqueueid            m_ctz64
 #define ZEN_VM_QUEUES           64
 #endif
 
@@ -37,7 +37,7 @@ struct zenvmseg {
     m_adr_t                     ptr;
     m_size_t                    size;
     m_word_t                    flag;
-#if defined(__voima__)
+#if defined(__v0__)
     m_word_t                    pad;
 #endif
 };
