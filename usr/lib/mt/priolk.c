@@ -1,6 +1,10 @@
+#include <mt/conf.h>
+
+#if defined(MT_PRIORITY_LOCK)
+
 #include <stdlib.h>
 #include <stdio.h>
-#include <zero/cdefs.h>
+#include <env/defs.h>
 #include <mach/asm.h>
 
 THREADLOCAL struct mtpriolkdata    *t_priolk;
@@ -44,9 +48,9 @@ mtinitpriolk(struct mtpriolkdata *data, unsigned long val)
         }
         if (!res) {
             /* try to allocate */
-            ptr = PRIOLKALLOC(sizeof(struct mtpriolkdata));
-#if defined(PRIOLKUSEMMAP)
-            if (ptr == PRIOLKALLOCFAILED) {
+            ptr = MT_PRIOLKALLOC(sizeof(struct mtpriolkdata));
+#if defined(MT_PRIOLKUSEMMAP)
+            if (ptr == MT_PRIOLKALLOCFAILED) {
                 ptr = NULL;
             }
 #endif

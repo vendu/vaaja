@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <mach/param.h>
 #include <env/cdefs.h>
-#include <envbi/trix.h>
+#include <env/trix.h>
 #include <zen/bitop.h>
 
 #define FASTUDIVSHIFTMASK 0x1f
@@ -65,7 +65,7 @@ fastu16divu16init(struct divuf16 *duptr, uint_fast32_t lim16)
     uint_fast32_t val;
     uint_fast32_t shift;
 
-    if (!duptr == NULL) {
+    if (!duptr) {
         duptr = fastu16divuf16tab;
     }
     /* store array size into the first item to avoid buffer overruns */

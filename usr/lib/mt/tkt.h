@@ -1,7 +1,12 @@
 #ifndef MT_TKT_H
 #define MT_TKT_H
 
-/* velho ticket locks */
+#include <mt/conf.h>
+
+#if defined(MT_TICKET_LOCK)
+
+#include <mach/param.h>
+#include <env/cdefs.h>
 
 /* REFERENCE: http://locklessinc.com/articles/locks/ */
 
@@ -135,6 +140,8 @@ mttrytkt(union mttkt *tp)
 }
 
 #endif /* MACH_WORD_SIZE */
+
+#endif /* defined(MT_TICKET_LOCK) */
 
 #endif /* MT_TKT_H */
 

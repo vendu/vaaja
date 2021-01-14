@@ -1,18 +1,17 @@
 #ifndef MT_PRIOLK_H
 #define MT_PRIOLK_H
 
-/* velaho priority locks */
+#include <mt/conf.h>
+
+#if defined(ZEN_PRIORITY_LOCK)
+
+/* priority locks */
 
 #include <stdint.h>
 #include <mach/param.h>
-#if defined(PRIOLKUSEMMAP)
-#define MTPRIOLKALLOCFAILED         MAP_FAILED
-#define MTPRIOLKALLOC(sz)           mapanon(0, sz)
-#include <vnd/unix.h>
-#else
-#define MTPRIOLKALLOCFAILED NULL
-#define MTPRIOLKALLOC(sz)           malloc(sz)
-#endif
+
+#define MT_PRIOLK_ALLOCFAILED       NULL
+#define MT_PRIOLKALLOC(sz)          malloc(sz)
 
 /*
  * REFERENCE: http://locklessinc.com/articles/priority_locks/
@@ -34,6 +33,8 @@ void                                mtinitpriolk(struct priolkdata *data,
 void                                mtfinpriolk(void);
 void                                priolkget(struct priolk *priolk);
 void                                priolkrel(struct priolk *priolk);
+
+#endif /* defined(ZEN_PRIORITY_LOCK) */
 
 #endif /* MT_PRIOLK_H */
 

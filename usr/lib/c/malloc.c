@@ -1,8 +1,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
-#include <mem.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
+#include <zen/mem.h>
 #include "_malloc.h"
 
 #if 0

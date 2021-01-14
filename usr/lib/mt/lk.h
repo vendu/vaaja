@@ -1,6 +1,8 @@
 #ifndef MT_LK_H
 #define MT_LK_H
 
+#include <mach/asm.h>
+
 /* velho lock routines */
 
 #include <mt/mt.h>

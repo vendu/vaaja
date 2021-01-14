@@ -1,58 +1,59 @@
 /* REFERENCE: http://preshing.com/20120305/implementing-a-recursive-mutex/ */
-#if defined(ZEROMTX) && !defined(PTHREAD)
+
+#include <mt/conf.h>
+
+#if defined(MT_MUTEX) && !defined(MT_POSIX_THREAD)
 
 #include <stdlib.h>
-#include <zero/asm.h>
-#include <zero/thr.h>
-#include <zero/mtx.h>
+#include <mt/mtx.h>
 
-zeromtxatr *
-zeroallocmtxatr(void)
+zenmtxatr *
+zenallocmtxatr(void)
 {
-    zeromtxatr *atr = malloc(sizeof(zeromtxatr));
+    zenmtxatr *atr = malloc(sizeof(zenmtxatr));
 
     if (atr) {
-        atr->flg = __ZEROMTXATR_DYNAMIC;
+        atr->flg = __MT_MTXATR_DYNAMIC;
     }
 
     return atr;
 }
 
 int
-zerofreemtxatr(zeromtxatr *atr)
+zenfreemtxatr(zenmtxatr *atr)
 {
     int ret = 0;
-    
-    if (atr->flg & __ZEROMTXATR_DYNAMIC) {
+
+    if (atr->flg & __MT_MTXATR_DYNAMIC) {
         free(atr);
     } else {
-        ret = ZEROMTXATR_NOTDYNAMIC;
+        ret = MT_MTXATR_NOTDYNAMIC;
     }
 
     return ret;
 }
 
 int
-zeroinitmtxatr(zeromtxatr *atr)
+zeninitmtxatr(zenmtxatr *atr)
 {
-    long dynflg = atr->flg & __ZEROMTXATR_DYNAMIC;
+    long dynflg = atr->flg & __MT_MTXATR_DYNAMIC;
 
     if (!atr) {
 
         return -1;
     }
-    atr->flg |= __ZEROMTXATR_INIT | dynflg;
+    atr->flg |= __MT_MTXATR_INIT | dynflg;
 
     return 0;
 }
-    
+
 long
-zerotrylkmtx(zeromtx *mtx)
+zentrylkmtx(zenmtx *mtx)
 {
     volatile long res = 0;
     long          thr;
 
-    if (!(mtx->atr.flg & ZEROMTX_RECURSIVE)) {
+    if (!(mtx->atr.flg & MT_MUTEX_RECURSIVE)) {
         /* non-recursive mutex */
         res = mtxtrylk(&mtx->val);
     } else {
@@ -63,7 +64,7 @@ zerotrylkmtx(zeromtx *mtx)
         } else if (!m_cmpswap(&mtx->cnt, 0, 1)) {
             mtx->val = thr;
         } else {
-            
+
             return 0;
         }
         res = thr;
@@ -74,12 +75,12 @@ zerotrylkmtx(zeromtx *mtx)
 }
 
 void
-zerolkmtx(zeromtx *mtx)
+zenlkmtx(zenmtx *mtx)
 {
     volatile long res = -1;
     long          thr;
 
-    if (!(mtx->atr.flg & ZEROMTX_RECURSIVE)) {
+    if (!(mtx->atr.flg & MT_MUTEX_RECURSIVE)) {
         /* non-recursive mutex */
         mtxlk(&mtx->val);
     } else {
@@ -104,12 +105,12 @@ zerolkmtx(zeromtx *mtx)
 }
 
 void
-zerounlkmtx(zeromtx *mtx)
+zenunlkmtx(zenmtx *mtx)
 {
     volatile long res;
     long          thr;
-    
-    if (!(mtx->atr.flg & ZEROMTX_RECURSIVE)) {
+
+    if (!(mtx->atr.flg & MT_MUTEX_RECURSIVE)) {
         /* non-recursive mutex */
         mtxunlk(&mtx->val);
     } else {
@@ -118,7 +119,7 @@ zerounlkmtx(zeromtx *mtx)
         if (mtx->val == thr) {
             mtx->rec--;
             if (!mtx->rec) {
-                mtx->val = ZEROMTX_FREE;
+                mtx->val = MT_MUTEX_FREE;
             }
             res = m_fetchadd(&mtx->cnt, -1);
             if (res > 1) {
@@ -132,5 +133,5 @@ zerounlkmtx(zeromtx *mtx)
     return;
 }
 
-#endif /* defined(ZEROMTX) && !defined(PTHREAD) */
+#endif /* defined(MT_MUTEX) && !defined(MT_POSIX_THREAD) */
 

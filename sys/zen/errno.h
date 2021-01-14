@@ -1,10 +1,6 @@
 #ifndef __SYS_ZEN_ERRNO_H__
 #define __SYS_ZEN_ERRNO_H__
 
-const char * const sys_errlist[];
-       int sys_nerr;
-int errno;       /* Not really declared this way; see errno(3) */
-
 #define ENONE                   0
 #define ENOSYS                  1  // function not implemented
 #define EINTR                   2  // interrupted system call

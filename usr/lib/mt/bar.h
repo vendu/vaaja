@@ -1,6 +1,13 @@
 #ifndef MT_BAR_H
 #define MT_BAR_H
 
+#include <mt/conf.h>
+
+#if defined(MT_BARRIER)
+
+#include <mt/mtx.h>
+#include <mt/cond.h>
+
 /* velho thread barriers */
 
 #if (MACH_WORD_SIZE == 8)
@@ -10,17 +17,15 @@
 #endif
 #define BARSERIALTHR (-1L)
 
-typedef mtfmtx                  zenbarlk;
-
 typedef struct __mtbar {
-    zenbarlk                    lk;
+    zenfmtx                     lk;
     unsigned long               num;
     unsigned long               cnt;
     zencond                     cond;
 } mtbar;
 
 typedef struct __mtbarpool {
-    zenbarlk                    lk;
+    zenfmtx                     lk;
     m_atomic_t                  nref;
     long                        num;
     union {
@@ -31,6 +36,8 @@ typedef struct __mtbarpool {
         volatile uint64_t       rst;
     } cnt;
 } mtbarpool;
+
+#endif /* defined(MT_BARRIER) */
 
 #endif /* MT_BAR_H */
 

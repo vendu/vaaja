@@ -1,13 +1,15 @@
 #ifndef __MT_MTX_H__
 #define __MT_MTX_H__
 
+#include <mt/conf.h>
+
+#if defined(MT_ZERO_MUTEX)
+
 /* velho mutex locks */
 
-#include <mt/mt.h>
-
-#define MTMTX           1
-#if !defined(MTFMTX)
-#define MTFMTX          1
+#define MT_MUTEX           1
+#if !defined(MT_FAST_MUTEX)
+#define MT_FAST_MUTEX          1
 #endif
 
 typedef volatile m_atomic_t mtmtx;
@@ -18,20 +20,20 @@ typedef volatile m_atomic_t mtfmtx;
  * Gregan for help with the mutex code.:)
  */
 
-#define fmtxinit(mp)    (*(mp) = MTMTXINITVAL)
+#define fmtxinit(mp)    (*(mp) = MT_MUTEX_INITVAL)
 #define fmtxfree(mp) /* no-op */
 
-#define MTMTXINITVAL    0
-#define MTMTXLKVAL      1
-#define MTMTXCONTVAL    2
-#define MTFMTXINITVAL   0
-#define MTFMTXLKVAL     1
+#define MT_MUTEX_INITVAL    0
+#define MT_MUTEX_LKVAL      1
+#define MT_MUTEX_CONTVAL    2
+//#define MT_FAST_MUTEX_INITVAL   0
+//#define MT_FAST_MUTEX_LKVAL     1
 
 static C_INLINE void
 mtinitfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *mp = MTMTXINITVAL;  // lazy-write
+    *mp = MT_MUTEX_INITVAL;  // lazy-write
 
     return;
 }
@@ -45,8 +47,8 @@ mttrylkfmtx(mtfmtx *mp)
 {
     m_atomic_t  res = 0;
 
-    if (*mp == MTMTXINITVAL) {
-        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
+    if (*mp == MT_MUTEX_INITVAL) {
+        res = m_cmpswap(mp, MT_MUTEX_INITVAL, MT_MUTEX_LKVAL);
     }
 
     return res;
@@ -62,10 +64,10 @@ mtlkfmtx(mtfmtx *mp)
     m_atomic_t  res = 0;
 
     do {
-        while (*mp != MTMTXINITVAL) {
+        while (*mp != MT_MUTEX_INITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
+        res = m_cmpswap(mp, MT_MUTEX_INITVAL, MT_MUTEX_LKVAL);
     } while (!res);
 
     return;
@@ -79,13 +81,11 @@ static C_INLINE void
 mtunlkfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *mp = MTMTXINITVAL;  // lazy-write
+    *mp = MT_MUTEX_INITVAL;  // lazy-write
     m_endspin();        // signal wakeup-event
 
     return;
 }
-
-#if !defined(__zen__)
 
 /*
  * try to acquire fast mutex lock
@@ -97,8 +97,8 @@ mttrylkrecfmtx(mtfmtx *mp)
     m_atomic_t  res = 0;
     m_atomic_t  id = (m_atomic_t)mtthrself();
 
-    if (*mp == MTMTXINITVAL) {
-        res = m_cmpswap(mp, MTMTXINITVAL, id);
+    if (*mp == MT_MUTEX_INITVAL) {
+        res = m_cmpswap(mp, MT_MUTEX_INITVAL, id);
     }
     if (!res) {
         res = (*mp == id);
@@ -118,10 +118,10 @@ mtlkrecfmtx(mtfmtx *mp)
     m_atomic_t  id = (m_atomic_t)mtthrself();
 
     do {
-        while (*mp != MTMTXINITVAL) {
+        while (*mp != MT_MUTEX_INITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(mp, MTMTXINITVAL, MTMTXLKVAL);
+        res = m_cmpswap(mp, MT_MUTEX_INITVAL, MT_MUTEX_LKVAL);
         if (!res) {
             res = (*mp == id);
         }
@@ -138,13 +138,13 @@ static C_INLINE void
 mtunlkrecfmtx(mtfmtx *mp)
 {
     m_membar();         // full memory barrier
-    *mp = MTMTXINITVAL;  // lazy-write
+    *mp = MT_MUTEX_INITVAL;  // lazy-write
     m_endspin();        // signal wakeup-event
 
     return;
 }
 
-#endif /* !defined(__zen__) */
+#endif /* defined(MT_ZERO_MUTEX) */
 
 #endif /* __MT_MTX_H__ */
 

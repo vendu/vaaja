@@ -1,6 +1,12 @@
 #ifndef __MT_SPINRW_H__
 #define __MT_SPINRW_H__
 
+#include <mt/conf.h>
+
+#if defined(MT_SPINLOCKS)
+
+#include <mach/param.h>
+
 /* velho read-write spinlocks */
 
 /* REFERENCE: https://jfdube.wordpress.com/2014/01/03/implementing-a-recursive-read-write-spinlock/ */
@@ -115,6 +121,8 @@ zenunlkspinrwrecwr(zenspinrwrec *spin)
         zenunlkspinwr(&spin->lk);
     }
 }
+
+#endif /* defined(MT_SPINLOCKS)*/
 
 #endif /* __MT_SPINRW_H__ */
 

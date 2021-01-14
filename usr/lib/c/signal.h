@@ -24,38 +24,41 @@ struct timespec;
 #endif
 #include <mach/param.h>
 #include <mach/atomic.h>
+#if defined(__zen__)
+#include <sys/zen/errno.h>
+#endif
 
-typedef void          (*sighandler_t)(int);
+typedef void                    (*sighandler_t)(int);
 
-typedef m_atomic_t      sig_atomic_t;
+typedef m_atomic_t              sig_atomic_t;
 
 /* special values; standard ones */
-#define SIG_ERR         ((__sighandler_t)-1)
-#define SIG_DFL         ((__sighandler_t)0)
-#define SIG_IGN         ((__sighandler_t)1)
-#define SIG_HOLD        ((__sighandler_t)2)
+#define SIG_ERR                 ((__sighandler_t)-1)
+#define SIG_DFL                 ((__sighandler_t)0)
+#define SIG_IGN                 ((__sighandler_t)1)
+#define SIG_HOLD                ((__sighandler_t)2)
 /* commands for sigprocmask() */
-#define SIG_BLOCK       0
-#define SIG_UNBLOCK     1
-#define SIG_SETMASK     2
+#define SIG_BLOCK               0
+#define SIG_UNBLOCK             1
+#define SIG_SETMASK             2
 
 /* set handler for signal sig; returns old handler */
-extern void           (*signal(int sig, void (*func)(int)))(int);
-extern __sighandler_t   __sysv_signal(int sig, __sighandler_t func);
+extern void                     (*signal(int sig, void (*func)(int)))(int);
+extern __sighandler_t           __sysv_signal(int sig, __sighandler_t func);
 #if defined(_SVID_SOURCE)
-extern sighandler_t     ssignal(int sig, sighandler_t action);
-extern int              gsignal(int sig);
+extern sighandler_t             ssignal(int sig, sighandler_t action);
+extern int                      gsignal(int sig);
 #endif
 #if defined(_GNU_SOURCE)
-extern __sighandler_t   sysv_signal(int sig, __sighandler_t func);
+extern __sighandler_t           sysv_signal(int sig, __sighandler_t func);
 #endif
 #if defined(_XOPEN_SOURCE)
-extern __sighandler_t   bsd_signal(int sig, __sighandler_t func);
+extern __sighandler_t           bsd_signal(int sig, __sighandler_t func);
 #endif
 
 #if defined(_BSD_SOURCE) || defined(_XOPEN_SOURCE_EXTENDED)
-extern void             psiginfo(const siginfo_t *info, const char *msg);
-void                    psignal(int sig, const char *message);
+extern void                     psiginfo(const siginfo_t *info, const char *msg);
+void                            psignal(int sig, const char *message);
 #endif
 
 #if defined(_POSIX_SOURCE)
@@ -65,7 +68,7 @@ void                    psignal(int sig, const char *message);
  *   group
  * - if pid < -1, send sig to all processes in the process group -pid
  */
-extern int              kill(pid_t pid, int sig);
+extern int                      kill(pid_t pid, int sig);
 
 #if defined(POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500)
 //int pthread_kill(pthread_t thr, int sig);
@@ -79,22 +82,22 @@ extern int              kill(pid_t pid, int sig);
  * send signal sig to all processes in the group pgrp
  * - if pid is zero, send sig to all processes in the current one's group
  */
-extern int              killpg(pid_t pgrp, int sig);
+extern int                      killpg(pid_t pgrp, int sig);
 #endif /* _BSD_SOURCE || USEXOPENEXT */
 
-extern int              raise(int sig);
+extern int                      raise(int sig);
 #if defined(_SVID_SOURCE)
-extern                  __sighandler_t ssignal(int sig, __sighandler_t func);
-extern int              gsignal(int sig);
+extern                          __sighandler_t ssignal(int sig, __sighandler_t func);
+extern int                      gsignal(int sig);
 #endif /* USESVID */
-//extern void           psignal(int sig);
+//extern void                   psignal(int sig);
 #if defined(_FAVOR_BSD)
 /* set mask to blocked signals, wait for signal, restore the mask */
-extern int              sigpause(int mask);
+extern int                      sigpause(int mask);
 #elif (_XOPEN_SOURCE)
 /* remove sig from signal mask and suspend the process */
 #if defined(__GNUC__)
-extern int              sigpause(int sig) __asm__ ("__xpg_sigpause\n");
+extern int                      sigpause(int sig) __asm__ ("__xpg_sigpause\n");
 #else
 //#define               sigpause(sig) __sigpause(sig, 1);
 #endif
@@ -103,17 +106,17 @@ extern int              sigpause(int sig) __asm__ ("__xpg_sigpause\n");
 #if defined(_BSD_SOURCE)
 
 /* none of these functions should be used any longer */
-#define sigmask(sig)    (1L << ((sig) - 1))
+#define sigmask(sig)            (1L << ((sig) - 1))
 /* block signals in mask, return old mask */
-extern int              sigblock(int mask);
+extern int                      sigblock(int mask);
 /* set mask of blocked signals, return old mask */
-extern int              sigsetmask(int mask);
+extern int                      sigsetmask(int mask);
 /* return current signal mask */
-extern int              siggetmask(void);
+extern int                      siggetmask(void);
 
 #if !defined(_POSIX_SOURCE)
-int                     sigvec(int sig, const struct sigvec *vec,
-                               struct sigvec *oldvec);
+int                             sigvec(int sig, const struct sigvec *vec,
+                                       struct sigvec *oldvec);
 #endif
 
 // extern int sigreturn(struct sigcontext *scp);

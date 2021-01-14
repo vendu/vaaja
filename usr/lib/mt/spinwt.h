@@ -1,9 +1,9 @@
 #ifndef MT_SPINWT_H
 #define MT_SPINWT_H
 
-/* velho spin-wait locks */
+#include <mt/conf.h>
 
-#include <mt/mt.h>
+#if defined(MT_SPINLOCKS)
 
 /*
  * NOTES
@@ -63,6 +63,8 @@ mtunlkspinwt(volatile m_atomic_t *sp)
 
     return;
 }
+
+#endif /* defined(MT_SPINLOCKS) */
 
 #endif /* MT_SPINWT_H */
 

@@ -1,23 +1,9 @@
 #ifndef MT_THR_H
 #define MT_THR_H
 
-/* zen thread abstraction */
+#include <mt/conf.h>
 
-#if defined(POSIX_THREAD) && !defined(MT_ZEN_THREAD)
-#define thrself()                   ((uintptr_t)pthread_self())
-#endif
-
-#if defined(__zen__)
-#define zenyieldthr()               schedyield()
-#elif defined(POSIX_THREAD)
-#define zenyieldthr()               pthread_yield()
-#elif defined(_WIN64) || defined(_WIN32)
-#define zenyieldthr()               kYieldProcessor()
-#elif defined(__linux__) && !defined(__KERNEL__)
-#define zenyieldthr()               sched_yield()
-#endif
-
-#if defined(ZEN_THREAD)
+#if defined(MT_ZEN_THREAD)
 
 typedef uintptr_t zenthr;
 
@@ -81,7 +67,7 @@ extern void                         zenwakethrall(zenthrqueue *queue);
 
 #define zenwaitthr()                zenthrwait1(NULL)
 
-#endif /* defined(ZEN_THREAD) */
+#endif /* defined(MT_ZEN_THREAD) */
 
 #endif /* MT_THR_H */
 

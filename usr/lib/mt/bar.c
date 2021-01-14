@@ -1,10 +1,6 @@
 /* REFERENCE: http://locklessinc.com/articles/barriers/ */
 
-#include <mach/asm.h>
-#include <mt/mtx.h>
-#include <mt/cond.h>
 #include <mt/bar.h>
-#include <zero/sys.h>
 
 #if (MTFMTX)
 #define mtinitbarlk(lp) (*(lp) = MTFMTXINITVAL)

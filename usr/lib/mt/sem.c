@@ -1,21 +1,25 @@
-#include <mt/mt.h>
+#include <mt/conf.h>
+
+#if defined(MT_SEMAPHORE)
+
+#include <mt/sem.h>
 
 long
 mtwaitsem(mtsem *sem)
 {
     do {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
         while (!pthread_mutex_trylock(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #elif defined(MTFMTX)
         while (!mttryfmtx(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #endif
         if (sem->val > 0) {
             sem->val--;
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
@@ -23,12 +27,11 @@ mtwaitsem(mtsem *sem)
 
             return 0;
         } else {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
 #endif
-            mtyieldthr();
         }
     } while (1);
 
@@ -39,18 +42,18 @@ long
 semtrywait(mtsem *sem)
 {
     do {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
         while (!pthread_mutex_trylock(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #elif defined(MTfMTX)
         while (!mttryfmtx(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #endif
         if (sem->val > 0) {
             sem->val--;
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
@@ -58,7 +61,7 @@ semtrywait(mtsem *sem)
 
             return 0;
         } else {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
@@ -76,25 +79,24 @@ long
 sempost(mtsem *sem)
 {
     do {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
         while (!pthread_mutex_trylock(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #elif defined(MTFMTX)
         while (mttryfmtx(&sem->lk)) {
-            mtyieldthr();
+            m_waitspin();
         }
 #endif
         if (!sem->val) {
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
 #endif
-            mtyieldthr();
         } else if (sem->val != MTSEM_INITVAL) {
             sem->val++;
-#if defined(PTHREAD)
+#if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
 #elif defined(MTFMTX)
             mtunlkfmtx(&sem->lk);
@@ -112,4 +114,6 @@ sempost(mtsem *sem)
 
     return 0;
 }
+
+#endif /* defined(MT_SEMAPHORE) */
 
