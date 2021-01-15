@@ -7,10 +7,11 @@
 #include <sys/zen/task.h>
 #include <sys/zen/sched.h>
 #include <sys/zen/var.h>
-#include <sys/zen/perm.h>#include <sys/zen/dev.h>
-#include <sys/zen/drv.h>
+#include <sys/zen/perm.h>#include <sys/zen/drv.h>
+#include <sys/zen/dev.h>
 #include <sys/zen/vfs.h>
 #include <sys/zen/fs0.h>
+#include <sys/zen/buf.h>
 #include <sys/zen/io.h>
 #include <sys/zen/page.h>
 #include <sys/zen/vm.h>
