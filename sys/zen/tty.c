@@ -1,26 +1,23 @@
-#include <mjolnir/conf.h>
+#include <sys/zen/conf.h>
 
-#if defined(MJOLNIR_TTY)
+#if defined(ZEN_TTY)
 
-#include <stdlib.h>
-#include <mjolnir/mjol.h>
-#include <mjolnir/scr.h>
-#include <mjolnir/tty.h>
+#include <sys/zen/util.h>
 
 int
-mjolgetchtty(void)
+zengetchar(void)
 {
     int retval = EOF;
 
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
     printf("READ\n");
-    retval = getchar();
+    retval = congetchar();
     if (retval == EOF) {
         fprintf(stderr, "EOF read\n");
 
         exit(0);
     }
-#elif defined(MJOLNIR_CURSES)
+#elif defined(ZEN_CURSES)
     retval = getch();
 #endif
 
@@ -30,14 +27,14 @@ mjolgetchtty(void)
 void
 mjolmovetotty(int x, int y)
 {
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
     char esc[] = "\033[";
 #endif
 
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
     printf("%s", esc);
     printf("%d:%dH", y, x);
-#elif defined(MJOLNIR_CURSES)
+#elif defined(ZEN_CURSES)
     /* TODO */
 #endif
 }
@@ -53,9 +50,9 @@ mjoldrawchrtty(struct game *game, struct chr *chr)
     if (x != scr->x || y != scr->y) {
         scr->moveto(x, y);
     }
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
     printf("%c", game->objtab[lvl][x][y]->id);
-#elif defined(MJOLNIR_CURSES)
+#elif defined(ZEN_CURSES)
     printw("%c", game->objtab[lvl][x][y]->id);
 #endif
 }
@@ -69,7 +66,7 @@ mjolrefreshtty(void)
 void
 mjolclosetty(void)
 {
-#if defined(MJOLNIR_CURSES)
+#if defined(ZEN_CURSES)
     endwin();
 #endif
 
@@ -79,12 +76,12 @@ mjolclosetty(void)
 void
 mjolmkscrtty(struct game *game)
 {
-#if defined(MJOLNIR_CURSES)
+#if defined(ZEN_CURSES)
     struct ttywins     *wins = calloc(1, sizeof(struct ttywins));
     WINDOW             *win;
 #endif
 
-#if defined(MJOLNIR_CURSES)
+#if defined(ZEN_CURSES)
     /* create main window */
     win = newwin(game->height, game->width, 0, 0);
     if (!win) {
@@ -122,21 +119,21 @@ mjolmkscrtty(struct game *game)
         exit(1);
     }
     wins->statwin = win;
-#endif /* defined(MJOLNIR_CURSES) */
+#endif /* defined(ZEN_CURSES) */
     game->scr = calloc(1, sizeof(struct scr));
     if (game->scr) {
         game->scr->wins = wins;
-#if defined(MJOLNIR_VT)
-        game->scr->getch = mjolgetchtty;
-#elif defined(MJOLNIR_CURSES)
+#if defined(ZEN_VT)
+        game->scr->congetchar = zengetchar;
+#elif defined(ZEN_CURSES)
         game->scr->getch = getch;
 #endif
         game->scr->moveto = mjolmovetotty;
         game->scr->drawchr = mjoldrawchrtty;
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
         game->scr->printmsg = printf;
         game->scr->refresh = mjolrefreshtty;
-#elif defined(MJOLNIR_CURSES)
+#elif defined(ZEN_CURSES)
         game->scr->printmsg = printw;
         game->scr->refresh = refresh;
 #endif
@@ -154,9 +151,9 @@ mjolmkscrtty(struct game *game)
 void
 mjolopentty(struct game *game)
 {
-#if defined(MJOLNIR_VT)
+#if defined(ZEN_VT)
     setvbuf(stdin, NULL, _IONBF, BUFSIZ);
-#elif defined(MJOLNIR_CURSES)
+#elif defined(ZEN_CURSES)
     initscr();
     cbreak();
     keypad(stdscr, TRUE);
@@ -173,5 +170,5 @@ mjolopentty(struct game *game)
     return;
 }
 
-#endif /* MJOLNIR_TTY */
+#endif /* defined(ZEN_TTY) */
 

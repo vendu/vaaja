@@ -14,6 +14,7 @@
 #define MAXPRINTFSTR 2048
 
 #if defined(ZEN_USE_STDIO)
+#defone congetchar()    getchar()
 #define conputs(s)      puts(s)
 #define conputchar(c)   putchar(c)
 #endif

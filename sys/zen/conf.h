@@ -1,6 +1,9 @@
 #ifndef ZEN_CONF_H
 #define ZEN_CONF_H
 
+#define ZEN_TTY
+#define ZEN_VT
+
 #define ZEN_SIMULATION
 /* in simulation mode, th kernel runs on top of a system instead of being standalone */
 #if defined(ZEN_SIMULATION)
