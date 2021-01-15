@@ -2,6 +2,7 @@
 #define SYS_ZEN_EV_H
 
 //#include <gfx/rgb.h>
+#include <stdint.h>
 
 #define ZEN_EV_OBJ_BITS         32
 #define ZEN_EV_TIME_BITS        32
@@ -117,7 +118,6 @@ typedef uint64_t                zenevuword_t;
 #define zengetevtime(ev)    ((ev)->hdr.tm)
 #define zensetevtime(ev, t) ((ev)->hdr.tm = (t))
 
-struct zenev;
 /* API */
 #define zenevmask(id) (1U << (id))
 /* TODO: implement ring-buffers for event queues */
@@ -148,13 +148,6 @@ long   zenpeekev(struct zenev *ev, long mask);
 #define ZEN_SYNC_EV             0x08000000 // asynchronous if not set
 #define ZEN_DISCARD_INPUT       0x04000000 // discard pending user input
 #define ZEN_DISCARD_OUTPUT      0x02000000
-
-#define zenchkev(evq, ev, flg)) zengetev((evq), (ev), (flg) | ZEN_CHECK_EV)
-#define zenpeekev(evq, ev, flg) zengetev((evq), (ev), (flg) | ZEN_PEEK_EV)
-void    zengetev(struct zenev *evq, struct zenev *ev, long flg);
-long    zenputev(struct zenev *evq, struct zenev *ev, long flg);
-void    zensyncev(struct zenev *evq, long flg);
-long    zenskiphid(struct zenevq *evq, long len);
 
 #if defined(__zen__)
 
@@ -347,6 +340,13 @@ struct zenev {
     } data;
     struct zenmsg               msg[C_VLA];
 };
+
+#define zenchkev(evq, ev, flg)) zengetev((evq), (ev), (flg) | ZEN_CHECK_EV)
+#define zenpeekev(evq, ev, flg) zengetev((evq), (ev), (flg) | ZEN_PEEK_EV)
+void    zengetev(struct zenev *evq, struct zenev *ev, long flg);
+long    zenputev(struct zenev *evq, struct zenev *ev, long flg);
+void    zensyncev(struct zenev *evq, long flg);
+long    zenskiphid(struct zenevq *evq, long len);
 
 #endif /* SYS_ZEN_EV_H */
 

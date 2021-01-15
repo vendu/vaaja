@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <api/zen/types.h>
+#include <mt/tkt.h>
 
 struct zendev {
     void                       *vfsfuncs;
@@ -24,7 +25,7 @@ struct zendesc {
 
 struct zentasktab {
     struct zentask             *tab;
-    mttktlk                     tkt;
+    mttkt                       tkt;
 };
 
 struct zennice {
