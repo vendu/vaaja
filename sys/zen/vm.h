@@ -1,7 +1,8 @@
-#ifndef ZEN_VM_H
-#define ZEN_VM_H
+#ifndef SYS_ZEN_VM_H
+#define SYS_ZEN_VM_H
 
 #include <mach/param.h>
+#include <zen/bitbang.h>
 
 #if (MACH_WORD_SIZE == 4)
 #define zenvmqueueid            m_ctz32
@@ -31,15 +32,15 @@ struct zenvmseg {
 };
 
 #define MEM_NULL_FLAGS          0
-#define MEM_CODE_FLAGS          (K_MEM_EXEC | K_MEM_READ)
-#define MEM_RODATA_FLAGS        K_MEM_READ
-#define MEM_DATA_FLAGS          (K_MEM_WRITE | K_MEM_READ | K_MEM_ZERO)
-#define MEM_HEAP_FLAGS          (K_MEM_WRITE | K_MEM_READ | K_MEM_DYNAMIC)
-#define MEM_USRSTK_FLAGS        (K_MEM_WRITE | K_MEM_READ           \
-                                 | K_MEM_GROW_DOWN)
-#define MEM_SYS_FLAGS           (K_MEM_EXEC | K_MEM_READ | K_MEM_SYS)
-#define MEM_SYSSTK_FLAGS        (K_MEM_WRITE | K_MEM_READ           \
-                                 | K_MEM_GROW_DOWN | K_MEM_SYS)
+#define MEM_CODE_FLAGS          (MEM_EXEC | MEM_READ)
+#define MEM_RODATA_FLAGS        MEM_READ
+#define MEM_DATA_FLAGS          (MEM_WRITE | MEM_READ | MEM_ZERO)
+#define MEM_HEAP_FLAGS          (MEM_WRITE | MEM_READ | MEM_DYNAMIC)
+#define MEM_USRSTK_FLAGS        (MEM_WRITE | MEM_READ           \
+                                 | MEM_GROW_DOWN)
+#define MEM_SYS_FLAGS           (MEM_EXEC | MEM_READ | MEM_SYS)
+#define MEM_SYSSTK_FLAGS        (MEM_WRITE | MEM_READ           \
+                                 | MEM_GROW_DOWN | MEM_SYS)
 #define ZEN_NULL_SEG            0
 #define ZEN_CODE_SEG            1
 #define ZEN_RODATA_SEG          2
@@ -75,5 +76,5 @@ struct zenpage {
     uint32_t            qid;    // lruq, sizeof(uint32_t) * CHAR_BIT - clz(nflt)
 };
 
-#endif /* ZEN_VM_H */
+#endif /* SYS_ZEN_VM_H */
 

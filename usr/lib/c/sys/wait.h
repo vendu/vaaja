@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 #if !defined(_POSIX_SOURCE)
-#include <machine/endian.h>
+#include <endian.h>
 #endif
 #define WNOHANG                 0x00000001
 #define WUNTRACED               0x00000002
@@ -68,12 +68,12 @@ union wait {
     int w_status; // used in syscall
     /* terminated process status */
     struct {
-#if (BYTE_ORDER == LITTLE_ENDIAN)
+#if (__BYTE_ORDER == __LITTLE_ENDIAN)
         unsigned w_Termsig      : 7;
         unsigned w_Coredump     : 1;
         unsigned w_Retcode      : 8;
         unsigned w_Filler       : 16;
-#elif (BYTE_ORDER == BIG_ENDIAN)
+#elif (__BYTE_ORDER == __BIG_ENDIAN)
         unsigned w_Filler       : 16;
         unsigned w_Retcode      : 8;
         unsigned w_Coredump     : 1;
@@ -81,11 +81,11 @@ union wait {
 #endif
     } w_T;
     struct {
-#if (BYTE_ORDER == LITTLE_ENDIAN)
+#if (__BYTE_ORDER == __LITTLE_ENDIAN)
         unsigned w_Stopaval     : 8;
         unsigned w_Stopsig      : 8;
         unsigned w_Filler       : 16;
-#elif (BYTE_ORDER == BIG_ENDIAN)
+#elif (__BYTE_ORDER == __BIG_ENDIAN)
         unsigned w_Filler       : 16;
         unsigned w_Stopsig      : 8;
         unsigned w_Stopval      : 8;

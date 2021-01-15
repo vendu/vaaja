@@ -5,6 +5,7 @@
 #include <sys/zen/errno.h>
 #include <sys/zen/signal.h>
 #include <sys/zen/ev.h>
+#include <sys/zen/deck.h>
 #include <sys/zen/perm.h>
 #include <sys/zen/types.h>
 #include <sys/zen/mem.h>
