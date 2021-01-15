@@ -1,9 +1,5 @@
-#ifndef __SYS_ZEN_UTIL_H__
-#define __SYS_ZEN_UTIL_H__
-
-#include <stdint.h>
-#include <mach/asm.h>
-#include <sys/zen/signal.h>
+#ifndef SYS_ZEN_UTIL_H
+#define SYS_ZEN_UTIL_H
 
 #define _roundup16b(a, b)                                               \
     ((fastu16divu16((a) + (b) - 1, (b), k_fastu16divu16tab)) * (b))
@@ -16,16 +12,16 @@
         } while (1);                                                    \
     } while (0);
 
-void kbzero(void *adr, unsigned long len);
-void kmemset(void *adr, int byte, unsigned long len);
+void                            kbzero(void *adr, unsigned long len);
+void                            kmemset(void *adr, int byte, unsigned long len);
 #define kbcopy(src, dest, len)  kmemcpy(dest, src, len);
-void kbcopy(void *dest, const void *src, unsigned long len);
-int  kmemcmp(const void *ptr1, const void *ptr2, unsigned long nb);
-int  kstrcmp(const char *str1, const char *str2);
-long kstrncpy(char *dest, char *src, long len);
-void kprintf(const char *fmt, ...);
-void perror(const char *str);
-void kpanic(const char *str, int sig);
+void                            kbcopy(void *dest, const void *src, unsigned long len);
+int                             kmemcmp(const void *ptr1, const void *ptr2, unsigned long nb);
+int                             kstrcmp(const char *str1, const char *str2);
+long                            kstrncpy(char *dest, char *src, long len);
+void                            kprintf(const char *fmt, ...);
+void                    i       kperror(const char *str);
+void                            kpanic(const char *str, int sig);
 
-#endif /* __SYS_ZEN_UTIL_H__ */
+#endif /* SYS_ZEN_UTIL_H */
 

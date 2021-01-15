@@ -17,19 +17,10 @@
 #define _zenvmunlkqueue(queue)  mtunlktkt(&queue->lk)
 
 struct zenvmqueue {
-    mttktlk                     lk;
+    mttkt                       lk;
     m_atomic_t                  n;
     struct zenvmpage           *head;
     struct zenvmpage           *tail;
-};
-
-struct zenvmpage {
-    struct zenvmqueue          *queue;
-    struct zenvmpage           *prev;
-    struct zenvmpage           *next;
-    m_adr_t                     ptr;
-    m_word_t                    flg;
-    m_word_t                    qofs;
 };
 
 struct zenvmseg {
@@ -37,9 +28,51 @@ struct zenvmseg {
     m_adr_t                     ptr;
     m_size_t                    size;
     m_word_t                    flag;
-#if defined(__v0__)
-    m_word_t                    pad;
-#endif
+};
+
+#define MEM_NULL_FLAGS          0
+#define MEM_CODE_FLAGS          (K_MEM_EXEC | K_MEM_READ)
+#define MEM_RODATA_FLAGS        K_MEM_READ
+#define MEM_DATA_FLAGS          (K_MEM_WRITE | K_MEM_READ | K_MEM_ZERO)
+#define MEM_HEAP_FLAGS          (K_MEM_WRITE | K_MEM_READ | K_MEM_DYNAMIC)
+#define MEM_USRSTK_FLAGS        (K_MEM_WRITE | K_MEM_READ           \
+                                 | K_MEM_GROW_DOWN)
+#define MEM_SYS_FLAGS           (K_MEM_EXEC | K_MEM_READ | K_MEM_SYS)
+#define MEM_SYSSTK_FLAGS        (K_MEM_WRITE | K_MEM_READ           \
+                                 | K_MEM_GROW_DOWN | K_MEM_SYS)
+#define ZEN_NULL_SEG            0
+#define ZEN_CODE_SEG            1
+#define ZEN_RODATA_SEG          2
+#define ZEN_DATA_SEG            3
+#define ZEN_HEAP_SEG            4
+#define ZEN_USRSTK_SEG          5
+#define ZEN_SYS_SEG             6
+#define ZEN_SYSSTK_SEG          7
+#define ZEN_MEM_DYNAMIC         ZEN_MEM_FLAG
+#define ZEN_MEM_ZERO            (ZEN_MEM_FLAG << 1)
+struct zenseg {
+    m_ptr_t             base;
+    m_ptr_t             lim;
+    zensize_t           size;
+    uint32_t            flags;
+};
+
+struct zenmap {
+    struct zencred      cred;
+    m_ptr_t             adr;
+    zensize_t           size;
+    uint32_t            flags;
+};
+
+struct zenpage {
+    struct zenpage     *prev;
+    struct zenpage     *next;
+    zenpage_t          *pte;    // pointer to page-table entry
+    zenblk_t            blk;    // page-device block ID
+    zendev_t            dev;    // page-device
+    uint32_t            flags;  // page-flags
+    uint32_t            nflt;   // # of page-faults
+    uint32_t            qid;    // lruq, sizeof(uint32_t) * CHAR_BIT - clz(nflt)
 };
 
 #endif /* ZEN_VM_H */

@@ -1,13 +1,11 @@
-#ifndef __SYS_ZEN_TRAP_H__
-#define __SYS_ZEN_TRAP_H__
+#ifndef SYS_ZEN_TRAP_H
+#define SYS_ZEN_TRAP_H
 
-#include <sys/zen/signal.h>
-#if defined(__voima__)
-#include <v0/trap.h>
-#endif
+#include <mach/trap.h>
 
-#define kintron(void)  kpanic("kintron not implemented yet", SIGSYS);
-#define kintroff(void)  kpanic("kintron not implemented yet", SIGSYS);
+#define kintrmask(mask)         kpanic("kintrmask not implemented yet", SIGSYS);
+#define kintron(void)           kpanic("kintron not implemented yet", SIGSYS);
+#define kintroff(void)          kpanic("kintron not implemented yet", SIGSYS);
 
-#endif /* __SYS_ZEN_TRAP_H__ */
+#endif /* SYS_ZEN_TRAP_H */
 

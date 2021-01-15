@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_NET_H__
-#define __SYS_ZEN_NET_H__
+#ifndef SYS_ZEN_NET_H
+#define SYS_ZEN_NET_H
 
 #include <zen/net/inet.h>
 
@@ -9,5 +9,5 @@ struct zennetcon {
     socklen_t           adrlen;
 };
 
-#endif /* __SYS_ZEN_NET_H__ */
+#endif /* SYS_ZEN_NET_H */
 

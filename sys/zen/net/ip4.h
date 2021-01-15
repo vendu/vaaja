@@ -1,5 +1,5 @@
-#ifndef NET_IP4_H
-#define NET_IP4_H
+#ifndef SYS_ZEN_NET_IP4_H
+#define SYS_ZEN_NET_IP4_H
 
 #include <stdint.h>
 #include <zero/cdefs.h>
@@ -37,5 +37,5 @@ struct netip4tcp4pkt {
     uint8_t             data[C_VLA];
 };
 
-#endif /* NET_IP4_H */
+#endif /* SYS_ZEN_NET_IP4_H */
 

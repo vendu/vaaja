@@ -8,7 +8,7 @@
 /*
  * NOTES
  * -----
- * pid_t                sys_proc(flg);
+ * pid_t                proc(flg);
  * void                 taskdt(tid);
  * void                 taskat(tid);
  * pid_t                taskrm(tid);

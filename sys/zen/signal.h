@@ -1,5 +1,5 @@
-#ifndef ZEN_SIGNAL_H
-#define ZEN_SIGNAL_H
+#ifndef SYS_ZEN_SIGNAL_H
+#define SYS_ZEN_SIGNAL_H
 
 #define SIGHUP                  1
 #define SIGINT                  2
@@ -49,9 +49,25 @@
 #define SIGRT13                 SIGRT(13)
 #define SIGRT14                 SIGRT(14)
 #define SIGRT15                 SIGRT(15)
+#define SIGRT16                 SIGRT(16)
+#define SIGRT17                 SIGRT(17)
+#define SIGRT18                 SIGRT(18)
+#define SIGRT19                 SIGRT(19)
+#define SIGRT20                 SIGRT(20)
+#define SIGRT21                 SIGRT(21)
+#define SIGRT22                 SIGRT(22)
+#define SIGRT23                 SIGRT(23)
+#define SIGRT24                 SIGRT(24)
+#define SIGRT25                 SIGRT(25)
+#define SIGRT26                 SIGRT(26)
+#define SIGRT27                 SIGRT(27)
+#define SIGRT28                 SIGRT(28)
+#define SIGRT29                 SIGRT(29)
+#define SIGRT30                 SIGRT(30)
+#define SIGRT31                 SIGRT(31)
 #define _SIGRTMAX               63
 #define _NRTSIG                 32
 #define _NSIG                   (_SIGRTMAX + 1)
 
-#endif /* ZEN_SIGNAL_H */
+#endif /* SYS_ZEN_SIGNAL_H */
 

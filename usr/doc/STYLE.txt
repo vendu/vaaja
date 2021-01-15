@@ -1,0 +1,291 @@
+Welcome to an early version of a style guide for the Zero project! :)
+
+/* zero style abbreviations for words/terms and terminology */
+
+indentation etc.
+---------------
+- see style.c for example code :)
+
+general conventions
+-------------------
+- assembly files are to be written in AT&T syntax... ;)
+- FIXME, TODO, NOTREACHED, WONTFIX, README, REFERENCE
+
+objects/identifiers
+-------------------
+- m_-prefix stands for machine-specific [routine]
+- g_-prefix may be used to denote an object is globally visible
+  - it's often a good idea to collect global variables into a global structure
+    or a few of them
+- object and other names should be brief
+  - global and function argument names should be longer
+  - for example, number of bytes could be
+    - modnumbytes (global, mod is the name of the code module/file)
+    - nbyte (function argument)
+    - nb (function-internal variable)
+    - nbyte, size or len; structure member
+  - another example
+    - modtokenstk (stack)
+    - stack
+    - stk
+    - stk
+  - and another example
+    - modwinattrib or modwinparam
+    - attrib, param
+    - atr, parm
+- volatile-qualifier should be used for cross-thread variables such as mutexes
+  and reference counters where not guarded by other synchronization e.g. mutex
+- static-qualifier is used for locally (within the file) visible values
+  - may let the compiler do more aggressive optimisations
+  - static names can be shorter;
+    not necessarily styleindent(), but perhaps indent() instead
+- global entities can be wrapped into a single per-program structure
+  - e.g. struct g_malloc; use g_-prefix (global)
+- constant [macro] values in all upper case, e.g. TRAPPF
+- function names should contain verbs
+  - module name + verb + possible object
+    - e.g. meminit(), vminitzone()
+- object sizes are usually represented as number of bytes
+- n-prefix for number of items
+  - e.g. nfile - number of files, nbyte - number of bytes
+- data structure names should consist of object name + structure "type";
+  - e.g. ptrtab, symhash
+  - structure and union members may have shorter names
+    - e.g. stk (stack), tab (table/array)
+  - it feels natural _not_ to typedef structs and so hide their aggregate nature
+- it is good to put all per-module globals into a single global structure, e.g.
+  struct g_malloc g_malloc
+
+type sizes
+----------
+- when relying on the size of an object, it is good to make the size-assumption
+  easy to catch, i.e.
+  - use int64_t i64 for a signed 64-bit value
+  - use uin32_t u32 for an unsigned 32-bit value
+  - when it's not feasible or necessary to use explicit-size types, you can use
+    conventions like illustrated below
+    - X86/C-like terminology, 32-bit oriented
+      brief                 size              short names     postfix
+      -----                 ----              ----------      -------
+      byte                  8-bit             b, nb for count 8, u8
+      word/short            16-bit            w               16, u16
+      int/longword          32-bit            i (int), l, n   32, u32
+      quadword              64-bit            qw, ll          64, u64
+      octaword              128-bit           ow              128, u128
+      hexaword              256-bit           hw              256, u256
+      (u)inptr_t            sizeof(void *)    adr
+      (u)int8_t/char        8/CHAR_BIT        (u)c, (u)b8     i8, u8
+      (u)int16_t/short      16                (u)16, (u)w16   16, w16, uw16
+      (u)int32_t/int        32                (u)i32, (u)l32  32, i32, u32
+      (u)int64_t/long long  64                (u)l64, (u)ll64 64, l64, ull64
+
+prefixes
+--------
+
+- these prefixes should be used with a following underscore, e.g. t_stkitem
+- g	- global (e.g. g_malloc for gathering together malloc's globals)
+- m	- machine (dependent/specific)
+- t	- type (_t-postfix is reserved)
+
+- these prefixes don't use underscores
+- k	- kernel; e.g. kbzero() to differentiate from bzero()
+- n	- number of something; e.g. nb for number of bytes
+- u	- user; e.g. usavectx()
+
+abbreviations
+-------------
+acl     - access control list
+adr     - address
+alg	- algebraic
+algo	- algorithm
+alloc	- allocate
+alu	- arithmetic-logical unit
+apnd	- append
+apu	- application processor unit
+arg	- argument
+arith	- arithmetic
+asm	- assembly, assemble(r)
+atr     - attribute(s)
+aud	- audio
+auto	- automatic
+bin     - binary
+blk     - block
+bsp	- board support package
+btn     - button
+buf     - buffer
+calc	- calculator
+cand	- candidate
+cap     - capability
+ch      - character (data)
+chk     - check
+chr     - character (like a monster or player in a game)
+cmp	- compare
+cnt     - count
+cond	- conditional
+conf    - configuration
+conn	- connection
+cons    - console
+conv    - convert, conversion
+cor	- corridor
+cpu	- central processing unit
+ctrl    - control, controller
+ctx	- context
+dec     - decimal [number]
+desc    - descriptor
+dest    - destination
+dbl	- double, floating point value (of type double)
+decr	- decrement
+dfl     - default
+diff	- difference
+div	- division
+dlg	- dialog
+doc     - document
+drv     - drive, driver
+dsp	- digital signal processor
+emu	- emulator
+eta	- estimated time of arrival
+eth     - ethernet
+eq	- equal, equation
+ev      - event
+exec    - execute
+fd	- floppy drive, file descriptor
+flg	- flag
+flt	- fault, floating point value (of type float)
+fmt     - format
+fp	- frame pointer
+fpu	- floating point unit
+frm     - frame
+fs	- file system
+func    - function
+gen	- generate, generator, generation
+gfx	- graphics
+gpu	- graphics processing unit
+gui	- graphical user interface
+hash	- hash table, associative array; also a verb
+hd	- hard drive
+hdr	- header
+hex     - hexadecimal
+i18	- internalisation
+id	- identification; typically numerical ID (see also num)
+img	- image
+in	- input, e.g. inbuf
+incr	- increment
+info	- information
+init    - initialise, initialisation
+intl	- international
+intr	- interrupt
+io      - input/output
+ip	- internet protocol
+ip4	- internet protocol version 4
+ip6	- internet protocol version 6
+ipc	- inter-process communications
+irq	- interrupt request
+kbd     - keyboard
+kern	- kernel
+l12n	- localisation
+lang    - language
+len     - length
+lex	- lexical analysis/analyser
+lim     - limit
+lin	- linear
+lk      - lock
+loc	- locale
+log	- logarithm
+lpt	- line printer
+lvl	- level
+mach    - machine
+mag     - magazine (memory management)
+man	- manual
+max     - maximum
+mem     - memory
+mgr     - manager
+min     - minimum
+mmu	- memory management unit
+mod     - module, modulus
+mp	- multiprocessor
+msk	- mask
+mtx     - mutex (mutual exclusion lock)
+mul	- multiplication
+nbor	- neighbor
+ndx     - index
+net     - network
+nic     - network interface card
+nod	- node
+num     - number, ID
+obj	- object
+oct     - octal
+ofs     - offset
+op	- operation
+out	- output, e.g. outbuf
+par     - parallel
+parm	- parameter(s)
+pc	- personal computer, program counter (i.e. instruction pointer)
+pct	- percent, percentage
+perm	- permissions
+pg	- page
+phys	- physical (e.g. physadr)
+pix     - pixel
+pkg     - package
+plr	- player
+pnt     - point
+pos     - position
+prob    - probability
+proc    - process
+prog    - program
+prot	- protection
+ptr     - pointer
+pty	- pseudo teletype
+q	- queue
+qta	- quota
+rand	- random
+rdx	- radix (base)
+rect    - rectangle
+reg	- register
+rem	- remainder
+ret	- return [value]
+rev	- reverse
+rnd	- round (e.g. rndup, rnddown)
+rtn	- routine
+sched	- schedule, scheduler
+scn	- scene
+ser     - serial
+sig     - signal
+sim	- simulation, simulator
+sp	- stack pointer
+src     - source
+stk     - stack
+stmp	- stamp, e.g. tmstmp (timestamp)
+str     - string
+strm	- stream
+sym	- symbol
+sys     - system
+tab     - table, array
+tcp	- transfer control protocol
+tcp4	- transfer control protocol version 4
+tcp6	- transfer control protocol version 6
+term	- terminal
+thr     - thread
+tls	- thread-local storage
+tm	- time
+tmr	- timer
+tok	- token
+trap	- trap; interrupt, exception, trap, abort, fault, ...
+ts	- time specification (e.g. struct timespec)
+tty	- teletype device
+tv	- time value (e.g. struct timeval)
+tz	- time zone
+ui	- user interface
+usr	- user
+val     - value
+var     - variable
+vec	- vector
+vfs	- virtual file system
+vid	- video
+virt	- virtual
+vis	- visualisation
+vm	- virtual machine/architecture
+vtx	- vertex
+win     - window
+xfrm	- transform
+xlate   - translate
+

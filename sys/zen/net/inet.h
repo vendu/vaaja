@@ -1,10 +1,10 @@
-#ifndef __ZEN_NET_INET_H__
-#define __ZEN_NET_INET_H__
+#ifndef SYS_ZEN_NET_INET_H
+#define SYS_ZEN_NET_INET_H
 
-#include <zen/conf.h>
+#include <sys/zen/conf.h>
 #if defined(ZEN_IP4_NET)
-#include <zen/net/ip4.h>
+#include <sys/zen/net/ip4.h>
 #endif
 
-#endif /* __ZEN_NET_INET_H__ */
+#endif /* SYS_ZEN_NET_INET_H */
 

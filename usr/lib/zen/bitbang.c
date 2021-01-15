@@ -1,5 +1,8 @@
 #include <stdint.h>
-#include <sys/zen/bitbang.h>
+#include <env/cdefs.h>
+#include <zen/bitbang.h>
+
+#if defined(ZEN_NEED_CLZ)
 
 #if defined(ZEN_DEBRUIJN_CLZ)
 static const unsigned char debruijn_clz32[32] = {
@@ -7,12 +10,21 @@ static const unsigned char debruijn_clz32[32] = {
     31, 22, 30, 21, 18, 10, 29, 2, 20, 17, 15, 13, 9, 6, 28, 1
 };
 #endif
+
+#endif /* ZEN_NEED_CLZ */
+
+#if defined(ZEN_NEED_CtZ)
+
 #if defined(ZEN_DEBRUIJN_CTZ)
 static const unsigned char debruijn_ctz32[32] = {
     31, 0, 27, 1, 28, 13, 23, 2, 29, 21, 19, 14, 24, 16, 3, 7,
     30, 26, 12, 22, 20, 18, 15, 6, 25, 11, 17, 5, 10, 4, 9, 8
 };
 #endif
+
+#endif /* ZEN_NEED_CTZ */
+
+#if defined(ZEN_NEED_CLZ)
 
 #if defined(ZEN_DEBRUIJN_CLZ)
 
@@ -39,7 +51,7 @@ m_clz32(uint32_t u32)
     return ret;
 }
 
-#elif defined(ZEN_NEED_CLZ)
+#else
 
 static __inline__ int
 m_clz32(uint32_t u32)
@@ -119,7 +131,11 @@ m_clz64(uint64_t u64)
     return ret;
 }
 
+#endif /* ZEN_DEBRUIJN_CLZ */
+
 #endif /* ZEN_NEED_CLZ */
+
+#if defined(ZEN_NEED_CTZ)
 
 #if defined(ZEN_DEBRUIJN_CTZ)
 
@@ -137,7 +153,7 @@ m_ctz32(uint32_t u32)
     ret = x + debruijn_ctz32[y];
 }
 
-#elif defined(ZEN_NEED_CTZ)
+#else
 
 /* count number of trailing (low) zero-bits in u32 */
 static __inline__ int
@@ -184,7 +200,6 @@ m_ctz32(uint32_t u32)
     return ret;
 }
 
-#if 0
 /* count number of trailing (low) zero bits in u64 */
 static __inline__ int
 m_ctz64(uint64_t u64)
@@ -234,7 +249,8 @@ m_ctz64(uint64_t u64)
 
     return ret;
 }
-#endif
+
+#endif /* ZEN_DEBRUIJN_CTZ */
 
 #endif /* ZEN_NEED_CTZ */
 

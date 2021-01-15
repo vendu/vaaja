@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_VAR_H__
-#define __SYS_ZEN_VAR_H__
+#ifndef SYS_ZEN_VAR_H
+#define SYS_ZEN_VAR_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -33,5 +33,5 @@ struct zenvars {
     int16_t                     evqmax;
 };
 
-#endif /* __SYS_ZEN_VAR_H__ */
+#endif /* SYS_ZEN_VAR_H */
 

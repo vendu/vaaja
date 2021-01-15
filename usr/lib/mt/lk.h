@@ -1,11 +1,10 @@
 #ifndef MT_LK_H
 #define MT_LK_H
 
+#include <env/cdefs.h>
 #include <mach/asm.h>
 
 /* velho lock routines */
-
-#include <mt/mt.h>
 
 #define MT_ADR_LK_BIT           ((uintptr_t)1 << MT_ADR_LK_BIT_OFS)
 #define MT_ADR_LK_BIT_OFS       0

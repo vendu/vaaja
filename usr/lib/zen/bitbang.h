@@ -1,8 +1,6 @@
 #ifndef ZEN_BITBANG_H
 #define ZEN_BITBANG_H
 
-#include <sys/zen/zen.h>
-
 #define ZEN_BITBANG_DEBRUIJN    1
 #if defined(ZEN_BITBANG_DEBRUIJN)
 #define ZEN_DEBRUIJN_CLZ        1
@@ -10,6 +8,10 @@
 #endif
 
 #if (defined(__GNUC__) || defined(__clang__))
+
+#undef ZEN_NEED_CLZ
+#undef ZEN_NEED_CTZ
+#undef ZEN_NEED_HAM
 
 #define m_clz32(x)              ((x) ? __builtin_clz(x) : 32)
 #define m_clz64(x)              ((x) ? __builtin_clzll(x) : 64)

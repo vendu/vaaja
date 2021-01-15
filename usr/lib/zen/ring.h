@@ -1,5 +1,6 @@
-/* FIXME: do this! :) */
+/* FIXME: do these! :) */
 #undef ZEN_RINGATOMIC
+#undef ZEN_RINGLOCKFREE
 
 /* ZEN_RING_MALLOC  - function used to allocate data buffer */
 /* ZEN_RING_FREE    - function used to free buffers */
@@ -14,14 +15,14 @@
 #include <features.h>
 #include <stdint.h>
 #include <limits.h>
-#if defined(_ZERO_SOURCE) && (ZEN_RINGSHAREBUF)
-#include <sys/syscall.h>
-#include <sys/zero/syscall.h>
-#include <kern/mem/obj.h>
-#endif
-#include <zero/cdefs.h>
-#include <mach/asm.h>
+/* #if defined(_ZERO_SOURCE) && (ZEN_RINGSHAREBUF) */
+/* #include <sys/syscall.h> */
+/* #include <sys/zero/syscall.h> */
+/* #include <kern/mem/obj.h> */
+/* #endif */
+#include <env/cdefs.h>
 #include <mach/param.h>
+#include <mach/asm.h>
 
 #if !defined(ZEN_RINGATOMIC) && !defined(ZEN_RINGLOCKFREE)
 
@@ -89,22 +90,22 @@ zenunlkringoutp(struct ringbuf *rb, RING_ITEM val)
 
 #endif
 
-#include <zero/trix.h>
+#include <env/trix.h>
 
-#if defined(__KERNEL__)
+#if defined(__kernel__)
 #undef ZEN_RING_MALLOC
 #undef ZEN_RING_FREE
+#undef ZEN_RING_MEMCPY
 #include <sys/zen/mem.h>
 #include <sys/zen/util.h>
 #define ZEN_RING_MALLOC(sz)             kmalloc(sz)
 #define ZEN_RING_FREE(ptr)              kfree(ptr)
 #define ZEN_RING_MEMCPY(dest, src, nb)  kmemcpy(dest, src, nb)
-
-#else /* !defined(__KERNEL__) */
+#else /* !defined(__kernel__) */
 #include <stdlib.h>
 #define ZEN_RING_MALLOC(sz)             malloc(sz)
 #define ZEN_RING_FREE(ptr)              free(ptr)
-
+#endif
 #if !defined(ZEN_RING_MEMCPY)
 #if defined(ZEN_RING_BCOPY)
 #include <strings.h>
@@ -115,9 +116,9 @@ zenunlkringoutp(struct ringbuf *rb, RING_ITEM val)
 #endif /* defined(ZEN_RING_BCOPY) */
 #endif /* !defined(ZEN_RING_MEMCPY) */
 
-#endif /* defined(__KERNEL__) */
+#endif /* defined(__kernel__) */
 
-#if (ZEN_RINGSHAREBUF) && !defined(__KERNEL__)
+#if (ZEN_RINGSHAREBUF) && !defined(__kernel__)
 
 #if defined(_ISOC11_SOURCE) && (_ISOC11_SOURCE)
 #defined ZEN_RING_VALLOC(n)           aligned_alloc(MACH_PAGE_SIZE, n)
@@ -145,7 +146,7 @@ ZEN_RING_VALLOC(size_t n)
 #define ZEN_RING_VALLOC(n) memalign(MACH_PAGE_SIZE, n)
 #endif
 
-#endif /* ZEN_RINGSHAREBUF && !__KERNEL__ */
+#endif /* ZEN_RINGSHAREBUF && !__kernel__ */
 
 /* flg-member bits */
 #define ZEN_RINGBUF_INIT (1 << 0)
