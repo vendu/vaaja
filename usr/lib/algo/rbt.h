@@ -1,5 +1,5 @@
-#ifndef __ZERO_RBT_H__
-#define __ZERO_RBT_H__
+#ifndef ALGO_RBT_H
+#define ALGO_RBT_H
 
 #include <stdint.h>
 
@@ -55,5 +55,5 @@ struct rbt {
     struct rbtnode   nil;
 };
 
-#endif /* __ZERO_RBT_H__ */
+#endif /* ALGO_RBT_H */
 

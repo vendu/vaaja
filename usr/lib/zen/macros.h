@@ -4,6 +4,8 @@
 #define ZEN_SUCCESS             0
 #define ZEN_FAILURE             (-1)
 
+#include <zen/bitbang.h>
+
 /*
  * bitcond(f, m, w)
  * - f  - condition flag
@@ -15,7 +17,7 @@
 #define max(a, b)               ((b) ^ (((a) ^ (b)) & -((a) < (b))))
 #define bitcond(f, m, w)        ((w) ^= (-(f) ^ (w)) & (m))
 #define negcond(f, a)           (((a) ^ -(f)) + (f))
-#define bitmerge(a, b, msk, f)  ((a) ^ (((a) ^ (b)) & (msk)))   // 0 in mask is a
+#define bitmerge(a, b, mask, f) ((a) ^ (((a) ^ (b)) & (mask)))
 
 #endif /* ZEN_MACROS_H */
 

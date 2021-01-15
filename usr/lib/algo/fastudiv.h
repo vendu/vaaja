@@ -1,5 +1,5 @@
-#ifndef __ZERO_FASTUDIV_H__
-#define __ZERO_FASTUDIV_H__
+#ifndef ALGO_FASTUDIV_H
+#define ALGO_FASTUDIV_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -227,5 +227,5 @@ fastu16divu16(uint16_t num, uint16_t divu16,
     return res;
 }
 
-#endif /* __ZERO_FASTUDIV_H__ */
+#endif /* ALGO_FASTUDIV_H */
 
