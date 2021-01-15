@@ -2,7 +2,7 @@
 #define __MJOLNIR_SCR_H__
 
 #include <mjolnir/conf.h>
-#include <mjolnir/mjol.h>
+#include <mjolnir/mjolnir.h>
 
 #if (MJOLNIR_VGA_TEXT)
 #include <mjolnir/vga.h>

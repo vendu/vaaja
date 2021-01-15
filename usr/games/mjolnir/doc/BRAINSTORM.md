@@ -71,6 +71,7 @@
 - DISTRACTION           - [mental] DISTRACTION factor
 - EMPATHY
 - HUMANITY              - HUMANITY ZERO is CYBERPSYCHOSIS; player turns into NPC
+- CONCENTRATION         - for casting spells
 
 # Physical Skills
 - LOCKS: cur/max        - lock-picking skills; ability to break into buildings

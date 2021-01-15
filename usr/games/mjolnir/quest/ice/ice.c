@@ -243,8 +243,8 @@ main(C_UNUSED int argc, C_UNUSED char *argv[])
     long                        winner;
 
     iceinit();
-    iceinitchr(&icechrtab[0], "john", CHR_PROGRAMMER_CATEGORY);
-    iceinitchr(&icechrtab[1], "doe", CHR_CRACKER_CATEGORY);
+    iceinitchr(&icechrtab[0], "neo", CHR_PROGRAMMER_CATEGORY);
+    iceinitchr(&icechrtab[1], "bug", CHR_CRACKER_CATEGORY);
     winner = icerun(&icechrtab[0], &icechrtab[1]);
     if (winner == 1) {
         fprintf(stderr, "player %ld (%s/%s) won player 2 (%s/%s)\n",

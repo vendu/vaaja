@@ -3,6 +3,8 @@
 
 #define MJOLNIR_OBJ_CHARACTER   1
 #define MJOLNIR_OBJ_ITEM        2
+#define MJOLNIR_OBJ_DECK        3
+#define MJOLNIR_OBJ_PROG        4
 
 /* character categories */
 #define CHR_PROGRAMMER_CATEGORY 1
@@ -19,6 +21,7 @@ struct ice {
     long                        basehp;     // program hitpoint increment
     long                        maxhp;      // program max # of hitpoints
     long                        nhp;        // program current # of hitpoints
+    long                        atk;        // basic strength of attack
     long                        ndef;       // number of defdies for defense
     long                        defdie;     // die to roll for defense
     long                        nhit;       // number of hitdies for attack
@@ -30,12 +33,14 @@ struct objchr {
     long                        cat;    // category, 'class'
     long                        type;   // type/ASCII-presentation
     long                        flg;    // character status flags
-    long                        nluck;
+    long                        karma;
+    long                        intel;
+    long                        luck;
     long                        luckdie;
     struct ice                  ice;
 };
 
-struct                          chrcatname {
+struct chrcatname {
     char                       *def;
     char                       *name;
 };
