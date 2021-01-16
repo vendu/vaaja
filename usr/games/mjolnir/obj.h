@@ -15,19 +15,6 @@
 #define CHR_ENGINEER_CATEGORY   6
 #define CHR_MAX_CATEGORY        6
 
-struct ice {
-    long                        xp;         // program experience
-    long                        lvl;        // program level
-    long                        basehp;     // program hitpoint increment
-    long                        maxhp;      // program max # of hitpoints
-    long                        nhp;        // program current # of hitpoints
-    long                        atk;        // basic strength of attack
-    long                        ndef;       // number of defdies for defense
-    long                        defdie;     // die to roll for defense
-    long                        nhit;       // number of hitdies for attack
-    long                        hitdie;     // die to roll for attack
-};
-
 struct objchr {
     char                       *name;   // character name
     long                        cat;    // category, 'class'

@@ -43,32 +43,36 @@ d20rolln(long n, long die)
 static C_INLINE long
 d20rollset(struct d20dice *dice)
 {
-    long                        score;
+    long                        score = dice->str;
+    long                        prob;
     long                        n;
 
-    n = dice->nd4;
-    if (n) {
-        score += d20rolln(n, D20_D4);
-    }
-    n = dice->nd6;
-    if (n) {
-        score += d20rolln(n, D20_D6);
-    }
-    n = dice->nd8;
-    if (n) {
-        score += d20rolln(n, D20_D8);
-    }
-    n = dice->nd10;
-    if (n) {
-        score += d20rolln(n, D20_D10);
-    }
-    n = dice->nd12;
-    if (n) {
-        score += d20rolln(n, D20_D12);
-    }
-    n = dice->nd20;
-    if (n) {
-        score += d20rolln(n, D20_D20);
+    prob = d20rolldie(D20_D10);
+    if (prob <= dice->prob) {
+        n = dice->nd4;
+        if (n) {
+            score += d20rolln(n, D20_D4);
+        }
+        n = dice->nd6;
+        if (n) {
+            score += d20rolln(n, D20_D6);
+        }
+        n = dice->nd8;
+        if (n) {
+            score += d20rolln(n, D20_D8);
+        }
+        n = dice->nd10;
+        if (n) {
+            score += d20rolln(n, D20_D10);
+        }
+        n = dice->nd12;
+        if (n) {
+            score += d20rolln(n, D20_D12);
+        }
+        n = dice->nd20;
+        if (n) {
+            score += d20rolln(n, D20_D20);
+        }
     }
 
     return score;
@@ -76,9 +80,8 @@ d20rollset(struct d20dice *dice)
 
 /* roll buffer for d20 dice set */
 struct d20diceset {
-    long                        atk;    /* base attack strength */
-    long                        def;    /* base defense strength */
-    long                        prob;   /* success probability */
+    long                        str;    /* base attack/defense strength */
+    long                        prob;   /* attack/defense success probability */
     long                        nd4;    /* count of 4-side dice */
     long                        nd6;    /* count of 6-side dice */
     long                        nd8;    /* count of 8-side dice */

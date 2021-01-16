@@ -113,6 +113,7 @@ iceinitchr(struct objchr *chr)
     }
 }
 
+#if 0
 static long
 icerollkarma(struct objchr *chr)
 {
@@ -122,25 +123,22 @@ icerollkarma(struct objchr *chr)
 
     return nlp;
 }
+#endif
 
 static long
 icerolldef(struct ice *ice)
 {
-    long                        n = ice->ndef;
-    long                        die = ice->defdie;
-    long                        nhp = d20rollndie(n, die);
+    long                        def = d20rollset(&ice->defdice);
 
-    return nhp;
+    return def;
 }
 
 static long
 icerollhit(struct ice *ice)
 {
-    long                        n = ice->nhit;
-    long                        die = ice->hitdie;
-    long                        nhp = d20rollndie(n, die);
+    long                        hit = d20rollset(&ice->hitdice);
 
-    return nhp;
+    return hit;
 }
 
 static long
@@ -150,37 +148,39 @@ icehit(struct ice *ice,
     long                        lvl = ice->lvl;
     long                        xp = ice->xp;
     long                        nhp = ice->nhp;
-    long                        def = icerolldef(ice);
+    long                        save = icerolldie(D20_D10);
     long                        maxhp;
     long                        hp;
     long                        nd;
 
-    if (hit > def) {
-        nhp += def;
+    if (save > ice->refprob) {
+        /* reflex save failed */
         nhp -= hit;
         ice->nhp = nhp;
-    }
-    xp++;
-    if (nhp <= 0) {
+        xp++;
+        if (nhp <= 0) {
 
-        return INT32_MIN;
-    }
-    ice->xp = xp;
-    lvl = xp >> 4;
-    if (lvl > ice->lvl) {
-        maxhp = ice->maxhp;
-        hp = ice->basehp;
-        nd = lvl;
-        ice->lvl = lvl;
-        maxhp += hp;
-        nhp += hp;
-        ice->ndef += nd;
-        ice->nhit += nd;
-        ice->basehp = hp;
-        ice->maxhp = maxhp;
+            return INT32_MIN;
+        }
+        ice->xp = xp;
+        lvl = xp >> 4;
+        if (lvl > ice->lvl) {
+            maxhp = ice->maxhp;
+            hp = ice->basehp;
+            nd = lvl;
+            ice->lvl = lvl;
+            maxhp += hp;
+            nhp += hp;
+            ice->ndef += nd;
+            ice->nhit += nd;
+            ice->basehp = hp;
+            ice->maxhp = maxhp;
+        }
+    } else {
+        hit = 0;
     }
 
-    return nhp;
+    return hit;
 }
 
 static void
@@ -195,6 +195,7 @@ static long
 icerun(struct objchr *chr1, struct objchr *chr2)
 {
     long                        nturn;
+    long                        hit;
     long                        hit1;
     long                        hit2;
     struct ice                 *ice1 = &chr1->ice;
@@ -202,16 +203,24 @@ icerun(struct objchr *chr1, struct objchr *chr2)
 
     for (nturn = 0 ; nturn < ICE_MAX_TURNS ; nturn++) {
         hit1 = icerollhit(ice1);
-        hit1 -= min2(icerollkarma(chr2), hit1 >> 2);
         hit2 = icerollhit(ice2);
-        hit2 -= min2(icerollkarma(chr1), hit2 >> 2);
-        if (icehit(ice2, hit1) == INT32_MIN) {
+        hit = icehit(ice2, hit1);
+        if (hit == INT32_MIN) {
 
             return 1;
+        } else if (hit) {
+            printf("player 1 hits with %ld damage\n", hit);
+        } else {
+            printf("player 1 misses\n");
         }
-        if (icehit(ice1, hit2) == INT32_MIN) {
+        hit = icehit(ice1, hit2);
+        if (hit == INT32_MIN) {
 
             return 2;
+        } else if (hit) {
+            printf("player 2 hits with %ld damage\n", hit);
+        } else {
+            printf("player 2 misses\n");
         }
     }
     if (ice1->nhp >= ice2->nhp) {
