@@ -5,11 +5,22 @@
 Close combat ranks are based on karate belts. Combat
 proceeds as follows.
 
-- the dice are rolled for the attacker's hit
+If the player chooses close combat
+
+- the dice are rolled for the hit
   - HIT = STRENGTH + ATTACK
 - the success die is rolled for the attacker
 - the reflex dice are rolled for the defender
   - success indicates the attacker misses
+
+If the player chooses element combat
+
+- the dice are rolled for the hit
+  - D8 for a weak hit
+  - 3+D8 for an equal hit
+  - 6+D8 for a strong hit
+- the cycle is continued until one element is out of hitpoints
+  or flees
 
 ## White Belt
 

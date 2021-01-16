@@ -1,7 +1,7 @@
 #ifndef __MALT_DIV_H__
 #define __MALT_DIV_H__
 
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <malt/float.h>
 #include <malt/irp.h>
 
@@ -25,7 +25,7 @@ divirp32(int32_t num, int32_t den)
     double  dval = den;
     double  d;
 
-    d = irpguess(dval);
+    d = divguessirp(dval);
     d = nrpiter2(d, dval);
     d = nrpiter2(d, dval);
     d = nrpiter2(d, dval);

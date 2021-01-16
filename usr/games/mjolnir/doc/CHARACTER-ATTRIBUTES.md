@@ -1,3 +1,16 @@
+# Mjolnir Character Skills
+
+- CON               - concentration (affects magic success)
+- STR               - combat strength (base hit power)
+- RANK              - karate belts (affects combat)
+- REF               - reflex (affects attack-saves)
+- CAST              - affects spell casting
+
+## Concentration
+
+In the beginning of casting a spell, the player throws concentration dice.
+The score will be added to the final spell strength.
+
 # Mjolnir Character Types
 
 # Character Types

@@ -20,10 +20,10 @@ struct objchr {
     long                        cat;    // category, 'class'
     long                        type;   // type/ASCII-presentation
     long                        flg;    // character status flags
-    long                        karma;
-    long                        intel;
-    long                        luck;
-    long                        luckdie;
+    long                        xp;
+    long                        str;
+    long                        prob;
+    struct d20dice             *hitdice;
     struct ice                  ice;
 };
 
@@ -39,9 +39,8 @@ struct objitem {
     long                        type;   // type/ASCII-presentation
     long                        cat;    // category/subtype
     long                        flg;    // object status flags
-    long                        hp;     // e.g. +1 or -1 for armor
-    long                        def;    // defense points
-    long                        hit;    // hit points
+    //    long                        hp;     // e.g. +1 or -1 for armor
+    struct d20dice              defdice;
 };
 
 #endif /* __MJOLNIR_OBJ_H__ */

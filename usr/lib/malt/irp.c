@@ -6,7 +6,6 @@
  */
 
 #include <stdint.h>
-//#include <malt/util.h>
 #include <malt/float.h>
 #include <malt/irp.h>
 #if defined(TEST_IRP)
@@ -19,9 +18,9 @@
 float
 irpguessf(float f)
 {
-    union _flt32        u;
-    uint32_t            m = UINT32_C(0xbe6eb3be);
-    float               flt;
+    union _flt32                u;
+    uint32_t                    m = UINT32_C(0xbe6eb3be);
+    float                       flt;
 
     u.flt = f;
     u.u32 = (m - u.u32) >> 1;
@@ -33,16 +32,16 @@ irpguessf(float f)
 #endif
 
 union _dbl64 {
-    uint64_t    u64;
-    double      dbl;
+    uint64_t                    u64;
+    double                      dbl;
 };
 
 double
 irpguess0(double den)
 {
-    union _dbl64        u;
-    uint64_t            m = UINT64_C(0xbfcdd6a18f6a6f52);
-    double              dbl;
+    union _dbl64                u;
+    uint64_t                    m = UINT64_C(0xbfcdd6a18f6a6f52);
+    double                      dbl;
 
     u.dbl = den;
     u.u64 = (m - u.u64) >> 1;
@@ -53,12 +52,12 @@ irpguess0(double den)
 }
 
 double
-irpguess(double den)
+irpguess1(double den)
 {
-    double  d1 = 140.0 / 33.0;
-    double  d2 = -64.0 / 11.0;
-    double  d3 = 256.0 / 99.0;
-    double  res = den;
+    double                      d1 = 140.0 / 33.0;
+    double                      d2 = -64.0 / 11.0;
+    double                      d3 = 256.0 / 99.0;
+    double                      res = den;
 
     res *= d3;          // den * 256/99
     res += d2;          // den += -64/11
@@ -71,10 +70,10 @@ irpguess(double den)
 double
 gsdiv(int32_t num, int32_t den)
 {
-    int     sft = DOUBLE_MANTISSA_BITS - __builtin_clz(den);
-    double  n;
-    double  d = den << sft;
-    double  f;
+    int                         sft = DOUBLE_MANTISSA_BITS - __builtin_clz(den);
+    double                      n;
+    double                      d = den << sft;
+    double                      f;
 
     if (den == 0) {
         abort();
@@ -93,17 +92,17 @@ gsdiv(int32_t num, int32_t den)
     d = 2.0 - f;
     f = 2.0 - d;
     num *= d;
-    
+
     return num;
 }
 
 int32_t
 irpidiv(int32_t num, int32_t den)
 {
-    double  dnum = num;
-    double  dval = den;
-    double  drp;
-    int32_t res;
+    double                      dnum = num;
+    double                      dval = den;
+    double                      drp;
+    int32_t                     res;
 
     if (den == 0) {
         abort();
@@ -114,7 +113,7 @@ irpidiv(int32_t num, int32_t den)
 
         return 1;
     } else if (den != 1) {
-        drp = irpguess2(dval);
+        drp = irpguess0(dval);
         drp = nrpiter2(drp, dval);
         drp = nrpiter2(drp, dval);
         drp = nrpiter2(drp, dval);

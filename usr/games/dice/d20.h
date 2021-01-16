@@ -80,8 +80,6 @@ d20rollset(struct d20dice *dice)
 
 /* roll buffer for d20 dice set */
 struct d20diceset {
-    long                        str;    /* base attack/defense strength */
-    long                        prob;   /* attack/defense success probability */
     long                        nd4;    /* count of 4-side dice */
     long                        nd6;    /* count of 6-side dice */
     long                        nd8;    /* count of 8-side dice */

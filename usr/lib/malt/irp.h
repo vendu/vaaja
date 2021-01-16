@@ -4,7 +4,7 @@
 /* NOTE: some of this code is unnecessary and going to be removed later */
 
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #if defined(TEST_DIV)
 #include <stdio.h>
 #endif

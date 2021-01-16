@@ -12,7 +12,7 @@ int32_t
 div32(int32_t num, int32_t den)
 {
     double  dval = den;
-    double  guess = irpguess(dval);
+    double  guess = irpguess0(dval);
 
     if (!den) {
         raise(SIGFPE);
@@ -44,7 +44,7 @@ main(int argc, char *argv[])
     int32_t res;
     int     i;
     int     j;
-    
+
     for (i = 0 ; i <= 0xffff ; i++) {
         fprintf(stderr, "I: %x\n", i);
         for (j = 1 ; j <= 0xffff ; j++) {
@@ -55,7 +55,7 @@ main(int argc, char *argv[])
             }
         }
     }
-    
+
     exit(0);
 }
 
