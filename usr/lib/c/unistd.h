@@ -38,7 +38,7 @@ extern int   optopt;
 #define _XOPEN_LEGACY   1
 #endif
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 extern char **__environ;
 #if defined(_GNU_SOURCE)
@@ -302,7 +302,7 @@ char         * ctermid(char *str);
 int            getdtablesize(void);
 #endif
 
-#endif /* !defined(__KERNEL__) */
+#endif /* !defined(__kernel__) */
 
 #endif /* __UNISTD_H__ */
 

@@ -1,7 +1,7 @@
 #ifndef __THREADS_H__
 #define __THREADS_H__
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 /* https://github.com/jtsiomb/c11threads */
 
@@ -11,7 +11,7 @@
 
 #endif /* __STDC_VERSION < 201112L || __STDC_NO_THREADS__ */
 
-#endif /* !defined(__KERNEL__) */
+#endif /* !defined(__kernel__) */
 
 #endif /* __THREADS_H__ */
 

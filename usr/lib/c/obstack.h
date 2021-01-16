@@ -1,7 +1,7 @@
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 #include <stddef.h>
 #include <string.h>
@@ -13,7 +13,6 @@
 #define __BPTR_ALIGN(b, p, a) ((b) + (((p) - (b) + (a)) & ~(a)))
 #define __PTR_ALIGN(b, p, a)                                            \
     __BPTR_ALIGN(sizeof(PTR_INT_TYPE) < sizeof(void *) ? (b) : (char *)0, \
-                 
 
 extern void _obstack_newchunk(struct obstack *, int);
 extern int  _obstack_begin(struct obstack *, int, int,
@@ -281,7 +280,7 @@ extern int  obstack_exit_failure;
 
 #endif /* __GNUC__ */
 
-#endif /* !__KERNEL__ */
+#endif /* !__kernel__ */
 
 #endif /* __OBSTACK_H__*/
 

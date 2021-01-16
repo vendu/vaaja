@@ -1,9 +1,9 @@
 #include <ctype.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <zero/cdefs.h>
 #include <mach/param.h>
-#include <zero/trix.h>
+#include <env/cdefs.h>
+#include <env/trix.h>
 
 char       _inaddrstr[16] ALIGNED(CLSIZE);
 const char _asctodectab[10]

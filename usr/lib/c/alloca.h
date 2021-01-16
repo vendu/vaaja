@@ -1,7 +1,7 @@
 #ifndef __ALLOCA_H__
 #define __ALLOCA_H__
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 #include <stddef.h>
 
@@ -13,7 +13,7 @@
 void * alloca(size_t size);
 #endif
 
-#endif /* !__KERNEL__ */
+#endif /* !__kernel__ */
 
 #endif /* __ALLOCA_H__ */
 

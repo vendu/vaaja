@@ -8,16 +8,16 @@
 #include <sys/types.h>
 
 struct pwd {
-	char  *pw_name;     // user name
-	char  *pw_passwd;   // password
-	uid_t  pw_uid;      // user ID
-	gid_t  pw_gid;      // group ID
-	char  *pw_gecos;    // real name
-	char  *pw_dir;      // home directory
-	char  *pw_shell;    // shell program
+    char  *pw_name;     // user name
+    char  *pw_passwd;   // password
+    uid_t  pw_uid;      // user ID
+    gid_t  pw_gid;      // group ID
+    char  *pw_gecos;    // real name
+    char  *pw_dir;      // home directory
+    char  *pw_shell;    // shell program
 };
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 #if (USESVID) || (USEXOPENEXT)
 extern void           setpwent(void);
@@ -27,7 +27,7 @@ extern struct passwd *getpwent(void);
 #if (USESVID)
 extern struct passwd *fgetpwent(FILE *stream);
 extern int             putpwent(const struct passwd *__restrict passwd,
-								FILE *__restrict fp);
+                                FILE *__restrict fp);
 #endif
 extern struct passwd *getpwuid(uid_t uid);
 extern struct passwd *getpwnam(const char *name);
@@ -58,7 +58,7 @@ extern int fgetpwent_r(FILE *__restrict stream,
 extern int getpw(uid_t uid, char *buf);
 #endif
 
-#endif /* !__KERNEL__ */
+#endif /* !__kernel__ */
 
 #endif /* __PWD_H__ */
 

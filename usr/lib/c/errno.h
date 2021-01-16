@@ -11,5 +11,5 @@ int                             errno;       /* Not really declared this way; se
 #   include <sys/zen/errno.h>
 #endif
 
-#endof /* ERRNO_H */
+#endif /* ERRNO_H */
 

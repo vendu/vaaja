@@ -1,6 +1,6 @@
 /* zero c library terminal I/O interface */
 
-#if !defined(__KERNEL__)
+#if !defined(__kernel__)
 
 #ifndef __TERMIOS_H__
 #define __TERMIOS_H__
@@ -23,7 +23,7 @@ extern int     tcsendbreak(int, int);
 extern int     tcsetattr(int, int, const struct termios *term);
 #if (_BSD_SOURCE)
 void           cfmakeraw(struct termios *term);
-void           cfsetspeed(struct termios *term, speed_t speed); 
+void           cfsetspeed(struct termios *term, speed_t speed);
 #endif
 
 typedef unsigned char cc_t;
@@ -112,7 +112,7 @@ struct termios {
 #define CCEQ(val, c) ((c) == val && (val) != _POSIX_VDISABLE)
 #endif
 
-#endif /* !__KERNEL__ */
+#endif /* !__kernel__ */
 
 #endif /* __TERMIOS_H__ */
 

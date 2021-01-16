@@ -72,15 +72,15 @@ typedef __gnuc_va_list    va_list;
 #elif defined(_MSC_VER)
 #include <va_list.h>
 /* courtesy of Microsoft */
-#define _INTSIZEOF(n)	  ((sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1))
-#define va_start(ap,v)	  (ap = (va_list)&v + _INTSIZEOF(v))
-#define va_arg(ap,t)	  (*(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
-#define va_end(ap)	  (ap = (va_list)0)
+#define _INTSIZEOF(n)     ((sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1))
+#define va_start(ap,v)    (ap = (va_list)&v + _INTSIZEOF(v))
+#define va_arg(ap,t)      (*(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
+#define va_end(ap)    (ap = (va_list)0)
 #elif defined(__x86_64__) || defined(__amd64__)
-#include <x86-64/stdarg.h>
+#include <bsp/x86-64/stdarg.h>
 #elif ((defined(__i386__) || defined(__i486__)                          \
         || defined(__i386__) || defined(__i486__)))
-#include <ia32/stdarg.h>
+#include <bsp/ia32/stdarg.h>
 #endif /* compiler */
 
 #if defined(__VARARGS_H__)

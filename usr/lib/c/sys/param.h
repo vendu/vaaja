@@ -1,7 +1,7 @@
 #ifndef __SYS_PARAM_H__
 #define __SYS_PARAM_H__
 
-#include <zero/trix.h>
+#include <env/trix.h>
 
 /* BSD names for some <limits.h> values */
 #define NBBY          8
