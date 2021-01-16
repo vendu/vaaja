@@ -1,0 +1,4 @@
+export TARGETS="test-velho"
+export SOURCES="test-velho bit bit-global"
+export INCLUDES="-I. -I.."
+

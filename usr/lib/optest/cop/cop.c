@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <env/prof.h>
 
 /*
  * NOTES: if anyone can find a good way to deduce loop overhead please let me
@@ -9,8 +10,6 @@
 
 int64_t       tickoverhead;
 unsigned long clkoverhead;
-
-#include <zero/prof.h>
 
 #define PROF_ITERATIONS 524288
 

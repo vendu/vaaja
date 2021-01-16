@@ -1,9 +1,8 @@
-I compiled this with
+To compile, do
 
-	gcc -O0 -Wall -o cop cop.c
-	gcc -O0 -Wall -o fop fop.c
+        ./build.sh
 
-Make sure to turn compiler optimizations off. :)
+Make sure compiler optimizations are left off. :)
 
 I don't think it's a good idea to enable compiler optimization as this would
 very likely break the tests; I don't want to actually do anything real with
