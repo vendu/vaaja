@@ -13,9 +13,9 @@
 #include <sparc/float.h>
 #endif
 
-#define FLT_RADIX           2
-#define DBL_RADIX           FLT_RADIX
-#define LDBL_RADIX          FLT_RADIX
+#define FLT_RADIX  2
+#define DBL_RADIX  FLT_RADIX
+#define LDBL_RADIX FLT_RADIX
 
 /*
  * values for FLT_ROUNDS
@@ -25,10 +25,10 @@
  *  2 - toward positive infinity (FE_UPWARD)
  *  3 - toward negative infinity (FE_DOWNWARD)
  */
-#define FLT_ROUNDS          fegetround()
+#define FLT_ROUNDS  fegetround()
 /* TODO: fix DBL_ROUNDS and LDBL_ROUNDS */
-#define DBL_ROUNDS          FLT_ROUNDS
-#define LDBL_ROUNDS         FLT_ROUNDS
+#define DBL_ROUNDS  FLT_ROUNDS
+#define LDBL_ROUNDS FLT_ROUNDS
 
 /*
  * FIXME
@@ -49,28 +49,28 @@
 #undef DBL_TRUE_MIN
 #undef LDBL_TRUE_MIN
 /* *_DECIMAL_DIG come from <bits/ieee754.h> */
-#define FLT_HAS_SUBNORM     __FLT_HAS_DENORM__
-#define DBL_HAS_SUBNORM     __DBL_HAS_DENORM__
-#define LDBL_HAS_SUBNORM    __LDBL_HAS_DENORM__
+#define FLT_HAS_SUBNORM  __FLT_HAS_DENORM__
+#define DBL_HAS_SUBNORM  __DBL_HAS_DENORM__
+#define LDBL_HAS_SUBNORM __LDBL_HAS_DENORM__
 
 /* fixes for some systems/compilers */
 #if defined(__GNUC__) || defined(__clang__)
 
 #if !defined(FLT_TRUE_MIN) && defined(__FLT_HAS_DENORM__)
-#define FLT_TRUE_MIN        __FLT_DENORM_MIN__
+#define FLT_TRUE_MIN    __FLT_DENORM_MIN__
 #endif /* denormal float numbers */
 
 #if !defined(DBL_TRUE_MIN) && defined(__DBL_HAS_DENORM__)
-#define DBL_TRUE_MIN        __DBL_DENORM_MIN__
+#define DBL_TRUE_MIN    __DBL_DENORM_MIN__
 #endif /* denormal double numbers */
 
 #if !defined(LDBL_TRUE_MIN) && defined(__LDBL_HAS_DENORM__)
-#define LDBL_TRUE_MIN       __LDBL_DENORM_MIN__
+#define LDBL_TRUE_MIN   __LDBL_DENORM_MIN__
 #endif /* denormal long double numbers */
 
-#endif /* defined(__GNUC__) || defined(__clang__) */
+#endif /* __GNUC__ || __clang__ */
 
-#endif /* defined(__STDC_VERSION__) && (__STDC_VERSION >= 201112L) */
+#endif /* C11 */
 
 #endif /* __FLOAT_H__ */
 
