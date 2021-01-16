@@ -60,8 +60,10 @@ typedef int16_t                 gfxpix444;
                                  | ((r) << GFX_RED_OFS)                \
                                  | ((g) << GFX_GREEN_OFS)              \
                                  | ((b) << GFX_BLUE_OFS))
+#if 0
 #define gfxmkpix_p(dest, a, r, g, b)                                   \
     ((dest) = gfxmkpix(a, r, g, b))
+#endif
 #define gfxsetpix_p(p, a, r, g, b)                                     \
     (((struct gfxpix32 *)(ptr))->alpha = (a),                          \
      ((struct gfxpix32 *)(ptr))->red = (r),                            \
@@ -139,16 +141,21 @@ typedef int16_t                 gfxpix444;
                                            GFX_RGB444_BLUE_MASK,        \
                                            GFX_RGB444_BLUE_SHIFT))
 
+#define GFX_COPY_ALPHA          256
 #define gfxsetpix32_p(pix, ptr, aval)                                   \
     do {                                                                \
-        gfxpix32         _pix = (pix);                                  \
-        struct gfxpix32 *_src = (struct gfxpix32 *)&_pix;               \
-        struct gfxpix32 *_dest = (struct gfxpix32 *)(ptr);              \
+        gfxpix32         __pix = (pix);                                 \
+        struct gfxpix32 *__src = (struct gfxpix32 *)&__pix;             \
+        struct gfxpix32 *__dest = (struct gfxpix32 *)(ptr);             \
                                                                         \
-        _dest->red = gfxgetred_p(_src);                                 \
-        _dest->green = gfxgetgreen_p(_src);                             \
-        _dest->blue = gfxgetblue_p(_src);                               \
-        _dest->alpha = (aval);                                          \
+        __dest->red = __src->red;                                       \
+        __dest->green = __src->green;                                   \
+        __dest->blue = __src->blue;                                     \
+        if ((aval) == GFX_COPY_ALPHA) {                                 \
+            __dest->alpha = __src->alpha;                               \
+        } else {                                                        \
+            __dest->alpha = (aval);                                     \
+        }                                                               \
     } while (0)
 
 #endif /* __GFX_RGB_H__ */

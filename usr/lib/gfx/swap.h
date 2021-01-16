@@ -1,8 +1,22 @@
 #ifndef __GFX_SWAP_H__
 #define __GFX_SWAP_H__
 
-#include <mach/param.h>
 #include <stdint.h>
+#include <endian.h>
+#include <mach/param.h>
+#include <gfx/argb.h>
+
+#if (__BYTE_ORDER == __BIG_ENDIAN)
+#define gfxswap16(u)            bswap_16(u)
+#define gfxswap32(u)            bswap_32(u)
+#define gfxswap64(u)            bswap_64(u)
+#else
+#define gfxswap16(u)            (u)
+#define gfxswap32(u)            (u)
+#define gfxswap64(u)            (u)
+#endif
+
+extern uint8_t                  __bitswaptable[256];
 
 #if defined(__HAVE_BYTESWAP_H__)
 
@@ -30,21 +44,13 @@
 
 #endif
 
-#include <gfx/argb.h>
-
-#if (WORD_SIZE == 4)
-#   define bswapu(u) bswap_32(u)
-#elif (WORD_SIZE == 8)
-#   define bswapu(u) bswap_64(u)
+#if defined(GFX_64_BIT_PROTOCOL)
+#   define gfxswapproto(u)      gfxswap64(u)
+#elif defined(GFX_32_BIT_PROTOCOL)
+#   define gfxswapproto(u)      gfxswap32(u)
 #endif
 
-#if (_GFX_64_BIT_PROTOCOL)
-#   define bswapproto(u) bswap_64(u)
-#else
-#   define bswapproto(u) bswap_32(u)
-#endif
-
-#define bswapargb(u) bswap_32(u)
+#define bswapargb(u) gfxswap32(u)
 
 #define bswaprgb(p)                                                     \
     do {                                                                \
