@@ -12,12 +12,6 @@ struct memglob                  g_mem C_ALIGNED(MACH_PAGE_SIZE);
 C_THREADLOCAL struct memtls    *t_memtls;
 struct tabhashtab              *g_memhashbuf;
 
-#define memblkslabsize(qid)                                             \
-    (((qid) <= MEM_BLK_MID_QUEUE_MIN)                                   \
-     ? (MEM_BLK_MIN_SLAB >> 2)                                          \
-     : (((qid) <= MEM_BLK_BIG_QUEUE_MIN)                                \
-        ? (MEM_BLK_MID_SLAB >> 1)                                       \
-        : MEM_BLK_BIG_SLAB))
 static void
 meminitblktabs(struct memglob *mem)
 {
@@ -39,12 +33,6 @@ meminitblktabs(struct memglob *mem)
     return;
 }
 
-#define memrunslabsize(qid)                                             \
-    (((qid) < MEM_RUN_MID_QUEUE_MIN)                                    \
-     ? MEM_RUN_MIN_SLAB                                                 \
-     : (((qid) < MEM_RUN_BIG_QUEUE_MIN)                                 \
-        ? MEM_RUN_MID_SLAB                                              \
-        : MEM_RUN_BIG_SLAB))
 static void
 meminitruntabs(struct memglob *mem)
 {

@@ -1,0 +1,5 @@
+- toolkit for developing xorg applications
+- SDL support
+- other interfaces such as zero framebuffer/desktop later
+  - opengl, enlightenment, wayland, ...? :)
+

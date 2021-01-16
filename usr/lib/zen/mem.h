@@ -135,6 +135,19 @@ void  * memresize(void *ptr, size_t size, size_t align, long flg);
              MACH_PAGE_SIZE)
 #define memrunbufsize()         (membufsize())
 #define membigbufsize()         (membufsize())
+#define memblkslabsize(qid)                                             \
+    (((qid) <= MEM_BLK_MID_QUEUE_MIN)                                   \
+     ? (MEM_BLK_MIN_SLAB >> 2)                                          \
+     : (((qid) <= MEM_BLK_BIG_QUEUE_MIN)                                \
+        ? (MEM_BLK_MID_SLAB >> 1)                                       \
+        : MEM_BLK_BIG_SLAB))
+
+#define memrunslabsize(qid)                                             \
+    (((qid) < MEM_RUN_MID_QUEUE_MIN)                                    \
+     ? MEM_RUN_MIN_SLAB                                                 \
+     : (((qid) < MEM_RUN_BIG_QUEUE_MIN)                                 \
+        ? MEM_RUN_MID_SLAB                                              \
+        : MEM_RUN_BIG_SLAB))
 
 #define membufpagenum(buf, ptr)                                         \
     (((uintptr_t)(ptr) - (uintptr_t)(buf)->adr) >> MACH_PAGE_SIZE_LOG2)

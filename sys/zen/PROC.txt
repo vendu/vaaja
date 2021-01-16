@@ -1,6 +1,0 @@
-Zen Process Abstraction
------------------------
-
-Process Memory Layout
----------------------
-
