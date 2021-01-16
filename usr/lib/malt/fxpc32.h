@@ -2,7 +2,7 @@
 #define __MATH_FXPC32_H__
 
 /*
- * velho implementation of the CORDIC-algorithm
+ * vaaja implementation of fixed-point math for the CORDIC algorithm */
  * REFERENCE: https://www.drdobbs.com/database/implementing-cordic-algorithms/184408428
  */
 
