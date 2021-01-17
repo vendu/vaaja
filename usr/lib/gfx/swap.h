@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <endian.h>
 #include <mach/param.h>
-#include <gfx/argb.h>
+#include <gfx/rgb.h>
 
 #if (__BYTE_ORDER == __BIG_ENDIAN)
 #define gfxswap16(u)            bswap_16(u)

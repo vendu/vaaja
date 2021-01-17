@@ -9,7 +9,7 @@
 #define ZEN_GFX_API     2
 struct zendeck {
     long        api;
-    struct evq  evq;
+    struct ev  *evq;
     long        pixfmt;
     void       *fb;
     long        w;

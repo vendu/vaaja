@@ -8,9 +8,10 @@
 #if !defined(__size_t_defined)
 #include <share/size.h>
 #endif
-#if (_XOPEN_SOURCE) || (__STDC__)
+#if defined(_XOPEN_SOURCE) || (__STDC__)
 #if defined(__GNUC__)
 #include <stdarg.h>
+#define va_list __builtin_va_list
 typedef va_list __stdio_va_list;
 #endif
 #endif

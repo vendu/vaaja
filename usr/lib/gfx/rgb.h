@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <endian.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
 
 #define GFX_ARGB32              1
@@ -22,10 +22,10 @@
 
 #endif /* __BYTE_ORDER */
 
-typedef int32_t                 gfxpix32;
-typedef int16_t                 gfxpix555;
-typedef int16_t                 gfxpix565;
-typedef int16_t                 gfxpix444;
+typedef int32_t                 gfxargb32;
+typedef int16_t                 gfxrgb555;
+typedef int16_t                 gfxrgb565;
+typedef int16_t                 gfxrgb444;
 
 #define GFX_BLACK               0x00000000
 #define GFX_WHITE               0xffffffff

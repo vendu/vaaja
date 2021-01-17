@@ -1,5 +1,5 @@
 #ifndef GFX_API_H
-#ifndef GFX_API_H
+#define GFX_API_H
 
 #include <gfx/types.h>
 #include <gfx/rgb.h>

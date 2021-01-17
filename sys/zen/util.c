@@ -5,7 +5,7 @@
 #include <env/trix.h>
 #include <mach/param.h>
 #include <mach/types.h>
-//#include <zen/zen.h>
+#include <zen/sys.h>
 
 //#include <kern/dev/chr/con.h>
 //#include <kern/io/drv/chr/con.h>

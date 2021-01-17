@@ -1,5 +1,5 @@
-#ifndef ZEN_CONF_H
-#define ZEN_CONF_H
+#ifndef SYS_ZEN_CONF_H
+#define SYS_ZEN_CONF_H
 
 #define ZEN_GFX_DECK
 #define ZEN_TTY
@@ -46,5 +46,5 @@
 #define ZEN_USR_STK_MAX         (32 * MACH_PAGE_SIZE)
 #define ZEN_SYS_STK_SIZE        MACH_PAGE_SIZE
 
-#endif /* ZEN_CONF_H */
+#endif /* SYS_ZEN_CONF_H */
 

@@ -8,8 +8,6 @@ typedef uint32_t                m_intrdesc_t;
 typedef uint32_t                m_pagedesc_t;
 typedef int32_t                 m_reg_t;
 typedef uint32_t                m_ureg_t;
-typedef int64_t                 m_long_t;
-typedef uint64_t                m_ulong_t;
 typedef int32_t                 m_word_t;
 typedef uint32_t                m_uword_t;
 typedef int16_t                 m_half_t;
@@ -25,6 +23,12 @@ typedef uint64_t                m_ulong_t;
 typedef int32_t                 m_long_t;
 typedef uint32_t                m_ulong_t;
 #endif
+
+struct m_trapframe {
+    m_word_t                    pc;
+    m_word_t                    msw;
+    m_word_t                    usp;
+};
 
 #endif /* MACH_V0_TYPES_H */
 

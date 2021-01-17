@@ -41,14 +41,14 @@ struct m_segregs {
 
 /* interrupt return frame for iret - 20 bytes */
 struct m_trapframe {
-    int32_t eip;	// old instruction pointer
-    int16_t cs;		// code segment selector
-    int16_t pad1;	// pad to 32-bit boundary
-    int32_t eflags;	// machine status word
+    int32_t eip;    // old instruction pointer
+    int16_t cs;     // code segment selector
+    int16_t pad1;   // pad to 32-bit boundary
+    int32_t eflags; // machine status word
     /* present in case of privilege transition */
-    int32_t uesp;	// user stack pointer
-    int16_t uss;	// user stack segment selector
-    int16_t pad2;	// pad to 32-bit boundary
+    int32_t uesp;   // user stack pointer
+    int16_t uss;    // user stack segment selector
+    int16_t pad2;   // pad to 32-bit boundary
 };
 
 /* task state segment */

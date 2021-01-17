@@ -28,15 +28,15 @@
 #define V0_IRQ_TRAP_BIT         0x20
 #define V0_IRQ_TRAP(i)          (V0_IRQ_TRAP_BIT | (i))
 #define V0_IRQ_0x00_TRAP        V0_IRQ_TRAP(0x00)   // interrupt 0  - TMR
-#define V0_IRQ_0x01_TRAP        V0_IRQ_TRAP(0x01)   // interrupt 1  - AUD
-#define V0_IRQ_0x02_TRAP        V0_IRQ_TRAP(0x02)   // interrupt 2  - VID
-#define V0_IRQ_0x03_TRAP        V0_IRQ_TRAP(0x03)   // interrupt 3  - KBD
-#define V0_IRQ_0x04_TRAP        V0_IRQ_TRAP(0x04)   // interrupt 4  - PTR
-#define V0_IRQ_0x05_TRAP        V0_IRQ_TRAP(0x05)   // interrupt 5  - HID
+#define V0_IRQ_0x01_TRAP        V0_IRQ_TRAP(0x01)   // interrupt 3  - KBD
+#define V0_IRQ_0x02_TRAP        V0_IRQ_TRAP(0x02)   // interrupt 4  - PTR
+#define V0_IRQ_0x03_TRAP        V0_IRQ_TRAP(0x03)   // interrupt 5  - HID
+#define V0_IRQ_0x04_TRAP        V0_IRQ_TRAP(0x04)   // interrupt 1  - AUD
+#define V0_IRQ_0x05_TRAP        V0_IRQ_TRAP(0x05)   // interrupt 2  - VID
 #define V0_IRQ_0x06_TRAP        V0_IRQ_TRAP(0x06)   // interrupt 6  - NET
 #define V0_IRQ_0x07_TRAP        V0_IRQ_TRAP(0x07)   // interrupt 7  - DSK
 #define V0_IRQ_0x08_TRAP        V0_IRQ_TRAP(0x08)   // interrupt 8  - OPT
-#define V0_IRQ_0x09_TRAP        V0_IRQ_TRAP(0x09)   // interrupt 9  - USB
+#define V0_IRQ_0x09_TRAP        V0_IRQ_TRAP(0x09)   // interrupt 9  - BUS
 #define V0_IRQ_0x0a_TRAP        V0_IRQ_TRAP(0x0a)   // interrupt 10 - DEV
 #define V0_IRQ_0x0b_TRAP        V0_IRQ_TRAP(0x0b)   // interrupt 11
 #define V0_IRQ_0x0c_TRAP        V0_IRQ_TRAP(0x0c)   // interrupt 12

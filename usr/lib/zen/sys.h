@@ -1,14 +1,14 @@
 #ifndef ZEN_SYS_H
 #define ZEN_SYS_H
 
-#include <sys/zen/zen.h>
+#include <sys/zen/api.h>
 #include <sys/zen/sched/task.h>
 
 #define ZEN_PANIC_REBOOT    (1 << 0)
 
 struct zensys {
-    struct zencpu		cputab[ZEN_MAX_CPUS];
-    struct zenproc	       *proctab[ZEN_MAX_TASKS];
+    struct zencpu               cputab[ZEN_MAX_CPUS];
+    struct zenproc             *proctab[ZEN_MAX_TASKS];
     struct zentask             *systasktab[ZEN_SYS_THREADS];
     struct zentask             *tasktab[ZEN_MAX_TASKS];
     m_page_t                    pagedir[MACH_PAGE_DIR_ITEMS];

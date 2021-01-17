@@ -4,8 +4,8 @@
 #include <env/cdefs.h>
 #include <sys/zen/errno.h>
 
-#define kseterrno(e)  (*__errnoloc() = (e))
-#define kclrerrno(e)  (*__errnoloc() = 0)
+#define kseterrno(e)            (*__errnoloc() = (e))
+#define kclrerrno(e)            (*__errnoloc() = 0)
 
 #if ((!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)        \
       || defined(__STDC_NO_THREADS__))                                  \
@@ -14,12 +14,12 @@
 #include <pthread.h>
 
 const char                     *const sys_errlist[];
-int                             sys_nerr;
-int                             errno;       /* Not really declared this way; see errno(3) */
+const int                       sys_nerr = NERRNO;   /* number of specified codes */
+int                             errno;      /* see errno(3) */
 
-static pthread_once_t   __once = PTHREAD_ONCE_INIT;
-static pthread_key_t    __key;
-int                    *__zenerrno;
+static pthread_once_t           __once = PTHREAD_ONCE_INIT;
+static pthread_key_t            __key;
+int                            *__errno;
 
 static void
 __errnoinit(void)
@@ -40,11 +40,11 @@ __errnoloc(void)
         ptr = malloc(sizeof(int));
         if (ptr) {
             pthread_setspecific(__key, ptr);
-            __zenerrno = ptr;
+            __errno = ptr;
         }
     }
 
-    return __zenerrno;
+    return __errno;
 }
 
 #else
@@ -52,8 +52,8 @@ __errnoloc(void)
 C_CONST int *
 __errnoloc(void)
 {
-    int    *ptr = &__zenerrno;
-
-    return ptr;
+    return __errno;
 }
+
+#endif
 

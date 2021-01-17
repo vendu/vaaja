@@ -149,28 +149,6 @@ long   zenpeekev(struct zenev *ev, long mask);
 #define ZEN_DISCARD_INPUT       0x04000000 // discard pending user input
 #define ZEN_DISCARD_OUTPUT      0x02000000
 
-#if defined(__zen__)
-
-#if !defined(RING_ITEM)
-#define RING_ITEM  struct zenev
-#endif
-#if !defined(RING_INVAL)
-#define RING_INVAL (RING_ITEM){ 0 }
-#endif
-#if !defined(MALLOC)
-#define MALLOC(sz) kmalloc(sz)
-#endif
-
-#else /* !defined(__zen__) */
-
-#define RING_ITEM  struct zenev
-#define RING_INVAL NULL
-#define MALLOC(sz) malloc(sz)
-
-#include <zen/ring.h>
-
-#endif /* defined(__zen__) */
-
 /* event interface */
 
 /* keyboard events */
@@ -346,7 +324,29 @@ struct zenev {
 void    zengetev(struct zenev *evq, struct zenev *ev, long flg);
 long    zenputev(struct zenev *evq, struct zenev *ev, long flg);
 void    zensyncev(struct zenev *evq, long flg);
-long    zenskiphid(struct zenevq *evq, long len);
+long    zenskiphid(struct zenev *evq, long len);
+
+#if defined(__zen__) && defined(__kernel__)
+
+#if !defined(RING_ITEM)
+#define RING_ITEM  struct zenev
+#endif
+#if !defined(RING_INVAL)
+#define RING_INVAL (RING_ITEM){ 0 }
+#endif
+#if !defined(MALLOC)
+#define MALLOC(sz) kmalloc(sz)
+#endif
+
+#else /* !defined(__zen__) */
+
+#define RING_ITEM  struct zenev
+#define RING_INVAL (RING_ITEM){ 0 }
+#define MALLOC(sz) malloc(sz)
+
+#endif /* defined(__zen__) */
+
+#include <algo/ring.h>
 
 #endif /* SYS_ZEN_EV_H */
 
