@@ -1,55 +1,56 @@
 #ifndef __MJOLNIR_CHR_H__
 #define __MJOLNIR_CHR_H__
 
-struct                          objchr;
-void                            chrinit(struct objchr *chr,
-                                        long cat,
-                                        const char *name);
+void                                    chrinit(struct objchr *chr,
+                                                long cat,
+                                                const char *name);
+
+//extern struct chrcatname                chrcatnames[MJOLNIR_MAX_CATEGORY + 1];
 
 /* characters */
-#define CHR_PLAYER              '@'
-#define CHR_ANT                 'a'
-#define CHR_SOLDIER_ANT         'A'
-#define CHR_BEE                 'b'
-#define CHR_BEE_QUEEN           'B'
-#define CHR_CYBORG              'c'
-#define CHR_DOG                 'd'
-#define CHR_ALIEN               'e'
-#define CHR_GHOUL               'g'
-#define CHR_HUMAN               'H'
-#define CHR_ORACLE              'O'
-#define CHR_RAT                 'r'
-#define CHR_SHOPKEEPER          '£'
-#define CHR_UNICORN             'u'
-#define CHR_VAMPIRE             'v'
-#define CHR_WEREWOLF            'w'
-#define CHR_WIZARD              'W'
-#define CHR_ZOMBIE              'Z'
+#define MJOLNIR_CHR_PLAYER              '@'
+#define MJOLNIR_CHR_ANT                 'a'
+#define MJOLNIR_CHR_SOLDIER_ANT         'A'
+#define MJOLNIR_CHR_BEE                 'b'
+#define MJOLNIR_CHR_BEE_QUEEN           'B'
+#define MJOLNIR_CHR_CYBORG              'c'
+#define MJOLNIR_CHR_DOG                 'd'
+#define MJOLNIR_CHR_ALIEN               'e'
+#define MJOLNIR_CHR_GHOUL               'g'
+#define MJOLNIR_CHR_HUMAN               'H'
+#define MJOLNIR_CHR_ORACLE              'O'
+#define MJOLNIR_CHR_RAT                 'r'
+#define MJOLNIR_CHR_SHOPKEEPER          '£'
+#define MJOLNIR_CHR_UNICORN             'u'
+#define MJOLNIR_CHR_VAMPIRE             'v'
+#define MJOLNIR_CHR_WEREWOLF            'w'
+#define MJOLNIR_CHR_WIZARD              'W'
+#define MJOLNIR_CHR_ZOMBIE              'Z'
 
 /* special characters */
-#define CHR_FENRIS              'F'
-#define CHR_KARA                'K'
-#define CHR_THOR                'T'
-#define CHR_UKKO                'U'
-#define CHR_DRACULA             'V'
-#define CHR_LADY_X              'X'
+#define MJOLNIR_CHR_FENRIS              'F'
+#define MJOLNIR_CHR_KARA                'K'
+#define MJOLNIR_CHR_THOR                'T'
+#define MJOLNIR_CHR_UKKO                'U'
+#define MJOLNIR_CHR_DRACULA             'V'
+#define MJOLNIR_CHR_LADY_X              'X'
 
 /* character flags */
-#define CHR_BLIND               (1 << 0)    // character blind
-#define CHR_LEVITATING          (1 << 1)    // character levitating
-#define CHR_INVISIBLE           (1 << 2)    // character invisible
-#define CHR_STARVING            (1 << 3)    // character starving
-#define CHR_DROWNING            (1 << 4)    // character drowning
-#define CHR_SINKING             (1 << 5)    // character sinking (quicksand)
-#define CHR_POISONED            (1 << 5)    // ghoul-bite or other poisoning
-#define CHR_DRUNK               (1 << 6)    // character drunk
-#define CHR_HIGH                (1 << 7)    // character is high
+#define MJOLNIR_CHR_BLIND               (1 << 0)    // character blind
+#define MJOLNIR_CHR_LEVITATING          (1 << 1)    // character levitating
+#define MJOLNIR_CHR_INVISIBLE           (1 << 2)    // character invisible
+#define MJOLNIR_CHR_STARVING            (1 << 3)    // character starving
+#define MJOLNIR_CHR_DROWNING            (1 << 4)    // character drowning
+#define MJOLNIR_CHR_SINKING             (1 << 5)    // character sinking (quicksand)
+#define MJOLNIR_CHR_POISONED            (1 << 5)    // ghoul-bite or other poisoning
+#define MJOLNIR_CHR_DRUNK               (1 << 6)    // character drunk
+#define MJOLNIR_CHR_HIGH                (1 << 7)    // character is high
 
 /* speed values */
-#define CHR_SLOW                (-1)        // slow speed
-#define CHR_FROZEN              0           // character can't move
-#define CHR_NORMAL              1           // normal speed
-#define CHR_FAST                2           // character is moving faster
+#define MJOLNIR_CHR_SLOW                (-1)        // slow speed
+#define MJOLNIR_CHR_FROZEN              0           // character can't move
+#define MJOLNIR_CHR_NORMAL              1           // normal speed
+#define MJOLNIR_CHR_FAST                2           // character is moving faster
 
 #endif /* __MJOLNIR_CHR_H__ */
 

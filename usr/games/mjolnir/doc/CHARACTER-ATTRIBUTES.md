@@ -51,25 +51,3 @@ The score will be added to the final spell strength.
 - the player may either give their character a name, choose from a list of names
   or let the game pick a name at random.
 
-## List of Default Names
-
-- storm
-- toor
-- ice
-- hak
-- loop
-- flash
-- shine
-- shadow
-- dawn
-- pixel
-- wizard
-- mage
-- shaman
-- thunder
-- fiber
-- fury
-- rage
-- kaos
-- trik
-

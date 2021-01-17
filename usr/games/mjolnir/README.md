@@ -1,26 +1,30 @@
-# mjolnir roadmap
+# Mjolnir Roadmap
 
-## code modules
+## Code modules
 
-### chr         - character types and classes
+### conf                - compile-time options for building the game
 
-### cw          - core war subgame base implementation
+### chr                 - character types and classes
 
-### d20         - routines for rolling virtual dice
+### combat              - close and element combat
 
-### deice       - deice subgame
+### cw                  - core war subgame base implementation
 
-### dng         - dungeon generator
+### d20                 - routines for rolling virtual dice
 
-### map         - map generator
+### dng                 - dungeon generator
 
-### rc          - core war redcode support
+### item                - items
 
-### scr         - screen/display support
+### gen/map             - map generator
 
-### sdl         - SDL2 user interface
+### gen/dng             - dungeon generator
 
-### tty         - terminal user interface (optionally with ncurses)
+### scr                 - screen/display support
 
-### util        - miscellaneous routines
+### sdl                 - SDL2 user interface
+
+### tty                 - terminal user interface (optionally with ncurses)
+
+### util                - miscellaneous routines
 

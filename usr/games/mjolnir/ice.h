@@ -11,7 +11,7 @@ void                            iceinitchr(struct objchr *chr,
 struct ice {
     long                        xp;         // program experience
     long                        lvl;        // program level
-    long                        basehp;     // program hitpoint increment
+    //    long                        basehp;     // program hitpoint increment
     long                        maxhp;      // program max # of hitpoints
     long                        nhp;        // program current # of hitpoints
     long                        atk;        // basic strength of attack
