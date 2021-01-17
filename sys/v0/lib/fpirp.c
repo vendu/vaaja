@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <deck/lib/cdefs.h>
-#include <deck/lib/fpirp.h>
-#include <deck/lib/float.h>
+#include <env/cdefs.h>
+#include <v0/lib/fpirp.h>
+#include <v0/lib/float.h>
 
 /* Newton-Raphson iterator */
 /* x + x * (1 - x * xd) */

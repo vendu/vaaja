@@ -3,26 +3,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <deck/lib/cdefs.h>
-#include <deck/lib/mach.h>
-#include <deck/lib/bitmagic.h>
-#include <deck/lib/lk.h>
-#include <deck/lib/ht.h>
+#include <v0/lib/cdefs.h>
+#include <v0/lib/mach.h>
+#include <v0/lib/bitmagic.h>
+#include <v0/lib/lk.h>
+#include <v0/lib/ht.h>
 
-struct deckhtqueue            **deckhttab;
+struct v0htqueue              **v0httab;
 
 static void *
-deckinitht(long nslot)
+v0initht(long nslot)
 {
     void                       *ptr;
 
     if (nslot <= MACH_PAGE_SIZE / CHAR_BIT) {
         nslot = MACH_PAGE_SIZE / CHAR_BIT;
     }
-    ptr = calloc(nslot, sizeof(struct deckhtqueue));
+    ptr = calloc(nslot, sizeof(struct v0htqueue));
     if (!ptr) {
         fprintf(stderr, "%s: %s failed to allocated %ld bytes\n",
-                __FILE__, __func__, nslot * sizeof(struct deckhtqueue));
+                __FILE__, __func__, nslot * sizeof(struct v0htqueue));
 
         exit(1);
     }
@@ -30,22 +30,22 @@ deckinitht(long nslot)
     return ptr;
 }
 
-#define DECK_HT_REMOVE          (-1L)
-#define DECK_HT_SEARCH          (0L)
-#define DECK_HT_ADD             (1L)
+#define V0_HT_REMOVE            (-1L)
+#define V0_HT_SEARCH            (0L)
+#define V0_HT_ADD               (1L)
 
-#define deckfreeht(ptr)         free((void *)(ptr))
+#define v0freeht(ptr)           free((void *)(ptr))
 long
-deckhtfind(struct deckhtqueue ** C_RESTRICT tab,
+v0htfind(struct v0htqueue ** C_RESTRICT tab,
            uintptr_t val,
            long op)
 {
     uint32_t                        key = tmhash32(val);
-    volatile struct deckhtitem     *item;
-    volatile struct deckhtqueue    *head = NULL;
-    volatile struct deckhtqueue    *prev = NULL;
-    volatile struct deckhtqueue    *next = NULL;
-    volatile struct deckhtqueue    *ptr = tab[key];
+    volatile struct v0htitem       *item;
+    volatile struct v0htqueue      *head = NULL;
+    volatile struct v0htqueue      *prev = NULL;
+    volatile struct v0htqueue      *next = NULL;
+    volatile struct v0htqueue      *ptr = tab[key];
     uintptr_t                       mask;
     size_t                          n;
     size_t                          nleft;
@@ -103,14 +103,14 @@ deckhtfind(struct deckhtqueue ** C_RESTRICT tab,
                     break;
             }
             if (val) {
-                if (op == DECK_HT_SEARCH || DECK_HT_ADD) {
+                if (op == V0_HT_SEARCH || V0_HT_ADD) {
                     m_unlkbit((volatile m_atomic_t *)&tab[key],
                               M_ADR_LK_BIT_OFS);
 
                     return val;
                 } else {
-                    /* op == DECK_HT_REMOVE */
-                    n = (struct deckhtitem *)val - &ptr->items[0];
+                    /* op == V0_HT_REMOVE */
+                    n = (struct v0htitem *)val - &ptr->items[0];
                     if (n == 1) {
                         prev = ptr->prev;
                         next = ptr->next;
@@ -122,7 +122,7 @@ deckhtfind(struct deckhtqueue ** C_RESTRICT tab,
                         if (next) {
                             next->prev = prev;
                         }
-                        deckfreeht(ptr);
+                        v0freeht(ptr);
                     } if (n < val - 1) {
                         val = tab[key]->items[n].val;
                         memcpy(&tab[key]->items[n],
@@ -145,50 +145,50 @@ deckhtfind(struct deckhtqueue ** C_RESTRICT tab,
 }
 
 long
-deckhtadd(struct deckhtqueue ** C_RESTRICT tab,
+v0htadd(struct v0htqueue ** C_RESTRICT tab,
           uintptr_t val)
 {
     uint32_t                        key = tmhash32(val);
-    volatile struct deckhtqueue    *ptr;
-    volatile struct deckhtqueue    *ptr1;
+    volatile struct v0htqueue      *ptr;
+    volatile struct v0htqueue      *ptr1;
     long                            ncur;
 
-    if (!deckhttab) {
-        deckhttab = deckinitht(DECK_HT_SLOTS);
+    if (!v0httab) {
+        v0httab = v0initht(V0_HT_SLOTS);
     }
     m_lkbit((volatile m_atomic_t *)&tab[key], M_ADR_LK_BIT_OFS);
     ptr1 = (void *)((uintptr_t)tab[key] & ~M_ADR_LK_BIT_OFS);
     if (!ptr1) {
-        ptr1 = calloc(DECK_HT_SLOTS, sizeof(struct deckhtqueue *));
+        ptr1 = calloc(V0_HT_SLOTS, sizeof(struct v0htqueue *));
         if (!ptr1) {
             fprintf(stderr, "%s: %s failed to allocated %u bytes\n",
                     __FILE__,
                     __func__,
-                    DECK_HT_SLOTS * sizeof(struct deckhtqueue *));
+                    V0_HT_SLOTS * sizeof(struct v0htqueue *));
 
             exit(1);
         }
         ptr1->ncur = 1;
-        ptr1->nmax = DECK_HT_QUEUE_ITEMS;
+        ptr1->nmax = V0_HT_QUEUE_ITEMS;
     } else {
-        while ((ptr1->next) && ptr1->next->ncur == DECK_HT_QUEUE_ITEMS) {
+        while ((ptr1->next) && ptr1->next->ncur == V0_HT_QUEUE_ITEMS) {
             ptr1 = ptr1->next;
         }
         if (ptr1->next) {
             ptr = ptr1->next;
         } else {
-            ptr = calloc(DECK_HT_SLOTS, sizeof(struct deckhtqueue *));
+            ptr = calloc(V0_HT_SLOTS, sizeof(struct v0htqueue *));
         }
         if (!ptr) {
             fprintf(stderr, "%s: %s failed to allocated %u bytes\n",
                     __FILE__,
                     __func__,
-                    DECK_HT_SLOTS * sizeof(struct deckhtqueue *));
+                    V0_HT_SLOTS * sizeof(struct v0htqueue *));
 
             exit(1);
         }
         ncur = ptr->ncur;
-        ptr->nmax = DECK_HT_QUEUE_ITEMS;
+        ptr->nmax = V0_HT_QUEUE_ITEMS;
         ncur++;
         ptr->ncur = ncur;
     }

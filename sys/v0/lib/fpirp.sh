@@ -1,4 +1,4 @@
 #! /bin/sh
 
-gcc -I../.. -O -o irp64 fpirp.c -lm
+gcc -I../.. -I../../../usr/lib -O -o irp64 fpirp.c -lm
 
