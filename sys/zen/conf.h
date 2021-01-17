@@ -4,7 +4,7 @@
 #define ZEN_GFX_DECK
 #define ZEN_TTY
 #define ZEN_VT
-#define ZEN_PIX_FORMAT  GFX_RGB444
+#define ZEN_PIX_FORMAT          GFX_RGB444
 
 #define ZEN_SIMULATION
 /* in simulation mode, th kernel runs on top of a system instead of being standalone */
@@ -44,7 +44,7 @@
 /* system parameters */
 #define ZEN_USR_STK_SIZE        (4 * MACH_PAGE_SIZE)
 #define ZEN_USR_STK_MAX         (32 * MACH_PAGE_SIZE)
-#define ZEN_SYS_STK_SIZE        (MACH_PAGE_SIZE)
+#define ZEN_SYS_STK_SIZE        MACH_PAGE_SIZE
 
 #endif /* ZEN_CONF_H */
 

@@ -1,6 +1,9 @@
 #ifndef SYS_ZEN_FS0_H
 #define SYS_ZEN_FS0_H
 
+#include <stdint.h>
+#include <env/cdefs.h>
+
 /* fs0 aims to be a somewhat-modernised version of berkeley ffs */
 
 #define ZEN_FS0                 1
@@ -38,22 +41,22 @@ typedef int64_t                 fs0time_t;
 #define ZEN_FS0_SYMLiNK_NODE    ZEN_VFS_SYMLINK_NODE    // symbolic link
 /* exactly 64 bytes */
 #define ZEN_FS0_BLK_TAB_SIZE    64
-struct fs0blktab {
+struct zenfs0blktab {
     fs0ino_t                    dir[ZEN_FS0_DIRECT_BLOCKS];     // direct blocks
     fs0ino_t                    indir[ZEN_FS0_INDIRECT_BLOCKS]; // indirect
 };
 
 /* exactly 64 bytes */
 #define ZEN_FS0_LINK_SIZE       64
-union fs0link {
-    struct fs0blktab            blktab;             // fs block book-keeping
+union zenfs0link {
+    struct zenfs0blktab         blktab;             // fs block book-keeping
     uint8_t                     name[ZEN_FS0_LINK_SIZE]; // CHR, BLK, FIFO, SOCK, LNK
 };
 
 /* struct fs0common is exactly 128 bytes and on-disk verbatim */
 #define ZEN_FS0_COMMON_SIZE     128
-struct fs0common {
-    fs0asize_t                  size;   // file size in bytes
+struct zenfs0common {
+    fs0size_t                   size;   // file size in bytes
     fs0size_t                   nblk;   // # of 1K blocks used
     fs0time_t                   atime;  // access time
     fs0time_t                   mtime;  // modification time
@@ -66,10 +69,10 @@ struct fs0common {
     fs0word_t                   gen;    // generation ID
     fs0ino_t                    meta;   // 0 or metadata inode ID
     fs0ino_t                    extatr; // 0 or extended attributes inode ID
-    union fs0link               link;   // block book-keeping or object name
+    union zenfs0link            link;   // block book-keeping or object name
 };
 
-struct fs0dirent {
+struct zenfs0dirent {
     fs0size_t                   ofs;            // 64-bit offset
     fs0ino_t                    ino;            // 32-bit inode number
     fs0half_t                   namelen;        // 16-bit length of name
