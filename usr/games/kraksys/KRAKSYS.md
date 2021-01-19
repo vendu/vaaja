@@ -23,93 +23,109 @@ The slots protected by the action cards are mainframes.
 
 each player gets the following items (first listed for 2-player sessions)
 
-- 8 mainframe cards
-- 8 pieces of your player/native element
+- 8 runners (of your native element)
 - up to 16 spell cards; D4 x frost, D4 x tornado, D4 x tsunami, D4 x quake
-- 2 teleport cards; teleport the attacking piece to a random location on the
-  board (roll X- and Y-coordinates with D8)
-- 2 thief cards; steal a [blindly-picked] card from an opponent's hand
-- 2 swap cards; exchange the swap card with a [blindly-picked] one from an
-  opponent's deck
-- 2 probe cards; identify opponent card on the board (turn it face-side up)
-- 2 trojan cards; try to infect/hijack the chosen attacker mainframe
-- 2 worm cards; try to hijack as many attacker mainframes as you desire as
-  long as the worm is alive or you control them all; this is where you can
-  use your heal cards
-- 2 emp cards; try to destroy a chosen attacker mainframe
-- D4 x heal cards
+- the following action cards
+  - 2 teleport cards; teleport the attacking piece to a random location on the
+    board (roll X- and Y-coordinates with D8)
+    - 2 thief cards; steal a [blindly-picked] card from an opponent's hand
+    - 2 swap cards; exchange the swap card with a [blindly-picked] one from an
+      opponent's deck
+      - 2 probe cards; identify opponent card on the board
+      (turn it face-side up)
+      - 2 trojan cards; try to infect/hijack a chosen mainframe of the attacker
+      - 2 worm cards; try to hijack as many attacker mainframes as you desire
+       as long as the worm is alive, you control them all, or you decide to
+       stop the invasion
+       - 2 emp cards; try to destroy a chosen attacker mainframe
+       - D8 x heal cards; these may be used to start a turn
 
 ## Board Layout
 
 The game board looks like this
 
-- 1P    - player 1 protection
+- 1P    - player 1 runner
 - 1A    - player 1 actions
-- 2P    - player 2 protection
+- 2P    - player 2 runner
 - 2A    - player 2 actions
-- 3P    - player 3 protection
+- 3P    - player 3 runner
 - 3A    - player 3 actions
-- 4P    - player 4 protection
+- 4P    - player 4 runner
 - 4A    - player 4 actions
 
-|Y\X | M3 | A3 | P3 | 1  | 2  | 3  | 4  | 5  | 6  | 7  | P4 | A4 | M4 |
+|Y\X | M3 | A3 | R3 | 1  | 2  | 3  | 4  | 5  | 6  | 7  | R4 | A4 | M4 |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:----
 | M1 | M3 |    |1M1 |1M2 |1M3 |1M4 |1M5 |1M6 |1M7 |1M8 |    |    |    |
 | A1 |    |    |1A1 |1A2 |1A3 |1A4 |1A5 |1A6 |1A7 |1A8 |    |    |    |
-| P1 |    |    |1P1 |1P2 |1P3 |1P4 |1P5 |1P6 |1P7 |1P8 |    |    |    |
-| 1  |3M1 |3A1 |3P1 |    |    |    |    |    |    |    |4P1 |4A1 |4M1 |
-| 2  |3M2 |3A2 |3P2 |    |    |    |    |    |    |    |4P2 |4A2 |4M2 |
-| 3  |3M3 |3A3 |3P3 |    |    |    |    |    |    |    |4P3 |4A3 |4M3 |
-| 4  |3M4 |3A4 |3P4 |    |    |    |    |    |    |    |4P4 |4A4 |4M4 |
-| 5  |3M5 |3A5 |3P5 |    |    |    |    |    |    |    |4P5 |4A5 |4M5 |
-| 6  |3M6 |3A6 |3P6 |    |    |    |    |    |    |    |4P6 |4A6 |4M6 |
-| 7  |3M7 |3A7 |3P7 |    |    |    |    |    |    |    |4P7 |4A7 |4M7 |
-| 8  |3M8 |3A8 |3P8 |    |    |    |    |    |    |    |4P8 |4A8 |4M8 |
-| P2 |    |    |2P1 |2P2 |2P3 |2P4 |2P5 |2P6 |2P7 |2P8 |    |    |    |
-| A2 |    |    |2A1 |2A2 |2A3 |2A4 |2A5 |2A6 |2A7 |2A8 |4P8 |2A9 |4M1 |
+| R1 |    |    |1R1 |1R2 |1R3 |1R4 |1R5 |1R6 |1R7 |1R8 |    |    |    |
+| 1  |3M1 |3A1 |3R1 |    |    |    |    |    |    |    |4R1 |4A1 |4M1 |
+| 2  |3M2 |3A2 |3R2 |    |    |    |    |    |    |    |4R2 |4A2 |4M2 |
+| 3  |3M3 |3A3 |3R3 |    |    |    |    |    |    |    |4R3 |4A3 |4M3 |
+| 4  |3M4 |3A4 |3R4 |    |    |    |    |    |    |    |4R4 |4A4 |4M4 |
+| 5  |3M5 |3A5 |3R5 |    |    |    |    |    |    |    |4R5 |4A5 |4M5 |
+| 6  |3M6 |3A6 |3R6 |    |    |    |    |    |    |    |4R6 |4A6 |4M6 |
+| 7  |3M7 |3A7 |3R7 |    |    |    |    |    |    |    |4R7 |4A7 |4M7 |
+| 8  |3M8 |3A8 |3R8 |    |    |    |    |    |    |    |4R8 |4A8 |4M8 |
+| R2 |    |    |2R1 |2R2 |2R3 |2R4 |2R5 |2R6 |2R7 |2R8 |    |    |    |
+| A2 |    |    |2A1 |2A2 |2A3 |2A4 |2A5 |2A6 |2A7 |2A8 |4R8 |2A9 |4M1 |
 
 After the initial steps for the player, they populate the S1-S10 cells with
 spell cards face down.
 
-P1-P10 are populated with element pieces.
+R1-R10 are populated with runners.
 
 ## Game Goal
 
-Your mission in the game is to crack and capture as many mainframes as possible.
-You have captured a mainframe when you have at least 50 % of its live mainframes
+Your mission in the game is to crack and capture as many mainframes as
+possible from the other players.
 jacked. You may destroy mainframes with EMP-cards. Captured mainframes may not
 be taken back from you.
 
 ## Gameplay
 
 A turn beings by a player moving a piece forward, left, or right; you are not
-allowed to move pieces back towards your home location (your S and P columns).
-Diagonal moves are allowed.
+allowed to move pieces back towards your home location (your A and R columns).
+Diagonal moves are allowed. Optionally, you may use a heal card before moving
+your runner.
 
-If you move the piece on top of an opponent card, a combat is triggered between
-your element piece and the opponent card; more details on rolling dice and other
-game mechanics below.
+## Runner Combat; Close Combat or Ice
 
-You may opt to combine 1 or more spell cards with the attack; the maximum number
-depends on you magic skill level (throwing the respective dice).
+If you move the runner on top of an opponent one, a combat is triggered between
+your element piece and the opponent card; you may choose either a close-combat
+or an ice-attack; more details on rolling dice and other game mechanics below.
+
+You may opt to combine 1 or more spell cards with the attack; the maximum
+number depends on you magic skill level (throwing the respective dice).
 
 You now roll the die, then the dice for each spell respectively and add the
 figures to each other.
 
-Finally, you roll the luck die and add it to the current sum of figures to
-determine the total hit strength of your attack.
+Next you roll the attack dice and add the points to the current sum of figures
+to determine the total hit strength of your attack.
 
-If the attack leads to a die the attacking player wins and the opponent card
-just beaten is discarded from the board. The player may but does not have to
-replace the card with their own action card (see Action Cards below).
+Finally, the opponent rolls their REF-dice (reflex); if successful, the attack
+is blocked.
 
-## Actions
+The total damage, if successful, is
 
-The game actions are attack, defense, and spell combinations.
+    STR + SPELLS + ATK
+
+where STR is your base strength, SPELLS is the sum of your spells, and ATK is
+the hit.
+
+In case the points result in a tie, the attacker has advantage and wins. The
+losing runner is removed from the board.
+
+## Ice Combat
+
+The rules for ICE are to be documented later. For now, feel free to take a
+peek at ice.c and ice.h.
+
+## Element Combat
 
 ## Dice
 
-KRAKSYS Gameplay is based on D20 set of dice with dices of 4, 6, 8, 10, 12, and
+KRAKSYS Gameplay is based on D20 set of dice with dice of 4, 6, 8, 10, 12, and
 20 points.
 
 Here, I list some default actions for the different dice.
@@ -123,15 +139,9 @@ Here, I list some default actions for the different dice.
 |  D10  | check action; 1 point is 10 %         | ACTION
 |  D20  | check success; 1 point is 5 %         | SUCCESS
 
-## Cards
+## Attack Cards
 
-Every card represents one element of water, air, fire, or land.
-
-### Combat System
-
-When a player moves a piece to the protection zone of another player, combat
-results. The opponent may choose a protection spell from the adjacent spell
-cell (right below or after the protection cell just attacked).
+Every attack card represents one element of water, air, fire, or land.
 
 ### Protection/Attack Cards; Elements
 
