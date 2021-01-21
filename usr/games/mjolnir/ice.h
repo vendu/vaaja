@@ -9,7 +9,7 @@ void                            iceinitchr(struct objchr *chr,
 #define ICE_MAX_LEVEL           32
 
 struct ice {
-    long                        xp;         // program experience
+    long                        exp;        // program experience points
     long                        lvl;        // program level
     //    long                        basehp;     // program hitpoint increment
     long                        maxhp;      // program max # of hitpoints

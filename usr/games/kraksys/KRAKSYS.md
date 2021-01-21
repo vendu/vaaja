@@ -3,6 +3,15 @@
 KRAKSYS is a quick-to-play board game for 2-4 players. A game should last
 approximately 15-60 minutes.
 
+# Character Attributes
+
+- CON       - concentration
+- REF       - reflex
+- EXP       - experience points
+- LVL       - experience level
+- STR       - [close-combat] attack base strength
+- HP        - [close combat] hit points
+
 ## Getting Started
 
 In the beginning of the game, each player chooses player element of water, air,
@@ -98,21 +107,24 @@ or an ice-attack; more details on rolling dice and other game mechanics below.
 You may opt to combine 1 or more spell cards with the attack; the maximum
 number depends on you magic skill level (throwing the respective dice).
 
-You now roll the die, then the dice for each spell respectively and add the
-figures to each other.
+## Close Combat
 
-Next you roll the attack dice and add the points to the current sum of figures
-to determine the total hit strength of your attack.
+First, you roll opponent reflex die D10. In case the opponent has the reflex
+of 30 %, the reflex-save is successful if the roll is smaller than or equal
+to 3.
 
-Finally, the opponent rolls their REF-dice (reflex); if successful, the attack
-is blocked.
+Second, you roll the success die D10. If the roll is smaller than or equal to
+your success rate, the hit is a success and you continue as follows.
+
+You now roll the attack (ATK) dice, then the hit and success dice for each of
+the chosen spells respectively and add the figures to each other.
 
 The total damage, if successful, is
 
-    STR + SPELLS + ATK
+    HIT = STR + ATK + SPELLS
 
-where STR is your base strength, SPELLS is the sum of your spells, and ATK is
-the hit.
+where STR is your base strength, ATK is the hit, and SPELLS is the sum of your
+spell dice.
 
 In case the points result in a tie, the attacker has advantage and wins. The
 losing runner is removed from the board.

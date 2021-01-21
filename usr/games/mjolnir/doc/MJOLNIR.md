@@ -150,7 +150,7 @@ mjolnir actions | description
   - look(loc);
   - open(obj, key);
   - close(obj);
-  - pick a lock(obj, key);
+  - unlock(obj, key|pick);
   - read(obj);
   - shout(str);
   - search(loc);

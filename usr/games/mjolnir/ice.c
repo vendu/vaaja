@@ -23,42 +23,42 @@ chrinitice(struct objchr *chr)
 
     switch (cat) {
         case CHR_PROGRAMMER_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->maxhp = 128;
             ice->nhp = 128;
 
             break;
         case CHR_CRACKER_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->maxhp = 64;
             ice->nhp = 64;
 
             break;
         case CHR_SOLDIER_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->maxhp = 32;
             ice->nhp = 32;
 
             break;
         case CHR_CYBORG_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->maxhp = 64;
             ice->nhp = 64;
 
             break;
         case CHR_THIEF_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->basehp = 16;
             ice->maxhp = 16;
 
             break;
         case CHR_ENGINEER_CATEGORY:
-            ice->xp = 0;
+            ice->exp = 0;
             ice->lvl = 1;
             ice->maxhp = 96;
             ice->nhp = 96;
@@ -104,7 +104,7 @@ icehit(struct objchr *atk,
        struct objchr *def)
 {
     long                        lvl = atk->lvl;
-    long                        xp = atk->xp;
+    long                        xp = atk->exp;
     long                        save = icerolldie(D20_D10);
     long                        nhp;
     long                        maxhp;
@@ -196,7 +196,7 @@ iceprintstats(const char *msg, struct ice *ice)
     printf("%s: lvl = %ld, xp = %ld, basehp = %ld, maxhp = %ld, nhp = %ld\n",
            msg,
            ice->lvl,
-           ice->xp,
+           ice->exp,
            ice->basehp,
            ice->maxhp,
            ice->nhp);

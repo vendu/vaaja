@@ -20,7 +20,7 @@ void                                    chrinit(struct objchr *chr,
 #define MJOLNIR_CHR_HUMAN               'H'
 #define MJOLNIR_CHR_ORACLE              'O'
 #define MJOLNIR_CHR_RAT                 'r'
-#define MJOLNIR_CHR_SHOPKEEPER          '£'
+#define MJOLNIR_CHR_SHOPKEEPER          'S'
 #define MJOLNIR_CHR_UNICORN             'u'
 #define MJOLNIR_CHR_VAMPIRE             'v'
 #define MJOLNIR_CHR_WEREWOLF            'w'

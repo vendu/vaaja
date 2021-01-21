@@ -53,7 +53,7 @@ somewhere. They can also be used to pay for items in shops.
 ### c - carving
 - may be hidden under sand
 
-### C - ATM-machine
+### | - ATM-machine
 
 ATM-machines can be used for cash withdrawals and deposits.
 
@@ -91,9 +91,6 @@ Mainframes store Core War warriors and other software + data on tapes.
 - hole
 - teleport
 
-### \ - wand
-- magic wands used to cast different spells
-
 ### 9 - scroll
 - scrolls contains spell to be casted
 
@@ -115,7 +112,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 - ring of teleport
 - ring of night vision
 
-### / - whip
+### \ - whip
 - may be used to slay non-demonic, usually smaller creatures
 
 ### ] - armor
@@ -134,7 +131,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 ### k - katana
 - a Japanese-style sword
 
-### ¿ - crowbar
+### j - crowbar
 
 ### 4 - c4 plastic explosive
 
@@ -193,10 +190,9 @@ return.
 |   t    | tape           | mainframes          | software for in-dungeon mainframes
 |   &    | statue         | 1/32                | e.g. Buddha statue, elephant statue, ...
 |   ^    | trap           | varies              | trap; arrow, bomb, pit, hole, teleport
-|   \    | wand           | 1/32                | magic wand
 |   9    | scroll         | 1/32                | spell or other scroll
 |   o    | ring           | 1/64                | ring
-|   /    | whip           | 1/64                | whip
+|   \    | whip           | 1/64                | whip
 |   ]    | armor          | 1/32                | suit or armor
 |   [    | mirror         | 1/16                | mirror on a wall
 |   c    | chest          | 1/32                | chest; may find treasury in them
@@ -208,12 +204,12 @@ return.
 |   L    | laser          | 1/128               | laser gun, from aliens
 |   m    | mace           | 1/32                | mace or hammer
 |   8    | mainframe      | 1/16                | computer systems for running punchcards
-|   ¤    | money          | 1/256               | money from shops or ATMs
+|   C    | money          | 1/256               | money from shops or ATMs
 |   p    | paper          | N/A                 | paper pieces such as fortunes
 |   ?    | pipe           | 1/64                | pipe
 |   7    | pistol         | 1/64                | pistol
 |   R    | remnants       | N/A                 | corpses and belongings
-|   s    | sword          | 1/128               | sword
+|   /    | sword          | 1/128               | sword
 |   T    | terminal       | 1/16                | terminal connected to mainframe
 |   x    | cross          | 1/64                | cross; may be Holy Cross
 |   X    | altar          | 1/32                | altar; sacrifice dead creatures on it
