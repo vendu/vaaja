@@ -17,15 +17,7 @@ approximately 15-60 minutes.
 In the beginning of the game, each player chooses player element of water, air,
 fire, or land. There may be no two players with the same element.
 
-A roll of D6 determines the skill factor for each player as follows
-- the value 1 indicates we shall roll D4 to for luck
-- the value 2 indicates we shall roll D4 to for luck
-- the value 3 indicates we shall roll D4 to for luck
-- the value 4 indicates we shall roll D6 to for luck
-- the value 5 indicates we shall roll D6 to for luck
-- the value 6 indicates we shall roll D6 to for luck
-
-A roll of D4 determines the magic skill (the number of spells you may use in
+A roll of D& determines the magic skill (the number of spells you may use in
 combinations).
 
 The slots protected by the action cards are mainframes.
@@ -48,6 +40,9 @@ each player gets the following items (first listed for 2-player sessions)
        stop the invasion
        - 2 emp cards; try to destroy a chosen attacker mainframe
        - D8 x heal cards; these may be used to start a turn
+
+The players locate their 8 runners (miniatures?) to their R-columns and chosen
+action cards in their 8 action columns on the board.
 
 ## Board Layout
 
