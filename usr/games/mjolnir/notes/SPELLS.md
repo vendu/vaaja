@@ -1,5 +1,7 @@
 # Mjolnir Spells
 
+This document is a list of ideas.
+
 - oath
 - karma
 - heal
@@ -14,5 +16,6 @@
 - swarm
 - boost
 - frost
+- shock
 - teleport
 

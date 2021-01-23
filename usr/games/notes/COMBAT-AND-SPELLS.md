@@ -1,11 +1,26 @@
-# Close Combat
+# VD20 Combat and Spells
+
+This is an early design
+document of VD20 RPG-like
+game system. I plan on
+using the system for my
+KrakSys board game,
+Mjolnir rogue-like
+computer game and other
+projects.
+
+As the name VD20 hints,
+the system is implemented
+for the D20 dice set with
+dies of 4, 6, 8, 10, 12,
+and 20 points.
+
+# Close Combat; Budo
 
 ## Basic Mechanics
 
 Close combat ranks are based on karate belts. Combat
 proceeds as follows.
-
-If the player chooses close combat
 
 - the dice are rolled for the hit
   - HIT = STRENGTH + ATTACK
@@ -93,10 +108,38 @@ WEAK | NORMAL | STRONG |
 - equal with air
 - equal with fire
 
-## Land
+## Earth
 
 - strong against air
 - weak against fire
 - equal against water
 - equal against land
+
+# Spells
+
+The spell system is
+planned to be based on
+the elements Fire, Ice
+and Lightning.
+
+## Fire Spells
+
+- damage: burning
+- fireball
+
+## Ice Spells; Frost
+
+- damage: freezing
+- ice spike
+
+## Lightning Spells; Shock
+
+- damage: electrocution
+- lightning bolt
+
+# Elementals
+
+Players may summon
+elementals to aid in
+battles.
 

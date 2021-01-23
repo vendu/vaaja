@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_ERRNO_H__
-#define __SYS_ZEN_ERRNO_H__
+#ifndef SYS_ZEN_ERRNO_H
+#define SYS_ZEN_ERRNO_H
 
 #define ENONE                   0
 #define ENOSYS                  1  // function not implemented
@@ -76,5 +76,5 @@
 #define ERRNO_MAX               66
 #define NERRNO                  (ERRNO_MAX + 1) // 1 + max errno value */
 
-#endif /* __SYS_ZEN_ERRNO_H__ */
+#endif /* SYS_ZEN_ERRNO_H */
 

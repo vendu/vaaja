@@ -4,7 +4,15 @@
 - STR               - combat strength (base hit power)
 - RANK              - karate belts (affects combat)
 - REF               - reflex (affects attack-saves)
+- KRAK              - malware attack skill
+- PROT              - malware protection percentage
 - CAST              - affects spell casting
+- HEAL              - healing rate
+- LOCK              - lock-picking skill
+
+# Other Ideas
+- CHA               - charisma; affects discussions and bargaining
+- KARMA             - TODO: rises a point when you kill an evil creature, drops for good
 
 ## Concentration
 
@@ -22,8 +30,8 @@ The score will be added to the final spell strength.
 
 ## Cracker
 
-- highly skilled in ice and social engineering
-- good at counter-ice attacks
+- highly skilled in ice attacks and social engineering
+- has some
 
 ## Cyborg
 
