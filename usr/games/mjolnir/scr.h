@@ -4,15 +4,15 @@
 #include <mjolnir/conf.h>
 #include <mjolnir/mjolnir.h>
 
-#if (MJOLNIR_VGA_TEXT)
+#if defined(MJOLNIR_VGA_TEXT)
 #include <mjolnir/vga.h>
 #endif
-#if (MJOLNIR_TTY)
+#if defined(MJOLNIR_TTY)
 #include <mjolnir/tty.h>
 #endif
 
-struct mjolscr {
-    void               *data;
+struct gamescr {
+    void               *lvldata;
     long                x;
     long                y;
     int               (*getch)(void);

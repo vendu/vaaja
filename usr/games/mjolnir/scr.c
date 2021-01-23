@@ -3,27 +3,27 @@
 #include <stdlib.h>
 #include <mjolnir/scr.h>
 
-#if defined(MJOLNIR_VGA_TEXT)
+#if defined(MJOLNIR_VGA_TEXT) && 0
 extern void mjolopenvga(struct game *game);
 #define MJOLNIR_VGA_TEXT_OPEN mjolopenvga
 #else
 #define MJOLNIR_VGA_TEXT_OPEN NULL
 #endif
 #if defined(MJOLNIR_TTY)
-extern void mjolopentty(struct game *game);
-#define MJOLNIR_TTY_OPEN      mjolopentty
+extern void gameopentty(struct game *game);
+#define MJOLNIR_TTY_OPEN      gameopentty
 #else
 #define MJOLNIR_TTY_OPEN      NULL
 #endif
 #if defined(MJOLNIR_X11)
-extern void mjolopenx11(struct game *game);
-#define MJOLNIR_X11_OPEN      mjolopenx11
+extern void gameopenx11(struct game *game);
+#define MJOLNIR_X11_OPEN      gameopenx11
 #else
 #define MJOLNIR_X11_OPEN      NULL
 #endif
 
-typedef void mjolopenscrfunc(struct game *);
-static mjolopenscrfunc *mjolopenscrfuncs[4] = {
+typedef void gameopenscrfunc(struct game *);
+static gameopenscrfunc *gameopenscrfuncs[4] = {
     NULL,
     MJOLNIR_VGA_TEXT_OPEN,
     MJOLNIR_TTY_OPEN,
@@ -31,9 +31,9 @@ static mjolopenscrfunc *mjolopenscrfuncs[4] = {
 };
 
 void
-mjolopenscr(struct game *game)
+gameopenscr(struct game *game)
 {
-    mjolopenscrfunc *func = mjolopenscrfuncs[game->scrtype];
+    gameopenscrfunc *func = gameopenscrfuncs[game->scrtype];
 
     if (func) {
         func(game);

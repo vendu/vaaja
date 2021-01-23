@@ -1,30 +1,24 @@
-# Mjolnir Roadmap
+# Mjolnir Source Roadmap
 
-## Code modules
+## chr    - game characters
 
-### conf                - compile-time options for building the game
+## combat - budo and element combat
 
-### chr                 - character types and classes
+£# conf   - compile-time options
 
-### combat              - close and element combat
+## item   - game items
 
-### cw                  - core war subgame base implementation
+## krak   - subgame
 
-### d20                 - routines for rolling virtual dice
+## obj    - characters, items
 
-### dng                 - dungeon generator
+## scr    - screen/user interface
 
-### item                - items
+## tty    - TTY-interface support
 
-### gen/map             - map generator
-
-### gen/dng             - dungeon generator
-
-### scr                 - screen/display support
-
-### sdl                 - SDL2 user interface
-
-### tty                 - terminal user interface (optionally with ncurses)
-
-### util                - miscellaneous routines
-
+## util
+util.h
+vt.c
+vt.h
+gen/dng.c
+gen/map.c

@@ -9,6 +9,7 @@
 - CAST              - affects spell casting
 - HEAL              - healing rate
 - LOCK              - lock-picking skill
+- SWORD             - sword combat skill
 
 # Other Ideas
 - CHA               - charisma; affects discussions and bargaining
