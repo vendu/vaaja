@@ -5,9 +5,16 @@ approximately 15-60 minutes. The game design is in early stages.
 
 # Runners
 
+<<<<<<< HEAD
 ## Runner Attributes
 
 - CTYPE     - character type; wizard, barbarian, engineer, or android
+=======
+- CON       - concentration; affects spell-casting
+- REF       - reflex; check for refex-saves ('blocks') on attacks
+- EXP       - experience points; these determine the experience level
+- LVL       - experience level
+>>>>>>> 115ea79 (...)
 - STR       - [close-combat] attack base strength
 - MAGIC     - spell-casting
 - REF       - reflex; check for reflex-saves ('blocks') on attacks

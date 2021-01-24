@@ -118,6 +118,7 @@ WEAK | NORMAL | STRONG |
 - equal with fire
 
 <<<<<<< HEAD:usr/games/notes/COMBAT-AND-SPELLS.md
+<<<<<<< HEAD:usr/games/notes/COMBAT-AND-SPELLS.md
 ## Earth
 
 - strong against air
@@ -125,6 +126,8 @@ WEAK | NORMAL | STRONG |
 - equal against water
 - equal against land
 =======
+=======
+>>>>>>> 115ea79 (...):usr/games/COMBAT.md
 ## Ice (Light Blue)
 ## Light (White)
 - opposite of Darkness
@@ -147,6 +150,7 @@ WEAK | NORMAL | STRONG |
 - Love (Light Red)
 - Aether (Light Green)
 - Electricity (Light Blue)
+<<<<<<< HEAD:usr/games/notes/COMBAT-AND-SPELLS.md
 >>>>>>> 115ea79 (...):usr/games/COMBAT.md
 
 # Spells
@@ -176,4 +180,6 @@ and Lightning.
 Players may summon
 elementals to aid in
 battles.
+=======
+>>>>>>> 115ea79 (...):usr/games/COMBAT.md
 
