@@ -88,8 +88,8 @@ struct cwinstr {
     unsigned                atype   : CW_ARG_TYPE_BITS;
     unsigned                btype   : CW_ARG_TYPE_BITS;
     uint16_t                _pad;
-    unsigned                a       : CW_OPERAND_BITS;
-    unsigned                b       : CW_OPERAND_BITS;
+    signed                  a       : CW_OPERAND_BITS;
+    signed                  b       : CW_OPERAND_BITS;
 };
 
 #elif defined(CW_32BIT_INSTRUCTIONS)

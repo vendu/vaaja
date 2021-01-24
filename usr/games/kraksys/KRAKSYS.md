@@ -5,17 +5,19 @@ approximately 15-60 minutes.
 
 # Character Attributes
 
-- CON       - concentration
-- REF       - reflex
-- EXP       - experience points
+- CON       - concentration; affects spell-casting
+- REF       - reflex; check for refex-saves ('blocks') on attacks
+- EXP       - experience points; these determine the experience level
 - LVL       - experience level
 - STR       - [close-combat] attack base strength
 - HP        - [close combat] hit points
 
 ## Getting Started
 
-In the beginning of the game, each player chooses player element of water, air,
-fire, or land. There may be no two players with the same element.
+In the beginning of the game, each player chooses player element of land,
+water, fire, or air. There may be no two players with the same element.
+These can be distributed so that every turn, the highest-roll player gets to
+choose an element or pick one at random until every player has an element.
 
 A roll of D& determines the magic skill (the number of spells you may use in
 combinations).

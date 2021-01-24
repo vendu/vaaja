@@ -87,33 +87,67 @@ WEAK | NORMAL | STRONG |
 -----|:-------|:--------
  D8  | 4+D8   | 6+D10  |
 
-## Water
+# 12 Elements of Nature
+
+## Earth (Brown)
+
+- strong against air
+- weak against fire
+- equal against water
+- equal against land
+
+## Water (Blue)
 
 - strong against fire
 - weak against air
 - equal with land
 - equal wirh water
 
-## Air
+## Wind (Gray)
 
 - strong against water
 - weak against land
 - equal with fire
 - equal with air
 
-## Fire
+## Fire (Red)
 
 - strong against land
 - weak against water
 - equal with air
 - equal with fire
 
+<<<<<<< HEAD:usr/games/notes/COMBAT-AND-SPELLS.md
 ## Earth
 
 - strong against air
 - weak against fire
 - equal against water
 - equal against land
+=======
+## Ice (Light Blue)
+## Light (White)
+- opposite of Darkness
+## Darkness (Black)
+- opposite of Light
+## Nature (Green)
+
+# Other Suggested Elements
+
+- Thunder (Dark Blue)
+- Force (Turquoise)
+- Time (Light Gray)
+- Flower (Purple)
+- Shadow (Dark Gray)
+- Moon (Orange)
+- Air (Wind) (Gray)
+- Lightning (Yellow)
+- Spirit (Magenta)
+- Storm (Dark Green)
+- Love (Light Red)
+- Aether (Light Green)
+- Electricity (Light Blue)
+>>>>>>> 115ea79 (...):usr/games/COMBAT.md
 
 # Spells
 

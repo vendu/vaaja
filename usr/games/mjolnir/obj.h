@@ -1,12 +1,8 @@
 #ifndef __MJOLNIR_OBJ_H__
 #define __MJOLNIR_OBJ_H__
 
-#if 0
 #define MJOLNIR_OBJ_CHARACTER       1
 #define MJOLNIR_OBJ_ITEM            2
-#define MJOLNIR_OBJ_DECK            3
-#define MJOLNIR_OBJ_PROG            4
-#endif
 
 /* character categories */
 #define MJOLNIR_PROGRAMMER_CATEGORY 1
@@ -24,16 +20,14 @@
 struct objchr {
     char                           *name;       // character name
     long                            cat;        // category, 'class'
-    long                            aln;        // alighnment
     long                            type;       // type/ASCII-presentation
     long                            flg;        // character status flags
-    long                            exp;        // experience points
-    long                            str;        // base strength for combat
+    long                            aln;        // alighnment
+    long                            str;        // strength
     long                            con;        // conecntration (for spells)
-    long                            ref;        // reflex value for saves
-    long                            rank;       // close combat rank ('belt')
-    long                            hitprob;    // hit success probability
-    struct d20dice                 *hitdice;    // rank-based dice-set for atk
+    long                            exp;        // experience points
+    long                            lvl;        // experience level
+    struct budo                     budo;       // budo close-combat attributes
     struct ice                      ice;        // ice subgame structure
 };
 

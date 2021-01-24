@@ -1,5 +1,5 @@
-#ifndef __GAMES_DICE_D20_H__
-#define __GAMES_DICE_D20_H__
+#ifndef GAMES_DICE_D20_H
+#define GAMES_DICE_D20_H
 
 #define D20_RANDMT32
 #define D20_RAND_SHIFT          16
@@ -88,5 +88,5 @@ struct d20diceset {
     long                        nd20;   /* count of 20-side dice */
 };
 
-#endif /* __GAMES_DICE_D20_H__ */
+#endif /* GAMES_DICE_D20_H */
 
