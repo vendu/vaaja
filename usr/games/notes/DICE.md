@@ -18,61 +18,61 @@ D12    - automatic weapons
          - submachine gun
          - Jatimatic
 D20    - special weapons
-         - golden katana
+         - golden sword
          - Jatimatic with exploding or silver vs. demon bullets
 
 STR      - exp / 8
 
-|STR|RANK| ATK  |
-|:  |:   |:     |:
-| 0 |WHI | 1d4  |
-| 1 |WHI | 1d4  |
-| 2 |WHI | 1d4  |
-| 3 |WHI | 1d4  |
-| 4 |YEL | 1d6  |
-| 5 |YEL | 1d6  |
-| 6 |YEL | 1d6  |
-| 7 |YEL | 1d6  |
-| 8 |ORA | 1d6  |
-| 9 |ORA | 1d6  |
-|10 |ORA | 1d8  |
-|11 |ORA | 1d8  |
-|12 |PUR | 1d8  |
-|13 |PUR | 1d8  |
-|14 |PUR | 1d8  |
-|15 |PUR | 1d8  |
-|16 |BLU | 1d8  |
-|17 |BLU | 1d8  |
-|18 |BLU | 1d10 |
-|19 |BLU | 1d10 |
-|20 |GRE | 1d10 |
-|21 |GRE | 1d10 |
-|21 |GRE | 1d10 |
-|22 |GRE | 1d10 |
-|23 |BRO | 1d10 |
-|24 |BRo | 1d10 |
-|25 |BRO | 1d10 |
-|26 |BRO | 1d10 |
-|27 |RED | !d12 |
-|28 |RED | 1d12 |
-|29 |RED | 1d12 |
-|30 |RED | 1d12 |
-|31 |BLA | 1d12 |
-|32 |BLA | 1d12 |
-|33 |BLA | 1d12 |
-|34 |BLA | 1d12 |
-|35 |BLA1| 2d12 |
-|36 |BLA1| 2d12 |
-|37 |BLA1| 2d12 |
-|38 |BLA1| 2d12 |
-|39 |BLA2| 2d12 |
-|40 |BLA2| 2d12 |
-|41 |BLA2| 2d12 |
-|42 |BLA2| 2d12 |
-|43 |BLA3| 4d12 |
-|44 |BLA3| 4d12 |
-|45 |BLA3| 4d12 |
-|46 |BLA3| 4d12 |
-|46 |SPI | 4d20 |
------------------
+|STR|RANK   | ATK  |
+|:  |:      |:     |
+| 0 |WHITE  | 1d4  |
+| 1 |WHITE  | 1d4  |
+| 2 |WHITE  | 1d4  |
+| 3 |WHITE  | 1d4  |
+| 4 |YELLOW | 1d6  |
+| 5 |YELLOW | 1d6  |
+| 6 |YELLOW | 1d6  |
+| 7 |YELLOW | 1d6  |
+| 8 |ORANGE | 1d6  |
+| 9 |ORANGE | 1d6  |
+|10 |ORANGE | 1d8  |
+|11 |ORANGE | 1d8  |
+|12 |PURPLE | 1d8  |
+|13 |PURPLE | 1d8  |
+|14 |PURPLE | 1d8  |
+|15 |PURPLE | 1d8  |
+|16 |BLUE   | 1d8  |
+|17 |BLUE   | 1d8  |
+|18 |BLUE   | 1d10 |
+|19 |BLUE   | 1d10 |
+|20 |GREEN  | 1d10 |
+|21 |GREEN  | 1d10 |
+|21 |GREEN  | 1d10 |
+|22 |GREEN  | 1d10 |
+|23 |BROWN  | 1d10 |
+|24 |BROWN  | 1d10 |
+|25 |BROWN  | 1d10 |
+|26 |BROWN  | 1d10 |
+|27 |RED    | !d12 |
+|28 |RED    | 1d12 |
+|29 |RED    | 1d12 |
+|30 |RED    | 1d12 |
+|31 |BLACK  | 1d12 |
+|32 |BLACK  | 1d12 |
+|33 |BLACK  | 1d12 |
+|34 |BLACK  | 1d12 |
+|35 |BLACK1 | 2d12 |
+|36 |BLACK1 | 2d12 |
+|37 |BLACK1 | 2d12 |
+|38 |BLACK1 | 2d12 |
+|39 |BLACK2 | 2d12 |
+|40 |BLACK2 | 2d12 |
+|41 |BLACK2 | 2d12 |
+|42 |BLACK2 | 2d12 |
+|43 |BLACK3 | 4d12 |
+|44 |BLACK3 | 4d12 |
+|45 |BLACK3 | 4d12 |
+|46 |BLACK3 | 4d12 |
+|47 |SPIRIT | 4d20 |
+--------------------
 
