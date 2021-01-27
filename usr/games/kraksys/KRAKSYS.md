@@ -1,15 +1,16 @@
 # KRAKSYS Board Game
 
 KRAKSYS is a quick-to-play board game for 2-4 players. A game should last
-approximately 15-60 minutes.
+approximately 15-60 minutes. The game design is in early stages.
 
 # Character Attributes
 
-- CON       - concentration; affects spell-casting
-- REF       - reflex; check for refex-saves ('blocks') on attacks
+- STR       - [close-combat] attack base strength
+- MAGIC     - spell-casting
+- REF       - reflex; check for reflex-saves ('blocks') on attacks
+- KRAK      - skill for using malware for system break-ins
 - EXP       - experience points; these determine the experience level
 - LVL       - experience level
-- STR       - [close-combat] attack base strength
 - HP        - [close combat] hit points
 
 ## Getting Started
@@ -27,7 +28,6 @@ The slots protected by the action cards are mainframes.
 each player gets the following items (first listed for 2-player sessions)
 
 - 8 runners (of your native element)
-- up to 16 spell cards; D4 x frost, D4 x tornado, D4 x tsunami, D4 x quake
 - the following action cards
   - 2 teleport cards; teleport the attacking piece to a random location on the
     board (roll X- and Y-coordinates with D8)
@@ -84,9 +84,8 @@ R1-R10 are populated with runners.
 ## Game Goal
 
 Your mission in the game is to crack and capture as many mainframes as
-possible from the other players.
-jacked. You may destroy mainframes with EMP-cards. Captured mainframes may not
-be taken back from you.
+possible from the other players. You may destroy mainframes with EMP-cards.
+Captured mainframes may not be taken back from you.
 
 ## Gameplay
 

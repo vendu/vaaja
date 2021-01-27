@@ -1,24 +1,20 @@
 # Mjolnir Character Skills
 
-- CON               - concentration (affects magic success)
+- INT               - intelligence (affects magic success)
 - STR               - combat strength (base hit power)
 - RANK              - karate belts (affects combat)
 - REF               - reflex (affects attack-saves)
 - KRAK              - malware attack skill
-- PROT              - malware protection percentage
-- CAST              - affects spell casting
+- PROT              - malware protection skill
+- MAGIC             - affects spell casting
 - HEAL              - healing rate
 - LOCK              - lock-picking skill
 - SWORD             - sword combat skill
 
 # Other Ideas
 - CHA               - charisma; affects discussions and bargaining
-- KARMA             - TODO: rises a point when you kill an evil creature, drops for good
-
-## Concentration
-
-In the beginning of casting a spell, the player throws concentration dice.
-The score will be added to the final spell strength.
+- KARMA             - TODO: rises a point when you kill an evil creature,
+                      drops for good
 
 # Mjolnir Character Types
 
@@ -26,24 +22,21 @@ The score will be added to the final spell strength.
 
 ## Programmer
 
-- highly skilled in defense against ice (high ICE-powers)
-- quick to learn improving existing ICE-software
+- highly skilled in defense against malware (high PROT)
 
 ## Cracker
 
-- highly skilled in ice attacks and social engineering
+- highly skilled in malware attacks (KRAK) and social engineering
 - has some
 
 ## Cyborg
 
 - may use cybernetic implants
-- were strong for physical battle
 
 ## Soldier
 
 - often enhanced with neurological and physical implants
-- good at budo + with swords
-- you're gun-for-hire combat machines
+- good at combat
 
 ## Thief
 
