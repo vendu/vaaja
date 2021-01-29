@@ -20,7 +20,7 @@ are some current ideas for in-game characters.
 
 ## a - ant
 
-Ants are easy opponents to defaeat, except perhaps when they appear en masse.
+Ants are easy opponents to defaeat, except perhaps when they appear in masses.
 
 ## A - soldier ant
 
@@ -40,8 +40,7 @@ in vicinity.
 
 Your pet dog is smart and may bring you things after which it would be a good
 idea to feed it. The dog may hit small creatures to defend you. Don't forget to
-feed your beloved dog now and again, even though it eats corpses of the monsters
-you slay.
+feed your beloved dog now and again, even though it eats corpses of the monsters you slay.
 
 ## e - alien/extraterrestrial creature
 
@@ -68,7 +67,7 @@ Oracles share pieces of wisdow to give you hints for the game.
 ## S - shopkeeper
 ## u - unicorn
 ## v - vampire
-## w - werewolf
+## w - (were)wolf
 ## W - wizard
 ## z - zombie
 

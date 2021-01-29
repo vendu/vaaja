@@ -188,11 +188,6 @@ mjolnir actions | description
         - stepi - execute n instructions
   - mastermind(chr);
   - battleship(chr);
-  - bank robbery
-    - different camo operations and strategies
-    - the winning scenery uses maps of bank network nerve centers
-    - you need to forge a few bank transfers after deciphering their network
-      traffic format :)
 
 ## tiles
 -----

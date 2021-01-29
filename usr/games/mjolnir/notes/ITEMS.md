@@ -42,20 +42,24 @@ at graveyards, often inside tombs.
 - flash memory
 - processor module
 
-### - - ATM-card
+### - - ATM- or credit card
 
-ATM-cards may be used to withdraw money you have gotten or stolen from
-somewhere. They can also be used to pay for items in shops.
+ATM/credit-cards you have gotten or stolen from may be used to transfer digital
+currency to anynymous accounts with only numerical IDs which you control. They
+can also be used to pay for items in shops.
 
-### h - bee hive
+### | - ATM-machine
+
+### i - Identification card (to be used on terminals)
+
+### B - bee hive
 - you may acquire honey from these; one queen per hive.
 
 ### c - carving
 - may be hidden under sand
 
-### | - ATM-machine
-
-ATM-machines can be used for cash withdrawals and deposits.
+ATM-machines can be used for cash withdrawals and deposits, and transfers from
+one account to another.
 
 ### f - food
 
@@ -66,8 +70,6 @@ ATM-machines can be used for cash withdrawals and deposits.
 ### $ - gold
 
 ### = - bullet
-
-Silver bullets are good for demon-hunting.
 
 ### ! - potion
 
@@ -116,10 +118,8 @@ Mainframes store Core War warriors and other software + data on tapes.
 - may be used to slay non-demonic, usually smaller creatures
 
 ### ] - armor
-- different kinds and strengths
 
 ### [ - mirror
-- vampires do not show in mirrors
 
 ### c - chest
 
@@ -129,9 +129,8 @@ Mainframes store Core War warriors and other software + data on tapes.
 ### h - honey
 
 ### k - katana
-- a Japanese-style sword
 
-### j - crowbar
+### j - crowbar ('jimmy bar')
 
 ### 4 - c4 plastic explosive
 
@@ -143,9 +142,9 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### 8 - mainframe
 
-### ¤ - money
+### $ - money
 
-### p - paper
+### p - paper [possibly a note]
 
 ### ? - pipe
 
@@ -153,9 +152,9 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ### R - remnants
 
-### s - software/program
+### s - sword
 
-### S - sword
+### S - shopkeeper
 
 ### T - terminal
 
@@ -204,12 +203,12 @@ return.
 |   L    | laser          | 1/128               | laser gun, from aliens
 |   m    | mace           | 1/32                | mace or hammer
 |   8    | mainframe      | 1/16                | computer systems for running punchcards
-|   C    | money          | 1/256               | money from shops or ATMs
+|   $    | money          | 1/256               | money
 |   p    | paper          | N/A                 | paper pieces such as fortunes
 |   ?    | pipe           | 1/64                | pipe
 |   7    | pistol         | 1/64                | pistol
 |   R    | remnants       | N/A                 | corpses and belongings
-|   /    | sword          | 1/128               | sword
+|   s    | sword          | 1/128               | sword
 |   T    | terminal       | 1/16                | terminal connected to mainframe
 |   x    | cross          | 1/64                | cross; may be Holy Cross
 |   X    | altar          | 1/32                | altar; sacrifice dead creatures on it
@@ -228,10 +227,14 @@ anyone during those turns.
 
 ### Y - demon whip
 
+Legend has it this weapon against some demons was sown from the backskin of
+a demon.
+
 ### J - Jatimatic
 
 Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
-very nice firearm against vampires and other demons.
+very nice firearm against vampires and other demons. Another story goes that
+quicksilver (mercury)-filled bullets might be the way to go for werewolves.
 
 ### K - golden sword
 - the golden sword of the princess of Atlantis, Kara, is a strong weapon against

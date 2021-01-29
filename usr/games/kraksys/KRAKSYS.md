@@ -3,15 +3,50 @@
 KRAKSYS is a quick-to-play board game for 2-4 players. A game should last
 approximately 15-60 minutes. The game design is in early stages.
 
-# Character Attributes
+# Runners
 
+## Runner Attributes
+
+- CTYPE     - character type; wizard, barbarian, engineer, or android
 - STR       - [close-combat] attack base strength
 - MAGIC     - spell-casting
 - REF       - reflex; check for reflex-saves ('blocks') on attacks
 - KRAK      - skill for using malware for system break-ins
+- HACK      - skill for protection using malware
+- FIX       - skill for fixing electronics (such as android implants)
 - EXP       - experience points; these determine the experience level
 - LVL       - experience level
 - HP        - [close combat] hit points
+
+## Runner Types
+
+### Wizard
+
+- Attack:       D6
+- Spell:        D8
+- Elemental:    D12
+
+### Barbarian
+
+- Attack:       D12
+
+### Engineer
+
+- Attack:       D8
+
+### Android
+
+- Attack:       D10
+
+# Elements
+
+Each player has a unique native element of one of Land, Water, Fire, and Wind.
+
+The order of these elements in ascending order is
+
+    Earth rising out of Water,
+    Air over Earth,
+    Fire over all.
 
 ## Getting Started
 
@@ -20,64 +55,62 @@ water, fire, or air. There may be no two players with the same element.
 These can be distributed so that every turn, the highest-roll player gets to
 choose an element or pick one at random until every player has an element.
 
-A roll of D& determines the magic skill (the number of spells you may use in
-combinations).
+A roll of D4 determines the magic skill (the number of spells you may use in
+combinations). Wizard will have this figure + 2.
 
-The slots protected by the action cards are mainframes.
+The slots protected by (behind) the runners cards are mainframes.
 
-each player gets the following items (first listed for 2-player sessions)
+Each player gets the following items (first listed for 2-player sessions)
 
-- 8 runners (of your native element)
-- the following action cards
-  - 2 teleport cards; teleport the attacking piece to a random location on the
+# Runners
+
+- 8 runners (of your native element); 2 of each character type; placed in the
+  R-cells of the board.
+
+# Action Cards
+
+## Player [Invisible] Hand-Decks
+
+- 2 teleport cards; teleport the attacking piece to a random location on the
     board (roll X- and Y-coordinates with D8)
-    - 2 thief cards; steal a [blindly-picked] card from an opponent's hand
-    - 2 swap cards; exchange the swap card with a [blindly-picked] one from an
-      opponent's deck
-      - 2 probe cards; identify opponent card on the board
-      (turn it face-side up)
-      - 2 trojan cards; try to infect/hijack a chosen mainframe of the attacker
-      - 2 worm cards; try to hijack as many attacker mainframes as you desire
-       as long as the worm is alive, you control them all, or you decide to
-       stop the invasion
-       - 2 emp cards; try to destroy a chosen attacker mainframe
-       - D8 x heal cards; these may be used to start a turn
+- 2 thief cards; steal a [blindly-picked] card from an opponent's hand
+- 2 swap cards; exchange the swap card with a [blindly-picked] one from an
+    opponent's deck
+- 2 probe cards; identify opponent card on the board
+    (turn it face-side up)
+- 2 trojan cards; try to infect/hijack a chosen mainframe of the attacker
+- 2 worm cards; try to hijack as many attacker mainframes as you desire
+    as long as the worm is alive, you control them all, or you decide to
+    stop the invasion
+ - 2 emp cards; try to destroy a chosen attacker mainframe
+ - 2 tap cards
+ - D8 x heal cards; these may be used to start a turn
 
-The players locate their 8 runners (miniatures?) to their R-columns and chosen
-action cards in their 8 action columns on the board.
+The players locate their 8 runners (miniatures?) in their R-columns.
 
 ## Board Layout
 
 The game board looks like this
 
 - 1P    - player 1 runner
-- 1A    - player 1 actions
 - 2P    - player 2 runner
-- 2A    - player 2 actions
 - 3P    - player 3 runner
-- 3A    - player 3 actions
 - 4P    - player 4 runner
-- 4A    - player 4 actions
 
-|    |    |    |    | A  | B  | C  | D  | E  | F  | G  | H   |    |    |    |
-|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:----|:---|:---|:---|
-|    |    |    |    |1M1 |1M2 |1M3 |1M4 |1M5 |1M6 |1M7 |1M8  |    |    |    |
-|    |    |    |    |1A1 |1A2 |1A3 |1A4 |1A5 |1A6 |1A7 |1A8  |    |    |    |
-|    |    |    |    |1R1 |1R2 |1R3 |1R4 |1R5 |1R6 |1R7 |1R8  |    |    |    |
-| 1  |3M1 |3A1 |3R1 |    |    |    |    |    |    |    |     |4R1 |4A1 |4M1 |
-| 2  |3M2 |3A2 |3R2 |    |    |    |    |    |    |    |     |4R2 |4A2 |4M2 |
-| 3  |3M3 |3A3 |3R3 |    |    |    |    |    |    |    |     |4R3 |4A3 |4M3 |
-| 4  |3M4 |3A4 |3R4 |    |    |    |    |    |    |    |     |4R4 |4A4 |4M4 |
-| 5  |3M5 |3A5 |3R5 |    |    |    |    |    |    |    |     |4R5 |4A5 |4M5 |
-| 6  |3M6 |3A6 |3R6 |    |    |    |    |    |    |    |     |4R6 |4A6 |4M6 |
-| 7  |3M7 |3A7 |3R7 |    |    |    |    |    |    |    |     |4R7 |4A7 |4M7 |
-| 8  |3M8 |3A8 |3R8 |    |    |    |    |    |    |    |     |4R8 |4A8 |4M8 |
-|    |    |    |    | 2R1 |2R2 |2R3 |2R4 |2R5 |2R6 |2R7 |2R8 |    |    |    |
-|    |    |    |    | 2A1 |2A2 |2A3 |2A4 |2A5 |2A6 |2A7 |2A8 |    |    |    |
-|    |    |    |    | 2M1 |2M2 |2M3 |2M4 |2M5 |2M6 |2M7 |2M8 |    |    |    |
-
-After the initial steps for the player, they populate the S1-S10 cells with
-spell cards face down.
+|Y\X |    |    | A  | B  | C  | D  | E  | F  | G  | H   |    |    |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:----|:---|:---|
+|    |    |    |1M1 |1M2 |1M3 |1M4 |1M5 |1M6 |1M7 |1M8  |    |    |
+|    |    |    |1R1 |1R2 |1R3 |1R4 |1R5 |1R6 |1R7 |1R8  |    |    |
+| 1  |3M1 |3R1 |    |    |    |    |    |    |    |     |4R1 |4M1 |
+| 2  |3M2 |3R2 |    |    |    |    |    |    |    |     |4R2 |4M2 |
+| 3  |3M3 |3R3 |    |    |    |    |    |    |    |     |4R3 |4M3 |
+| 4  |3M4 |3R4 |    |    |    |    |    |    |    |     |4R4 |4M4 |
+| 5  |3M5 |3R5 |    |    |    |    |    |    |    |     |4R5 |4M5 |
+| 6  |3M6 |3R6 |    |    |    |    |    |    |    |     |4R6 |4M6 |
+| 7  |3M7 |3R7 |    |    |    |    |    |    |    |     |4R7 |4M7 |
+| 8  |3M8 |3R8 |    |    |    |    |    |    |    |     |4R8 |4M8 |
+|    |    |    | 2R1 |2R2 |2R3 |2R4 |2R5 |2R6 |2R7 |2R8 |    |    |
+|    |    |    | 2M1 |2M2 |2M3 |2M4 |2M5 |2M6 |2M7 |2M8 |    |    |
 
 R1-R10 are populated with runners.
 
@@ -89,25 +122,25 @@ Captured mainframes may not be taken back from you.
 
 ## Gameplay
 
-A turn beings by a player moving a piece forward, left, or right; you are not
-allowed to move pieces back towards your home location (your A and R columns).
-Diagonal moves are allowed. Optionally, you may use a heal card before moving
-your runner.
+A turn beings by a player moving a piece forward, left, right, or diagonally;
+you are not allowed to move pieces back towards your home location (R-columns).
+Optionally, you may use a heal card before moving your runner.
 
-## Runner Combat; Close Combat or Ice
+## Runner Combat; Close Combat or Krak
 
-If you move the runner on top of an opponent one, a combat is triggered between
-your element piece and the opponent card; you may choose either a close-combat
-or an ice-attack; more details on rolling dice and other game mechanics below.
+If you move the runner to the location of an opponent one, a combat is
+triggered between your element piece and the opponent card; you may choose
+either a close-combat (with spells) or a Krak-attack; more details on rolling
+dice and other game mechanics below.
 
 You may opt to combine 1 or more spell cards with the attack; the maximum
-number depends on you magic skill level (throwing the respective dice).
+number depends on you magic skill points.
 
 ## Close Combat
 
-First, you roll opponent reflex die D10. In case the opponent has the reflex
+First, you roll opponent reflex die D20. In case the opponent has the reflex
 of 30 %, the reflex-save is successful if the roll is smaller than or equal
-to 3.
+to 6, so each point represents 5 %.
 
 Second, you roll the success die D10. If the roll is smaller than or equal to
 your success rate, the hit is a success and you continue as follows.
@@ -119,10 +152,10 @@ The total damage, if successful, is
 
     HIT = STR + ATK + SPELLS
 
-where STR is your base strength, ATK is the hit, and SPELLS is the sum of your
-spell dice.
+where STR is your base strength, ATK is the hit, and SPELLS is the damage-sum
+of your spell dice.
 
-In case the points result in a tie, the attacker has advantage and wins. The
+In case the rolls result in a tie, the attacker has advantage and wins. The
 losing runner is removed from the board.
 
 ## Ice Combat
