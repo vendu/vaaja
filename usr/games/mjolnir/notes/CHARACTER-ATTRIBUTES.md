@@ -1,5 +1,6 @@
 # Mjolnir Character Skills
 
+- PSI               - psionic skills such as telepathy and seeing things
 - INT               - intelligence (affects magic success)
 - STR               - combat strength (base hit power)
 - RANK              - karate belts (affects combat)

@@ -38,3 +38,42 @@
 - zombies can be killed by destroying their brain, e.g. decapitating them
 - zombies may be killed with salt
 
+## Generic Weapons
+
+# Frostblade
+  - STR         16
+  - LENGTH      75
+  - WEIGHT      3000
+  - ATK         2d12
+  - ABILITIES   - turning off fire, freezing water
+  - 25 % chance of a frost bolt
+
+# Flameblade
+  - STR         16
+  - LENGTH      75
+  - WEIGHT      3000
+  - ATK         2d12
+  - ABILITIES   - turning on fire
+  - 25 % chance of a flame bolt
+
+# Shockblade
+  - STR         16
+  - LENGTH      75
+  - WEIGHT      3000
+  - ATK         2d12
+  - ABILITIES   electrocuting/boiling water, setting things on fire
+  - 25 % chance of a lightning bolt
+
+# Silverblade
+  - STR         16, 32 against demons
+  - LENGTH      75
+  - WEIGHT      3000
+  - ABILITIES   - decapitating demons
+  - ATK         2d!2, 2d20 against demons
+
+# Oakblade      (dagger)
+  - STR         2, 32 on vampires but fatal if hit through the heart
+  - LENGTH      35
+  - WEIGHT      500
+  - ABILITIES   killing vampire
+

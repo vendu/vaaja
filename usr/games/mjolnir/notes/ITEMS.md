@@ -217,7 +217,8 @@ return.
 
 ### Q - Crystal ball
 
-The crystal ball shows things happening right now and/or in the future.
+The crystal ball shows things happening right now and/or in the future. The
+probability for you to see visions depends on your psionic skill.
 
 ### | - Rod of Buddha
 
