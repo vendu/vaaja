@@ -17,18 +17,47 @@
 #define MJOLNIR_NEUTRAL_ALIGNMENT   0
 /* positive value of [1, 16] for evil alignment */
 
+#define MJOLNIR_HEAL_PARALYZED      5           // paralyzed/elecrocuted, frozen
+#define MJOLNIR_HEAL_INFECTED       4           // ghoul-, zombie-, rat-bites...
+#define MJOLNIR_HEAL_NORMAL         3           // normal condition
+#define MJOLNIR_HEAL_FAST           2           // natural salves
+#define MJOLNIR_HEAL_EXTRA_FAST     1           // fast-to-heal undead
+#define MJOLNIR_HEAL_SUPER_FAST     0           // fastest-to-heal undead
+#define MJOLINR_CHR_CHAOTIC_EVIL    (-2)        // 'entropy and destruction'
+#define MJOLNIR_CHR_EVIL            (-1)        // 'tyranny and hatred'
+#define MJOLNIR_CHR_UNALIGNED       0           // 'no alignment'
+#define MJOLNIR_LAWFUL_GOOD         1           // 'civilization and order
+#define MJOLNIR_CHR_GOOD            2           // 'freedom and kindness'
 struct objchr {
-    char                           *name;       // character name
-    long                            cat;        // category, 'class'
-    long                            type;       // type/ASCII-presentation
+    const char                     *name;       // character name
+    const long                      cat;        // category, 'class' ID
+    const long                      type;       // type/ASCII-presentation
     long                            flg;        // character status flags
     long                            aln;        // alighnment
+    /* mental skills */
+    long                            psi;        // psionic skills e.g. telepathy
+    long                            intel;      // intelligence; magic success
+    long                            magic;      // general magic
+    long                            cast;       // spell-casting modifier
+    /* physical abilities */
+    long                            heal;       // heal rate [1/32,1]; 1 >> heal
     long                            str;        // strength
-    long                            con;        // conecntration (for spells)
-    long                            exp;        // experience points
-    long                            lvl;        // experience level
+    long                            throw;      // throwing; grenade, cross etc.
+    /* softwre skills */
+    struct krak                     krak;       // krak subgame structure
+    /* combat skills */
     struct budo                     budo;       // budo close-combat attributes
-    struct ice                      ice;        // ice subgame structure
+    /* weapon skills */
+    long                            whip;       // whip skill
+    long                            knife;      // knife skill
+    long                            sword;      // sword skill
+    long                            gun;        // gun skill
+    long                            bomb;       // explosive skill
+    /* miscellaneous modifiers */
+    long                            lock;       // lock-picking
+    long                            karma;
+    long                            cha;        // charisma; communication skill
+    long                            con;        // frauds and other hoaxes
 };
 
 #if 0
@@ -47,6 +76,17 @@ struct objitem {
     long                            def;        // non-zero e.g. for armors
     struct d20diceset               atkdice;
     struct d20diceset               defdice;
+};
+
+struct objdeck {
+    long                            netplugs;   // number of connections
+    long                            netspeed;   // 512000, 1000000, or 4000000
+    long                           *bram;       // TLB, NVRAM, CACHE, MTR
+    long                            bramsize;
+    int8_t                         *flash;      // operating system and programs
+    long                            flashsize;
+    int8_t                         *ram;        // physical memory; code + data
+    long                            ramsize;    // max 64 megs (16x4M), 32-bit
 };
 
 #endif /* __MJOLNIR_OBJ_H__ */

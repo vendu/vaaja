@@ -115,6 +115,8 @@ Weapons
 
 # Zombie
 
+- immune to changes assist against the effectes of altitube, disease, poison,
+  pressure, radiatoion, and temperature
 - a reawakened corpse or someone bitten by another zombie
 - cannibalistic fiends
 - rotot-like walking, respiratory problems, rotting corpses

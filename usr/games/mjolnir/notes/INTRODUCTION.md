@@ -31,6 +31,10 @@ f - 4 food rations
 G - a bit of Gleipnir
 x - the blessed silver cross of Ezekiel
 | - the rod of Buddha
+S - Silverblade from your worshipped deity
+D - deck-computer
+: - 4 punchcards
+  - anonymous bank account credentials
 
 # Levels and Quests
 
@@ -44,8 +48,12 @@ hood by the corresponding god. In short, you win the game.
 
 # Level 0 - Ground
 
-The ground level has locations such as shops, offices, other buildings, and
-graveyards.
+The Big War of 2051 has wiped huge amount of the population; humans and other
+creatures, animals, and plants included. Radiation levels are intolerable in
+most areas.
+
+The ground level has building such as shops and offices, as well as graveyards.
+Business is out and the undead roam the world.
 
 ## Transylvania
 
@@ -55,45 +63,80 @@ country. :)
 
 Pay attention to graveyards, especially at dusk and dawn.
 
+# Levels 1-8 - New Atlantis
+
+New Atlamtis consists of procedurally, pseudo-randomly  generated rooms and
+walls, to guarantee a unique experience every game.
+
+The population of New Atlantis is said to be about 5,000.
+
+There's up to a few ATM-machines per-level together with half a dozen banks.
+
+Digital currency is normal. Pretty much every inhabitant has an anonymous
+digital account + password combination or two.
+
+Your quests in the dungeons include a digital a ATM/credit-card hoax and a
+bank robbery.
+
+## Altars
+
+Altars can be used to offer sacrifices (plants etc., only flesh if youre evil
+or chaotic). Sometimes your deity gives you a special gift such as a sword
+
 ## Monastery
 
 The monks you run into are highly-educated ones with some being experts on demon
 and ghost hunting. Pay attention to the monastery library.
 
-# Levels 1-8 - Dungeons
+# Level 9 - Oracle
 
-The dungeon levels consist of procedurally generated rooms and walls generated
-procedurally, somewhat pseudo-randomly, to guarantee a unique experience every
-game.
-
-Your quests in the dungeons include a digital bank robbery or two. You'll also
-meet plenty of demons and other hostile enemies to combat with in the dungeons.
-
-# Level 10 - Oracle
+# Levels 10-17 - New Atlantis Suburbs
 
 The oracle gives useful hints at different prices - the more you pay, the better
-advice.
+advice. In case you manage to hypnotize the mentally strong oracle, he will slip
+out a hint for free.
 
-# Level 11 - Atlantis
+# Level 18 - Original Atlantis
 
 Your mission in Atlantis is to rescue the captured princess Kara from the
-continent falling under the sea. You also must return her golden sword back to
-Kara.
+continent once sunk into the sea. You also have to return her golden sword back
+to Kara.
 
-# Levels 12-15 - Death Labyrinth
+# Level 19 - Oracle
+
+# Levels 19-20 - Death Labyrinth
 
 The Death Labyrinth is a place ruled by the daughter of Asmodeus aka Lucifer,
 Asmodina. Common shapes of Asmodina include that of a young woman as well as
 the snake Apep. Beating Asmodina will require use of white magic weaponry.
 
-# Levels 16-19 - Hell
+Somehow, Sinclair's silver cross [of Ezekiel] has gone missing, and he's been
+given a hint that it might be in Asmodina's labyrinth. Your mission is to try
+to rescue it if so.
+
+# Levels 21-22 - Hell
 
 Hell is where Lucifer the fallen angel aka Satan rules the game. Your mission is
 to either eliminate Asmodis or escape from Hell.
 
+# Levels 23-38 - Old Atlantis
+
+Old Atlantis is where humans and other creatures lived after the fall of the
+Original Atlantis in 1024 until Asmodis and Asmodina took over the inside of
+the planet below Original Atlantis above them. This exile in 2057AD
+wiped out 3/4 of the Atlantean from about 10,000 in their battle against demons.
+
+# Level 39 - Oracle
+
+# Level 40 - Asgard
+- the home and fortress of the Aesir
+
+# Level 41 - Vanaheim
+- the home and fortress of the Vanir
+
 # Level 42 - Valhalla
 
-Rumor has it Valhalla is where Fenris has taken Mjolnir the hammer which he
-stole from Thor. It's also a place where half of those who died in combats have
-gathered to help Odin with the events of Ragnarök.
+Rumor has it Fenris has taken Mjolnir the hammer which he
+stole from Thor to Valhalla. It's also a place where half of those who died in
+combats have gathered to help Odin with the events of Ragnarök.
 

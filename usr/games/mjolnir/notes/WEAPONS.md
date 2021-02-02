@@ -46,7 +46,7 @@
   - WEIGHT      3000
   - ATK         2d12
   - ABILITIES   - turning off fire, freezing water
-  - 25 % chance of a frost bolt
+  - 25 % chance of a frost bolt which causes freezing
 
 # Flameblade
   - STR         16
@@ -54,7 +54,7 @@
   - WEIGHT      3000
   - ATK         2d12
   - ABILITIES   - turning on fire
-  - 25 % chance of a flame bolt
+  - 25 % chance of a flame boltwhich causes burns
 
 # Shockblade
   - STR         16
@@ -62,10 +62,10 @@
   - WEIGHT      3000
   - ATK         2d12
   - ABILITIES   electrocuting/boiling water, setting things on fire
-  - 25 % chance of a lightning bolt
+  - 25 % chance of a lightning bolt which causes paralysis/electrocution
 
 # Silverblade
-  - STR         16, 32 against demons
+  - STR         16, 64 against demons; even ghouls
   - LENGTH      75
   - WEIGHT      3000
   - ABILITIES   - decapitating demons

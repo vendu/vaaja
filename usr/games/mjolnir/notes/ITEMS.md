@@ -40,9 +40,13 @@ at graveyards, often inside tombs.
   the deck's NET-module.
 
 ## 1 - deck upgrades
-- network card
-- flash memory
-- processor module
+- network card with 1-16 plugs for 512K-4M transfer rates
+- flash memory with the operating system
+- RAM-memory, up to 16x4 megabytes (32-bit bus)
+- processor module with 1-16 cores
+
+## 6 - elecronic devices
+- automatic and mechanical timers, readiation-meter
 
 ## - - ATM- or credit card
 
@@ -50,9 +54,14 @@ ATM/credit-cards you have gotten or stolen from may be used to transfer digital
 currency to anynymous accounts with only numerical IDs which you control. They
 can also be used to pay for items in shops.
 
-## | - ATM-machine
+## C - ATM-machine
+
+ATM-machines can be used for cash withdrawals and deposits, and transfers from
+one account to another.
 
 ## i - Identification card (to be used on terminals)
+
+## 9 - Book
 
 ## B - bee hive
 - you may acquire honey from these; one queen per hive.
@@ -60,16 +69,13 @@ can also be used to pay for items in shops.
 ## c - carving
 - may be hidden under sand
 
-ATM-machines can be used for cash withdrawals and deposits, and transfers from
-one account to another.
-
 ## f - food
 
 ## ~ - water
 
 ## { - fountain
 
-## $ - gold
+## $ - money
 
 ## = - bullet
 
@@ -123,7 +129,7 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ## [ - mirror
 
-## c - chest
+## 4 - chest
 
 ## g - submachine gun
 - may be special weapon Jatimatic
@@ -134,11 +140,12 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ## j - crowbar ('jimmy bar')
 
+## 3 - detonator (used constructing bombs) automatic or mechanical, the latter
+       being able to take an EMP-hit
+
 ## 4 - c4 plastic explosive
 
 ## l - lockpick
-
-## L - laser
 
 ## m - mace
 
@@ -152,11 +159,11 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ## 7 - pistol
 
-## R - remnants
+## R - leftovers; remnants
 
-## s - sword
+## S - sword
 
-## S - shopkeeper
+## s - shopkeeper
 
 ## T - terminal
 
@@ -172,16 +179,16 @@ return.
 |  ' '   | floor          | N/A                 | floor/ground
 |   #    | wall           | N/A                 | cave wall (may be hidden door)
 |   +    | door           | N/A                 | door
-|   .    | sand           | 1/4                 | may be quick-sand
+|   .    | sand           | 1/4 in Original Atlantis| may be quick-sand (5 %)
 |   >    | stairway down  | 1 per level         | stairs one level down
 |   <    | stairway up    | 1 per level         | stairs one level up
-|   %    | coffin         | 1/8 on graveyards   | a grave coffin (in a tomb)
+|   %    | coffin         | 1/4 in graveyards   | a grave coffin (tomb, crypt)
 |   0    | jack           | 1/64 in underworld  | connection with NET-module
 |   1    | deck upgrades  | NET, MEM, PROC      | upgrades for your deck
 |   -    | ATM-card       | 1/128               | bank account access; need PIN-code
 |   C    | ATM-machine    | 1/32                | cash withdrawals and deposits
 |   f    | food           | 1/16                | food ration
-|   ~    | water          | 1/16                | water, may be blessed potion
+|   ~    | water          | 1/16                | water, potion
 |   {    | fountain       | 1/32                | fountain
 |   $    | gold           | 1/64                | use to get merchandise
 |   =    | bullet         | 1/32                | bullet (silver ones work on daemons)
@@ -198,11 +205,10 @@ return.
 |   [    | mirror         | 1/16                | mirror on a wall
 |   c    | chest          | 1/32                | chest; may find treasury in them
 |   D    | deck           |                     | punchcard and tape readers
-|   g    | sub-machine gun | 1/128              | close-range combat
-|   h    | hammer          | bee nests          |
+|   g    | sub-machine gun| buy from soldiers   | close-range combat
+|   h    | honey          | in bee nests        |
 |   k    | knife          | 1/32                | knife, dagger, gurkha, ...
 |   l    | lockpick       | 1/64                | thieves are naturally best at using these
-|   L    | laser          | 1/128               | laser gun, from aliens
 |   m    | mace           | 1/32                | mace or hammer
 |   8    | mainframe      | 1/16                | computer systems for running punchcards
 |   $    | money          | 1/256               | money
@@ -210,7 +216,8 @@ return.
 |   ?    | pipe           | 1/64                | pipe
 |   7    | pistol         | 1/64                | pistol
 |   R    | remnants       | N/A                 | corpses and belongings
-|   s    | sword          | 1/128               | sword
+|   S    | sword          | 1/128               | sword
+|        | shopkeeper
 |   T    | terminal       | 1/16                | terminal connected to mainframe
 |   x    | cross          | 1/64                | cross; may be Holy Cross
 |   X    | altar          | 1/32                | altar; sacrifice dead creatures on it
@@ -254,14 +261,6 @@ The hammer you need to return to Thor after Fenris stole it.
 
 Ribbon that can hold Fenris leashed.
 
-## S - Stormbringer
-
-Special sword.
-
-## E - Excalibur
-
-Special sword.
-
 ## x - Cross of Light
 
 Special cross, the player's default white-magic weapon.
@@ -278,7 +277,5 @@ Raphael, Gabriel, Uriel - carved on it. Very strong white-magic weapon.
 |   (   | Golden Sword    | 1 per game     | princess Kara's golden sword
 |   M   | Mjolnir         | 1 per game     | the hammer of Thor
 |   G   | Gleipnir        | 1 at start     | ribbon that can hold Fenris
-|   S   | Stormbringer    | 1 per game     | Stormbringer special sword
-|   E   | Excalibur       | 1 per game     | Excalibur special sword
 |   x   | Cross of Light  | 1 per game     | the blessed cross of Ezekiel with the names of 4 archangels - Michael, Raphael, Gabriel, Uriel
 

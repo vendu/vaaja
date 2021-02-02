@@ -47,7 +47,7 @@ d20rollset(struct d20dice *dice)
     long                        prob;
     long                        n;
 
-    prob = d20rolldie(D20_D10);
+    prob = d20rolldie(D20_D20);
     if (prob <= dice->prob) {
         n = dice->nd4;
         if (n) {

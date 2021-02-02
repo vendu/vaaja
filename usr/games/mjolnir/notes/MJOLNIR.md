@@ -6,7 +6,7 @@ This document contains ideas for a Rogue-like adventure game.
 
 ## background
 
-I grew up playing mostly point and click adventures from the likes of Sierra
+I grew up playing mostly point-and-click adventures from the likes of Sierra
 On-Line and Lucasarts. Games such as Gabriel Knight series by my favorite game
 creator Jane Jensen, another Sierra series of funny Space Quest games, most
 Leisure Suit Larry games, and so forth.
@@ -18,8 +18,10 @@ mention Gabriel Knight - Sins of the Fathers from the late Sierra On-Line. I
 rank it as one of the very best computer games ever made.
 
 Many Rogue-like genre games are based on characters from Dungeons & Dragons
-games, which is one reason I decided to try something different so you're going
-to meet characters from different mythologies such as Norse ones.
+games or perhaps Tolkien stories or the Cthulhu mythos, which is one reason I
+decided to try something different so you're going to meet characters from
+different mythologies such as Norse ones together with demons, some animals,
+and a few deities.
 
 ## the plot
 
