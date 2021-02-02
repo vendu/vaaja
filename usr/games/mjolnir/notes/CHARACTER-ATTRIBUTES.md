@@ -1,21 +1,34 @@
-# Mjolnir Character Skills
+# Mjolnir Character Attributes
 
+## Mental Skills
 - PSI               - psionic skills such as telepathy and seeing things
 - INT               - intelligence (affects magic success)
+- MAGIC             - affects spell casting
+- HEAL              - healing rate
+
+## Physical Skills
 - STR               - combat strength (base hit power)
 - RANK              - karate belts (affects combat)
 - REF               - reflex (affects attack-saves)
+- THROW             - throwing things such as knives
+
+## Software Skills
 - KRAK              - malware attack skill
 - PROT              - malware protection skill
-- MAGIC             - affects spell casting
-- HEAL              - healing rate
-- LOCK              - lock-picking skill
+
+## Weapon Skills
+- KNIFE             - knife combat skill
 - SWORD             - sword combat skill
+- GUN               - handgun shooting skill
+- SUB               - submachine shooting skill
+
+## Miscellaneous Skills
+- LOCK              - lock-picking skill
+- KARMA             - TODO: rises a point when you kill an evil creature,
+                      drops for good
 
 # Other Ideas
 - CHA               - charisma; affects discussions and bargaining
-- KARMA             - TODO: rises a point when you kill an evil creature,
-                      drops for good
 
 # Mjolnir Character Types
 

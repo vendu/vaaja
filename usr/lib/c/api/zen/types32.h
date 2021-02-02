@@ -5,7 +5,9 @@
 typedef uint32_t                m_size_t;    // size for memory regions
 typedef int32_t                 m_ssize_t;   // signed size for I/O
 
-#if (defined(__i386__)                                                  \
+#if (defined(__amd64__)\
+     || defined(__x86_64__)                                             \
+     || defined(__i386__)                                               \
      || defined(__i486__)                                               \
      || defined(__i586__)                                               \
      || defined(__i686__))

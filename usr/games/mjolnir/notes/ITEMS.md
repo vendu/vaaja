@@ -1,34 +1,36 @@
-## game objects
+# Dungeon Objects
 
-The objects are designed to be based on different mythologies and cyberpunk-like
-plot.
+The objects are designed to be based on different mythologies and cyberpunk-
+like plot.
 
-### ' ' - floor
+## ' ' - floor
 
 Floors are empty space in the dungeon, but may have traps and items hidden on
 them.
 
-### # - wall
+## # - wall
 
 Walls exist to separate rooms and corridors; they have hidden traps, cervings,
 or corridors
 
-### + - door
+## + - door
 
-### . - sand
+## . - sand
 
 Sand is usually safe, but has a small probability to be quick-sand which is
 of course hazardous.
 
-### > - stairway down
+## > - stairway down
 
 Stairs one level down.
 
-### < - stairway up
+## < - stairway up
 
 Stairs one level up.
 
-### % - coffin
+# Miscellaneous Objects
+
+## % - coffin
 
 Vampires don't like daylight, so they sleep in closed coffins. These are located
 at graveyards, often inside tombs.
@@ -42,61 +44,61 @@ at graveyards, often inside tombs.
 - flash memory
 - processor module
 
-### - - ATM- or credit card
+## - - ATM- or credit card
 
 ATM/credit-cards you have gotten or stolen from may be used to transfer digital
 currency to anynymous accounts with only numerical IDs which you control. They
 can also be used to pay for items in shops.
 
-### | - ATM-machine
+## | - ATM-machine
 
-### i - Identification card (to be used on terminals)
+## i - Identification card (to be used on terminals)
 
-### B - bee hive
+## B - bee hive
 - you may acquire honey from these; one queen per hive.
 
-### c - carving
+## c - carving
 - may be hidden under sand
 
 ATM-machines can be used for cash withdrawals and deposits, and transfers from
 one account to another.
 
-### f - food
+## f - food
 
-### ~ - water
+## ~ - water
 
-### { - fountain
+## { - fountain
 
-### $ - gold
+## $ - gold
 
-### = - bullet
+## = - bullet
 
-### ! - potion
+## ! - potion
 
-### * - plant
+## * - plant
 
-### : - punchcard
+## : - punchcard
 
 Punchcards contain Core War warriors for competing on mainframe masterhood as
 well as other software tools.
 
-### t - tape
+## t - tape
 
 Mainframes store Core War warriors and other software + data on tapes.
 
-### & - statue
+## & - statue
 
-### ^ - trap
+## ^ - trap
 - arrow
 - bomb
 - pit
 - hole
 - teleport
 
-### 9 - scroll
+## 9 - scroll
 - scrolls contains spell to be casted
 
-#### spells
+## Spells
 - spell of identify
 - spell of teleport
 - spell of activate cross
@@ -108,59 +110,59 @@ Mainframes store Core War warriors and other software + data on tapes.
 - spell of stop time
 - spell of bless
 
-### o - ring
+## o - ring
 - ring of levitation
 - ring of invisibility
 - ring of teleport
 - ring of night vision
 
-### \ - whip
+## \ - whip
 - may be used to slay non-demonic, usually smaller creatures
 
-### ] - armor
+## ] - armor
 
-### [ - mirror
+## [ - mirror
 
-### c - chest
+## c - chest
 
-### g - submachine gun
+## g - submachine gun
 - may be special weapon Jatimatic
 
-### h - honey
+## h - honey
 
-### k - katana
+## k - katana
 
-### j - crowbar ('jimmy bar')
+## j - crowbar ('jimmy bar')
 
-### 4 - c4 plastic explosive
+## 4 - c4 plastic explosive
 
-### l - lockpick
+## l - lockpick
 
-### L - laser
+## L - laser
 
-### m - mace
+## m - mace
 
-### 8 - mainframe
+## 8 - mainframe
 
-### $ - money
+## $ - money
 
-### p - paper [possibly a note]
+## p - paper [possibly a note]
 
-### ? - pipe
+## ? - pipe
 
-### 7 - pistol
+## 7 - pistol
 
-### R - remnants
+## R - remnants
 
-### s - sword
+## s - sword
 
-### S - shopkeeper
+## S - shopkeeper
 
-### T - terminal
+## T - terminal
 
-### x - cross
+## x - cross
 
-### X - altar
+## X - altar
 
 This is where you sacrifice to a dedicated god. You may get special items in
 return.
@@ -215,52 +217,52 @@ return.
 
 ## Special Objects
 
-### Q - Crystal ball
+## Q - Crystal ball
 
 The crystal ball shows things happening right now and/or in the future. The
 probability for you to see visions depends on your psionic skill.
 
-### | - Rod of Buddha
+## | - Rod of Buddha
 
 The holder of Buddha rod may stop time for a short period to flee from or do
 preparations for fights by yelling TOPAR - it is not allowed to kill or attack
 anyone during those turns.
 
-### Y - demon whip
+## Y - demon whip
 
 Legend has it this weapon against some demons was sown from the backskin of
 a demon.
 
-### J - Jatimatic
+## J - Jatimatic
 
 Finnish-engineered submachine gun, loaded with 9 mm silver bullets it makes a
 very nice firearm against vampires and other demons. Another story goes that
 quicksilver (mercury)-filled bullets might be the way to go for werewolves.
 
-### K - golden sword
+## K - golden sword
 - the golden sword of the princess of Atlantis, Kara, is a strong weapon against
   demons and may be used to travel through dimensions
 
-### ) - boomerang
+## ) - boomerang
 - may be special itgem Silver boomerang
 
-### M - Mjolnir
+## M - Mjolnir
 
 The hammer you need to return to Thor after Fenris stole it.
 
-### G - Gleipnir
+## G - Gleipnir
 
 Ribbon that can hold Fenris leashed.
 
-### S - Stormbringer
+## S - Stormbringer
 
 Special sword.
 
-### E - Excalibur
+## E - Excalibur
 
 Special sword.
 
-### x - Cross of Light
+## x - Cross of Light
 
 Special cross, the player's default white-magic weapon.
 
