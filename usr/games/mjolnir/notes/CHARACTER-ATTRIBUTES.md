@@ -40,8 +40,7 @@
 
 ## Cracker
 
-- highly skilled in malware attacks (KRAK) and social engineering
-- has some
+- highly skilled in malware attacks (KRAK) and social engineering (CHA)
 
 ## Cyborg
 
