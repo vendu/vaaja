@@ -2,15 +2,15 @@
 
 ## Programmer Names
 
-- toor, loop, pixel, mage
+- toor, loop, pixel, trik
 
 ## Cracker Names
 
-- baud, tap, fiber, storm
+- baud, hijak, fiber, storm, brik, noise
 
 ## Cyborg Names
 
-- bug, kaos, trik, dawn
+- bug, kaos, hitek, wire
 
 ## Soldier Names
 
@@ -18,7 +18,7 @@
 
 ## Thief Names
 
-- flash, shine, shadow, snap
+- flash, shine, shadow, snap, dawn
 
 ## Engineer Names
 
