@@ -10,6 +10,8 @@ game are based on common horror stories such as John Sinclair adventures from
 
 ### @ - the player
 
+## Non-Player Creatures
+
 ### a - ant (STR:0 HIT:1d4)
 
 Ants are easy opponents to defaeat, except perhaps when they appear in masses.
@@ -109,7 +111,6 @@ Lady X carries a submachine gun which may be loaded with silver bullets.
 |--------|---------------|-------------|--------------|-------
 |  a     | ant           | any         | 1/16         | regular ant
 |  A     | soldier ant   | 2 up        | 1/32         | soldier ant
-|  B     | beehive       | 4 up        | 1/16         | one queen per hive
 |  b     | bee           | 4 up        | 1/32         | masses around hives
 |  q     | bee queen     | 4 up        | 1/128        | usually hiding in nest
 |  d     | dog           | 1 up        | initial pet  | likes munchies

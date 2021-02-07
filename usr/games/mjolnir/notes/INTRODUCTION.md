@@ -33,8 +33,40 @@ x - the blessed silver cross of Ezekiel
 | - the rod of Buddha
 S - Silverblade from your worshipped deity
 D - deck-computer
-: - 4 punchcards
-  - anonymous bank account credentials
+  - 2 flashcard slots
+1 - 1 jack; 1x512K transfer rate
+1 - 1 core; 32 MIPS execution speed
+1 - RAM; 1x4M, 16 slots
+1 - 4 punchcards
+    - COM   - DPL-compiler
+    - DEB   - deck debugger
+    - DPF   - deck profiler
+    - TAP   - network packet monitoring and filtering
+      - PKT *tap(src, mask, port, ndx); - create a new packet-queue
+        - returns head-pointer or NULL on failure (sets errno)
+          - errno: ENOMEM
+      - uint16 pktchksum(pkt);          - calculate packet [IPv4] checksum (CRC)
+      - uint32 pktgetsrcadr(pkt);       - get packet source address
+      - uint32 pktgetdestadr(pkt)       - get packet destination address
+      - uint16 pktgetsrcport(pkt);      - get packet source port
+      - uint16 pktgetdestport(pkt);     - get packet destination port
+      - uint32 pktpushfilt(prog, qid);
+        - return: qid, -1 on failure (sets errno)
+          - errno: ENOMEM
+      - void   pktlog(level);           - log textual information on packet
+      - void   pktcpy(pkt, ram);        - copy biary-packet data into RAM
+      - void   pktrecv(pkt);            - push to input-chain
+      - void   pktsend(pkt);            - push to output-chain
+      - void   pktreq(pkt, queue);      - reque packet to specified queue
+1 - 1 flashcard with the DOS (Deck Operating System)
+1 - 1 flashcard with the following data
+  - 9 spellbook
+    - 4xfireball + 4xfirebolt OR 4xfrostball + 4xfrostbolt
+      OR 4xshockball + 4xshcokbolt depending on your characters element of fire,
+      ice, or lightning, respectively
+  - 9 notes (level maps with special location, your notes)
+  - 2 anonymous bank account credentials
+- - ATM-debit card loaded with $5,000
 
 # Levels and Quests
 

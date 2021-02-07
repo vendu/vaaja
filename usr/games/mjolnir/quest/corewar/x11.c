@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #include <corewar/cw.h>
 #include <corewar/rc.h>
 #include <corewar/zeus.h>

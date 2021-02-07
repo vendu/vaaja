@@ -17,8 +17,8 @@ or corridors
 
 ## . - sand
 
-Sand is usually safe, but has a small probability to be quick-sand which is
-of course hazardous.
+Sand is usually safe, but has a small probability to be quick-sand which makes
+you sink down to the next level
 
 ## > - stairway down
 
@@ -59,7 +59,7 @@ can also be used to pay for items in shops.
 ATM-machines can be used for cash withdrawals and deposits, and transfers from
 one account to another.
 
-## i - Identification card (to be used on terminals)
+## i - identification card (to be used on terminals)
 
 ## 9 - Book
 
@@ -74,6 +74,8 @@ one account to another.
 ## ~ - water
 
 ## { - fountain
+
+## o - oxygen tank and mask
 
 ## $ - money
 
@@ -100,27 +102,35 @@ Mainframes store Core War warriors and other software + data on tapes.
 - pit
 - hole
 - teleport
+- quicksand
 
-## 9 - scroll
-- scrolls contains spell to be casted
+## 9 - book
 
 ## Spells
 - spell of identify
+  - identifies player possessions
 - spell of teleport
-- spell of activate cross
-- spell of paralyze
-- spell of icebolt
-- spell of thunderbolt
-- spell of lightning
+  - teleports player to a random location (on the current level)
+- spell of light
+  - activates cross of light; it starts to glow and heats up
+- spell of firebolt
+  - causes burns
+- spell of frostbolt
+  - causes freezing, even necrosis if bad enough
+- spell of shockbolt
+  - causes paralyses
 - spell of show map - shows the map of the current level
 - spell of stop time
 - spell of bless
 
 ## o - ring
+- ring of strength      - gives player 2 x STR
+- ring of mind          - gives player 2 * INTEL
+- ring of magic         - gives player 2 x MAGIC
 - ring of levitation
 - ring of invisibility
 - ring of teleport
-- ring of night vision
+- ring of darkvision
 
 ## \ - whip
 - may be used to slay non-demonic, usually smaller creatures
@@ -157,6 +167,8 @@ Mainframes store Core War warriors and other software + data on tapes.
 
 ## ? - pipe
 
+## 5 - shuriken (made of steel, silver, gold)
+
 ## 7 - pistol
 
 ## R - leftovers; remnants
@@ -190,6 +202,7 @@ return.
 |   f    | food           | 1/16                | food ration
 |   ~    | water          | 1/16                | water, potion
 |   {    | fountain       | 1/32                | fountain
+|   o    | oxygen tank    |
 |   $    | gold           | 1/64                | use to get merchandise
 |   =    | bullet         | 1/32                | bullet (silver ones work on daemons)
 |   !    | potion         | 1/32                | potion
@@ -219,7 +232,7 @@ return.
 |   S    | sword          | 1/128               | sword
 |        | shopkeeper
 |   T    | terminal       | 1/16                | terminal connected to mainframe
-|   x    | cross          | 1/64                | cross; may be Holy Cross
+|   x    | cross          | 1/64                | cross; may be cross of light
 |   X    | altar          | 1/32                | altar; sacrifice dead creatures on it
 
 ## Special Objects
@@ -251,7 +264,7 @@ quicksilver (mercury)-filled bullets might be the way to go for werewolves.
   demons and may be used to travel through dimensions
 
 ## ) - boomerang
-- may be special itgem Silver boomerang
+- may be special Silver boomerang (against demons)
 
 ## M - Mjolnir
 

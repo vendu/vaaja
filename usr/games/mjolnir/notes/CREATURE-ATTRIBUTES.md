@@ -2,20 +2,27 @@
 
 ## Creature Evolution
 - EXP rises every 32 turns, max 32768
-- RANK rises every 128 turns
+- RANK rises every 32 turns
 - healing rate is 1 / HEAL per turn.
 
 ## Mental Skills
 - PSI               - psionic skills such as telepathy and seeing things,
                       e.g. in the crystal ball
-- INTEL             - intelligence (affects magic success)
+- INTEL             - intelligence (affects magic success, reasoning, memory)
+- (WIS)             - wisdom; animal handling, insight, medicine, perception
 - MAGIC             - affects spell casting
 
 ## Physical Abilities
 - HEAL              - healing rate
+                    - affected by freezing and paralysis, infections, and
+                      health
 - STR               - combat strength (base hit power)
-- RANK              - karate belts (affects combat)
-- REF               - reflex (affects attack-saves)
+- BUDO              - karate belts (close-combat skills)
+- DEX               - dexterity (affects attack-saves), agility (sneaking),
+                      coordination, balance, investigation, nature
+- (END)             - endurance; abilities to stay active for a long time,
+                      resist, withstand, recover from and have immunity to
+                      trauma, wounds, or fatigue
 - THROW             - throwing things such as hand grenades
 
 ## Software Skills

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #include <corewar/cw.h>
 
 #define cwset1field(id) (g_cw1fieldmap |= (1 << (id)))
@@ -332,7 +332,7 @@ rcgetinstr(long pid, long adr, char *str)
                 if (sign) {
                     val = -val;
                 }
-                val = cwwrapval(val);
+                //                val = cwwrapval(val);
                 a = val;
             } else {
                 fprintf(stderr, "missing A-field: %s (%ld)\n",
@@ -403,7 +403,7 @@ rcgetinstr(long pid, long adr, char *str)
                         if (sign) {
                             val = -val;
                         }
-                        val = cwwrapval(val);
+                        //                        val = cwwrapval(val);
                         instr.b = val;
                     } else {
                         fprintf(stderr, "invalid B-field: %s\n",

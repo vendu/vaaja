@@ -9,9 +9,9 @@
 #include <ctype.h>
 #include <stdint.h>
 #include <time.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #include <prng/randmt32.h>
 #include <corewar/cw.h>
 #include <corewar/rc.h>

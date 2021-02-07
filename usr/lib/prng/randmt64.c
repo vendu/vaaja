@@ -13,9 +13,9 @@
 #if defined(_REENTRANT)
 #include <pthread.h>
 #endif
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 
 #define RANDMT64NSTATE      312
 #define RANDMT64MAGIC       156

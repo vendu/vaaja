@@ -33,13 +33,13 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #if (RANDMT32TEST)
 #include <stdio.h>
 #if (RANDMT32PROF)
-#include <zero/prof.h>
+#include <env/prof.h>
 #endif
 #endif
 

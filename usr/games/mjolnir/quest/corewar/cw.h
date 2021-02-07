@@ -11,7 +11,7 @@
 #include <corewar/conf.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <zero/cdefs.h>
+#include <env/cdefs.h>
 #include <mach/param.h>
 #if defined(ZEUS) && defined(ZEUSSDL)
 #include <corewar/sdl.h>
