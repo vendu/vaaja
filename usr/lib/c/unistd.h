@@ -12,6 +12,9 @@
 #if !defined(__size_t_defined)
 #include <share/size.h>
 #endif
+#if !defined(__off_t_defined)
+#include <share/off_t.h>
+#endif
 //#include <stddef.h>
 #include <stdio.h>
 //#include <stdint.h>
@@ -22,9 +25,7 @@
 #include <getopt.h>
 #endif
 
-#if !defined(__GLIBC__)
 #include <bits/unistd.h>
-#endif
 
 extern char *optarg;
 extern int   optind;

@@ -7,9 +7,13 @@
 #define ZEN_TOOR_UID    INT32_C(0)
 #define ZEN_TOOR_GID    INT32_C(0)
 #define ZEN_NO_GID      (~INT32_C(0))
-#define ZEN_EXEC_PERM   1
-#define ZEN_WRITE_PERM  2
-#define ZEN_READ_PERM   4
+#define ZEN_UX_PERM     (1 << 0)        // object may be executed
+#define ZEN_UW_PERM     (1 << 1)        // object may be written
+#define ZEN_UR_PERM     (1 << 2)        // object may be read
+#define ZEN_PHYS_PERM   (1 << 3)        // object may be wired (mapped
+                                        // permantly) to virtual memory
+
+typedef zenperm_t       m_word_t;
 struct zenperm {
     zenuid_t            uid;
     zenuid_t            gid;
@@ -23,15 +27,12 @@ struct zencred {
 };
 
 /* I/O permission-bits */
-#define V0_UR_PERM      (1L << 8)       // user read permission bit
-#define V0_UW_PERM      (1L << 7)       // user write
-#define V0_UX_PERM      (1L << 6)       // user execute
-#define V0_GR_PERM      (1L << 5)       // group read
-#define V0_GW_PERM      (1L << 4)       // group write
-#define V0_GX_PERM      (1L << 3)       // group execute
-#define V0_AR_PERM      (1L << 2)       // world read
-#define V0_AW_PERM      (1L << 1)       // world write
-#define V0_AX_PERM      (1L << 0)       // world execute
+#define V0_GR_PERM      (1 << 26)       // group read
+#define V0_GW_PERM      (1 << 27)       // group write
+#define V0_GX_PERM      (1 << 28)       // group execute
+#define V0_AR_PERM      (1 << 29)       // world read
+#define V0_AW_PERM      (1 << 30)       // world write
+#define V0_AX_PERM      (1 << 31)       // world execute
 
 extern int  zenchkperm(struct zenperm *perm, struct zencred *cred, int mask);
 

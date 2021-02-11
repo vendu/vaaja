@@ -23,7 +23,7 @@ Close combat ranks are based on karate belts. Combat
 proceeds as follows.
 
 - the dice are rolled for the hit
-  - HIT = STRENGTH + ATTACK + DEX
+  - HIT = STRENGTH + DEX + ATTACK_DICE
 - the success die is rolled for the attacker
 - the reflex dice are rolled for the defender
   - success indicates the attacker hits

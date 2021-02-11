@@ -64,15 +64,15 @@ zenfreerun(void *ptr)
 }
 #endif
 
-#define zenaddadr(adr, val)    tabhashadd((const uintptr_t)adr,        \
-                                           (const uintptr_t)val)
+#define zenaddadr(adr, val)    tabhashadd((const uintptr_t)adr,         \
+                                          (const uintptr_t)val)
 #define zenfindadr(adr)        tabhashop((const uintptr_t)adr, TABHASH_FIND)
 
 #if !defined(SMP)
 #define zenchkslabbit(slab, ndx, id)                                    \
     (slab->bmap[ndx] & (1L << (id)))
 #else
-#define zenchkslabbit(slab, ndx, id)\
+#define zenchkslabbit(slab, ndx, id)                                    \
     m_cmpclrbit(&slab->bmap[ndx], id)
 #endif
 

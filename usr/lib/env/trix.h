@@ -136,7 +136,7 @@ long long llabs(long long x);
 
 #if defined(__GNUC__)
 #define _roundup2(a, b)                         \
-    ((__builtin_constant_p(b))                  \
+    ((__builtin_constant_p(b) && powerof2(b))   \
      ? rounduppow2(a, b)                        \
      : ((((a) + ((b) - 1)) / (b)) * b))
 #elif 0

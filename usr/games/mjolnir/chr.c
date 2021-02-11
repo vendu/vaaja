@@ -1,34 +1,15 @@
 #include <mjolnir/mjolnir.h>
 
-#define CHR_INVALID_CATEGORY    0
-#define CHR_PROGRAMMER_CATEGORY 1
-#define CHR_CRACKER_CAT         2
-#define CHR_CYBORG_CAT          3
-#define CHR_SOLDIER_CAT         4
-#define CHR_THIEF_CAT           5
-#define CHR_ENGINEER_CAT        6
-
-#define CHR_CATEGORY_DEF_NAMES  4
-static const char              *chrdefnames[CHR_MAX_CATEGORY + 1][CHR_CATEGORY_DEF_NAMES]
+#define CHR_DEF_NAMES  5
+static const char              *chrdefnames[MJOLNIR_CHR_CATEGORIES + 1][CHR_DEF_NAMES]
 = {
-    { NULL, NULL, NULL, NULL },             /* INVALID */
-    { "toor", "loop", "pixel", "mage" },    /* PROGRAMMER */
-    { "baud", "tap", "fiber", "storm" },    /* CRACKER */
-    { "bug", "kaos", "trik", "dawn" },      /* CYBORG */
-    { "max", "slash", "fury", "rage" },     /* SOLDIER */
-    { "flash", "shine", "shadow", "snap" }, /* THIEF */
-    { "hak", "core", "mage", "thunder" }    /* ENGINEER */
-};
-
-static long                     chrcounts[CHR_MAX_CATEGORY + 1]
-= {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    { NULL, NULL, NULL, NULL, NULL },               /* INVALID */
+    { "toor", "loop", "pixel", "mage", "zero" },    /* PROGRAMMER */
+    { "baud", "tap", "fiber", "storm", "krak" },    /* CRACKER */
+    { "bug", "kaos", "trik", "dawn", "mek" },       /* CYBORG */
+    { "max", "slash", "fury", "rage", "koma" },     /* SOLDIER */
+    { "flash", "shine", "shadow", "snap", "piq" },  /* THIEF */
+    { "hak", "core", "mage", "thunder", "tune" }    /* ENGINEER */
 };
 
 const char                     *chrcatnames[CHR_MAX_CATEGORY + 1]
@@ -46,18 +27,10 @@ static const char *
 chrgetname(long cat)
 {
     const char                 *name;
-    long                        cnt;
+    long                        ndx;
 
-    cnt = chrcounts[cat];
-    if (cnt < CHR_CATEGORY_DEF_NAMES) {
-        name = chrdefnames[cat][cnt];
-        cnt++;
-        chrcounts[cat] = cnt;
-    } else {
-        printf("%s: no default names left\n", chrcatnames[cat]);
-
-        exit(1);
-    }
+    ndx = getrandlim(MJOLNIR_CATEGORY_DEF_NAMES);
+    name = chrdefnames[cat][ndx];
 
     return name;
 }
@@ -70,13 +43,10 @@ chrinit(struct objchr *chr, long cat, const char *name)
     } else {
         name = chrgetname(cat);
     }
-    if (cat == CHR_CYBORG_CATEGORY) {
-        chr->type = CHR_CYBORG;
-    } else {
-        chr->type = CHR_HUMAN;
-    }
+    chr->type = MJOLNIR_CHR_PLAYER;
     chr->cat = cat;
-    iceinitchr(chr);
+    chrinitkrak(chr);
+    chr->budo.belt = MJOLNIR_WHITE_BELT;
 
     return;
 }

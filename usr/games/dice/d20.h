@@ -47,39 +47,35 @@ d20rollset(struct d20dice *dice)
     long                        prob;
     long                        n;
 
-    prob = d20rolldie(D20_D20);
-    if (prob <= dice->prob) {
-        n = dice->nd4;
-        if (n) {
-            score += d20rolln(n, D20_D4);
-        }
-        n = dice->nd6;
-        if (n) {
-            score += d20rolln(n, D20_D6);
-        }
-        n = dice->nd8;
-        if (n) {
-            score += d20rolln(n, D20_D8);
-        }
-        n = dice->nd10;
-        if (n) {
-            score += d20rolln(n, D20_D10);
-        }
-        n = dice->nd12;
-        if (n) {
-            score += d20rolln(n, D20_D12);
-        }
-        n = dice->nd20;
-        if (n) {
-            score += d20rolln(n, D20_D20);
-        }
+    n = dice->nd4;
+    if (n) {
+        score += d20rolln(n, D20_D4);
     }
+    n = dice->nd6;
+    if (n) {
+        score += d20rolln(n, D20_D6);
+    }
+    n = dice->nd8;
+    if (n) {
+        score += d20rolln(n, D20_D8);
+    }
+    n = dice->nd10;
+    if (n) {
+        score += d20rolln(n, D20_D10);
+    }
+    n = dice->nd12;
+    if (n) {
+        score += d20rolln(n, D20_D12);
+    }
+    n = dice->nd20;
+    score += d20rolln(n, D20_D20);
 
     return score;
 }
 
 /* roll buffer for d20 dice set */
-struct d20diceset {
+struct d20dice {
+    long                        prob;   /* 1d20 * 5 < prob % */
     long                        nd4;    /* count of 4-side dice */
     long                        nd6;    /* count of 6-side dice */
     long                        nd8;    /* count of 8-side dice */

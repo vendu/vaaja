@@ -49,5 +49,85 @@
 
 #endif /* defined(__GNUC__) || defined(__clang__) */
 
+/* get the lowest 1-bit in a */
+#define lo1bit(a)           ((a) & -(a))
+/* get n lowest and highest bits of i */
+#define lobits(i, n)        ((i) & ((1U << (n)) - 0x01))
+#define hibits(i, n)        ((i) & ~((1U << (sizeof(i) * CHAR_BIT - (n))) - 0x01))
+/* get n bits starting from index j */
+#define getbits(i, j, n)    (lobits((i) >> (j), (n)))
+/* set n bits starting from index j to value b */
+#define setbits(i, j, n, b) ((i) |= (((b) << (j)) & ~(((1UL << (n)) << (j)) - 0x01)))
+#define bitset(p, b)        (((uint8_t *)(p))[(b) >> 3] & (1UL << ((b) & 0x07)))
+/* set bit # b in *p */
+#if !defined(setbit)
+#define setbit(p, b)        (((uint8_t *)(p))[(b) >> 3] |= (1UL << ((b) & 0x07)))
+#endif
+/* clear bit # b in *p */
+#if !defined(clrbit)
+#define clrbit(p, b)        (((uint8_t *)(p))[(b) >> 3] &= ~(1UL << ((b) & 0x07)))
+#endif
+/* m - mask of bits to be taken from b. */
+#define mergebits(a, b, m)  ((a) ^ (((a) ^ (b)) & (m)))
+/* m - mask of bits to be copied from a. 1 -> copy, 0 -> leave alone. */
+#define copybits(a, b, m) (((a) | (m)) | ((b) & ~(m)))
+
+/* FIXME: test min2() and max2() */
+
+#define min(a, b)  ((a) <= (b) ? (a) : (b))
+#define max(a, b)  ((a) >= (b) ? (a) : (b))
+
+#define min2(a, b) ((b) ^ (((a) ^ (b)) & -((a) < (b))))
+#define max2(a, b) ((a) ^ (((a) ^ (b)) & -((a) < (b))))
+
+/* compute minimum and maximum of a and b without branching */
+#define min3(a, b)                              \
+    ((b) + (((a) - (b)) & -((a) < (b))))
+#define max3(a, b)                              \
+    ((a) - (((a) - (b)) & -((a) < (b))))
+
+#define sign(x, nb)                                     \
+    ((x) = (x) & ((1U < (nb)) - 1),                     \
+     ((x) ^ (1U << ((nb) - 1))) - (1U << ((nb) - 1)))
+
+/* compare with power-of-two p2 */
+#define gtpow2(u, p2)  /* true if u > p2 */     \
+    ((u) & ~(p2))
+#define gtepow2(u, p2) /* true if u >= p2 */    \
+    ((u) & -(p2))
+
+/* true if x is a power of two */
+#if !defined(powerof2)
+#define powerof2(x)     (!((x) & ((x) - 1)))
+#endif
+/* align a to boundary of (the power of two) b2. */
+#define align1(a, b2)   ((a) & ~((b2) - 1))
+#define align2(a, b2)   ((a) & -(b2))
+#define modpow2(a, b2)  ((a) & ((b2) - 1))
+
+/* round a up to the next multiple of (the power of two) b2. */
+//#define rounduppow2(a, b2) (((a) + ((b2) - 0x01)) & ~((b2) + 0x01))
+#define roundup2(a, b2) (((a) + ((b2) - 0x01)) & -(b2))
+/* round down to the previous multiple of (the power of two) b2 */
+#define rounddown2(a, b2) ((a) & ~((b2) - 0x01))
+
+#if defined(__GNUC__)
+#define _roundup2(a, b)                         \
+    ((__builtin_constant_p(b) && powerof2(b))   \
+     ? rounduppow2(a, b)                        \
+     : ((((a) + ((b) - 1)) / (b)) * b))
+#elif 0
+#define roundup2b(a, b)                         \
+    ((((a) + ((b) - 1)) / (b)) * (b))
+#endif /* !defined(__GNUC__) */
+
+/* compute the average of a and b without division */
+#define uavg(a, b)      (((a) & (b)) + (((a) ^ (b)) >> 1))
+
+#define divceil(a, b)   (((a) + (b) - 1) / (b))
+#define divround(a, b)  (((a) + ((b) / 2)) / (b))
+
+#define haszero32(a)    (((a) - 0x01010101) & ~(a) & 0x80808080)
+
 #endif /* ZEN_BITBANG_H */
 

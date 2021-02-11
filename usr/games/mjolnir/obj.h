@@ -5,13 +5,14 @@
 #define MJOLNIR_OBJ_ITEM            2
 
 /* character categories */
-#define MJOLNIR_PROGRAMMER_CATEGORY 1
-#define MJOLNIR_CRACKER_CATEGORY    2
-#define MJOLNIR_CYBORG_CATEGORY     3
-#define MJOLNIR_SOLDIER_CATEGORY    4
-#define MJOLNIR_THIEF_CATEGORY      5
-#define MJOLNIR_ENGINEER_CATEGORY   6
-#define MJOLNIR_MAX_CATEGORY        6
+#define MJOLNIR_INVALID_CHR         0
+#define MJOLNIR_PROGRAMMER_CHR      1
+#define MJOLNIR_CRACKER_CHR         2
+#define MJOLNIR_CYBORG_CHR          3
+#define MJOLNIR_SOLDIER_CHR         4
+#define MJOLNIR_THIEF_CHR           5
+#define MJOLNIR_ENGINEER_CHR        6
+#define MJOLNIR_CHR_CATEGORIES      6
 
 /* negative value of [-16, -1] for evil alignment */
 #define MJOLNIR_NEUTRAL_ALIGNMENT   0
@@ -38,7 +39,7 @@ struct objchr {
     long                            psi;        // psionic skills e.g. telepathy
     long                            intel;      // intelligence; magic success
     long                            magic;      // general magic
-    long                            cast;       // spell-casting modifier
+    long                            spell;      // spell-casting modifier
     /* physical abilities */
     long                            heal;       // heal rate [1/32,1]; 1 >> heal
     long                            str;        // strength

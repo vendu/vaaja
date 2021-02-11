@@ -608,4 +608,3 @@ kpanic(const char *msg, int sig)
     kreboot(ZEN_PANIC_REBOOT);
 #endif
 }
-

@@ -16,11 +16,11 @@ typedef va_list __stdio_va_list;
 #endif
 #endif
 #if !defined(__off_t_defined)
-#include <bits/off_t.h>
+#include <share/off_t.h>
 #endif /* !defined(__off_t_defined) */
 #include <fcntl.h>
 //#include <sys/types.h>
-#if (_ZERO_SOURCE)
+#if defined(__vaaja__)
 #include <mach/param.h>
 //#include <kern/io.h>
 //#include <kern/io/buf.h>

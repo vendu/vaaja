@@ -20,8 +20,16 @@
 #endif
 
 #define cwwrapval(x)        (((x) < 0)                                  \
+                             ? ((x) + CW_CORE_SIZE)                     \
+                             : (((x) >= CW_CORE_SIZE)                   \
+                                ? ((x) - CW_CORE_SIZE)                  \
+                                : (x)))
+
+#if 0
+#define cwwrapval(x)        (((x) < 0)                                  \
                              ? (CW_CORE_SIZE + (x))                     \
                              : ((x) % CW_CORE_SIZE))
+#endif
 
 #define CW_MAX_TURNS        80000
 #define CW_MAX_PROCS        8000

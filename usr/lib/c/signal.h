@@ -14,6 +14,7 @@ typedef uint32_t                pid_t;
 #define __pid_t_defined         1
 #endif
 #include <bits/signal.h>
+#include <share/sig_atomic_t.h>
 #include <sys/zen/signal.h>
 #if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199309L)
 struct timespec;
@@ -23,14 +24,11 @@ struct timespec;
 //#include <pthread.h>
 #endif
 #include <mach/param.h>
-#include <mach/atomic.h>
 #if defined(__zen__)
 #include <sys/zen/errno.h>
 #endif
 
 typedef void                    (*sighandler_t)(int);
-
-typedef m_atomic_t              sig_atomic_t;
 
 /* special values; standard ones */
 #define SIG_ERR                 ((__sighandler_t)-1)

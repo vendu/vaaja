@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#if defined(__zen__)
+#if defined(__zen__) && 0
 #include <sys/zen/malloc.h>
 #define MALLOC(n)                       kmalloc(n)
 #define FREE(ptr)                       kfree(ptr)
@@ -76,11 +76,11 @@ typedef __gnuc_va_list    va_list;
 #define va_start(ap,v)    (ap = (va_list)&v + _INTSIZEOF(v))
 #define va_arg(ap,t)      (*(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))
 #define va_end(ap)    (ap = (va_list)0)
-#elif defined(__x86_64__) || defined(__amd64__)
-#include <bsp/x86-64/stdarg.h>
-#elif ((defined(__i386__) || defined(__i486__)                          \
+//#elif defined(__x86_64__) || defined(__amd64__)
+//#include <bsp/x86-64/stdarg.h>
+//#elif ((defined(__i386__) || defined(__i486__)    \
         || defined(__i386__) || defined(__i486__)))
-#include <bsp/ia32/stdarg.h>
+//#include <bsp/ia32/stdarg.h>
 #endif /* compiler */
 
 #if defined(__VARARGS_H__)

@@ -5,7 +5,6 @@ approximately 15-60 minutes. The game design is in early stages.
 
 # Runners
 
-<<<<<<< HEAD
 ## Runner Attributes
 
 - CTYPE     - character type; wizard, barbarian, engineer, or android
