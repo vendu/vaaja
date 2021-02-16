@@ -69,13 +69,13 @@
 /* interrupt priorities */
 #define schedcalcintrprio(id)                                           \
     (SCHED_ULE_TRAP_PRIO + ((id) << SCHED_ULE_QUEUE_SHIFT))
-#define SCHED_ULE_TRAP_RT_PRIO      schedcaclintrprio(0)
-#define SCHED_ULE_TRAP_HID_PRIO     schedcaclintrprio(1)
-#define SCHED_ULE_TRAP_AV_PRIO      schedcaclintrprio(2)
-#define SCHED_ULE_TRAP_NET_PRIO     schedcaclintrprio(3)
-#define SCHED_ULE_TRAP_DISK_PRIO    schedcaclintrprio(4)
-#define SCHED_ULE_TRAP_MISC_PRIO    schedcaclintrprio(5)
-#define SCHED_ULE_TRAP_SOFT_PRIO    schedcaclintrprio(6)
+#define SCHED_ULE_TRAP_RT_PRIO      schedcalcintrprio(0)
+#define SCHED_ULE_TRAP_HID_PRIO     schedcalcintrprio(1)
+#define SCHED_ULE_TRAP_AV_PRIO      schedcalcintrprio(2)
+#define SCHED_ULE_TRAP_NET_PRIO     schedcalcintrprio(3)
+#define SCHED_ULE_TRAP_DISK_PRIO    schedcalcintrprio(4)
+#define SCHED_ULE_TRAP_MISC_PRIO    schedcalcintrprio(5)
+#define SCHED_ULE_TRAP_SOFT_PRIO    schedcalcintrprio(6)
 
 /*
  * in default configuration, we have

@@ -3,9 +3,11 @@
 #include <mach/asm.h>
 #include <mach/types.h>
 #include <mt/mtx.h>
+#include <env/cdefs.h>
 #include <sys/zen/util.h>
 #include <sys/zen/mem.h>
 
+#if 0
 #define TABHASH_SLOTS                   16384
 #define TABHASH_TAB_ITEMS               30
 #define TABHASH_ITEM_T                  struct zenmemitem
@@ -16,9 +18,11 @@
 
 static struct tabhashtab               *TABHASH_TAB[TABHASH_SLOTS];
 static volatile struct tabhashtab      *TABHASH_BUF;
+#endif
 
 #if defined(ZEN_SIMULATION)
 #include <stdlib.h>
+#define kmapanon(size, flg)             mapanon(-1, size, flg)
 #define kmalloc(size)                   malloc(size)
 #define kfree(ptr)                      free(ptr)
 #define kmemalign(align, size)          aligned_alloc(align, size)
@@ -76,10 +80,13 @@ zenfreerun(void *ptr)
 }
 #endif
 
+#if 0
 #define zenaddadr(adr, val)    tabhashadd((const uintptr_t)adr,         \
                                           (const uintptr_t)val)
 #define zenfindadr(adr)        tabhashop((const uintptr_t)adr, TABHASH_FIND)
+#endif
 
+#if 0
 #if !defined(SMP)
 #define zenchkslabbit(slab, ndx, id)                                    \
     (slab->bmap[ndx] & (1L << (id)))
@@ -87,7 +94,12 @@ zenfreerun(void *ptr)
 #define zenchkslabbit(slab, ndx, id)                                    \
     m_cmpclrbit(&slab->bmap[ndx], id)
 #endif
+#endif
 
+struct zenmemslab              *memslabtab[ZEN_MEM_MAX_SLABS] C_ALINED(MACH_PAGE_SIZE);
+
+#define zenmemaddblk(adr, buf)  (memslabtab[(uintptr_t)(adr) >> 17] = (buf))
+#define zenfindbuf(adr)         (memslabtab[(uintptr_t)(adr) >> 17])
 static void
 zenfreememslab(void *adr)
 {

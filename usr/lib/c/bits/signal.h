@@ -26,10 +26,6 @@
 typedef void (*__sighandler_t)(int);
 
 /* internal. */
-#define __sigisvalid(sig)                                               \
-    (((sig) > 0) && (!((sig) & ~SIGNO_MASK)))
-#define __sigrt(sig)    (((sig) > 0) && ((sig) & _SIGRTBIT))
-#define __signorm(sig)  (((sig) > 0) && (!((sig) & _SIGRTBIT)))
 #define __SIGNOCATCHBITS                                                \
     ((UINT64_C(1) << SIGKILL) | (UINT64_C(1) << SIGSTOP))
 
@@ -42,14 +38,7 @@ typedef void (*__sighandler_t)(int);
 #define SIG32BIT        1
 #endif
 
-#if (SIG32BIT)
-typedef struct {
-    int norm;
-    int rt;
-} sigset_t;
-#else
-typedef uint64_t sigset_t;
-#endif
+#include <api/zen/sigset.h>
 
 /* private values for signal actions */
 #define _SIG_TERM       ((__sighandler_t)3)
@@ -271,63 +260,9 @@ struct sigcontext {
 
 #if defined(_POSIX_SOURCE)
 
-#if defined(SIG32BIT)
-
-/* POSIX */
-#define sigemptyset(sp)                                                 \
-    ((sp)->norm = (sp)->rt = 0)
-#define sigfillset(sp)                                                  \
-    (((sp)->norm = (sp)->rt = ~UINT32_C(0)), 0)
-#define sigaddset(sp, sig)                                              \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1L)                                       \
-      : (__signorm(sig)                                                 \
-         ? ((sp)->norm |= (1UL << (sig)))                               \
-         : ((sp)->rt |= (1UL << ((sig) - SIGRTMIN))),                   \
-         0)))
-#define sigdelset(sp, sig)                                              \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1L)                                       \
-      : (__signorm(sig)                                                 \
-         ? ((sp)->norm &= ~(1UL << (sig)))                              \
-         : ((sp)->rt &= ~(1UL << ((sig) - SIGRTMIN))),                  \
-         0)))
-#define sigismember(sp, sig)                                            \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1L)                                       \
-      : (__signorm(sig)                                                 \
-         ? (((sp)->norm >> (sig)) & 0x01)                               \
-         : (((sp)->rt >> (sig - SIGRTMIN)) & 0x01))))
-#define __sigisemptyset(sp)     (!(sp)->norm | !(sp)->rt)
-
-#else /* !SIG32BIT */
-
-/* POSIX */
-#define sigemptyset(sp)                                                 \
-    (*(sp) = 0)
-#define sigfillset(sp)                                                  \
-    (*(sp) = ~0L)
-#define sigaddset(sp, sig)                                              \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1L)                                       \
-      : ((sp) |= (1UL << (sig)),                                        \
-         0)))
-#define sigdelset(sp, sig)                                              \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1L)                                       \
-      : ((sp) &= ~(1UL << (sig)),                                       \
-         0)))
-#define sigismember(sp, sig)                                            \
-    ((!__sigisvalid(sig)                                                \
-      ? (__seterrno(EINVAL), -1)                                        \
-      : ((*(sp) & (1UL << (sig)))                                       \
-         ? 1                                                            \
-         : 0)))
 #if defined(_GNU_SOURCE)
 #define __sigisemptyset(sp)     (!*(sp))
 #endif
-
-#endif /* SIG32BIT */
 
 #endif /* _POSIX_SOURCE */
 

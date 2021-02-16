@@ -32,20 +32,23 @@
 #define __SCHED_RT             (1 << 0) // realtime scheduling
 #define __SCHED_FIXED_PRIORITY (1 << 1) // SYNC, INPUT, AUDIO, VIDEO
 #define __SCHED_PROC_SCOPE     (1 << 2) // otherwise, system scope
+
+#define __SCHED_PARAM_PAD      (2 * MACH_CL_SIZE                        \
+                                - 7 * MACH_INT_SIZE                     \
+                                - 2 * TIMESPEC_SIZE)
 struct sched_param {
     int             sched_priority;
-    int             _pad;
+    int             sched_nice;
 #if defined(_POSIX_SPORADIC_SERVER) || defined(_POSIX_THREAD_SPORADIC_SERVER)
     int             sched_ss_low_priority;
+    int             sched_ss_max_repl;
     struct timespec sched_ss_repl_period;
     struct timespec sched_ss_init_budget;
-    int             sched_ss_max_repl;
 #endif /* SPORADIC */
-    long            __policy;
-    long            __nice;
-    long            __flg;
-    uint8_t         __res[2 * CLSIZE - 4 * sizeof(int) - 3 * sizeof(long)
-                          - 2 * sizeof(struct timespec)];
+    int             __policy;
+    int             __nice;
+    int             __flg;
+    int             __pad[__SCHED_PARAM_PAD];
 };
 
 #if defined(_GNU_SOURCE)

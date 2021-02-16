@@ -4,11 +4,9 @@
 #if !defined(NULL)
 #define NULL                    ((void *)0)
 #endif
+#include <api/zen/types.h>
 #include <sys/types.h>
-#if !defined(__time_t_defined)
-typedef uint64_t                time_t;
-#define __time_t_defined        1
-#endif
+#include <share/time.h>
 
 struct tm {
     int tm_sec;
@@ -22,9 +20,10 @@ struct tm {
     int tm_isdst;
 };
 
+#define TIMESPEC_SIZE           (M_TIME_T_SIZE + 2 * MACH_INT_sIZE)
 struct timespec {
     time_t      tv_sec;
-    long        tv_nsec;
+    int         tv_nsec;
 };
 
 struct itimerspec {

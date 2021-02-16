@@ -24,8 +24,8 @@ typedef uint32_t                v0ureg_t;
  * special registers 8-15
 */
 #define V0_MS_REG               0x08        // machine status word
-#define V0_CR_REG               0x09        // loop counter for REP
-#define V0_IR_REG               0x0a        // index register
+#define V0_CR_REG               0x09        // control register
+#define V0_IR_REG               0x0a        // index register/loop count
 #define V0_FP_REG               0x0b        // frame-pointer
 #define V0_SP_REG               0x0c        // stack-pointer
 #define V0_LR_REG               0x0d        // link-register
@@ -47,7 +47,7 @@ typedef uint32_t                v0ureg_t;
 #define V0_R7_BIT               (1 << V0_R7_REG)
 #define V0_MS_BIT               (1 << V0_MS_REG)
 #define V0_CR_BIT               (1 << V0_CR_REG)
-#define V0_NDX_BIT              (1 << V0_IR_REG)
+#define V0_IR_BIT               (1 << V0_IR_REG)
 #define V0_FP_BIT               (1 << V0_FP_REG)
 #define V0_SP_BIT               (1 << V0_SP_REG)
 #define V0_LR_BIT               (1 << V0_LR_REG)

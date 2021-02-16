@@ -8,7 +8,7 @@
 #if !defined(__time_types_defined)
 typedef long            clock_t;
 typedef long            clockid_t;
-#if !defined(__timetdefine)
+#if !defined(__time_t_defined)
 typedef long            time_t;
 typedef long            timer_t;
 typedef unsigned long   useconds_t;

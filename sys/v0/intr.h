@@ -3,14 +3,14 @@
 
 #include <stdint.h>
 
-#define V0_IRQ_RING             UINT32_C(0x00000001)
-#define V0_IRQ_RESERVED         UINT32_C(0x00000002)
+#define V0_IRQ_USER             UINT32_C(0x00000001)
+#define V0_IRQ_PRESENT          UINT32_C(0x00000002)
 #define V0_IRQ_FUNC_MASK        UINT32_C(0xfffffffc)
 
-#define intrgetfunc(vm, i)                                              \
-    ((void *)((uintptr_t)(vm).intrvec[(i)] & V0_IRQ_FUNC_MASK))
-#define intrsetfunc(vm, i, func, ring)                                  \
-    ((vm).intrvec[(i)] |= (void *)((uintptr_t)(func) | (ring)))
+#define intrgetfunc(vec, id)                                            \
+    (vec[(id)] & V0_IRQ_FUNC_MASK))
+#define intrsetfunc(vec, id, func, ring)                                \
+    (vec[(id)] |= (void *)((uintptr_t)(func) | (ring)))
 
 typedef void                   *v0intrfunc_t;
 typedef int8_t                  v0intr_t;
@@ -25,7 +25,7 @@ typedef int8_t                  v0intr_t;
 
 /*
  * event/exception/interrupt/fault/abort reason is stored in low 8-bit byte of
- * the interrupt reason-code
+ * the interrupt reason-code; if it's zero, the event info is undefined
  */
 #define V0_INTR_EVENT_MASK      UINT32_C(0x000000ff)    // 8-bit event code mask
 #define V0_INTR_INFO_MASK       UINT32_C(0xffffff00)    // event info mask

@@ -9,11 +9,17 @@
 #define ZEN_MEM_RUN             1
 #define ZEN_MEM_BIG             2
 
+#if (MACH_PTR_SIZE == 4)
+#define ZEN_MEM_MAX_SLABS       129     // 4 gigabytes
+#elif (MACH_PTR_SIZE == 4)
+#define ZEN_MEM_MAX_SLABS       16384   // 1 terabyte
+#endif
+
 struct zenmemconf {
+    m_word_t                    linesize;
+    m_word_t                    stridesize;
     m_word_t                    pagesize;
     m_word_t                    hugesize;
-    m_word_t                    clsize;
-    m_word_t                    strsize;
 };
 
 #define ZEN_MEM_ZONE_DMA        0
@@ -27,11 +33,11 @@ struct zenmempool {
     void                      (*free)(void *);
     void                       *head;
     void                       *tail;
-    m_word_t                    type;
+    m_word_t                    zone;
     m_word_t                    flg;
     m_word_t                    slot;
     m_word_t                    nitem;
-    m_word_t                    nfree;
+    volatile m_atomic_t         nref;
     //    m_word_t                    bmap[ZEN_MAX_POOL_ITEMS / CHAR_BIT];
 };
 
@@ -45,17 +51,14 @@ struct zenmempool {
  */
 /* blocks; sub-page [cacheline] allocations */
 #define ZEN_MEM_MIN_BLK         MACH_CL_SIZE
-#define ZEN_MEM_MAX_BLK         (MACH_PAGE_SIZE / 2)
-#define ZEN_MEM_SLAB_BLKS       (ZEN_MEM_BLK_SLAB_SIZE / MACH_CL_SIZE)
-#define ZEN_MEM_BLK_SLAB_SIZE   (4 * MACH_PAGE_SIZE)
+#define ZEN_MEM_MAX_BLK         (MACH_PAGE_SIZE << 8)
+#define ZEN_MEM_SLAB_BLKS       (ZEN_MEM_BLK_SLAB_SIZE / ZEN_MEM_MIN_BLK)
+#define ZEN_MEM_BLK_SLAB_SIZE   (8 * MACH_PAGE_SIZE)
 /* runs; multiple-of-page allocations */
 #define ZEN_MEM_MIN_RUN         MACH_PAGE_SIZE
-#define ZEN_MEM_MAX_RUN         (MACH_PAGE_SIZE << (ZEN_MEM_RUN_SLOTS - 1))
-#if (MACH_PAGE_SIZE == 4096)
-#define ZEN_MEM_RUN_SLOTS       4
-#elif (MACH_WORD_SIZE == 8)
-#define ZEN_MEM_RUN_SLOTS       3
-#define ZEN_MEM_RUN_SLAB_SIZE   (4 * ZEN_MEM_MAX_RUN)
+#define ZEN_MEM_MAX_RUN         (ZEN_MEM_RUN_SLOTS * MACH_PAGE_SIZE)
+#define ZEN_MEM_RUN_SLOTS       8
+#define ZEN_MEM_RUN_SLAB_SIZE   (ZEN_MEM_RUN_SLOTS * MACH_PAGE_SIZE)
 #endif
 
 struct zenmembuf {
@@ -70,8 +73,8 @@ struct zenmemslab {
     struct zenmemqueue         *queue;
     struct zenmemslab          *prev;
     struct zenmemslab          *next;
-    m_word_t                    type;   // BLK, RUN, BIG (0-2)
-    //    m_byte_t                    bmap[ZEN_MAX_SLAB_ITEMS / CHAR_BIT];
+    m_word_t                    type;   // BLK, RUN, BIG, BUF, DMA (0-4)
+    uint8_t                     bmap[ZEN_MAX_SLAB_ITEMS / CHAR_BIT];
 };
 
 #endif /* ZEN_MEM_H */

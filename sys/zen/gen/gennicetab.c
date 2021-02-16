@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <sys/zen/zen.h>
 
 #define ULE_NICE_MIN    (-20)
 #define ULE_NICE_MAX    19

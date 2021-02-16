@@ -14,11 +14,15 @@
 
 #define ZEN_THR_DEF_FLG         (ZEN_THR_STK | ZEN_THR_JOINABLE | ZEN_THR_SYS_SCOPE | ZEN_THR_INHERIT_SCHED)
 
+struct uthratr{
+    m_ptr_t                     stk;        // thread stack top
+    m_size_t                    stksize;    // thread stack size limit
+    m_word_t                    flags;      // thread flags
+    m_word_t                    errno;
+}
 struct thratr {
-    m_adr_t                     retptr; // thread return/exit value pointer
-    m_adr_t                     stk;    // thread stack top
-    m_size_t                    stklim; // thread stack size limit
-    m_word_t                    flags;  // thread flags
+    m_ptr_t                     retptr; // thread return/exit value pointer
+    struct uthratr              uatr;
 };
 
 #endif /* SYS_ZEN_TASK_H */

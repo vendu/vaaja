@@ -1,9 +1,11 @@
 #ifndef SYS_ZEN_SIGNAL_H
 #define SYS_ZEN_SIGNAL_H
 
+/* signal numbers */
+#define SIGNONE                 0
 #define SIGHUP                  1
-#define SIGINT                  2
-#define SIGQUIT                 3
+#define SIGINT                  2       // C-c
+#define SIGQUIT                 3       // C-\
 #define SIGILL                  4
 #define SIGTRAP                 5
 #define SIGABRT                 6
@@ -20,11 +22,12 @@
 #define SIGCHLD                 17
 #define SIGCONT                 18
 #define SIGSTOP                 19
-#define SIGTSTP                 20
+#define SIGTSTP                 20      // C-z
 #define SIGTTIN                 21
 #define SIGTTOU                 22
 #define SIGURG                  23
-#define SIGPROF                 26
+#define SIGVTALRM               26
+#define SIGPROF                 27
 #define SIGWWINCH               28
 #define SIGIO                   29
 #define SIGPOLL                 SIGIO
@@ -65,9 +68,7 @@
 #define SIGRT29                 SIGRT(29)
 #define SIGRT30                 SIGRT(30)
 #define SIGRT31                 SIGRT(31)
-#define _SIGRTMAX               63
-#define _NRTSIG                 32
-#define _NSIG                   (_SIGRTMAX + 1)
+#define SIGRTMAX                63
 
 #endif /* SYS_ZEN_SIGNAL_H */
 
