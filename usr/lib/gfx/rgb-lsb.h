@@ -1,6 +1,8 @@
 #ifndef __GFX_RGB_LSB_H__
 #define __GFX_RGB_LSB_H__
 
+/* little-endian RGB888-color support */
+
 #define GFX_ALPHA_OFS           24
 #define GFX_RED_OFS             16
 #define GFX_GREEN_OFS            8

@@ -1,3 +1,4 @@
+#include <sys/zen/conf.h>
 #include <stddef.h>
 #include <mach/asm.h>
 #include <mach/types.h>
@@ -15,6 +16,15 @@
 
 static struct tabhashtab               *TABHASH_TAB[TABHASH_SLOTS];
 static volatile struct tabhashtab      *TABHASH_BUF;
+
+#if defined(ZEN_SIMULATION)
+#include <stdlib.h>
+#define kmalloc(size)                   malloc(size)
+#define kfree(ptr)                      free(ptr)
+#define kmemalign(align, size)          aligned_alloc(align, size)
+#define krealloc(ptr, size)             realloc(ptr, size)
+
+#else /* !defined(ZEN_SIMULATION) */
 
 static C_INLINE void *
 kmalloc(m_size_t size)
@@ -49,6 +59,8 @@ krealloc(void *ptr, size_t size)
 
     return ret;
 }
+
+#endif /* defined(ZEN_SIMULATION) */
 
 #if 0
 static void

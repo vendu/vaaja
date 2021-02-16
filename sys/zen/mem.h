@@ -43,10 +43,12 @@ struct zenmempool {
  * - ZEN_MEM_RUN_SLOTS must be <= 4/3 (32/64-bit) so the max size for
  * fastudiv16 is 65536
  */
+/* blocks; sub-page [cacheline] allocations */
 #define ZEN_MEM_MIN_BLK         MACH_CL_SIZE
 #define ZEN_MEM_MAX_BLK         (MACH_PAGE_SIZE / 2)
-#define ZEN_MEM_MAX_SLAB_BLKS   (ZEN_MEM_BLK_SLAB_SIZE / MACH_CL_SIZE)
+#define ZEN_MEM_SLAB_BLKS       (ZEN_MEM_BLK_SLAB_SIZE / MACH_CL_SIZE)
 #define ZEN_MEM_BLK_SLAB_SIZE   (4 * MACH_PAGE_SIZE)
+/* runs; multiple-of-page allocations */
 #define ZEN_MEM_MIN_RUN         MACH_PAGE_SIZE
 #define ZEN_MEM_MAX_RUN         (MACH_PAGE_SIZE << (ZEN_MEM_RUN_SLOTS - 1))
 #if (MACH_PAGE_SIZE == 4096)
@@ -56,23 +58,20 @@ struct zenmempool {
 #define ZEN_MEM_RUN_SLAB_SIZE   (4 * ZEN_MEM_MAX_RUN)
 #endif
 
+struct zenmembuf {
+    uintptr_t                   adr;
+    volatile m_atomic_t         nref;
+    m_size_t                    size;
+    m_word_t                    flg;
+};
+
 struct zenmemslab {
+    struct zenmembuf            bufhdr;
     struct zenmemqueue         *queue;
     struct zenmemslab          *prev;
     struct zenmemslab          *next;
-    volatile m_atomic_t         nfree;
-    m_adr_t                     base;
-    m_size_t                    size;
-    m_word_t                    type;
-    m_word_t                    flg;
+    m_word_t                    type;   // BLK, RUN, BIG (0-2)
     //    m_byte_t                    bmap[ZEN_MAX_SLAB_ITEMS / CHAR_BIT];
-};
-
-struct zenmembuf {
-    volatile m_atomic_t         nref;
-    m_adr_t                     ptr;
-    m_size_t                    size;
-    m_word_t                    flg;
 };
 
 #endif /* ZEN_MEM_H */

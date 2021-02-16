@@ -1,13 +1,19 @@
 #ifndef SYS_ZEN_CONF_H
 #define SYS_ZEN_CONF_H
 
-#define ZEN_GFX_DECK
-#define ZEN_TTY
-#define ZEN_VT
+/* Zen kernel compile-time configuration */
+
+#define ZEN_GFX_DECK            1
+#define ZEN_TTY                 1
+#define ZEN_VT                  1
 #define ZEN_PIX_FORMAT          GFX_RGB444
 
-#define ZEN_SIMULATION
-/* in simulation mode, th kernel runs on top of a system instead of being standalone */
+/*
+ * in simulation mode, th kernel runs on top of a rurnning system instead of
+ * being standalone
+ */
+#define ZEN_SIMULATION          1
+#define ZEN_DEBUG               1   // runtime debugging facilities
 #if defined(ZEN_SIMULATION)
 #define ZEN_RUN_ON_UX           1   // execute on top of a Unix-like
 #define ZEN_USE_PTHREAD         1   // virtual kernel with POSIX Threads
@@ -15,8 +21,9 @@
 #endif /* defined(ZEN_SIMULATION) */
 
 /* compile-time options */
-#define ZEN_HANG_ON_PANIC       1
-#if defined(__voima__)          // fixed-priority scheduler for the consoles
+#define ZEN_HANG_ON_PANIC       1   // the kerel shall spin on panic
+#if defined(__voima__)              // fixed-priority scheduler for consoles
+/* static-priority simple scheduler for threads */
 #define ZEN_TASK_SCHED          ZEN_SPT_TASK_SCHED
 #else                           // slightly-revamped FreeBSD ULE for the desktop
 #define ZEN_TASK_SCHED          ZEN_ULE_TASK_SCHED
@@ -28,8 +35,8 @@
 #if defined(ZEN_MULTIPROC)
 #define ZEN_SMP                 1
 #endif
-#define ZEN_MAX_CPUS            32
-#define ZEN_MAX_TASKS           256
+#define ZEN_MAX_PROCESSORS      32
+#define ZEN_MAX_TASKS           256	// systme max # of tasks
 
 /* system limits */
 #define ZEN_NAME_MAX            255
@@ -45,6 +52,7 @@
 #define ZEN_USR_STK_SIZE        (4 * MACH_PAGE_SIZE)
 #define ZEN_USR_STK_MAX         (32 * MACH_PAGE_SIZE)
 #define ZEN_SYS_STK_SIZE        MACH_PAGE_SIZE
+#define ZEN_SYS_STK_MAX         (4 * MACH_PAGE_SIZE)
 
 #endif /* SYS_ZEN_CONF_H */
 

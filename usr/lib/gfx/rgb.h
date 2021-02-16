@@ -6,6 +6,7 @@
 #include <env/cdefs.h>
 #include <mach/param.h>
 
+/* supported pixel formats */
 #define GFX_ARGB32              1
 #define GFX_RGB888              2
 #define GFX_RGB555              3
@@ -47,7 +48,7 @@ typedef int16_t                 gfxrgb444;
 /* approximation for c / 0xff */
 #define gfxdiv255(c)            ((((c) << 8) + (c) + 256) >> 16)
 /* simple division by 256 by bitshift */
-#define gfxdiv256(c)            ((c) >> 8)
+//#define gfxdiv256(c)            ((c) >> 8)
 #define gfxalphablendc(src, dest, a)                                   \
     ((dest) + gfxdiv255(((src) - (dest)) * (a)))
 #define gfxalphablendc2(src, dest, a)                                  \
