@@ -33,7 +33,7 @@ typedef void (*__sighandler_t)(int);
      || defined(__ppc64__)                                              \
      || defined(__i386__) || defined(__i486__)                          \
      || defined(__i586__) || defined(__i686__))
-#define SIG32BIT        0
+#define SIG64BIT        1
 #else
 #define SIG32BIT        1
 #endif
@@ -261,7 +261,11 @@ struct sigcontext {
 #if defined(_POSIX_SOURCE)
 
 #if defined(_GNU_SOURCE)
+#if defined(SIG32BIT)
+#define __sigisemptyset(sp)     (!(sp)->norm && !(sp)->rt)
+#elif defined(SIG64BIT)
 #define __sigisemptyset(sp)     (!*(sp))
+#endif
 #endif
 
 #endif /* _POSIX_SOURCE */
@@ -270,9 +274,10 @@ struct sigcontext {
 #define sigisemptyset(sp)       __sigisemptyset(sp)
 #endif
 
-#if defined(_POSIX_SOURCE)
+#if !defined(_POSIX_SOURCE)
 
-#define MAXSIG                  SIGRTMAX
+#define NSIG                    64
+#define MAXSIG                  63
 
 #define S_SIGNAL                1
 #define S_SIGSET                2

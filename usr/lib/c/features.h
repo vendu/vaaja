@@ -2,7 +2,7 @@
 #define __FEATURES_H__
 
 #if defined(__zen__)
-#define _FILE_OFFSET_BITS       32
+#define _FILE_OFFSET_BITS       64
 #define __TIME_T                int32_t
 #else
 #define __TIME_T                int64_t

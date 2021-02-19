@@ -39,6 +39,7 @@
 #define ZEN_MAX_TASKS           256	// systme max # of tasks
 
 /* system limits */
+#if 0
 #define ZEN_NAME_MAX            255
 #define ZEN_PATH_MAX            4096
 #define ZEN_OPEN_MAX            1024
@@ -47,6 +48,7 @@
 #define ZEN_EVQ_MAX             (MACH_PAGE_SIZE / ZEN_MAX_EV_SIZE)
 #define ZEN_HOST_NAME_MAX       15
 #define ZEN_LOGIN_NAME_MAX      15
+#endif
 
 /* system parameters */
 #define ZEN_USR_STK_SIZE        (4 * MACH_PAGE_SIZE)

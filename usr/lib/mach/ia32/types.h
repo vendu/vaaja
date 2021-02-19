@@ -12,12 +12,15 @@ typedef uint32_t m_ureg_t;
 //typedef int32_t  m_atomic_t;
 
 /* C call frame - 8 bytes */
+
+#if 0
 struct m_stkframe {
     /* automatic variables go here */
     int32_t fp;         // caller frame pointer
     int32_t pc;         // return address
     /* call parameters on stack go here in 'reverse order' */
 };
+#endif
 
 /* general purpose registers - 32 bytes; in PUSHA order */
 struct m_genregs {
@@ -115,7 +118,7 @@ struct m_task {
     struct m_fpstate32 fpstate; //  X bytes @ 128; FPU state
 };
 
-#include <signal.h>
+#include <api/zen/sigset.h>
 
 struct m_ctx {
     int                onstk;   // non-zero if on signal-stack

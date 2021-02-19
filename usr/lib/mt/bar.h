@@ -11,20 +11,20 @@
 /* velho thread barriers */
 
 #if (MACH_WORD_SIZE == 8)
-#define BARFLAGBIT              (UINT64_C(1) << 63)
+#define ZEN_BARFLAGBIT              (UINT64_C(1) << 63)
 #elif (MACH_WORD_SIZE == 4)
-#define BARFLAGBIT              (UINT32_C(1) << 31)
+#define ZEN_BARFLAGBIT              (UINT32_C(1) << 31)
 #endif
-#define BARSERIALTHR (-1L)
+#define ZEN_BARSERIALTHR            (-1L)
 
-typedef struct __mtbar {
+typedef struct __zenbar {
     zenfmtx                     lk;
     unsigned long               num;
     unsigned long               cnt;
     zencond                     cond;
-} mtbar;
+} zenbar;
 
-typedef struct __mtbarpool {
+typedef struct __zenbarpool {
     zenfmtx                     lk;
     m_atomic_t                  nref;
     long                        num;
@@ -35,7 +35,7 @@ typedef struct __mtbarpool {
         } vals;
         volatile uint64_t       rst;
     } cnt;
-} mtbarpool;
+} zenbarpool;
 
 #endif /* defined(MT_BARRIER) */
 

@@ -3,13 +3,13 @@
 
 /* zen semaphores */
 
-#define MTSEM_INITVAL           ULONG_MAX
+#define ZEN_SEMINITVAL          ULONG_MAX
 typedef struct sem {
-#if defined(MTFMTX)
-    mtfmtx                      lk;
+#if defined(ZENFMTX)
+    zenfmtx                     lk;
 #endif
     unsigned long               val;
-} mtsem;
+} zensem;
 
 #endif /* MT_SEM_H */
 

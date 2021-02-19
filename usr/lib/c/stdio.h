@@ -46,7 +46,7 @@ typedef int64_t       fpos64_t;
 #include <bits/stdio.h>
 
 #define EOF           (-1)
-#define BUFSIZ        BUFSIZE
+#define BUFSIZ        MACH_PAGE_SIZE
 #define FILENAME_MAX  NAME_MAX
 #define FOPEN_MAX     OPEN_MAX
 /* setvbuf() arguments */
@@ -60,13 +60,13 @@ typedef int64_t       fpos64_t;
 #define P_tmpdir      "/tmp"
 #endif
 
-#if !defined(__kernel__)
+#if !defined(__zen__)
 
 /* buffering */
 extern void  setbuf(FILE *__restrict stream, char *__restrict buf);
 extern int   setvbuf(FILE *__restrict stream, char **__restrict ptr,
                      int modes, size_t len);
-#if (_BSD_SOURCE)
+#if defined(_BSD_SOURCE)
 extern void  setbuffer(FILE *__restrict stream, char *__restrict buf,
                        size_t len);
 extern void  setlinebuf(FILE *stream);
@@ -268,7 +268,7 @@ extern ssize_t readline(char **__restrict ptr, size_t *__restrict n,
                         FILE *__restrict stream);
 #endif
 
-#endif /* !defined(__kernel__) */
+#endif /* !defined(__zen__) */
 
 #endif /* __STDIO_H__ */
 

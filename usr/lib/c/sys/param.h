@@ -24,7 +24,7 @@
 #define MAX(a, b)     max((a), (b))
 
 /* unit for st_blocks */
-#define DEV_BSIZE     512
+#define DEV_BSIZE     1024
 
 #endif /* __SYS_PARAM_H__ */
 

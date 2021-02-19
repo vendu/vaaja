@@ -9,11 +9,11 @@
 #define major(dev)           ((dev_t)(((dev) >> NBITSMINOR) & MAXMAJ))
 #define makedev(maj, min)    ((dev_t)(((dev) << NBITSMINOR) | ((min) & MAXMIN)))
 #define makedevice(maj, min) ((dev_t)((maj) << NBITSMINOR) | ((min) & MAXMIN))
-#if defined(__KERNEL__)
+#if defined(__zen__)
 #define bmajor(dev)          major(dev)
 #define getminor(dev)        minor(dev)
 #define getmajor(dev)        major(dev)
-#endif /* __KERNEL__ */
+#endif /* defined(__zen__) */
 #define emajor(dev)          ((((dev_t)(dev) >> NBITSMINOR) > MAXMAJ) \
                               ? NODEV \
 							  : (((dev_t)(dev) >> NBITSMINOR) & MAXMAJ))
@@ -21,16 +21,16 @@
 #define getemajor(dev)       emajor(dev)
 #define geteminor(dev)       eminor(dev)
 
-#if !defined(__KERNEL__)
+#if !defined(__zen__)
 
-#if (_GNU_SOURCE)
+#if defined(_GNU_SOURCE)
 extern unsigned int          gnu_dev_major(unsigned long long dev);
 extern unsigned int          gnu_dev_minor(unsigned long long dev);
 extern unsigned long long    gnu_dev_makedev(unsigned int major,
                                              unsigned int minor);
-#endif /* _GNU_SOURCE */
+#endif /* defined(_GNU_SOURCE) */
 
-#endif /* !defined(__KERNEL__) */
+#endif /* !defined(__zen__) */
 
 #define ISP2(x)               (!(((x) & ((x) - 1))))
 #define P2ALIGN(x, aln)       ((x) & ~(aln))
@@ -40,10 +40,10 @@ extern unsigned long long    gnu_dev_makedev(unsigned int major,
 #define P2END(x, aln)         (-(~(x) & -(aln)))
 #define P2PHASEUP(x, aln, p)  ((p) - (((p) - (x)) & -(aln)))
 #define P2CROSS(x, y, aln)    (((x) ^ (y)) > ((aln) - 1))
-#define P2SAMEHIGHBIT(x, y)  (((x) ^ (y)) < ((x) & (y)))
+#define P2SAMEHIGHBIT(x, y)   (((x) ^ (y)) < ((x) & (y)))
 
-#define INCR_COUNT(var, mtx)  (mtxlk(var), (*(var))++, mtxunlk(mtx))
-#define DECR_COUNT(var, mtx)  (mtxlk(var), (*(var))--, mtxunlk(mtx))
+#define INCR_COUNT(var)       m_fetchadd(var, 1)
+#define DECR_COUNT(var)       m_fetchadd(var, -1)
 
 #endif /* __SYS_SYSMACROS_H__ */
 

@@ -11,12 +11,12 @@
 
 /* REFERENCE: http://locklessinc.com/articles/locks/ */
 
-#define MT_TKT_SPINS            16384
-#define MT_TKT_SIZE             (2 * MACH_WORD_SIZE)
+#define ZEN_TKT_SPINS           16384
+#define ZEN_TKT_SIZE            (2 * MACH_WORD_SIZE)
 
 #if (MACH_WORD_SIZE == 4)
 
-union mttkt {
+union zentkt {
     m_uatomic_t                 uval;
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
     struct {
@@ -33,7 +33,7 @@ union mttkt {
 
 #elif (MACH_WORD_SIZE == 8)
 
-union mttkt {
+union zentkt {
     m_atomicu64_t               uval;
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
     struct {
@@ -48,20 +48,20 @@ union mttkt {
 #endif
 };
 
-#endif /* MT_TKT_SIZE */
+#endif /* MACH_WORD_SIZE */
 
-#define MT_TKT_BKT_ITEMS        (MACH_CL_SIZE / MT_TKT_SIZE)
-struct mttktbkt {
-    union mttkt                 tab[MT_TKT_BKT_ITEMS];
+#define ZEN_TKT_BKT_ITEMS       (MACH_CL_SIZE / ZEN_TKT_SIZE)
+struct zentktbkt {
+    union zentkt                tab[ZEN_TKT_BKT_ITEMS];
 };
 
-typedef volatile union mttkt    mttkt;
+typedef volatile union zentkt   zentkt;
 
 #if (MACH_WORD_SIZE == 4)
 
 /* only return when the lock appears unlocked */
 static C_INLINE void
-mtlktkt(mttkt *tp)
+zenlktkt(zentkt *tp)
 {
     uint16_t                    val = m_fetchaddu16(&tp->s.cnt, 1);
 
@@ -73,7 +73,7 @@ mtlktkt(mttkt *tp)
 }
 
 static C_INLINE void
-mtunlktkt(mttkt *tp)
+zenunlktkt(zentkt *tp)
 {
     m_membar();
     tp->s.val++;
@@ -84,13 +84,13 @@ mtunlktkt(mttkt *tp)
 
 /* return 1 if lock succeeds, 0 otherwise */
 static C_INLINE long
-mttrytkt(union mttkt *tp)
+zentrytkt(union zentkt *tp)
 {
-    uint16_t                val = tp->s.cnt;
-    uint16_t                cnt = val + 1;
-    uint32_t                cmp = ((uint32_t)val << 16) | val;
-    uint32_t                cmpnew = ((uint32_t)cnt << 16) | val;
-    long                    res = 0;
+    uint16_t                    val = tp->s.cnt;
+    uint16_t                    cnt = val + 1;
+    uint32_t                    cmp = ((uint32_t)val << 16) | val;
+    uint32_t                    cmpnew = ((uint32_t)cnt << 16) | val;
+    long                        res = 0;
 
     if (m_cmpswapu32(&tp->uval, cmp, cmpnew)) {
         res++;
@@ -102,9 +102,9 @@ mttrytkt(union mttkt *tp)
 #elif (MACH_WORD_SIZE == 8)
 
 static C_INLINE void
-mtlktkt(union mttkt *tp)
+zenlktkt(union zentkt *tp)
 {
-    uint32_t                val = m_fetchaddu32(&tp->s.cnt, 1);
+    uint32_t                    val = m_fetchaddu32(&tp->s.cnt, 1);
 
     while (tp->s.val != val) {
         m_waitspin();
@@ -114,7 +114,7 @@ mtlktkt(union mttkt *tp)
 }
 
 static C_INLINE void
-mtunlktkt(union mttkt *tp)
+zenunlktkt(union zentkt *tp)
 {
     m_membar();
     tp->s.val++;
@@ -125,7 +125,7 @@ mtunlktkt(union mttkt *tp)
 
 /* return 1 if lock succeeds, 0 otherwise */
 static C_INLINE long
-mttrytkt(union mttkt *tp)
+zentrytkt(union zentkt *tp)
 {
     uint32_t                    val = tp->s.cnt;
     uint32_t                    cnt = val + 1;

@@ -3,38 +3,38 @@
 
 #include <mt/conf.h>
 
-#if defined(ZEN_PRIORITY_LOCK)
+#if defined(MT_PRIORITY_LOCK)
 
 /* priority locks */
 
 #include <stdint.h>
 #include <mach/param.h>
 
-#define MT_PRIOLK_ALLOCFAILED       NULL
-#define MT_PRIOLKALLOC(sz)          malloc(sz)
+#define ZEN_PRIOLK_ALLOCFAILED      NULL
+#define ZEN_PRIOLKALLOC(sz)         malloc(sz)
 
 /*
  * REFERENCE: http://locklessinc.com/articles/priority_locks/
  */
 
-struct mtpriolkdata {
+struct zenpriolkdata {
     unsigned long                   val;
     unsigned long                   orig;
-    volatile struct mtpriolkdata   *next;
+    volatile struct zenpriolkdata  *next;
 };
 
-struct mtpriolk {
-    volatile struct mtpriolkdata   *owner;
+struct zenpriolk {
+    volatile struct zenpriolkdata  *owner;
     volatile unsigned long          waitbits;
 };
 
-void                                mtinitpriolk(struct priolkdata *data,
-                                                 unsigned long val);
-void                                mtfinpriolk(void);
-void                                priolkget(struct priolk *priolk);
-void                                priolkrel(struct priolk *priolk);
+void                                zeninitpriolk(struct zenpriolkdata *data,
+                                                  unsigned long val);
+void                                zenfinpriolk(void);
+void                                zengetpriolk(struct zenpriolk *priolk);
+void                                zenrelpriolk(struct zenpriolk *priolk);
 
-#endif /* defined(ZEN_PRIORITY_LOCK) */
+#endif /* defined(MT_PRIORITY_LOCK) */
 
 #endif /* MT_PRIOLK_H */
 

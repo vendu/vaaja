@@ -10,11 +10,12 @@
 #define MACH_INT_SIZE           4
 #define MACH_LONG_SIZE          4
 #define MACH_LONG_SIZE_LOG2     2
+#define MACH_LONG_BITS_LOG2     5
 #define MACH_LONG_LONG_SIZE     8
 #define MACH_PTR_SIZE           4
 #define MACH_PTR_SIZE_LOG2      2
-#define MACH_PTRBITS            32
-#define MACH_ADRBITS            32
+#define MACH_PTR_BITS           32
+#define MACH_ADR_BITS           32
 #define MACH_CL_SIZE            32
 #define MACH_CL_SIZE_LOG2       5
 #define MACH_PAGE_SIZE          4096

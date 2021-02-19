@@ -20,7 +20,6 @@ struct tm {
     int tm_isdst;
 };
 
-#define TIMESPEC_SIZE           (M_TIME_T_SIZE + 2 * MACH_INT_sIZE)
 struct timespec {
     time_t      tv_sec;
     int         tv_nsec;

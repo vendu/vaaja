@@ -40,12 +40,12 @@
 #define SCHED_ULE_DIVU16TAB_SIZE    65536
 
 /* macros */
-#define schedlkcpuntick(cpu)        (mtlktkt(&cpu->lk), (cpu)->ntick)
-#define schedlkcpu(cpu)             (mtlktkt(&cpu->lk))
-#define schedunlkcpu(cpu)           (mtunlktkt(&cpu->lk))
-#define schedlktaskruntime(task)    (mtlktkt(&task->lk), (task)->runtime)
-#define schedlktask(task)           (mtlktkt(&task->lk))
-#define schedunlktask(task)         (mtunlktkt(&task->sched.lk))
+#define schedlkcpuntick(cpu)        (zenlktkt(&cpu->lk), (cpu)->ntick)
+#define schedlkcpu(cpu)             (zenlktkt(&cpu->lk))
+#define schedunlkcpu(cpu)           (zenunlktkt(&cpu->lk))
+#define schedlktaskruntime(task)    (zenlktkt(&task->lk), (task)->runtime)
+#define schedlktask(task)           (zenlktkt(&task->lk))
+#define schedunlktask(task)         (zenunlktkt(&task->sched.lk))
 
 #define schedcalctime(task)         ((task)->sched.ntick >> SCHED_ULE_TICK_SHIFT)
 #define schedcalcticks(task)        (max((task)->sched.lastrun - (task)->sched.firstrun, kgethz()))
@@ -61,10 +61,10 @@
     ((score) < SCHED_ULE_SCORE_INT_LIM)
 #define schedcalctrapqueue(p)                                           \
     (p)
-#define schedcalcqueue(tupe, p)                                        \
-    ((type == SCHED_ULE_REALTIME_RR)                                   \
-     ? ((p) + schedclassminprio(SCHED_ULE_REALTIME))                   \
-     : ((p) + schedclassminprio(type)))
+#define schedcalcqueue(tupe, p)                                         \
+    ((type == SCHED_ULE_REALTIME_RR)                                    \
+     ? ((p) + schedminprio(SCHED_ULE_REALTIME))                         \
+     : ((p) + schedminprio(type)))
 
 /* interrupt priorities */
 #define schedcalcintrprio(id)                                           \
@@ -116,29 +116,29 @@
 #define SCHED_ULE_FIXED_PRIO_MIN    0
 #endif
 
-#define schedclassminprio(c)                                            \
+#define schedminprio(c)                                                 \
     ((c) * SCHED_ULE_CLASS_PRIOS)
-#define schedclassmaxprio(c)                                            \
-    (schedclassminprio(c) + SCHED_ULE_CLASS_PRIOS - 1)
-#define schedclassminqueue(c)                                           \
+#define schedmaxprio(c)                                                 \
+    (schedminprio(c) + SCHED_ULE_CLASS_PRIOS - 1)
+#define schedminqueue(c)                                                \
     ((c) * SCHED_ULE_CLASS_QUEUES)
 /* priority organisation */
 #define SCHED_ULE_IDLE_QUEUES       SCHED_ULE_CLASS_QUEUES
-#define SCHED_ULE_SYSTEM_PRIO_MIN   schedclassminprio(SCHED_ULE_SYSTEM)
+#define SCHED_ULE_SYSTEM_PRIO_MIN   schedminprio(SCHED_ULE_SYSTEM)
 /* realtime priority limits */
-#define SCHED_ULE_REALTIME_PRIO_MIN schedclassminprio(SCHED_ULE_REALTIME)
-#define SCHED_ULE_REALTIME_PRIO_MAX schedclassmaxprio(SCHED_ULE_REALTIME)
+#define SCHED_ULE_REALTIME_PRIO_MIN schedminprio(SCHED_ULE_REALTIME)
+#define SCHED_ULE_REALTIME_PRIO_MAX schedmaxprio(SCHED_ULE_REALTIME)
 /* interrupt priority limits */
-#define SCHED_ULE_TRAP_PRIO_MIN     schedclassminprio(SCHED_ULE_TRAP)
-#define SCHED_ULE_TRAP_PRIO_MAX     schedclassmaxprio(SCHED_ULE_TRAP)
+#define SCHED_ULE_TRAP_PRIO_MIN     schedminprio(SCHED_ULE_TRAP)
+#define SCHED_ULE_TRAP_PRIO_MAX     schedmaxprio(SCHED_ULE_TRAP)
 /* timeshare priority limits */
-#define SCHED_ULE_USER_PRIO_MIN     schedclassminprio(SCHED_ULE_RESPONSIVE)
+#define SCHED_ULE_USER_PRIO_MIN     schedminprio(SCHED_ULE_RESPONSIVE)
 /* positive nice values will not be mapped to SCHED_ULE_IDLE */
-#define SCHED_ULE_USER_PRIO_MAX     (schedclassmaxprio(SCHED_ULE_BATCH) - SCHED_ULE_NICE_HALF)
+#define SCHED_ULE_USER_PRIO_MAX     (schedmaxprio(SCHED_ULE_BATCH) - SCHED_ULE_NICE_HALF)
 #define SCHED_ULE_USER_RANGE        (SCHED_ULE_USER_PRIO_MAX - SCHED_ULE_USER_PRIO_MIN + 1)
 /* batch priority limits */
-#define SCHED_ULE_BATCH_PRIO_MIN    schedclassminprio(SCHED_ULE_BATCH)
-#define SCHED_ULE_BATCH_PRIO_MAX    schedclassmaxprio(SCHED_ULE_BATCH)
+#define SCHED_ULE_BATCH_PRIO_MIN    schedminprio(SCHED_ULE_BATCH)
+#define SCHED_ULE_BATCH_PRIO_MAX    schedmaxprio(SCHED_ULE_BATCH)
 #define SCHED_ULE_BATCH_RANGE       (SCHED_ULE_BATCH_PRIO_MAX - SCHED_ULE_BATCH_PRIO_MIN + 1)
 /* nice limits */
 #define SCHED_ULE_NICE_MIN          (-(SCHED_ULE_CLASS_QUEUES << 1))
@@ -206,9 +206,9 @@ extern struct zennice           k_schednicetab[SCHED_ULE_NICE_RANGE];
 extern struct zennice          *k_schedniceptr;
 extern struct zenschedset       k_schedreadyset;
 
-#define schedclassminprio(c)    ((c) * SCHED_ULE_CLASS_PRIOS)
-#define schedclassmaxprio(c)    (schedclassminprio(c)               \
-                                 + SCHED_ULE_CLASS_PRIOS            \
+#define schedminprio(c)         ((c) * SCHED_ULE_CLASS_PRIOS)
+#define schedmaxprio(c)         (schedminprio(c)                        \
+                                 + SCHED_ULE_CLASS_PRIOS                \
                                  - 1)
 
 /* based on sched_pctcpu_update from ULE */
@@ -257,12 +257,12 @@ schedswapqueues(void)
 {
     struct zenschedset *set = &k_schedreadyset;
 
-    mtlktkt(&set->lk);
+    zenlktkt(&set->lk);
     set->next = set->cur;
     set->cur = set->next;
     set->nextmap = set->curmap;
     set->curmap = set->nextmap;
-    mtunlktkt(&set->lk);
+    zenunlktkt(&set->lk);
 
     return;
 }

@@ -23,7 +23,7 @@
 #endif
 
 #define m_trylkbit(p, ndx)      (!m_cmpsetbit(p, ndx))
-#define m_unlkbit(p, ndx)       m_clrbit(p, ndx)
+#define m_unlkbit(p, ndx)       m_cmpclrbit(p, ndx)
 #define m_lkbit(p, ndx)                                                 \
     do {                                                                \
         long _bit = 1 << (ndx);                                         \

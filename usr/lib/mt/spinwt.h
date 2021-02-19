@@ -16,15 +16,15 @@
  * - return non-zero on success, zero otherwise
  */
 static __inline__ long
-mttryspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
+zentryspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
 {
     volatile m_atomic_t res = 0;
 
     do {
-        while (*sp != MTSPININITVAL) {
+        while (*sp != ZEN_SPININITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(sp, MTSPININITVAL, val);
+        res = m_cmpswap(sp, ZEN_SPININITVAL, val);
     } while (--niter && !res);
 
     return res;
@@ -34,18 +34,18 @@ mttryspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
  * lock spin-wait lock
  */
 static __inline__ void
-mtlkspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
+zenlkspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
 {
     volatile m_atomic_t res = 0;
 
     do {
-        while (*sp != MTSPININITVAL) {
+        while (*sp != ZEN_SPININITVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(sp, MTSPININITVAL, val);
+        res = m_cmpswap(sp, ZEN_SPININITVAL, val);
     } while (--niter && !res);
     if (!niter) {
-        mtmtxlk(sp, val);
+        zenlkmtx(sp, val);
     }
 
     return;
@@ -55,10 +55,10 @@ mtlkspinwt(volatile m_atomic_t *sp, m_atomic_t val, long niter)
  * release spin-wait lock
  */
 static __inline__ void
-mtunlkspinwt(volatile m_atomic_t *sp)
+zenunlkspinwt(volatile m_atomic_t *sp)
 {
     m_membar();
-    *sp = MTSPININITVAL;
+    *sp = ZEN_SPININITVAL;
     m_endspin();
 
     return;

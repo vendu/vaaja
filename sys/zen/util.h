@@ -3,6 +3,8 @@
 
 #define EOF                     (-1)
 
+#define zensrand(seed)          (srandmt32(seed))
+#define zenurand()              (randmt32())
 #define _roundup16b(a, b)                                               \
     ((fastu16divu16((a) + (b) - 1, (b), k_fastu16divu16tab)) * (b))
 

@@ -129,5 +129,97 @@
 
 #define haszero32(a)    (((a) - 0x01010101) & ~(a) & 0x80808080)
 
+/* division and modulus for a few chosen values */
+
+C_STATIC C_INLINE unsigned long
+divu10(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0xcd);
+        unsigned long long res = uval;
+        unsigned long      cnt = 3;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu10(uval)            (uval - uval * divu10(uval)))
+
+unsigned long
+divu12(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0xab);
+        unsigned long long res = uval;
+        unsigned long      cnt = 3;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu12                  (uval - uval * divu12(uval))
+
+C_STATIC C_INLINE unsigned long
+divu30(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0x89);
+        unsigned long long res = uval;
+        unsigned long      cnt = 4;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu30(uval)            (uval - uval * divu30(uval)))
+
+C_STATIC C_INLINE unsigned long
+divu60(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0x89);
+        unsigned long long res = uval;
+        unsigned long      cnt = 5;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu60(uval)            (uval - uval * divu60(uval)))
+
+C_STATIC C_INLINE unsigned long
+divu100(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0x29);
+        unsigned long long res = uval;
+        unsigned long      cnt = 4;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu100(uval)           (uval - uval * divu100(uval)))
+
+unsigned long
+divu400(unsigned long uval)
+{
+        unsigned long long mul = UINT64_C(0x29);
+        unsigned long long res = uval;
+        unsigned long      cnt = 6;
+
+        res *= mul;
+        res >>= cnt;
+        uval = (unsigned long)res;
+
+        return uval;
+}
+#define modu400(uval)           (uval - uval * divu400(uval)))
+
 #endif /* ZEN_BITBANG_H */
 

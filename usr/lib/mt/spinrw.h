@@ -18,14 +18,14 @@
  */
 
 #if (MACH_LONG_SIZE == 8)
-#define SPINWRITEBIT            (INT64_C(1) << 63)
+#define ZEN_SPINWRITEBIT        (INT64_C(1) << 63)
 #elif (MACH_LONG_SIZE == 4)
-#define SPINWRITEBIT            (INT32_C(1) << 31)
+#define ZEN_SPINWRITEBIT        (INT32_C(1) << 31)
 #endif
-#define SPINCNTMASK             (~SPINWRITEBIT)
+#define ZEN_SPINCNTMASK         (~ZEN_SPINWRITEBIT)
 
-#define MTSPINRWFREE            (-1L)
-#define MTSPINRWRECDEFVAL       { MTSPININITVAL, MTSPINRWFREE, 0 }
+#define ZEN_SPINRWFREE          (-1L)
+#define ZEN_SPINRWRECDEFVAL     { ZEN_SPININITVAL, ZEN_SPINRWFREE, 0 }
 /* structure for recursive locks */
 typedef struct __zenspinrwrec {
     volatile long lk;   // lock value
@@ -90,7 +90,7 @@ zenunlkspinwr(volatile long *sp)
 {
     assert(*sp == SPINWRITEBIT);
 
-    *sp = MTSPININITVAL;
+    *sp = ZEN_SPININITVAL;
     m_endspin();
 
     return;
@@ -117,7 +117,7 @@ zenunlkspinrwrecwr(zenspinrwrec *spin)
     assert(thr == spin->thr);
     spin->rec--;
     if (!spin->rec) {
-        spin->thr = MTSPINRWFREE;
+        spin->thr = ZEN_SPINRWFREE;
         zenunlkspinwr(&spin->lk);
     }
 }

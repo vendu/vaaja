@@ -12,8 +12,8 @@
 #define MT_FAST_MUTEX          1
 #endif
 
-typedef volatile m_atomic_t mtmtx;
-typedef volatile m_atomic_t mtfmtx;
+typedef volatile m_atomic_t zenmtx;
+typedef volatile m_atomic_t zenfmtx;
 
 /*
  * Special thanks to Matthew 'kinetik'
@@ -30,7 +30,7 @@ typedef volatile m_atomic_t mtfmtx;
 //#define MT_FAST_MUTEX_LKVAL     1
 
 static C_INLINE void
-mtinitfmtx(mtfmtx *mp)
+zeninitfmtx(zenfmtx *mp)
 {
     m_membar();         // full memory barrier
     *mp = MT_MUTEX_INITVAL;  // lazy-write
@@ -43,7 +43,7 @@ mtinitfmtx(mtfmtx *mp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttrylkfmtx(mtfmtx *mp)
+zentrylkfmtx(zenfmtx *mp)
 {
     m_atomic_t  res = 0;
 
@@ -59,7 +59,7 @@ mttrylkfmtx(mtfmtx *mp)
  * - spin on volatile lock to avoid excess lock-operations
  */
 static C_INLINE void
-mtlkfmtx(mtfmtx *mp)
+zenlkfmtx(zenfmtx *mp)
 {
     m_atomic_t  res = 0;
 
@@ -78,7 +78,7 @@ mtlkfmtx(mtfmtx *mp)
  * - must use full memory barrier to guarantee proper write-ordering
  */
 static C_INLINE void
-mtunlkfmtx(mtfmtx *mp)
+zenunlkfmtx(zenfmtx *mp)
 {
     m_membar();         // full memory barrier
     *mp = MT_MUTEX_INITVAL;  // lazy-write
@@ -92,7 +92,7 @@ mtunlkfmtx(mtfmtx *mp)
  * - return non-zero on success, zero if already locked
  */
 static C_INLINE long
-mttrylkrecfmtx(mtfmtx *mp)
+zentrylkrecfmtx(zenfmtx *mp)
 {
     m_atomic_t  res = 0;
     m_atomic_t  id = (m_atomic_t)mtthrself();
@@ -112,7 +112,7 @@ mttrylkrecfmtx(mtfmtx *mp)
  * - spin on volatile lock to avoid excess lock-operations
  */
 static C_INLINE void
-mtlkrecfmtx(mtfmtx *mp)
+zenlkrecfmtx(zenfmtx *mp)
 {
     m_atomic_t  res = 0;
     m_atomic_t  id = (m_atomic_t)mtthrself();
@@ -135,7 +135,7 @@ mtlkrecfmtx(mtfmtx *mp)
  * - must use full memory barrier to guarantee proper write-ordering
  */
 static C_INLINE void
-mtunlkrecfmtx(mtfmtx *mp)
+zenunlkrecfmtx(zenfmtx *mp)
 {
     m_membar();         // full memory barrier
     *mp = MT_MUTEX_INITVAL;  // lazy-write

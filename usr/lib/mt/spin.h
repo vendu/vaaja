@@ -17,22 +17,22 @@
 
 typedef volatile m_atomic_t     mtspin;
 
-#define MT_SPININITVAL          0
-#define MT_SPINLKVAL            1
+#define ZEN_SPININITVAL          0
+#define ZEN_SPINLKVAL            1
 
-#define spininit(sp)            (*(sp) = MT_SPININITVAL)
+#define spininit(sp)            (*(sp) = ZEN_SPININITVAL)
 
 /*
  * try to lock spin-lock
  * - return non-zero on success, zero if already locked
  */
 static __inline__ long
-mttryspin(volatile m_atomic_t *sp)
+zentryspin(volatile m_atomic_t *sp)
 {
     m_atomic_t                  res = 0;
 
-    if (*sp == MT_SPININITVAL) {
-        res = m_cmpswap(sp, MT_SPININITVAL, MT_SPINLKVAL);
+    if (*sp == ZEN_SPININITVAL) {
+        res = m_cmpswap(sp, ZEN_SPININITVAL, ZEN_SPINLKVAL);
     }
 
     return res;
@@ -42,15 +42,15 @@ mttryspin(volatile m_atomic_t *sp)
  * acquire spin-lock
  */
 static __inline__ long
-mtlkspin(volatile m_atomic_t *sp)
+zenlkspin(volatile m_atomic_t *sp)
 {
     m_atomic_t                  res = *sp;
 
     do {
-        while (*sp == MT_SPINLKVAL) {
+        while (*sp == ZEN_SPINLKVAL) {
             m_waitspin();
         }
-        res = m_cmpswap(sp, MT_SPININITVAL, MT_SPINLKVAL);
+        res = m_cmpswap(sp, ZEN_SPININITVAL, ZEN_SPINLKVAL);
     } while (res);
 
     return res;
@@ -60,10 +60,10 @@ mtlkspin(volatile m_atomic_t *sp)
  * release spin-lock
  */
 static __inline__ void
-mtunlkspin(volatile m_atomic_t *sp)
+zenunlkspin(volatile m_atomic_t *sp)
 {
     m_membar();
-    *sp = MT_SPININITVAL;
+    *sp = ZEN_SPININITVAL;
     m_endspin();
 
     return;

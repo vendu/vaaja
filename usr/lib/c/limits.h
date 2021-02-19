@@ -52,88 +52,60 @@
 #define ULLONG_MAX              0xffffffffffffffffULL
 #define MB_LEN_MAX              1
 
-/* TODO: feature-macro these out etc... */
-#if defined(_ZERO_SOURCE) && defined(MACH_PAGE_SIZE)
-#define PAGESIZE                MACH_PAGE_SIZE
-#endif
-#if defined(PAGESIZE)
-#define PAGE_SIZE               PAGESIZE
-#endif
+#include <limits-posix.h>
 
-#if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 200112L)
-
-/*
- * POSIX limits.
- */
-/*
- * Invariant minimum values.
- */
-#define _POSIX_ARG_MAX          4096
-#define _POSIX_CHILD_MAX        6
-#define _POSIX_HOST_NAME_MAX    255
-#define _POSIX_LINK_MAX         8
-#define _POSIX_LOGIN_NAME_MAX   9         // includes terminating NUL
-#define _POSIX_MAX_CANON        255
-#define _POSIX_MAX_INPUT        255
-#define _POSIX_NAME_MAX         14
-#define _POSIX_NGROUPS_MAX      16  // number of supplementary group IDs if available
-#define _POSIX_OPEN_MAX         16
-#define _POSIX_PATH_MAX         255
-#define _POSIX_PIPE_BUF         512
-#define _POSIX_RE_DUP_MAX       255
-#define _POSIX_SSIZE_MAX        32767
-#define _POSIX_STREAM_MAX       8
-#define _POSIX_SYMLINK_MAX      255     // # of bytes in symbolic link
-#define _POSIX_SYMLOOP_MAX      8
-#define _POXIX_TTY_NAME_MAX     9
-#define _POSIX_TZNAME_MAX       3
 /*
  * Default values for possibly indeterminate run-time invariant values
  */
 /*
  * POSIX values.
  */
-#define ARG_MAX                 65535   // arg and env bytes to exec functions
-#define ATEXIT_MAX              32
-#define CHILD_MAX               256     // # of processes per real user ID
-#define HOST_NAME_MAX           255
-#define LINK_MAX                127     // # of links per file
-#define LOGIN_NAME_MAX          9
-#define MAX_CANON               255     // size of canonical input queue
-#define MAX_INPUT               255     // # size of type-ahead buffer
-#define NGROUPS_MAX             16      // # of extra group ID per process
-#define OPEN_MAX                32768   // # of open files per process
-#define PIPE_BUF                4096    // # of bytes in atomic write to pipe
-#define RE_DUP_MAX              255
-#define STREAM_MAX              FOPEN_MAX // # of open I/O streams per process
-#define SYMLOOP_MAX             8
-#define NAME_MAX                255     // # of bytes in file names
-#define PATH_MAX                4096    // bits in path with terminating NUL
-#define TZNAME_MAX              3       // # of bytes in timezone names
-#define TTY_NAME_MAX            9
-#define IOV_MAX                 1024
+#if !defined(__zen__)
+#define ARG_MAX                         _POSIX_ARG_MAX // arg and env bytes to execve()
+#define LINK_MAX                        _POSIX_LINK_MAX     // # of links per file
+#define OPEN_MAX                        _POSIX_OPEN_MAX // open files per process
+#endif
+#define ATEXIT_MAX                      32
+#define CHILD_MAX                       _POSIX_CHILD_MAX   // processes per real user ID
+#define DELAYTIMER_MAX                  _POSIX_DELAYTIMER_MAX
+#define HOST_NAME_MAX                   _POSIX_HOSTNAME_MAX
+#define LOGIN_NAME_MAX                  _POSIX_LOGIN_NAME_MAX
+#define MAX_CANON                       _POSIX_MAX_CANON // canonical input queue size
+#define MAX_INPUT                       _POSIX_MAX_INPUT // size of terminal input queue
+#define NGROUPS_MAX                     _POSIX_NGROUPS_MAX // # of extra group ID per process
+#define PAGE_SIZE                       MACH_PAGE_SIZE
+#define PAGESIZE                        MACH_PAGE_SIZE
+#define PIPE_BUF                        _POSIX_PIPE_BUF // bytes in atomic write to pipe
+#define RE_DUP_MAX                      _POSIX_REDUP_MAX
+#define STREAM_MAX                      _POSIX_STREAM_MAX // # of open I/O streams per process
+#define SYMLOOP_MAX                     _POSIX_SYMLOOP_MAX
+#define NAME_MAX                        _POSIX_NAME_MAX // filename-size (excl. NUL)
+#define PATH_MAX                        _POSIX_PATH_MAX // bits in path incl. NUL
+#define TZNAME_MAX                      _POSIX_TZNAME_MAX // bytes in timezone names
+#define TTY_NAME_MAX                    _POSIX_TTY_NAME_MAX
+#define IOV_MAX                         _POSIX_UIO_MAXIOV
+
+/* thread limits */
+#define PTHREAD_KEYS_MAX                128
+#define PTHREAD_DESTRUCTOR_ITERATIONS   8
+#define _POSIX_THREAD_THREADS_MAX       16
 
 #endif /* POSIX */
 
 /*
  * Unix values
  */
-#define PASS_MAX                15      // significant characters in password
-#define LOGIN_MAX               15      // significant characters in login name
+#define PASS_MAX                        16 // password length incl. NULL
 
 /*
  * Determinate (compile-time) values.
  */
 #if !defined(FOPEN_MAX)
-#define FOPEN_MAX               256
+#define FOPEN_MAX               32
 #endif
 #define SSIZE_MAX               INT32_MAX
 
-#if !defined(NFDBITS)
-#define _POSIX_FD_SET_SIZE      32768
-#else
-#define _POSIX_FD_SET_SIZE      NFDBITS
-#endif
+#define FD_SET_SIZE             _POSIX_FD_SETSIZE
 
 #if defined(_ZERO_SOURCE)
 #include <signal.h>

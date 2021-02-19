@@ -1,24 +1,24 @@
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <stdio.h>
+#include <unistd.h>
 #include <mach/param.h>
 #include <mt/mtx.h>
 
-#define EXIT_MAX_HANDLERS               64
-#define AT_QUICK_EXIT_MAX_HANDLERS      32
+#define AT_QUICK_EXIT_MAX           ATEXIT_MAX
 
 typedef void (*__exitfunc)(void);
+typedef void (*__onexitfunc)(void *);
 
 struct __exitfuncs {
-    __exitfunc                         *exit[ATEXIT_MAX_HANDLERS];
-    void                               *args[ATEXIT_MAX_HANDLERS];
-    __exitfunc                         *quick_exit[AT_QUICK_EXIT_MAX_HANDLERS];
+    __exitfunc                         *exit[ATEXIT_MAX];
+    __exitfunc                         *quickexit[AT_QUICK_EXIT_MAX];
+    __onexitfunc                       *onexit[ATEXIT_MAX];
+    void                               *args[ATEXIT_MAX];
     volatile m_atomic_t                 nexit;
     volatile m_atomic_t                 nquickexit;
+    volatile m_atomic_t                 nonexit;
 };
-
-static struct _exitfuncs                stdlibexitfuncs C_ALIGNED(MACH_CL_SIZE);
-mtfmtx                                  stdlibinitmtx;
-long                                    stdlibinitflg;
 
 C_NORETURN void
 abort(void)
@@ -29,69 +29,102 @@ abort(void)
 int
 atexit(void (*func)(void))
 {
+    int                                 ret = -1;
     long                                ndx;
 
     do {
-        if (stdlibinitflg) {
-            ndx = m_fetchadd(&stdlibexitfuncs.nexit, -1);
-            if (ndx >= 0) {
-                stdlibexitfuncs.exit[ndx] = func;
-
-                return 0;
-            }
-
-            return 1;
-        } else if (m_atommttryfmtx(&stdlibinit)) {
-            stdlibexitfunc.nexit = EXIT_MAX_HANDLERS - 1;
-            stdlibexitfunc.nquickexit = AT_QUICK_EXIT_MAX_HANDLERS - 1;
-            stdlibinitflg = 1;
+        ndx = m_fetchadd(&stdlibexitfunc.nexit, 1);
+        if (ndx < ATEXIT_MAX) {
+            stdlibexitfuncs.exit[ndx] = func;
+            
+            ret = 0;
         }
     }
-    C_UNREACHABLE;
+
+    return ret;
+}
+
+C_NORETURN int
+at_quick_exit(void (*func)(void))
+{
+    int                                 ret = -1;
+    long                                ndx;
+
+    do {
+        ndx = m_fetchadd(&stdlibexitfunc.nquickexit, 1);
+        if (ndx < ATEXIT_MAX) {
+            stdlibexitfuncs.quickexit[ndx] = func;
+            
+            ret = 0;
+        }
+    }
+
+    return ret;
 }
 
 int
 on_exit(void (*func)(int, void *), void *arg)
 {
+    long                                ret = -1;
     long                                ndx;
 
     do {
-        if (stdlibinitflg) {
-            ndx = m_fetchadd(&stdlibexitfuncs.nexit, -1);
-            if (ndx >= 0) {
-                stdlibexitfuncs.exit[ndx] = func;
-                stdlibexitfuncs.args[ndx] = arg;
-
-                return 0;
-            }
-
-            return 1;
-        } else if (m_atommttryfmtx(&stdlibinit)) {
-            stdlibexitfunc.nexit = EXIT_MAX_HANDLERS - 1;
-            stdlibexitfunc.nquickexit = AT_QUICK_EXIT_MAX_HANDLERS - 1;
-            stdlibinitflg = 1;
+        ndx = m_fetchadd(&stdlibexitfuncs.nonexit, -1);
+        if (ndx < ATEXIT_MAX) {
+            stdlibexitfuncs.onexit[ndx] = func;
+            stdlibexitfuncs.args[ndx] = arg;
+            
+            ret = 0;
         }
     }
-    C_UNREACHABLE;
+
+    return ret;
 }
 
 void
 exit(int status)
 {
-    long                                ndx = EXIT_MAX_HANDLERS;
+    long                                ndx;
     __exitfunc                         *func;
     void                               *arg;
 
-    while (ndx--) {
+    ndx = m_fetchadd(&stdlibexitfuncs.nexit, -1);
+    while (ndx >= 0) {
         func = stdlibexitfuncs.exit[ndx];
-        arg = stdlibexitfuncs.args[ndx];
-        if (stdlibexitfuncs.args[ndx]) {
-            func(status, arg);
-        } else {
-            func();
-        }
+        func();
+        ndx--;
     }
+    fflush(NULL);
     fcloseall();
 
     return status;
 }
+
+C_NORETURN void
+_exit(int status)
+{
+    pid_t                               ppid = getppid();
+
+    fcloseall();
+    raise(SIGTERM);
+
+    /* NOTREACHED */
+}
+
+C_NORETURN void
+quick_exit(int status)
+{
+    long                                ndx;
+    __exitfunc                         *func;
+    void                               *arg;
+
+    ndx = m_fetchadd(&stdlibexitfuncs.nquickexit, -1);
+    while (ndx >= 0) {
+        func = stdlibexitfuncs.quickexit[ndx];
+        func();
+        ndx--;
+    }
+
+    return status;
+}
+

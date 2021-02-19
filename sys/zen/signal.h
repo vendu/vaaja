@@ -34,8 +34,8 @@
 #define SIGPWR                  30
 #define SIGSYS                  31
 #define SIGUNUSED               31
-#define SIGRTMIN                32
-#define SIGRT(sig)              (SIGRTMIN | (sig))
+#define SIGRTBIT                32
+#define SIGRT(sig)              (SIGRTBIT | (sig))
 #define SIGRT0                  SIGRT(0)
 #define SIGRT1                  SIGRT(1)
 #define SIGRT2                  SIGRT(2)
@@ -68,7 +68,7 @@
 #define SIGRT29                 SIGRT(29)
 #define SIGRT30                 SIGRT(30)
 #define SIGRT31                 SIGRT(31)
-#define SIGRTMAX                63
+#define SIGRTLIM                64
 
 #endif /* SYS_ZEN_SIGNAL_H */
 

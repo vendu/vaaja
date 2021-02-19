@@ -4,6 +4,8 @@
 #include <mach/types.h>
 #include <mt/mtx.h>
 #include <env/cdefs.h>
+#include <prng/randmt32.h>
+#include <sys/zen/bitbang.h>
 #include <sys/zen/util.h>
 #include <sys/zen/mem.h>
 
@@ -18,7 +20,15 @@
 
 static struct tabhashtab               *TABHASH_TAB[TABHASH_SLOTS];
 static volatile struct tabhashtab      *TABHASH_BUF;
-#endif
+#endif /* 0 */
+
+static int32_t                          memprimetab[32]
+= {
+    1, 2, 3, 5, 7, 11, 13, 17,
+    19, 23, 29, 31, 37, 41, 43, 47,
+    53, 59, 61, 67, 71, 73, 79, 83,
+    89, 97, 101, 103, 107, 109, 113, 127
+};
 
 #if defined(ZEN_SIMULATION)
 #include <stdlib.h>
@@ -55,7 +65,7 @@ krealloc(void *ptr, size_t size)
 {
     void                       *ret;
 
-    ret = kmalloc(nitem * isize);
+    ret = kmalloc(size);
     if ((ret) && (ptr)) {
         kmemcpy(ret, ptr, size);
         ptr = NULL;
@@ -86,15 +96,8 @@ zenfreerun(void *ptr)
 #define zenfindadr(adr)        tabhashop((const uintptr_t)adr, TABHASH_FIND)
 #endif
 
-#if 0
-#if !defined(SMP)
-#define zenchkslabbit(slab, ndx, id)                                    \
-    (slab->bmap[ndx] & (1L << (id)))
-#else
-#define zenchkslabbit(slab, ndx, id)                                    \
+#define zengetslabbit(slab, ndx, id)                                    \
     m_cmpclrbit(&slab->bmap[ndx], id)
-#endif
-#endif
 
 struct zenmemslab              *memslabtab[ZEN_MEM_MAX_SLABS] C_ALINED(MACH_PAGE_SIZE);
 
@@ -162,16 +165,16 @@ zenfreememslab(void *adr)
 }
 
 static void
-zeninitmempool(struct zenmempool *pool, m_word_t type, m_word_t slot)
+zeninitmempool(struct zenmempool *pool, m_word_t zone, m_word_t slot)
 {
-    //    pool->mark = 0;
-    pool->type = type;
+    pool->free = zenfreememslab;
+    pool->head = &pool->bmap;
+    pool->tail = &pool->bmap;
+    pool->nref = 0;
+    pool->zone = zone;
+    pool->flg = flg;
     pool->slot = slot;
     pool->nitem = 0;
-    pool->nref = 0;
-    //    pool->head = (m_adr_t)&pool->mark;
-    //    pool->tail = (m_adr_t)&pool->mark;
-    pool->free = zenfreememslab;
 
     return;
 }
@@ -179,4 +182,8 @@ zeninitmempool(struct zenmempool *pool, m_word_t type, m_word_t slot)
 static void
 zeninitmem(void)
 {
+    srandmt32(0xa5a5a5a5);
+
+    return;
 }
+

@@ -5,16 +5,27 @@
 
 #if defined(MT_ZEN_THREAD)
 
-typedef uintptr_t zenthr;
+typedef uintptr_t                   zenthr;
 
+#define PTHREAD_INIT_DEFAULTS       0
+#define PTHREAD_CREATE_JOINABLE     0
+#define PTHREAD_CREATE_DETACHED     1           // otherwise joinable
+#define PTHREAD_INHERIT_SCHED       2           // interit scheduler
+#define PTHREAD_EXPLICIT_SCHED      3
+#define PTHREAD_SET_SCHEDPARAM      4
+#define PTHREAD_SCOPE_SYSTEM        0
+#define PTHREAD_SCOPE_PROCESS       6           // otherwise system
+#define PTHREAD_SET_STACK           7
+#define PTHREAD_SET_STACKSIZE       8
 #define ZEN_THRATR_INIT             (1 << 0)    // attributes initialised
-#define ZEN_THRATR_DETACHED         (1 << 1)    // detach thread
-#define ZEN_THRATR_INHERITSCHED     (1 << 2)    // inherit scheduler parameters
-#define ZEN_THRATR_EXPLICITSCHED    (1 << 3)    // specify scheduler parameters
-#define ZEN_THRATR_SCHED_PARAM      (1 << 4)    // scheduler parameters
-#define ZEN_THRATR_SCHEDPOLICY      (1 << 5)    // scheduler policy
+#define ZEN_THRATR_DETACHED         (1 << 1)    // detached thread (joinable)
+#define ZEN_THRATR_INHERIT_SCHED    (1 << 2)    // inherit scheduler parameters
+#define ZEN_THRATR_EXPLICIT_SCHED   (1 << 3)    // specify scheduler parameters
+#define ZEN_THRATR_SCHED_POLICY     (1 << 4)    // scheduler policy
+#define ZEN_THRATR_SCHED_PARAM      (1 << 5)    // scheduler parameters
 #define ZEN_THRATR_SCOPE            (1 << 6)    // scheduling scope
 #define ZEN_THRATR_STKATR           (1 << 7)    // stack address and size
+#define ZEN_THRATR_STKSIZE          (1 << 8)    // stack size
 #define ZEN_THRATR_GUARDSIZE        (1 << 8)    // stack guard size
 #define ZEN_THRATR_AFFINITY         (1 << 9)    // affinity configuration
 typedef struct __zenthratr {

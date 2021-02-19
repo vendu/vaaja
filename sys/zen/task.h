@@ -1,6 +1,8 @@
 #ifndef SYS_ZEN_TASK_H
 #define SYS_ZEN_TASK_H
 
+#include <mt/thr.h>
+
 #define ZEN_THR_STK             (1L << 0)   // stk + stklim attributes present
 #define ZEN_THR_JOINABLE        (1L << 1)   // thr may be joined
 #define ZEN_THR_SYS_SCOPE       (1L << 2)   // thr has system scope (process)
@@ -14,14 +16,9 @@
 
 #define ZEN_THR_DEF_FLG         (ZEN_THR_STK | ZEN_THR_JOINABLE | ZEN_THR_SYS_SCOPE | ZEN_THR_INHERIT_SCHED)
 
-struct uthratr{
-    m_ptr_t                     stk;        // thread stack top
-    m_size_t                    stksize;    // thread stack size limit
-    m_word_t                    flags;      // thread flags
-    m_word_t                    errno;
-}
 struct thratr {
     m_ptr_t                     retptr; // thread return/exit value pointer
+    m_word_t                    nice;
     struct uthratr              uatr;
 };
 

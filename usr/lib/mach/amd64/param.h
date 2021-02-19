@@ -18,9 +18,11 @@
      || defined(__ILP32__))
 #define MACH_LONG_SIZE          4
 #define MACH_LONG_SIZE_LOG2     2
+#define MACH_LONG_BITS_LOG2     5
 #else
 #define MACH_LONG_SIZE          8
 #define MACH_LONG_SIZE_LOG2     3
+#define MACH_LONG_BITS_LOG2     6
 #endif
 #define MACH_LONG_LONG_SIZE     8
 #define MACH_PTR_SIZE           8

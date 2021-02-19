@@ -56,28 +56,23 @@ int     posix_memalign(void **memptr, size_t align, size_t size);
 void  * valloc(size_t size);
 #endif
 
-#if 0
 int     atexit(void (*func)(void)) C_NONNULL(1);
+#if defined(_MISC_SOURCE)
 int     on_exit(void (*func)(int, void *), void *arg) C_NONNULL(1);
-int     at_quick_exit(void (*func)(void)) C_NONNULL(1);
 #endif
+int     at_quick_exit(void (*func)(void)) C_NONNULL(1);
 
 C_NORETURN void abort(void);
-int     atexit(void (*func)(void));
-C_NORETURN void exit(int status);
-
-#if defined(_MISC_SOURCE)
-int     on_exit(void (*func)(int, void *), void *arg);
+C_NORETURN void _exit(int status);
+#if (defined(_POSIX_SOURCE)                                             \
+     && (_XOPEN_SOURCE >= 600 || ISOC99_SOURCE || _POSIX_C_SOURCE >= 200112L))
+#define _Exit(status) _exit(status)
 #endif
+C_NORETURN void exit(int status);
 
 #if defined(_ISOC11_SOURCE)
 int     at_quick_exit(void (*func)(void));
 C_NORETURN void quick_exit(int status);
-#endif
-
-C_NORETURN void exit(int status);
-#if defined(_ISOC99_SOURCE)
-C_NORETURN void _Exit(int status);
 #endif
 
 #endif /* __STDLIB_H__ */

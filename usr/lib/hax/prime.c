@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <zero/trix.h>
+#include <env/trix.h>
 #include <unistd.h>
 #if defined(PRIMEPROF)
-#include <zero/prof.h>
+#include <env/prof.h>
 #endif
 
 #define PRIMECHK 1
-#define PRIMEN   (1U << 20)     // 1M
+#define PRIMEN   33
 
 #if defined(PRIMECHK)
 static unsigned long long  primelim;
@@ -343,7 +343,7 @@ main(int argc, char *argv[])
         res = !res;
     } else {
         res = 0;
-        primelst(val);
+        primelst(128);
     }
 #if defined(PRIMEPROF)
     profstopclk(clk);

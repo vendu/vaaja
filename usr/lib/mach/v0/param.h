@@ -6,7 +6,7 @@
 #define MACH_SHORT_SIZE         2
 #define MACH_INT_SIZE           4
 #define MACH_LONG_SIZE          4
-//#define MACH_LONG_LONG_SIZE     8
+#define MACH_LONG_LONG_SIZE     8
 #define MACH_PTR_SIZE           4
 #define MACH_PTR_BITS           32
 #define MACH_ADR_BITS           32

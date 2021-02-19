@@ -25,7 +25,7 @@
 #define m_scanlo1bit(l)              m_bsf32(l)
 #define m_scanhi1bit(l)              m_bsr32(l)
 
-static INLINE void *
+static C_INLINE void *
 m_getretadr(void)
 {
     void *ptr;
@@ -36,7 +36,7 @@ m_getretadr(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getfrmadr(void)
 {
     void *ptr;
@@ -46,7 +46,7 @@ m_getfrmadr(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getfrmadr1(void **fp)
 {
     void *ptr;
@@ -60,7 +60,7 @@ m_getfrmadr1(void **fp)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_getretfrm(void)
 {
     void *ptr;
@@ -70,7 +70,7 @@ m_getretfrm(void)
     return ptr;
 }
 
-static INLINE void *
+static C_INLINE void *
 m_loadretadr(void *frm)
 {
     void *ptr;

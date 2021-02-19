@@ -5,15 +5,15 @@
 #include <mt/sem.h>
 
 long
-mtwaitsem(mtsem *sem)
+zenwaitsem(zensem *sem)
 {
     do {
 #if defined(MT_POSIX_THREAD)
         while (!pthread_mutex_trylock(&sem->lk)) {
             m_waitspin();
         }
-#elif defined(MTFMTX)
-        while (!mttryfmtx(&sem->lk)) {
+#elif defined(ZENFMTX)
+        while (!zentryfmtx(&sem->lk)) {
             m_waitspin();
         }
 #endif
@@ -21,16 +21,16 @@ mtwaitsem(mtsem *sem)
             sem->val--;
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
 
             return 0;
         } else {
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
         }
     } while (1);
@@ -39,15 +39,15 @@ mtwaitsem(mtsem *sem)
 }
 
 long
-semtrywait(mtsem *sem)
+zensemtrywait(zensem *sem)
 {
     do {
 #if defined(MT_POSIX_THREAD)
         while (!pthread_mutex_trylock(&sem->lk)) {
             m_waitspin();
         }
-#elif defined(MTfMTX)
-        while (!mttryfmtx(&sem->lk)) {
+#elif defined(ZENfMTX)
+        while (!zentryfmtx(&sem->lk)) {
             m_waitspin();
         }
 #endif
@@ -55,16 +55,16 @@ semtrywait(mtsem *sem)
             sem->val--;
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
 
             return 0;
         } else {
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
             errno = EAGAIN;
 
@@ -76,7 +76,7 @@ semtrywait(mtsem *sem)
 }
 
 long
-sempost(mtsem *sem)
+zensempost(zensem *sem)
 {
     do {
 #if defined(MT_POSIX_THREAD)
@@ -84,22 +84,22 @@ sempost(mtsem *sem)
             m_waitspin();
         }
 #elif defined(MTFMTX)
-        while (mttryfmtx(&sem->lk)) {
+        while (zentryfmtx(&sem->lk)) {
             m_waitspin();
         }
 #endif
         if (!sem->val) {
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
-        } else if (sem->val != MTSEM_INITVAL) {
+        } else if (sem->val != ZEN_SEMINITVAL) {
             sem->val++;
 #if defined(MT_POSIX_THREAD)
             pthread_mutex_unlock(&sem->lk);
-#elif defined(MTFMTX)
-            mtunlkfmtx(&sem->lk);
+#elif defined(ZENFMTX)
+            zenunlkfmtx(&sem->lk);
 #endif
 
             return 0;

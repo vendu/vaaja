@@ -42,9 +42,15 @@ mtlkbit(volatile m_atomic_t *lp, long pos)
 static C_INLINE void
 mtunlkbit(volatile m_atomic_t *lp, long pos)
 {
-    m_membar();         // full memory barrier
-    m_clrbit(lp, pos);  // clear bit
-    m_endspin();        // signal wakeup-event
+    m_atomic_t                  res = 0;
+    long                        bit = 1L << pos;
+
+    do {
+        while (*lp & bit) {
+            m_waitspin;
+        }
+        res = m_cmpclrbit(lp, pos);  // clear bit
+    } while (!res);
 
     return;
 }
