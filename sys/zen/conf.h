@@ -26,11 +26,13 @@
 /* static-priority simple scheduler for threads */
 #define ZEN_TASK_SCHED          ZEN_SPT_TASK_SCHED
 #else                           // slightly-revamped FreeBSD ULE for the desktop
-#define ZEN_TASK_SCHED          ZEN_ULE_TASK_SCHED
+#define ZEN_TASK_SCHED          ZEN_UNI_TASK_SCHED
 #endif
 #define ZEN_ULE_TASK_SCHED      1
 #define ZEN_BVT_TASK_SCHED      2
 #define ZEN_SPT_TASK_SCHED      3
+#define ZEN_UNI_TASK_SCHED      4
+
 #define ZEN_IP4_NET             1
 #if defined(ZEN_MULTIPROC)
 #define ZEN_SMP                 1

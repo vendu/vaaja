@@ -27,7 +27,7 @@ schedinitset(void)
     struct zenschedset *set = &k_schedreadyset;
     long                id;
 
-    lim >>= __LONGBITSLOG2;
+    lim >>= MACH_LONG_BITS_LOG2;
     for (id = 0 ; id < lim ; id++) {
         k_schedidlecoremap[id] = ~1L;
     }
@@ -305,7 +305,7 @@ schedswitchtask(struct zentask *curtask)
                 do {
                     /* loop over current and next priority-queues */
                     lim = SCHED_ULE_CLASS_QUEUES;
-                    lim >>= __LONGBITSLOG2;
+                    lim >>= MACH_LONG_BITS_LOG2;
                     mtlktkt(&set->lk);
                     map = set->curmap;
                     queue = &set->cur[SCHED_ULE_TRAP_PRIO_MIN];
@@ -333,7 +333,7 @@ schedswitchtask(struct zentask *curtask)
                 } while (loop--);
                 /* if both current and next queues are empty, look for an idle task */
                 lim = SCHED_ULE_IDLE_QUEUES;
-                lim >>= __LONGBITSLOG2;
+                lim >>= MACH_LONG_BITS_LOG2;
                 mtlktkt(&set->lk);
                 map = set->idlemap;
                 queue = k_schedidletab;

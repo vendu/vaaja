@@ -103,8 +103,8 @@ struct m_tcb {
     struct m_segregs   segregs;         // data-segment registers
     struct m_genregs   genregs;         // general-purpose registers
     int32_t            pdbr;            // page-directory base register (%cr3)
-    int32_t            trapnum;         // # of trap
-    int32_t            err;             // error code for trap or zero
+    int32_t            trapnum;         // # of trap being handled or -1
+    int32_t            code;            // status/error code for trap or zero
     struct m_trapframe trapframe;       // return frame for iret
 };
 

@@ -194,7 +194,7 @@
 #endif
 #if !defined(C_CONST)
 #define C_CONST
-<#endif
+#endif
 #if !defined(C_USED)
 #define C_USED
 #endif
@@ -235,7 +235,7 @@ static C_INLINE C_PREFETCH(void *adr)
 #if defined(__GNUC__) || defined(__clang__)
 #define C_SCALAR_STORAGE_ORDER(name)    __attribute__ ((__scalar_storage_order (#name)))
 #define C_SCALAR_ORDER_LSB              __attribute__ ((__scalar_storage_order ("little-endian")))
-#define C_SCALAR_ORDER_LSB              __attribute__ ((__scalar_storage_order ("big-endian")))
+//#define C_SCALAR_ORDER_LSB              __attribute__ ((__scalar_storage_order ("big-endian")))
 #define C_NO_PLT                        __attribute__ ((__no_plt__))
 #define C_STACK_PROTECT                 __attribute__ ((__stack_protect__))
 #define C_NO_SPLIT_STACK                __attribute__ ((__no_split_stack__))
@@ -250,6 +250,95 @@ static C_INLINE C_PREFETCH(void *adr)
 #define C_ALLOC_SIZE(argv)              __attribute__ ((__alloc_size__ (##argv)))
 #define C_ALLOC_ALIGN(n)                __attribute__ ((__alloc_align__ (n)))
 #endif
+
+#if (!defined(__STDC_VERSION__)                                         \
+     || (__STDC_VERSION__ < 201112L)                                    \
+     || ((__STDC_VERSION__ >= 201112L) && !defined(__STDC_NO_ATOMICS__)))
+
+#include <stdint.h>
+
+typedef uint_fast8_t            atomic_flag;
+
+#define STDC_DEFAULT_MEMORY_MODEL memory_order_seq_cst
+#define atomic_is_lock_free(p)  __atomic_is_lock_free(sizeof(*p), p)
+#define _Atomic(t)              typedef atomic t t
+//#define _Atomic                 atomic
+
+#define ATOMIC_FLAG_INIT        0
+#define atomic_flag_clear(vap)                                          \
+    __atomic_clear(vap, STDC_DEFAULT_MEMORY_ORDER)
+#define atomic_flag_clear_explicit                                      \
+    __atomic_clear
+#define atomic_flag_test_and_set(vap)                                   \
+    __atomic_test_and_set(vap, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_flag_test_and_set_explicit                               \
+    __atomic_test_and_set_explicit
+#ifndef atomic_thread_fence
+#define	memory_order_relaxed	__ATOMIC_RELAXED
+#define memory_order_consume    __ATOMIC_CONSUME
+#define	memory_order_acquire	__ATOMIC_ACQUIRE
+#define	memory_order_release	__ATOMIC_RELEASE
+#define memory_order_acq_rel    __ATOMIC_ACQ_REL
+#define	memory_order_seq_cst	__ATOMIC_SEQ_CST
+#define	atomic_thread_fence(m)	__atomic_thread_fence(m)
+#endif
+#ifndef atomic_signal_fence
+#define atomic_signal_fence(m)  __atomic_signal_fence(m)
+#endif
+#ifndef atomic_store
+#define	atomic_store(ptr, val)  __atomic_store_n(ptr, val,              \
+                                                 STDC_DEFAULT_MEMORY_MODEL)
+#endif
+#ifndef atomic_load
+#define	atomic_load(ptr)        __atomic_load_n(ptr,                    \
+                                                STDC_DEFAULT_MEMORY_MODEL)
+#endif
+#ifndef atomic_compare_exchange
+#define atomic_compare_exchange(ptr, want, need)                        \
+    __atomic_compare_exchange_n(ptr, want, need, 0,                     \
+                                STDC_DEFAULT_MEMORY_MODEL,              \
+                                STDC_DEFAULT_MEMORY_MODEL)
+#endif
+#ifndef atomic_store_explicit
+#define	atomic_store_explicit	__atomic_store_n
+#endif
+#ifndef atomic_load_explicit
+#define	atomic_load_explicit	__atomic_load_n
+#endif
+#ifndef atomic_exchange_ptr
+#define atomic_exchange(ptr, valp, retp)                                \
+    __atomic_exchange(ptr, val,                                         \
+                      STDC_DEFAULT_MEMORY_ORDER)
+#endif
+#ifndef atomic_exchange_ptr
+#define atomic_exchange_ptr(ptr, valp, retp)                            \
+    __atomic_exchange(ptr, valp, retp,                                  \
+                      STDC_DEFAULT_MEMORY_ORDER)
+#endif
+#define atomic_fetch_add(ptr, val)                                      \
+    __atomic_fetch_add(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_fetch_sub(ptr, val)                                      \
+    __atomic_fetch_sub(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_fetch_or(ptr, val)                                       \
+    __atomic_fetch_or(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_fetch_and(ptr, val)                                      \
+    __atomic_fetch_and(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_fetch_xor(ptr, val)                                      \
+    __atomic_fetch_xor(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_add_fetch(ptr, val)                                      \
+    __atomic_add_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_sub_fetch(ptr, val)                                      \
+    __atomic_sub_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_or_fetch(ptr, val)                                       \
+    __atomic_or_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_and_fetch(ptr, val)                                      \
+    __atomic_and_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_xor_fetch(ptr, val)                                      \
+    __atomic_xor_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_fetch_nand(ptr, val)                                     \
+    __atomic_fetch_nand(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
+#define atomic_nand_fetch(ptr, val)                                     \
+    __atomic_nand_fetch(ptr, val, STDC_DEFAULT_MEMORY_MODEL)
 
 #endif /* DECK_CDEFS_H */
 

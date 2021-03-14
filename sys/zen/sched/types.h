@@ -3,6 +3,7 @@
 
 #include <sys/zen/conf.h>
 #include <mach/types.h>
+#include <stdint.h>
 
 #if (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED)
 struct  zenschedset {
@@ -21,7 +22,7 @@ struct  zenschedset {
 
 struct zenschedparm {
     m_word_t                    unit;           // CPU-affinity
-    m_word_t                    sched;          // thread scheduler class
+    m_word_t                    policy;         // thread scheduler class
     m_word_t                    intr;           // received interrupt
     m_word_t                    runprio;        // current priority
     m_word_t                    prio;           // base priority
@@ -42,7 +43,7 @@ struct zenschedparm {
     m_time_t                    timelim;        // wakeup time or deadline
 };
 
-#elif (ZEN_TASK_SCHED == ZEN_ULE_BVT_SCHED)
+#elif (ZEN_TASK_SCHED == ZEN_BVT_SCHED)
 
 /* per-thread scheduler parameters */
 struct zenschedparm {
@@ -50,6 +51,18 @@ struct zenschedparm {
     m_uword_t                   slptime;
     m_word_t                    warpofs;
     m_word_t                    lastwarp;
+};
+
+#elif (ZEN_TASK_SCHED == ZEN_UNI_SCHED)
+
+/* per-thread scheduler parameters */
+struct zenschedparm {
+    m_word_t                    policy;
+    m_word_t                    defpolicy;
+    m_word_t                    prio;
+    m_word_t                    defprio;
+    m_word_t                    niceval;
+    m_word_t                    slice;
 };
 
 #endif /* ZEN_TASK_SCHED */
@@ -82,6 +95,11 @@ struct zentask {
     struct zentask             *prev;
     struct zentask             *next;
     struct zenschedparm         sched;
+};
+
+struct zennice {
+    int_fast8_t                 nice;
+    int_fast8_t                 slice;
 };
 
 #endif /* __SYS_ZEN_SCHED_TYPES_H__ */

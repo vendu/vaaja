@@ -4,13 +4,13 @@
 //#include <gfx/rgb.h>
 #include <stdint.h>
 
-#define ZEN_EV_OBJ_BITS         32
-#define ZEN_EV_TIME_BITS        32
-#define ZEN_EV_WORD_BITS        32
+//#define ZEN_EV_OBJ_BITS         64
+//#define ZEN_EV_TIME_BITS        64
+//#define ZEN_EV_WORD_BITS        64
 
-#if (ZEN_EV_TIME_BITS == 64)
+#if defined(ZEN_EV_TIME_BITS) && (ZEN_EV_TIME_BITS == 64)
 typedef uint64_t zenevtime_t;
-#elif (ZEN_EV_TIME_BITS == 32)
+#else
 typedef uint32_t zenevtime_t;
 #endif
 
@@ -65,22 +65,20 @@ typedef uint64_t                zenevuword_t;
 #define ZEN_FOCUS_IN            13 // focus in event
 #define ZEN_FOCUS_OUT           14 // focus out event
 #define ZEN_CONFIGURE           15 // configure notfication
-#define ZEN_MOVE                16
-#define ZEN_RESIZE              17
-#define ZEN_MOVE_RESIZE         18
-#define ZEN_REPARENT            19 // reparent notification
-#define ZEN_CIRCULATE           20 // circulation notification
-#define ZEN_GRAVITY             21 // gravity notification
-#define ZEN_PROPERTY            22 // property notification
-#define ZEN_COLORMAP            23 // colormap notification
-#define ZEN_KEYMAP              24 // keymap notification
+#define ZEN_REQUEST             16 // move, resize, moveresize
+#define ZEN_REPARENT            17 // reparent notification
+#define ZEN_CIRCULATE           19 // circulation notification
+#define ZEN_GRAVITY             20 // gravity notification
+#define ZEN_PROPERTY            21 // property notification
+#define ZEN_COLORMAP            22 // colormap notification
+#define ZEN_KEYMAP              23 // keymap notification
 /* struct deckevnote */
-#define ZEN_MESSAGE             25 // message from another client
-#define ZEN_EXPOSE              26 // exposure notification
-#define ZEN_VISIBILITY          27 // visibility notification
-#define ZEN_KILL                28 // kill window
-#define ZEN_LOG_OUT             29
-#define ZEN_SHUT_DOWN           30
+#define ZEN_MESSAGE             24 // message from another client
+#define ZEN_EXPOSE              25 // exposure notification
+#define ZEN_VISIBILITY          26 // visibility notification
+#define ZEN_KILL                27 // kill window
+#define ZEN_DEEP_SIX            28 // DEEP_SIX_REBOOT
+#define ZEN_HIBERNATE           29
 /* events for window managers */
 
 /*
@@ -319,31 +317,25 @@ struct zenev {
     struct zenmsg               msg[C_VLA];
 };
 
-#define zenchkev(evq, ev, flg)) zengetev((evq), (ev), (flg) | ZEN_CHECK_EV)
-#define zenpeekev(evq, ev, flg) zengetev((evq), (ev), (flg) | ZEN_PEEK_EV)
+#define zenchkev(evq, ev, flg)  zengetev((evq), (ev), (flg) | ZEN_CHECK_EV)
+#define zeneekev(evq, ev, flg)  zengetev((evq), (ev), (flg) | ZEN_PEEK_EV)
 void    zengetev(struct zenev *evq, struct zenev *ev, long flg);
 long    zenputev(struct zenev *evq, struct zenev *ev, long flg);
 void    zensyncev(struct zenev *evq, long flg);
 long    zenskiphid(struct zenev *evq, long len);
 
-#if defined(__zen__) && defined(__kernel__)
+#undef RING_ITEM
+#undef RING_INVAL
+#undef RING_MALLOC
 
-#if !defined(RING_ITEM)
+#if defined(__zen__)
 #define RING_ITEM  struct zenev
-#endif
-#if !defined(RING_INVAL)
 #define RING_INVAL (RING_ITEM){ 0 }
-#endif
-#if !defined(MALLOC)
-#define MALLOC(sz) kmalloc(sz)
-#endif
-
+#define RING_MALLOC(sz) kmalloc(sz)
 #else /* !defined(__zen__) */
-
-#define RING_ITEM  struct zenev
-#define RING_INVAL (RING_ITEM){ 0 }
-#define MALLOC(sz) malloc(sz)
-
+#define RING_ITEM               struct zenev
+#define RING_INVAL              (RING_ITEM){ 0 }
+#define RING_MALLOC(sz)         malloc(sz)
 #endif /* defined(__zen__) */
 
 #include <algo/ring.h>

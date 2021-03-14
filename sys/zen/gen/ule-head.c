@@ -1,5 +1,7 @@
 /* slightly revamped FreeBSD ULE-scheduler */
 #include <limits.h>
+#include <stdint.h>
+#include <mach/param.h>
 #include <zero/cdefs.h>
 #include <mach/asm.h>
 #include <mt/tktlk.h>

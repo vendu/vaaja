@@ -10,23 +10,37 @@
 #define SPT_NICE_MAX    19
 #define SPT_NICE_RANGE  40
 
+#define UNI_NICE_MIN    (-20)
+#define UNI_NICE_MAX    19
+#define UNI_NICE_RANGE  40
+
 #define ULE_PRIO_MAX    64
 #define ULE_LOW_PRIO    (-(ULE_PRIO_MAX / 2))
 #define ULE_PRIO_LIM    (ULE_PRIO_MAX / 2)
 #define ULE_PRIO_RANGE  ULE_PRIO_MAX
-#define ULE_NICE_STEP   ((double)ULE_PRIO_LIM / ULE_NICE_MAX)
+#define ULE_NICE_STEP   (ULE_NICE_MAX >> 4)
 #define ULE_SLICE_SHIFT 3
 
 #define SPT_PRIO_MAX    64
 #define SPT_LOW_PRIO    (-(SPT_PRIO_MAX / 2))
 #define SPT_PRIO_LIM    (SPT_PRIO_MAX / 2)
 #define SPT_PRIO_RANGE  SPT_PRIO_MAX
-#define SPT_NICE_STEP   ((double)SPT_PRIO_LIM / SPT_NICE_MAX)
+#define SPT_NICE_STEP   (SPT_NICE_MAX >> 1)
+#define SPT_SLICE_SHIFT 2
+
+#define UNI_PRIO_MAX    64
+#define UNI_LOW_PRIO    (-(UNI_PRIO_MAX / 2))
+#define UNI_PRIO_LIM    (UNI_PRIO_MAX / 2)
+#define UNI_PRIO_RANGE  UNI_PRIO_MAX
+#define UNI_NICE_STEP   (UNI_NICE_MAX >> 1)
+#define UNI_SLICE_SHIFT 4
 
 long ulenicetab[ULE_PRIO_RANGE];
 long uleslicetab[ULE_PRIO_RANGE];
 long sptnicetab[SPT_PRIO_RANGE];
 long sptslicetab[SPT_PRIO_RANGE];
+long uninicetab[UNI_PRIO_RANGE];
+long unislicetab[UNI_PRIO_RANGE];
 
 void
 genniceule(void)
@@ -100,6 +114,42 @@ genslicespt(void)
     return;
 }
 
+void
+genniceuni(void)
+{
+    long   *ptr = &uninicetab[UNI_PRIO_LIM];
+    double  ofs = -UNI_PRIO_LIM;
+    long    ndx;
+
+    for (ndx = UNI_LOW_PRIO ; ndx < UNI_NICE_MIN ; ndx++) {
+        ptr[ndx] = 0;
+    }
+    for ( ; ndx < UNI_NICE_MAX ; ndx++) {
+        ptr[ndx] = (int8_t)ofs;
+        ofs += UNI_NICE_STEP;
+    }
+    for ( ; ndx < UNI_PRIO_LIM ; ndx++) {
+        ptr[ndx] = 0;
+    }
+
+    return;
+}
+
+void
+gensliceuni(void)
+{
+    long *ptr = unislicetab;
+    long  val = 0;
+    long  ndx;
+
+    for (ndx = 0 ; ndx < UNI_PRIO_LIM ; ndx++) {
+        val = ndx >> 4;
+        ptr[ndx] = val;
+    }
+
+    return;
+}
+
 /* map nice values [-20, 19] to priorities [lo, hi] */
 void
 printniceule(void)
@@ -161,9 +211,33 @@ printnicespt(void)
 }
 
 void
-printhelp(const char *cmd)
+printniceuni(void)
 {
-    fprintf(stderr, "usage:\t%s \"ule\" OR %s \"spt\"", cmd, cmd);
+    long ndx;
+    long n = 0;
+
+    printf("long k_schedslicetab[UNI_PRIO_RANGE] = {\n    ");
+    for (ndx = 0 ; ndx < UNI_PRIO_RANGE ; ndx++) {
+        printf("{ %3ld, %3ld }", uninicetab[ndx], unislicetab[ndx]);
+        if (ndx != 63) {
+            if (n == 3) {
+                printf(",\n    ");
+                n = 0;
+            } else {
+                printf(", ");
+                n++;
+            }
+        } else {
+            printf("\n};");
+        }
+    }
+    printf("\n\n");
+}
+
+void
+printhelp(const char *msg)
+{
+    fprintf(stderr, "usage:\t%s [\"ule\" OR \"spt\" OR \"uni\"]", msg);
 
     exit(1);
 }
@@ -182,6 +256,10 @@ main(int argc, char *argv[])
         gennicespt();
         genslicespt();
         printnicespt();
+    } else if (!strcmp(argv[1], "uni")) {
+        genniceuni();
+        gensliceuni();
+        printniceuni();
     } else {
         printhelp(argv[0]);
     }

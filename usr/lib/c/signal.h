@@ -5,17 +5,18 @@
 
 #include <features.h>
 #include <stdint.h>
-#if !defined(__size_t_defined)
-typedef uintptr_t               size_t;
-#define __size_t_defined        1
-#endif
+#include <share/size_t.h>
 #if !defined(__pid_t_defined)
 typedef uint32_t                pid_t;
 #define __pid_t_defined         1
 #endif
-#include <bits/signal.h>
 #include <share/sig_atomic_t.h>
+#include <bits/signal.h>
+#include <bits/sigset.h>
+#if defined(__zen__)
 #include <sys/zen/signal.h>
+#include <sys/zen/errno.h>
+#endif
 #if defined(_POSIX_SOURCE) && (_POSIX_C_SOURCE >= 199309L)
 struct timespec;
 #include <time.h>
@@ -23,12 +24,9 @@ struct timespec;
 #if ((_POSIX_C_SOURCE >= 199506L) || (_XOPEN_SOURCE >= 500) && 0)
 //#include <pthread.h>
 #endif
-#include <mach/param.h>
-#if defined(__zen__)
-#include <sys/zen/errno.h>
-#endif
 
-typedef void                    (*sighandler_t)(int);
+#if defined(_GNU_SOURCE)
+typedef __sighandler_t          sighandler_t;
 
 /* special values; standard ones */
 #define SIG_ERR                 ((__sighandler_t)-1)
@@ -44,7 +42,7 @@ typedef void                    (*sighandler_t)(int);
 extern void                     (*signal(int sig, void (*func)(int)))(int);
 extern __sighandler_t           __sysv_signal(int sig, __sighandler_t func);
 #if defined(_SVID_SOURCE)
-extern sighandler_t             ssignal(int sig, sighandler_t action);
+extern __sighandler_t           ssignal(int sig, __sighandler_t action);
 extern int                      gsignal(int sig);
 #endif
 #if defined(_GNU_SOURCE)
@@ -107,11 +105,13 @@ extern int                      sigpause(int sig) __asm__ ("__xpg_sigpause\n");
 #define sigmask(sig)            (1L << ((sig) - 1))
 /* block signals in mask, return old mask */
 extern int                      sigblock(int mask);
+//struct __ucontext;
+//extern int                      sigreturn(const struct __ucontext *);
 /* set mask of blocked signals, return old mask */
 extern int                      sigsetmask(int mask);
 /* return current signal mask */
 extern int                      siggetmask(void);
-
+/* set signal stack */
 #if !defined(_POSIX_SOURCE)
 int                             sigvec(int sig, const struct sigvec *vec,
                                        struct sigvec *oldvec);
@@ -124,25 +124,27 @@ int                             sigvec(int sig, const struct sigvec *vec,
 #if defined(_POSIX_SOURCE)
 
 /* get and/or change set of blocked signals */
-extern int              sigprocmask(int how, const sigset_t *restrict set,
-                                    sigset_t *restrict oldset);
+extern int      sigprocmask(int how, const sigset_t *restrict set,
+                            sigset_t *restrict oldset);
 /* change blocked signals to set, wait for a signal, restore the set */
 extern int      sigsuspend(const sigset_t *set);
 /* set or examine signal behavior */
 extern int      sigaction(int sig, const struct sigaction *restrict act,
-                                  struct sigaction *restrict oldact);
+                          struct sigaction *restrict oldact);
 /* fetch pending blocked signals */
 extern int      sigpending(sigset_t *set);
 /* wait for a signal in set */
 extern int      sigwait(const sigset_t *set, int *restrict sig);
 #if (_POSIX_C_SOURCE >= 199309L)
 extern int      sigwaitinfo(const sigset_t *restrict set,
-                                    siginfo_t *restrict info);
+                            siginfo_t *restrict info);
 extern int      sigtimedwait(const sigset_t *restrict set,
-                                     siginfo_t *restrict info,
-                                     const struct timespec *restrict timeout);
-extern int      sigqueue(pid_t pid, int sig, const union sigval val);
+                             siginfo_t *restrict info,
+                             const struct timespec *restrict timeout);
 #endif /* USEPOSIX199309 */
+#if (_POSIX_C_SOURCE >= 199506L || _XOPEN_SOURCE >= 600)
+extern int      sigqueue(pid_t pid, int sig, const union sigval val);
+#endif
 
 #endif /* USEPOSIX */
 

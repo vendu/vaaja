@@ -1,5 +1,5 @@
-#ifndef __SYS_ZEN_SCHED_ULE_H__
-#define __SYS_ZEN_SCHED_ULE_H__
+#ifndef SYS_ZEN_SCHED_ULE_H
+#define SYS_ZEN_SCHED_ULE_H
 
 #include <sys/zen/conf.h>
 
@@ -23,13 +23,6 @@
 #define SCHED_ULE_CLASS_WORDS       1
 #elif (MACH_WORD_SIZE == 4)
 #define SCHED_ULE_CLASS_WORDS       2
-#endif
-
-#define MACH_LONG_BITS  (CHAR_BIT * MACH_WORD_SIZE)
-#if (MACH_LONG_BITS == 32)
-#define __LONGBITSLOG2  5
-#elif (MACH_LONG_BITS == 64)
-#define __LONGBITSLOG2  6
 #endif
 
 #define SCHED_ULE_LVL0_DLS          (1U << 16)
@@ -595,5 +588,5 @@ taskwakeup(struct zentask *task)
 
 #endif /* (ZEN_TASK_SCHED == ZEN_ULE_TASK_SCHED) */
 
-#endif /* __SYS_ZEN_SCHED_ULE_H__ */
+#endif /* SYS_ZEN_SCHED_ULE_H */
 

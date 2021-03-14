@@ -18,8 +18,6 @@
 #elif (defined(__i386__) || defined(__i486__)                           \
        || defined(__i586__) || defined(__i686__))
 #include <bsp/ia32/signal.h>
-#elif defined(__arm__)
-#include <bsp/arm/signal.h>
 #endif
 //#include <sys/types.h>
 
@@ -29,16 +27,7 @@ typedef void (*__sighandler_t)(int);
 #define __SIGNOCATCHBITS                                                \
     ((UINT64_C(1) << SIGKILL) | (UINT64_C(1) << SIGSTOP))
 
-#if (defined(__x86_64__) || defined(__amd64__) || defined(___alpha__)  \
-     || defined(__ppc64__)                                              \
-     || defined(__i386__) || defined(__i486__)                          \
-     || defined(__i586__) || defined(__i686__))
-#define SIG64BIT        1
-#else
-#define SIG32BIT        1
-#endif
-
-#include <api/zen/sigset.h>
+#include <bits/sigset.h>
 
 /* private values for signal actions */
 #define _SIG_TERM       ((__sighandler_t)3)
