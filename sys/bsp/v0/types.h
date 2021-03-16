@@ -3,9 +3,9 @@
 
 #include <mach/param.h>
 
-typedef int32_t                 m_filedesc_t;
 typedef uint32_t                m_intrdesc_t;
 typedef uint32_t                m_pagedesc_t;
+typedef int32_t                 m_filedesc_t;
 typedef int32_t                 m_reg_t;
 typedef uint32_t                m_ureg_t;
 typedef int32_t                 m_word_t;

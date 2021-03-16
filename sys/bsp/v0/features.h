@@ -1,8 +1,6 @@
 #ifndef __VOIMA_FEATURES_H__
 #define __VOIMA_FEATURES_H__
 
-#include <v0/conf.h>
-
 #define _REENTRANT                      1
 #define THREAD_SAFE                     1
 

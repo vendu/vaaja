@@ -1,5 +1,5 @@
-#ifndef MACH_V0_INST_H
-#define MACH_V0_INST_H
+#ifndef SYS_V0_INST_H
+#define SYS_V0_INST_H
 
 /*
  * NOTES
@@ -8,8 +8,9 @@
  *   AORR etc. under V0_MP_EXTENSION
  */
 
+#define V0_RET_BITS             64 // normally 32, 64-bit internal
 /* instructions are 32-bit */
-#define V0_INST_BITS          32
+#define V0_INST_BITS            32
 /* NOP is a 32-bit parcel of all 1-bits */
 #define V0_NOP                  (~UINT32_C(0))
 
@@ -24,7 +25,6 @@
  * - V0_NAND_OP:  parm=V0_NAND
  */
 #define V0_LGF_OP               0x00
-/* 0x07 is reserved */
 #define V0_NOT_OP               V0_LGF_OP // dest = ~src;
 #define V0_ORR_OP               V0_LGF_OP // dest = src | arg;
 #define V0_XOR_OP               V0_LGF_OP // dest = src ^ arg;
@@ -40,6 +40,7 @@
 #define V0_NOR                  0x04
 #define V0_XNOR                 0x05
 #define V0_NAND                 0X06
+/* 0x07 is reserved */
 
 /*
  * bit-operations; struct v0inst
@@ -77,7 +78,7 @@
 /* arithmetic operations */
 /* the U-prefix unsigned operations have (parm & V0_UNSIGNED_BIT)   MS */
 #define V0_INC_OP               0x03        // dest = src + 1;           C
-#define V0_UINC_OP              V0_INC_OP
+#define V0_UINC_OP              DEC_INC_OP
 #define V0_DEC_OP               0x04        // dest = src - 1;           C
 #define V0_UDEC_OP              V0_DEC_OP
 #define V0_ADD_OP               0x05        // dest = src + arg;         C, O
@@ -130,7 +131,7 @@
 #define V0_UCMP_OP              V0_CMP_OP // parm & V0_UNSIGNED_BIT
 #define V0_JMP_OP               0x0f        // jump, cond=V0_ANY_COND
 /* jump, cond=V0_ANY_COND, (parm & V0_LINK_BIT) */
-#define V0_JAL_OP               V0_JMP_OP
+#define V0_JAL_OP               0_JMP_OP
 #define V0_BRA_OP               0x10
 #define V0_JEQ_OP               V0_BRA_OP // jump, cond=V0_EQ_COND
 #define V0_JLT_OP               V0_BRA_OP // jump, cond=V0_LT_COND
@@ -149,14 +150,14 @@
  * - LEA:           struct v0inst
  * - STR, LDR, MOV: struct v0inst
  * - PSH, POP:      struct v0stkinst, (parm & V0_STORE_BIT) for PSH
- * - STM, LDM:      struct v0mapinst
+ * - STM, LDM:      struct v0mapinst, (op.stm = 1) = store, 0 for load
  * - low bits in parm specify source operand size
  * - V0_SEX_BIT dictates zero/sign-extension
  */
 #define V0_LEA_OP               0x15        // dest = arg(src) + imm
 #define V0_STR_OP               0x16        // *(arg(dest) + imm) = src;
 #define V0_LDR_OP               0x17        // dest = *(arg(src) + imm);
-#define V0_MOV_OP               0x18        // dest = src;
+#define V0_MOV_OP               0x18        // dest = src; (reg to reg)
 #define V0_STK_OP               0x19        // PSH, POP
 #define V0_PSH_OP               V0_STK_OP // sp -= 4; *sp = src;
 #define V0_POP_OP               V0_STK_OP // dest = *sp; sp += 4;
@@ -177,11 +178,13 @@
 #define V0_STI_OP               0x22        // enable interrupts; default all
 #define V0_INT_OP               0x23        // processor ID in parm, -1 for self
 #define V0_IRT_OP               0x24        // return from interrupt handler
+#define V0_WFE_OP               0x25        // wait for event
+#define V0_SEV_OP               0x26        // signal event
 
 /* instruction IDs 0x2c..0x3d are currently reserved */
 
-#define V0_COPROC_OP            0x3e        // coprocessor-defined instructions
-#define V0_NOP_OP               0x3f        // NOP is 32-bit, all 1-bits
+#define V0_NOP_OP               0x3e        // NOP is 32-bit, all but low 1-bits
+#define V0_COPROC_OP            0x3f        // coprocessor-operation, all 1-bits
 #define V0_OP_BITS              6           // # of instruction-ID bits
 
 /*
@@ -221,7 +224,7 @@
 #define V0_SIZE_BITS            2           // 0 - 8-bit, 1 - 16, 2 - 32, 3 - 64
 #define V0_SEX_BIT              (1 << 2)    // 0: zero-extend, 1: sign-extend
 #define V0_STORE_BIT            (1 << 3)    // PSH, STM
-#define V0_SHIFT_BITS           5           // # of bits in shift counts
+#define V0_SHIFT_BITS           6           // # of bits in shift counts
 #define V0_ATOMIC_BIT           (1 << 6)    // atomic [memory] operation
 #define V0_REV_BIT              (1 << 6)    // reverse bits; HUN
 #define V0_LINK_BIT             (1 << 6)    // JAL
@@ -239,14 +242,7 @@
 
 #define V0_STD_INST_INITIALIZER                                         \
     {                                                                   \
-        V0_NOP_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        V0_R0_REG,                                                      \
-        V0_R0_REG,                                                      \
-        V0_R1_REG,                                                      \
-        V0_REG_ADR,                                                     \
-        V0_NO_FOLD,                                                     \
-        0                                                               \
+        V0_NOP_OP, V0_ANY_COND, V0_R0_REG, V0_R0_REG, V0_R1_REG, V0_REG_ADR, V0_NO_FOLD, 0 \
     }
 
 struct v0stdinst {
@@ -257,17 +253,21 @@ struct v0stdinst {
     unsigned                    arg     : V0_GEN_REG_BITS;    // [18:16]  (3)
     unsigned                    adr     : V0_ADR_BITS;        // [21:19]  (3)
     unsigned                    fold    : V0_FOLD_BITS;       // [23:22]  (2)
-    int8_t                      parm;                           // [31:24]
+    uint8_t                     parm;                           // [31:24]
     int32_t                     imm32[C_VLA];
 };
+#define V0_STDINST_SIZE         (V0_OP_BITS                           \
+                                 + V0_COND_BITS                       \
+                                 + V0_GEN_REG_BITS                    \
+                                 + V0_REG_BITS                        \
+                                 + V0_GEN_REG_BITS                    \
+                                 + V0_ADR_BITS                        \
+                                 + V0_FOLD_BITS                       \
+                                 + 8)
 
-#define V0_CMP_INST_INITIALIZER                                         \
-    {                                                                   \
-        V0_CMP_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        V0_R0_REG,                                                      \
-        V0_R0_REG,                                                      \
-        0                                                               \
+#define V0_CMP_INST_INITIALIZER                                       \
+    {                                                                 \
+        V0_CMP_OP, V0_ANY_COND, V0_R0_REG, V0_R0_REG, 0               \
     }
 struct v0cmpinst {
     unsigned                    op      : V0_OP_BITS;         // (6)
@@ -277,41 +277,46 @@ struct v0cmpinst {
     unsigned                    parm    : 3;                    // SIZE, SEX
     signed                      imm13   : 13; // [-8192, 8191]
 };
+#define V0_CMPINST_SIZE         (V0_OP_BITS                           \
+                                 + V0_COND_BITS                       \
+                                 + V0_GEN_REG_BITS                    \
+                                 + V0_REG_BITS                        \
+                                 + 3                                  \
+                                 + 15)
 
-#define V0_JMP_INST_INITIALIZER                                         \
-    {                                                                   \
-        V0_JMP_OP,                                                      \
-        0                                                               \
+#define V0_JMP_INST_INITIALIZER                                       \
+    {                                                                 \
+        V0_JMP_OP, 0                                                  \
     }
 /*
  * NOTE: the jump offsets are in 32-bit words to save space and meet alignment
  */
-#define V0_OFS_BITS           26          // PC-relative word-offset bits
+#define V0_OFS_BITS             26          // PC-relative word-offset bits
 struct v0jmpinst {
     unsigned                    op      : V0_OP_BITS;     // [5:0]
     unsigned                    ofs     : V0_OFS_BITS;    // [31:6]
 };
+#define V0_JMPINST_SIZE         (V0_OP_BITS                            \
+                                 + V0_OFS_BITS                         \
+                                 + 15)
 
 #define V0_BRA_INST_INITIALIZER                                         \
     {                                                                   \
-        V0_BRA_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        0                                                               \
+        V0_BRA_OP, V0_ANY_COND, 0                                       \
     }
-#define V0_BRA_BITS           23          // PC-relative word-offset bits
+#define V0_BRA_BITS             23          // PC-relative word-offset bits
 struct v0brainst {
     unsigned                    op      : V0_OP_BITS;
     unsigned                    cond    : V0_COND_BITS;   // [8:6]
     unsigned                    ofs     : V0_BRA_BITS;    // [31:9]
 };
+#define V0_BRAINST_SIZE         (V0_OP_BITS                            \
+                                 + V0_COND_BITS                        \
+                                 + V0_BRA_BITS)
 
-#define V0_STK_INST_INITIALIZER                                         \
-    {                                                                   \
-        V0_NOP_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        2,                                                              \
-        0,                                                              \
-        0,                                                              \
+#define V0_STK_INST_INITIALIZER                                        \
+    {                                                                  \
+        V0_NOP_OP, V0_ANY_COND, 2, 0, 0,                               \
     }
 /*
  * parm: SIZE[14:13], RING[15]
@@ -323,13 +328,14 @@ struct v0stkinst {
     unsigned                    parm    : 3;                // see above
     int16_t                     imm;
 };
+#define V0_STKINST_SIZE         (V0_OP_BITS                           \
+                                 + V0_COND_BITS                       \
+                                 + V0_REG_BITS                        \
+                                 + 1)
 
-#define V0_MAP_INST_INITIALIZER                                         \
-    {                                                                   \
-        V0_NOP_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        0,                                                              \
-        0,                                                              \
+#define V0_MAP_INST_INITIALIZER                                       \
+    {                                                                 \
+        V0_NOP_OP, V0_ANY_COND, 0, 0,                                 \
     }
 /*
  * - STM, LDM; struct v0mapinst
@@ -338,22 +344,21 @@ struct v0stkinst {
  *   the lowest bit is R0, the highest (#15) is MF which is static (POP invalid)
  */
 struct v0mapinst {
-    unsigned                    op      : V0_OP_BITS;     // STM or LDM
-    unsigned                    cond    : V0_COND_BITS;   // condition
-    unsigned                    parm    : 7;                // reserved
+    unsigned                    op      : V0_OP_BITS;      // STM or LDM
+    unsigned                    cond    : V0_COND_BITS;    // condition
+    unsigned                    parm    : 7;               // reserved
     unsigned                    bits    : V0_INT_REGS - 1; // reg-bitmap
-    unsigned                    stm     : 1;                 // 0=ldm, 1=stm
+    unsigned                    stm     : 1;               // 0=ldm, 1=stm
 };
+#define V0_MAPINST_SIZE         (V0_OP_BITS                             \
+                                 + V0_COND_BITS                         \
+                                 + 7                                    \
+                                 + V0_INT_REGS - 1                      \
+                                 + 1)
 
 #define V0_IO_INST_INITIALIZER                                          \
     {                                                                   \
-        V0_NOP_OP,                                                      \
-        V0_ANY_COND,                                                    \
-        V0_R0_REG,                                                      \
-        V0_R1_REG,                                                      \
-        0,                                                              \
-        0,                                                              \
-        1,                                                              \
+        V0_NOP_OP, V0_ANY_COND, V0_R0_REG, V0_R1_REG, 0, 0, 1,          \
     }
 struct v0ioinst {
     unsigned                    op      : V0_OP_BITS;     // IOC, IOR, IOW
@@ -363,6 +368,12 @@ struct v0ioinst {
     unsigned                    ring    : 1;                // 1=system-ring
     uint16_t                    cmd;                        // 16-bit command
 };
+#define V0_IOINST_SIZE          (V0_OP_BITS                           \
+                                 + V0_COND_BITS                       \
+                                 + V0_GEN_REG_BITS                      \
+                                 + V0_GEN_REG_BITS                      \
+                                 + 1                                    \
+                                 + 16)
 
-#endif /* MACH_V0_INST_H */
+#endif /* SYS_V0_INST_H */
 

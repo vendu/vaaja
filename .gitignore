@@ -62,3 +62,6 @@ vgcore.*
 # different log files
 *.log
 
+# document files (e.g. foreign)
+*.pdf
+
