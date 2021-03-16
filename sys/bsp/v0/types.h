@@ -26,6 +26,7 @@ typedef uint64_t                m_ulong_t;
 #endif
 
 struct m_trapframe {
+    m_word_t                    code;
     m_word_t                    pc;
     m_word_t                    msw;
     m_word_t                    usp;
