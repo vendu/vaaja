@@ -11,6 +11,7 @@
 #define SPT_NICE_RANGE  40
 
 #define UNI_NICE_MIN    (-20)
+#define UNI_NICE_DEF    0
 #define UNI_NICE_MAX    19
 #define UNI_NICE_RANGE  40
 
@@ -32,7 +33,7 @@
 #define UNI_LOW_PRIO    (-(UNI_PRIO_MAX / 2))
 #define UNI_PRIO_LIM    (UNI_PRIO_MAX / 2)
 #define UNI_PRIO_RANGE  UNI_PRIO_MAX
-#define UNI_NICE_STEP   (UNI_NICE_MAX >> 1)
+#define UNI_NICE_STEP   1
 #define UNI_SLICE_SHIFT 4
 
 long ulenicetab[ULE_PRIO_RANGE];
@@ -46,18 +47,19 @@ void
 genniceule(void)
 {
     long   *ptr = &ulenicetab[ULE_PRIO_LIM];
-    double  dval = -ULE_NICE_MAX * ULE_NICE_STEP;
+    long    lval = -20;
     long    ndx;
 
     for (ndx = ULE_LOW_PRIO ; ndx < ULE_NICE_MIN ; ndx++) {
-        ptr[ndx] = 0;
+        ptr[ndx] = ndx;
     }
-    for ( ; ndx < ULE_NICE_MAX ; ndx++) {
-        ptr[ndx] = (int8_t)dval;
-        dval += ULE_NICE_STEP;
+    lval = ndx;
+    for ( ; ndx <= ULE_NICE_MAX ; ndx++) {
+        ptr[ndx] = lval;
+        lval++;
     }
     for ( ; ndx < ULE_PRIO_LIM ; ndx++) {
-        ptr[ndx] = 0;
+        ptr[ndx] = ndx;
     }
 
     return;
