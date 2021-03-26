@@ -1,0 +1,8 @@
+GRUB_GIT_URI=https://git.savannah.gnu.org/git/grub.git
+KERN_BUILD_DIR=`pwd`
+KERN_ISO_DIR=iso
+GRUB_SRC_DIR=$KERN_BUILD_DIR/grub
+GRUB_CFG_DIR=$KERN_BUILD_DIR/boot
+GRUB_CFG_FILE=$KERN_BUILD_DIR/$GRUB_CFG_DIR/grub.cfg
+GRUB_GFX_MODE=1024x768
+

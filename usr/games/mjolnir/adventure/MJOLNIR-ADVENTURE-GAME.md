@@ -14,11 +14,15 @@
 ## Character Classes
 
 - class attributes hold values of 0-64
-  - middle low                  0-15
-  - high middle                 16-31
-  - low high                    32-47
-  - high                        48-63
-
+  - eighth #0                   0-7
+  - eighth #1                   8-15
+  - eighth #2                   16-23
+  - eighth #3                   24-31
+  - eighth #4                   32-39
+  - eighth #5                   40-47
+  - eighth #6                   4-55
+  - eighth #7                   56-63
+  
 ## Character Creation
 
 ## Programmer
@@ -30,56 +34,32 @@
   - high CON                    CON = [48-63]
 
 ### Programmer Names
-- toor
-- loop
-- pixel
-- mage
-- zero
+- toor, loop, pixel, mage, zero
 
 ## Cracker
 
 ### Cracker Names
-- baud
-- tap
-- fiber
-- storm
-- krak
+- baud, tap, fiber, storm, krak
 
 ## Soldier
+
+### Soldier Names
+- max, slash, fury, rage, koma
 
 ## Cyborg
 
 ### Cyborg Names
-- bug
-- kaos
-- brik
-- dawn
-- mek
-
-### Soldier Names
-- max
-- slash
-- fury
-- rage
-- koma
+- bug, kaos, brik, dawn, mek
 
 ## Thief
 
 ### Thief Names
-- flash
-- shine
-- shadow
-- snap
-- piq
+- flash, shine, shadow, snap, piq
 
 ## Engineer
 
 ### Engineer Names
-- hak
-- kore
-- wiz
-- trik
-- tune
+- hak, kore, wiz, trik, tune
 
 ### Character Abilities
 
@@ -95,9 +75,10 @@
 
 ### Game Mechanics
 
-#### Rolling the Dice
-
 #### Character Creation
+
+The Character abilities STR, DEX, CON, INT, WIS (see above) are predetermined by
+rolling character creation die (D8) as follows
 
 #### Save Throws
 

@@ -1,7 +1,7 @@
 #ifndef __STDINT_H__
 #define __STDINT_H__
 
-#include <mach/param.h>
+#include <internal/mach/param.h>
 
 #define INT8_C(c)    c
 #define INT16_C(s)   s

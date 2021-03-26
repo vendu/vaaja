@@ -1,0 +1,12 @@
+# low kernel is loaded at 1 M physical
+# DMA-buffers (8 * 2 * 512K = 8M) at 4M physical (reserve for 'better' allocs)
+# kernel page-directory (recursive) at 16M physical
+# kernel virtual memory base address 3G
+
+MPENTRY         = 0x9f000;
+HICORE          = 1M;
+DMABUFBASE      = 4M;
+DMABUFSIZE      = 8M;
+PAGETAB         = 16M;
+KERNVIRTBASE    = 0xc0000000;
+

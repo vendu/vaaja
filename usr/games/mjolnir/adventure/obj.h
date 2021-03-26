@@ -71,9 +71,10 @@ struct mjolnirchr {
 
 #define MJOLNIG_GLEIPNIR        'G'         // a piece Gleipnir; 'Fenris-trap'
 #define MJOLNIR_EZEKIEL_CROSS   'X'         // imprinted with 4 archangel-names
+#define MJOLNIR_SILVER_BULLET   's'
 // crystal ball for visions of past, now, and future */
-¤define MJOLNIR_ITEM_WHITE_OAK  'o'
 #define MJOLNIR_ITEM_CRYSTAL    'Q'
+¤define MJOLNIR_ITEM_WHITE_OAK  'o'
 #define MJOLNIR_BUDDHA_ROD      '|'
 #define MJOLNIR_DEMON_WHIP      'y'
 #define MJOLNIR_JATIMATIC       'J'

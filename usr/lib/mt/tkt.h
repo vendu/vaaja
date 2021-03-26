@@ -11,12 +11,12 @@
 
 /* REFERENCE: http://locklessinc.com/articles/locks/ */
 
-#define ZEN_TKT_SPINS           16384
-#define ZEN_TKT_SIZE            (2 * MACH_WORD_SIZE)
+#define MT_TKT_SPINS            16384
+#define MT_TKT_SIZE             (2 * MACH_WORD_SIZE)
 
 #if (MACH_WORD_SIZE == 4)
 
-union zentkt {
+union mttkt {
     m_uatomic_t                 uval;
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
     struct {
@@ -33,7 +33,7 @@ union zentkt {
 
 #elif (MACH_WORD_SIZE == 8)
 
-union zentkt {
+union mttkt {
     m_atomicu64_t               uval;
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
     struct {
@@ -50,18 +50,18 @@ union zentkt {
 
 #endif /* MACH_WORD_SIZE */
 
-#define ZEN_TKT_BKT_ITEMS       (MACH_CL_SIZE / ZEN_TKT_SIZE)
-struct zentktbkt {
-    union zentkt                tab[ZEN_TKT_BKT_ITEMS];
+#define MT_TKT_BKT_ITEMS        (MACH_CL_SIZE / MT_TKT_SIZE)
+struct mttktbkt {
+    union mttkt                 tab[MT_TKT_BKT_ITEMS];
 };
 
-typedef volatile union zentkt   zentkt;
+typedef volatile union mttkt    mttkt;
 
 #if (MACH_WORD_SIZE == 4)
 
 /* only return when the lock appears unlocked */
 static C_INLINE void
-zenlktkt(zentkt *tp)
+mtlktkt(mttkt *tp)
 {
     uint16_t                    val = m_fetchaddu16(&tp->s.cnt, 1);
 
@@ -73,7 +73,7 @@ zenlktkt(zentkt *tp)
 }
 
 static C_INLINE void
-zenunlktkt(zentkt *tp)
+mtunlktkt(mttkt *tp)
 {
     m_membar();
     tp->s.val++;
@@ -84,7 +84,7 @@ zenunlktkt(zentkt *tp)
 
 /* return 1 if lock succeeds, 0 otherwise */
 static C_INLINE long
-zentrytkt(union zentkt *tp)
+mttrytkt(union mttkt *tp)
 {
     uint16_t                    val = tp->s.cnt;
     uint16_t                    cnt = val + 1;
@@ -102,7 +102,7 @@ zentrytkt(union zentkt *tp)
 #elif (MACH_WORD_SIZE == 8)
 
 static C_INLINE void
-zenlktkt(union zentkt *tp)
+mtlktkt(union mttkt *tp)
 {
     uint32_t                    val = m_fetchaddu32(&tp->s.cnt, 1);
 
@@ -114,7 +114,7 @@ zenlktkt(union zentkt *tp)
 }
 
 static C_INLINE void
-zenunlktkt(union zentkt *tp)
+mtunlktkt(union mttkt *tp)
 {
     m_membar();
     tp->s.val++;
@@ -125,7 +125,7 @@ zenunlktkt(union zentkt *tp)
 
 /* return 1 if lock succeeds, 0 otherwise */
 static C_INLINE long
-zentrytkt(union zentkt *tp)
+mttrytkt(union mttkt *tp)
 {
     uint32_t                    val = tp->s.cnt;
     uint32_t                    cnt = val + 1;

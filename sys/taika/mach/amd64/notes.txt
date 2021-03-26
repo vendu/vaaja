@@ -1,0 +1,18 @@
+virtual memory
+--------------
+
+- page-fault: cr2 contains the virtual address
+- cr3 contains the base address of the highest-level page-translation table
+  - unimplemented bits are cleared to zero
+
+memory ranges
+-------------
+
+	48-bit			56-bit			64-bit
+	------			-----			------
+LOBASE	0			0			0
+LOTOP	0x00007fffffffffff	0x007fffffffffffff	0xffffffffffffffff
+HIBASE	0xffff800000000000	0xff80000000000000	0x8000000000000000
+HITOP	0xffffffffffffffff	0xffffffffffffffff	0xffffffffffffffff
+
+NX-bit	0x8000000000000000

@@ -1,0 +1,10 @@
+include_rules
+
+CFLAGS += -O -D_REENTRANT=1 -DQEMU=1 -ggdb -g -DKERN32BIT=1 -D__KERNEL__=1 -D__MTKERNEL__ -m32 -ffreestanding -static -I../../../usr/lib -I../../../usr/lib -I../../.. -I../../../usr/lib/c -fno-omit-frame-pointer -fno-builtin -nostdlib -mno-red-zone
+
+LDFLAGS += --check-sections -nostdlib -nodefaultlibs -g -m32 -static -T kern.lds -m elf_i386 -Map zero.sym
+
+: foreach ../x86/*.S *.S *.c ../../*.c ../x86/*.c ../../proc/*.c ../../mem/*.c ../../io/*.c ../../io/drv/pc/*.c ../../io/drv/chr/*.c .../../../usr/contrib/Zeno/plasma24grid.c ../../../usr/lib/zero/fastidiv.c ../../../usr/lib/zero/hash.c |> !cc |> %B.o
+
+: *.o |> !ld |> zero
+

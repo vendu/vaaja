@@ -1,0 +1,44 @@
+code modules
+------------
+
+portable modules
+----------------
+
+mbuf
+----
+- FreeBSD-inspired memory buffers to be used for network packets and other
+  buffers
+
+mem
+---
+- bootstrap initialization of memory management
+- buffer allocation and reclaim
+
+page
+----
+- page allocator
+- TODO: swap
+- TODO: page-replacement
+
+slab
+----
+- slab allocator
+- power-of-two slab sizes
+- combines slabs into bigger ones and splits them into smaller ones
+
+mag
+---
+- Bonwick-style magazine allocator buffer layer
+
+pool
+----
+- higher-level kernel allocator
+- TODO: zones
+
+machine-specific modules
+------------------------
+
+mtrr
+----
+- X86-style Memory Type Range Register support
+

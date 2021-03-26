@@ -1,0 +1,73 @@
+BOOTSTRAP; kern/unit/x86/boot.S
+-------------------------------
+
+_start
+------
+- set boot stack up at 512K
+- if support for longmode is detected, pass non-zero longmode argument to
+  kmain()
+- invoke kmain()
+
+Global Symbols
+--------------
+_start		- entry point
+
+Global Data
+-----------
+
+kernidt		- interrupt vector
+kernpagedir	- page directory
+kerngdt		- global descriptor table (GDT)
+
+64-bit kernel
+-------------
+
+kernpagetab1	- page table structures
+...
+kernpagetab4
+
+32-BIT KERNEL SETUP; kern/unit/ia32/setup.S
+-------------------------------------------
+
+gdtinit()	- initialize GDT
+pginit()	- initialize paging
+
+KERNEL INITIALIZATION; kern/unit/x86/main.c
+-------------------------------------------
+
+kmain()
+-------
+grubmemsz()	- determine amount of physical memory
+  - FIXME: use GRUB memory map?
+seginit()	- initialize segmentation
+vbeinit()	- initialize VBE graphics mode
+trapinitprot()	- initialize protected mode interrupt management
+kinitprot()	- initialize protected mode
+
+PROTECTED MODE INITIALIZATION; kern/unit/x86/protmode.c
+-------------------------------------------------------
+
+kinitprot()
+-----------
+vminit()	- initialize 32-bit virtual memory
+kbzero()	- zero kernel BSS segment
+vbeinitscr()	- set VBE graphics mode up (probe/store parameters)
+consinit()	- initialize console data structures
+vminitphys()	- initialize physical memory management
+meminit()	- initialize high-level virtual memory management
+tssinit()	- initialize kernel TSS
+smbiosinit()	- probe for and initialize SMBIOS
+ps2init()	- initialize PS/2 mouse and keyboard driver
+plasmaloop()	- run plasma animation
+pciinit()	- initialize PCI bus driver
+atainit()	- initialize ATA/SATA disk drivers
+sb16init()	- initialize Soundblaster 16 driver
+acpiinit()	- initialize ACPI driver
+bufinit()	- allocate and initialize [fixed-size] block I/O buffer cache
+mpinit()	- probe for and initialize SMP
+hpetinit()	- initialize HPET timers
+apicinit()	- initialize APIC [timers]
+ioapicinit()	- initialize I/O APIC
+mpstart()	- if SMP-system detected, start application CPUs (FIXME: broken)
+taskinitenv()	- initialize task environment
+

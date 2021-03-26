@@ -1,12 +1,15 @@
-#define MJOLNIR_INVALID_CHR     0
-#define MJOLNIR_PROGRAMMER_CHR  1
-#define MJOLNIR_CRACKER_CHR     2
-#define MJOLNIR_CYBORG_CHR      3
-#define MJOLNIR_SOLDIER_CHR     4
-#define MJOLNIR_THIEF_CHR       5
-#define MJOLNIR_ENGINEER_CHR    6
-#define MJOLNUR_OPERATOR_CHR    7
-#define MJOLNIR_OPERATOR_TYPES  8
+#ifndef MJOLNIR_ADVENTURE_CHR_H
+#define MJOLNIR_ADVENTURE_CHR_H
+
+#define MJOLNIR_INVALID_CHR             0
+#define MJOLNIR_PROGRAMMER_CHR          1
+#define MJOLNIR_CRACKER_CHR             2
+#define MJOLNIR_CYBORG_CHR              3
+#define MJOLNIR_SOLDIER_CHR             4
+#define MJOLNIR_THIEF_CHR               5
+#define MJOLNIR_ENGINEER_CHR            6
+#define MJOLNUR_OPERATOR_CHR            7
+#define MJOLNIR_OPERATOR_TYPES          8
 
 /* character-types; ASCII-presentation/indices for sprites */
 #define MJOLNIR_CHR_PLAYER              '@'
@@ -37,21 +40,15 @@
 #define MJOLNIR_CHR_LADY_X              'X'
 
 struct mjolnirchr {
-    const char                 *name;
-    uint_fast8_t                npcinfo;    // non-player info, 0 for player
-    uint_fast8_t                type;
+    const char                         *name;
+    uint_fast8_t                        npcinfo;    // non-player, 0 for player
+    uint_fast8_t                        type; // ASCII-represetnation/sprite ID
+    uint_fast8_t                        str;  // strentgh
+    uint_fast8_t                        dex;  // dexterity
+    uint_fast8_t                        con;  // constitution
+    uint_fast8_t                        intl; // intelligence
+    uint_fast8_t                        wis;  // wisdom
+};
 
-struct mjolchr {
-    const char                 *name;
-    uint_fast8_t                npcinfo;
-    uint_fast8_t                c;
-- type
-- class
-- name
-- str
-- dex
-- con
-- int
-- wis
-
+#endif /* MJOLNIR_ADVENTURE_CHR_H */
 
