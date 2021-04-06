@@ -1,5 +1,5 @@
 #include <taika/conf.h>
-#include <internal/mach/param.h>
+#include <mach/param.h>
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdint.h>

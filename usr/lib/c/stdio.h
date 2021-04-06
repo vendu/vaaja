@@ -6,7 +6,7 @@
 #include <share/null.h>
 #endif
 #if !defined(__size_t_defined)
-#include <share/size.h>
+#include <share/size_t.h>
 #endif
 #if defined(_XOPEN_SOURCE) || (__STDC__)
 #if defined(__GNUC__)

@@ -11,11 +11,13 @@
 #define FLOAT_MANTISSA_BITS     23
 #define FLOAT_EXPONENT_BITS     8
 #define FLOAT_SIGN_BIT          (INT32_C(1) << 31)
+#define FLOAT_EXPONENT_BIAS     127
 
 #define DOUBLE_BITS             64
 #define DOUBLE_MANTISSA_BITS    52
 #define DOUBLE_EXPONENT_BITS    11
 #define DOUBLE_SIGN_BIT         (INT32_C(1) << 63)
+#define DOUBLE_EXPONENT_BIAS    1023
 
 void    fp_fprint(float f);
 void    fp_dprint(double d);

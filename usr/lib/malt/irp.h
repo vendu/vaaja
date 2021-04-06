@@ -4,8 +4,8 @@
 /* NOTE: some of this code is unnecessary and going to be removed later */
 
 #include <stdint.h>
-#include <env/cdefs.h>
-#if defined(TEST_DIV)
+#include <sys/cdefs.h>
+#if defined(TEST_DIV) || defined(TEST_IRP)
 #include <stdio.h>
 #endif
 
@@ -16,7 +16,7 @@ int32_t irpidiv(int32_t num, int32_t den);
 
 /* Newton-Raphson iterator */
 /* x + x * (1 - x * xd) */
-static C_INLINE double
+static __inline__ double
 nrpiter(double x, double d)
 {
     double      xd = x * d;
@@ -35,14 +35,14 @@ nrpiter(double x, double d)
  * y = x * e;
  * x = x + y + y * e;
  */
-static C_INLINE double
+static __inline__ double
 nrpiter2(double x, double d)
 {
     double  e = 1.0 - d * x;
     double  y = x * e;
 
     x += y + y * e;
-#if (TEST_DIV)
+#if (TEST_DIV) || (TEST_IRP)
     fprintf(stderr, "X == %e\n", x);
 #endif
 

@@ -1,5 +1,5 @@
-#ifndef SYS_TAIKA_MEM_ZONE_H
-#define SYS_TAIKA_MEM_ZONE_H
+#ifndef TAIKA_MEM_ZONE_H
+#define TAIKA_MEM_ZONE_H
 
 /* flags for creating memzones */
 #define MEMZONE_ZERO            0x00000001 // initialize with zeroes
@@ -27,23 +27,23 @@
 #define MEM_ZONES               8
 
 struct memzone {
-    struct membkt  tab[MACH_PTR_BITS];
+    struct memlist tab[MACH_PTR_BITS];
     MEM_LK_T       lk;
-    m_size_t       flg;
+    size_t         flg;
     uintptr_t      base;
     unsigned long  nblk;
     void          *hdrtab;
 };
 
-void * slaballoc(struct memzone *zone, m_size_t nb, long flg);
-void   slabfree(struct memzone *zone, void *ptr);
+void                           *slaballoc(struct memzone *zone,
+                                          size_t nb,
+                                          long flg);
+void                            slabfree(struct memzone *zone,
+                                         void *ptr);
 
-//void * zonegetslab(struct memzone *zone, unsigned long nb, unsigned long flg);
-//#void   zonefreeslab(struct memzone *zone, void *ptr);
-
-void meminitphys(struct memzone *zone, m_size_t base, m_size_t nbyte);
-void meminitvirt(struct memzone *zone, m_size_t nbvirt);
+void meminitphys(struct memzone *zone, size_t base, size_t nbyte);
+void meminitvirt(struct memzone *zone, size_t nbvirt);
 void memfree(struct memzone *zone, void *ptr);
 
-#endif /* SYS_TAIKA_MEM_ZONE_H */
+#endif /* TAIKA_MEM_ZONE_H */
 

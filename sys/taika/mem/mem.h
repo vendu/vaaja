@@ -14,15 +14,15 @@
 #define MEM_LK_T                mttktlk
 #define memlk(lp)               tktlk(lp)
 #define memunlk(lp)             tktunlk(lp)
-#define memlkbkt(lp)            tktlk(lp)
-#define memunlkbkt(lp)          tktunlk(lp)
+#define memlklist(lp)           tktlk(lp)
+#define memunlklist(lp)         tktunlk(lp)
 #else
 #include <mt/mtx.h>
 #define MEM_LK_T                mtfmtx
 #define memlk(lp)               fmtxlk(lp)
 #define memunlk(lp)             fmtxunlk(lp)
-#define memlkbkt(lp)            fmtxlk(lp)
-#define memunlkbkt(lp)          fmtxunlk(lp)
+#define memlklist(lp)           fmtxlk(lp)
+#define memunlklist(lp)         fmtxunlk(lp)
 #endif
 
 /* memory caching type */
@@ -46,9 +46,9 @@
 #define MEMSLABSIZE             (1U << MEMSLABSHIFT)
 #define MEMMINSHIFT             MACH_CLSIZE_LOG2 // cacheline-minimum allocation
 #define MEMSLABSHIFT            16
-#define MEMBKTBITS              8 // 8 low bits of info used for bucket ID
+#define MEMLISTBITS             8 // 8 low bits of info used for bucket ID
 #define MEMNTYPEBIT             8 // up to 256 object types
-#define MEMBKTMASK              ((1UL << (MEMBKTBITS - 1)) - 1)
+#define MEMLISTMASK             ((1UL << (MEMLISTBITS - 1)) - 1)
 #define MEMLKBIT                (1UL << (WORDSIZE * CHAR_BIT - 1))
 #define MEMLKBITPOS             (WORDSIZE * CHAR_BIT - 1)
 /* allocation flags */
@@ -58,12 +58,11 @@
 #define MEMDIRTY                0x00000008UL
 #define MEMFLGBITS              (MEMFREE | MEMZERO | MEMWIRE | MEMDIRTY)
 #define MEMNFLGBIT              4
-#define memslabsize(bkt)                                                \
-    (1UL << (bkt))
+#define memslabsize(list)       (1UL << (list))
 #define memtrylkhdr(hdr)        m_trylkbit(&hdr->info, MEMLKBITPOS)
 #define memlkhdr(hdr)           m_lkbit(&hdr->info, MEMLKBITPOS)
 #define memunlkhdr(hdr)         m_unlkbit(&hdr->info, MEMLKBITPOS)
-#define memgetbkt(hdr)          ((hdr)->info & MEMBKTMASK)
+#define memgetlist(hdr)         ((hdr)->info & MEMLISTMASK)
 
 void meminit(m_ureg_t base, m_ureg_t nbphys, m_ureg_t nbvirt);
 

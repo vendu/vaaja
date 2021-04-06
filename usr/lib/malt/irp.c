@@ -67,35 +67,6 @@ irpguess1(double den)
     return res;
 }
 
-double
-gsdiv(int32_t num, int32_t den)
-{
-    int                         sft = DOUBLE_MANTISSA_BITS - __builtin_clz(den);
-    double                      n;
-    double                      d = den << sft;
-    double                      f;
-
-    if (den == 0) {
-        abort();
-    } else if (den > num) {
-
-        return 0;
-    } else if (den == num) {
-
-        return 1;
-    }
-    fp_dsetexp(n, sft);
-    fp_dsetexp(d, -sft);
-    f = 2.0 - d;
-    d = 2.0 - f;
-    f = 2.0 - d;
-    d = 2.0 - f;
-    f = 2.0 - d;
-    num *= d;
-
-    return num;
-}
-
 int32_t
 irpidiv(int32_t num, int32_t den)
 {
@@ -138,7 +109,7 @@ main(int argc, char *argv[])
     fprintf(stderr, "%d\n", irpidiv(220, 55));
     fprintf(stderr, "%d\n", irpidiv(5, 5));
     for (i = 0 ; i <= 0xffff ; i++) {
-        fprintf(stderr, "I: %x\n", i);
+        //        fprintf(stderr, "I: %x\n", i);
         for (j = 1 ; j <= 0xffff ; j++) {
             res = irpidiv(i, j);
             if (res != i / j) {

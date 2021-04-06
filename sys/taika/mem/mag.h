@@ -1,5 +1,5 @@
-#ifndef __KERN_MEM_MAG_H__
-#define __KERN_MEM_MAG_H__
+#ifndef TAIKA_MEM_MAG_H
+#define TAIKA_MEM_MAG_H
 
 #include <stdint.h>
 #include <zero/cdefs.h>
@@ -7,7 +7,7 @@
 
 #define mempop(mp)       ((mp)->ptab[((mp)->ndx)++])
 #define mempush(mp, ptr) ((mp)->ptab[--((mp)->ndx)] = (ptr))
-#define memmagempty(mp)  ((mp)->ndx == (mp)->n)
+#define memmagempty(mp)  ((mp)->ndx == (mp)->nmax)
 #define memmagfull(mp)   (!(mp)->ndx)
 
 #define __STRUCT_MEMMAG_PTAB_SIZE                                       \
@@ -32,7 +32,7 @@ struct memmag {
     unsigned long   bmap;
 #endif
     volatile long   ndx;
-    volatile long   n;
+    volatile long   nmax;
     void           *ptab[1UL << (MEMSLABSHIFT - MEMMINSHIFT)];
 #if defined(MEMPARANOIA) &&  !(MEMSLABSHIFT - MEMMINSHIFT < (LONGSIZELOG2 + 3)) && 0
     uint8_t         bmap[__STRUCT_MEMMAG_BMAP_SIZE];
@@ -49,13 +49,13 @@ struct memmag {
 #endif
 
 #define memclrmaginfo(mp)                                               \
-    ((mp)->info = ((m_ureg_t)0))
-#define memclrmagbkt(mp)                                                \
-    ((mp)->info &= ~MEMBKTMASK)
-#define memsetmagbkt(mp, bkt)                                           \
-    (memclrmagbkt(mp), (mp)->info |= (bkt))
-#define memmaggetbkt(mp)                                                \
-    ((mp)->info & MEMBKTMASK)
+    ((mp)->info = 0)
+#define memclrmaglist(mp)                                               \
+    ((mp)->info &= ~MEMLISTMASK)
+#define memsetmaglist(mp, list)                                         \
+    (memclrmaglist(mp), (mp)->info |= (list))
+#define memmaggetlist(mp)                                               \
+    ((mp)->info & MEMLISTMASK)
 #define memmagisfree(mp)                                                \
     (!((mp)->info & MEMFREE))
 #define memsetmagfree(mp)                                               \
@@ -81,5 +81,5 @@ struct memmag {
 #define memclrmagnext(mp)                                               \
     ((mp)->next = NULL)
 
-#endif /* __KERN_MEM_MAG_H__ */
+#endif /* TAIKA_MEM_MAG_H */
 

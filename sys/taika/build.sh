@@ -1,4 +1,4 @@
 #! /bin/sh
 
-gcc -O -I. -I.. -I../.. -o taika *.c
+gcc -nostdinc -O -I. -I.. -I../.. -I../../usr/lib -I../../usr/lib/c -o taika *.c
 

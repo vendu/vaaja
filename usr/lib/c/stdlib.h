@@ -2,7 +2,7 @@
 #define __STDLIB_H__
 
 #include <features.h>
-#include <env/cdefs.h>
+#include <sys/cdefs.h>
 #include <stddef.h>
 #include <sys/wait.h>
 #if defined(_MISC_SOURCE)

@@ -10,7 +10,7 @@
 
 #include <features.h>
 #if !defined(__size_t_defined)
-#include <share/size.h>
+#include <share/size_t.h>
 #endif
 #if !defined(__off_t_defined)
 #include <share/off_t.h>

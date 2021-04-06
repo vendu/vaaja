@@ -1,7 +1,7 @@
 #ifndef ERRNO_H
 #define ERRNO_H
 
-#include <api/errno.h>
+//#include <api/errno.h>
 
 const char                     *const sys_errlist[];
 int                             sys_nerr;
